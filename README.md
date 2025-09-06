@@ -16,8 +16,7 @@ A brief video demonstrating the core functionality of VeritasGraph, from data in
 
 [![Video Walkthrough](https://github.com/bibinprathap/VeritasGraph/blob/master/assets/graphrag.JPG)](https://drive.google.com/file/d/1lEmAOUCLV0h98kY-ars96SNf5O6lVmiY/view?usp=sharing)  
 
-> 📌 To make the video thumbnail appear, take a screenshot of your video, name it `video_thumbnail.png`, upload it to an `assets` folder in your repository, and update the placeholder path above.
-
+ 
 ---
 
 ### System Architecture Screenshot  
@@ -47,8 +46,7 @@ The following diagram illustrates the end-to-end pipeline of the VeritasGraph sy
     style F fill:#e6f7ff,stroke:#333,stroke-width:2px
     style K fill:#e6ffe6,stroke:#333,stroke-width:2px
 ```
-> 📌 Please upload your diagram to the `assets` folder in your repository and replace the path above.
-
+ 
 ---
 
 ## 📑 Table of Contents  
@@ -129,6 +127,37 @@ VeritasGraph succeeds by combining:
 - Copy `.env.example` → `.env`  
 - Populate with environment-specific values  
 
-### **Data Ingestion**  
-```bash
-docker-compose run ingest
+## 6. Project Philosophy & Future Roadmap
+### **Philosophy**  
+
+VeritasGraph is founded on the principle that the most powerful AI systems should also be the most transparent, secure, and controllable.
+
+The project's philosophy is a commitment to democratizing enterprise-grade AI, providing organizations with the tools to build their own sovereign knowledge assets.
+
+This stands in contrast to reliance on opaque, proprietary, cloud-based APIs, empowering organizations to maintain full control over their data and reasoning processes.
+
+### **Roadmap**  
+
+**Planned future enhancements include:**
+
+- Expanded Database Support – Integration with more graph databases and vector stores.
+
+- Advanced Graph Analytics – Community detection and summarization for holistic dataset insights (inspired by Microsoft’s GraphRAG).
+
+- Agentic Framework – Multi-step reasoning tasks, breaking down complex queries into sub-queries.
+
+- Visualization UI – A web interface for graph exploration and attribution path inspection.
+
+## 7. Acknowledgments & Citations**  
+
+This project builds upon the foundational research and open-source contributions of the AI community.
+
+We acknowledge the influence of the following works:
+
+- HopRAG – pioneering research on graph-structured RAG and multi-hop reasoning.
+
+- Microsoft GraphRAG – comprehensive approach to knowledge graph extraction and community-based reasoning.
+
+- LangChain & LlamaIndex – robust ecosystems that accelerate modular RAG system development.
+
+- Neo4j – foundational graph database technology enabling scalable Graph RAG implementations.
