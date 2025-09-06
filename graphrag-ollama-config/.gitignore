@@ -1,0 +1,8 @@
+input/*
+!input/.placeholder
+output/
+__pycache__
+cache
+.env
+lancedb/
+test*

@@ -1,0 +1,4 @@
+python-dotenv
+gradio
+pandas
+tiktoken
