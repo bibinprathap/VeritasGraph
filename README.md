@@ -14,7 +14,7 @@ Baseline RAG systems excel at finding direct answers but falter when faced with 
 ### Video Walkthrough  
 A brief video demonstrating the core functionality of VeritasGraph, from data ingestion to multi-hop querying with full source attribution.  
 
-[![Video Walkthrough](https://raw.githubusercontent.com/bibinprathap/VeritasGraph/main/assets/graphrag.png)](https://drive.google.com/file/d/1lEmAOUCLV0h98kY-ars96SNf5O6lVmiY/view?usp=sharing)  
+[![Video Walkthrough](https://raw.githubusercontent.com/bibinprathap/VeritasGraph/main/assets/graphrag.JPG)](https://drive.google.com/file/d/1lEmAOUCLV0h98kY-ars96SNf5O6lVmiY/view?usp=sharing)  
 
 > 📌 To make the video thumbnail appear, take a screenshot of your video, name it `video_thumbnail.png`, upload it to an `assets` folder in your repository, and update the placeholder path above.
 
@@ -29,7 +29,7 @@ The following diagram illustrates the end-to-end pipeline of the VeritasGraph sy
         A --> B{Document Chunking};
         B --> C{LLM-Powered Extraction<br/>(Entities & Relationships)};
         C --> D;
-        C --> E;
+        C --> E[Knowledge Graph];
     end
 
     subgraph "Query Pipeline (Real-Time)"
@@ -39,7 +39,7 @@ The following diagram illustrates the end-to-end pipeline of the VeritasGraph sy
         G --> H{Pruning & Re-ranking};
         H -- "Rich Reasoning Context" --> I{LoRA-Tuned LLM Core};
         I -- "Generated Answer + Provenance" --> J{Attribution & Provenance Layer};
-        J --> K;
+        J --> K[Attributed Answer];
     end
 
     style A fill:#f2f2f2,stroke:#333,stroke-width:2px
