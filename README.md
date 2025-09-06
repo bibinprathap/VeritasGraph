@@ -14,7 +14,7 @@ Baseline RAG systems excel at finding direct answers but falter when faced with 
 ### Video Walkthrough  
 A brief video demonstrating the core functionality of VeritasGraph, from data ingestion to multi-hop querying with full source attribution.  
 
-[![Video Walkthrough](https://raw.githubusercontent.com/bibinprathap/VeritasGraph/main/assets/video_thumbnail.png)](https://drive.google.com/file/d/1lEmAOUCLV0h98kY-ars96SNf5O6lVmiY/view?usp=sharing)  
+[![Video Walkthrough](https://raw.githubusercontent.com/bibinprathap/VeritasGraph/main/assets/graphrag.png)](https://drive.google.com/file/d/1lEmAOUCLV0h98kY-ars96SNf5O6lVmiY/view?usp=sharing)  
 
 > 📌 To make the video thumbnail appear, take a screenshot of your video, name it `video_thumbnail.png`, upload it to an `assets` folder in your repository, and update the placeholder path above.
 
@@ -22,10 +22,9 @@ A brief video demonstrating the core functionality of VeritasGraph, from data in
 
 ### System Architecture Screenshot  
 The following diagram illustrates the end-to-end pipeline of the VeritasGraph system:  
+ 
 
-![System Architecture](https://raw.githubusercontent.com/bibinprathap/VeritasGraph/main/assets/architecture_screenshot.png)  
-
-graph TD
+```mermaid graph TD
     subgraph "Indexing Pipeline (One-Time Process)"
         A --> B{Document Chunking};
         B --> C{LLM-Powered Extraction<br/>(Entities & Relationships)};
@@ -46,7 +45,7 @@ graph TD
     style A fill:#f2f2f2,stroke:#333,stroke-width:2px
     style F fill:#e6f7ff,stroke:#333,stroke-width:2px
     style K fill:#e6ffe6,stroke:#333,stroke-width:2px
-
+```
 > 📌 Please upload your diagram to the `assets` folder in your repository and replace the path above.
 
 ---
