@@ -14,7 +14,7 @@ Baseline RAG systems excel at finding direct answers but falter when faced with 
 ### Video Walkthrough  
 A brief video demonstrating the core functionality of VeritasGraph, from data ingestion to multi-hop querying with full source attribution.  
 
-[![Video Walkthrough](https://raw.githubusercontent.com/bibinprathap/VeritasGraph/main/assets/graphrag.JPG)](https://drive.google.com/file/d/1lEmAOUCLV0h98kY-ars96SNf5O6lVmiY/view?usp=sharing)  
+[![Video Walkthrough](https://github.com/bibinprathap/VeritasGraph/blob/master/assets/graphrag.JPG)](https://drive.google.com/file/d/1lEmAOUCLV0h98kY-ars96SNf5O6lVmiY/view?usp=sharing)  
 
 > 📌 To make the video thumbnail appear, take a screenshot of your video, name it `video_thumbnail.png`, upload it to an `assets` folder in your repository, and update the placeholder path above.
 
@@ -24,11 +24,32 @@ A brief video demonstrating the core functionality of VeritasGraph, from data in
 The following diagram illustrates the end-to-end pipeline of the VeritasGraph system:  
  
 
-```mermaid graph TD
+```mermaid 
+graph TD
     subgraph "Indexing Pipeline (One-Time Process)"
         A --> B{Document Chunking};
         B --> C{LLM-Powered Extraction<br/>(Entities & Relationships)};
         C --> D;
+        C --> E[Knowledge Graph];
+    end
+
+    subgraph "Query Pipeline (Real-Time)"
+        F[User Query] --> G{Hybrid Retrieval Engine};
+        G -- "1. Vector Search for Entry Points" --> D;
+        G -- "2. Multi-Hop Graph Traversal" --> E;
+        G --> H{Pruning & Re-ranking};
+        H -- "Rich Reasoning Context" --> I{LoRA-Tuned LLM Core};
+        I -- "Generated Answer + Provenance" --> J{Attribution & Provenance Layer};
+        J --> K[Attributed Answer];
+    end
+
+    style A fill:#f2f2f2,stroke:#333,stroke-width:2px
+    style F fill:#e6f7ff,stroke:#333,stroke-width:2px
+    style K fill:#e6ffe6,stroke:#333,stroke-width:2pxgraph TD
+    subgraph "Indexing Pipeline (One-Time Process)"
+        A --> B{Document Chunking};
+        B --> C{LLM-Powered Extraction<br/>(Entities & Relationships)};
+        C --> D[Vector Index];
         C --> E[Knowledge Graph];
     end
 
