@@ -25,30 +25,10 @@ The following diagram illustrates the end-to-end pipeline of the VeritasGraph sy
  
 
 ```mermaid 
-graph TD
+ graph TD
     subgraph "Indexing Pipeline (One-Time Process)"
         A --> B{Document Chunking};
-        B --> C{LLM-Powered Extraction<br/>(Entities & Relationships)};
-        C --> D;
-        C --> E[Knowledge Graph];
-    end
-
-    subgraph "Query Pipeline (Real-Time)"
-        F[User Query] --> G{Hybrid Retrieval Engine};
-        G -- "1. Vector Search for Entry Points" --> D;
-        G -- "2. Multi-Hop Graph Traversal" --> E;
-        G --> H{Pruning & Re-ranking};
-        H -- "Rich Reasoning Context" --> I{LoRA-Tuned LLM Core};
-        I -- "Generated Answer + Provenance" --> J{Attribution & Provenance Layer};
-        J --> K[Attributed Answer];
-    end
-
-    style A fill:#f2f2f2,stroke:#333,stroke-width:2px
-    style F fill:#e6f7ff,stroke:#333,stroke-width:2px
-    style K fill:#e6ffe6,stroke:#333,stroke-width:2pxgraph TD
-    subgraph "Indexing Pipeline (One-Time Process)"
-        A --> B{Document Chunking};
-        B --> C{LLM-Powered Extraction<br/>(Entities & Relationships)};
+        B --> C{"LLM-Powered Extraction<br/>(Entities & Relationships)"};
         C --> D[Vector Index];
         C --> E[Knowledge Graph];
     end
