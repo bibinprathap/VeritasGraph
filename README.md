@@ -269,3 +269,6 @@ We acknowledge the influence of the following works:
 - LangChain & LlamaIndex – robust ecosystems that accelerate modular RAG system development.
 
 - Neo4j – foundational graph database technology enabling scalable Graph RAG implementations.
+## Star History
+ 
+[![Star History Chart](https://api.star-history.com/svg?repos=bibinprathap/VeritasGraph&type=Date)](https://www.star-history.com/#bibinprathap/VeritasGraph&Date)
