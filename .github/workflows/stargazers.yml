@@ -1,0 +1,19 @@
+name: Stargazers map
+
+on:
+  schedule:
+    - cron: '0 0 * * *' # Runs every day
+  workflow_dispatch: # Allows you to run it manually
+
+jobs:
+  build_map:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Generate stargazers map
+        uses: badboy/stargazer-map@v1 # This is the new, working action
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          output_file: 'stargazers.svg' # The name of the map image file
