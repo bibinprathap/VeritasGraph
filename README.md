@@ -272,3 +272,8 @@ We acknowledge the influence of the following works:
 ## Star History
  
 [![Star History Chart](https://api.star-history.com/svg?repos=bibinprathap/VeritasGraph&type=Date)](https://www.star-history.com/#bibinprathap/VeritasGraph&Date)
+
+
+## 🗺️ Stargazers World Map
+
+![Stargazers Map](stargazers.svg)
