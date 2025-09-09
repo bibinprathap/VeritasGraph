@@ -11,6 +11,19 @@ It is architected to overcome the fundamental limitations of traditional vector-
 Baseline RAG systems excel at finding direct answers but falter when faced with questions that require connecting disparate information or understanding a topic holistically. **VeritasGraph addresses this challenge directly, providing not just answers, but transparent, auditable reasoning paths with full source attribution for every generated claim, establishing a new standard for trust and reliability in enterprise AI.**
 
 ---
+## Why VeritasGraph?
+
+### ✅ Fully On-Premise & Secure
+Maintain **100% control** over your data and AI models, ensuring maximum security and privacy.
+
+### ✅ Verifiable Attribution
+Every generated claim is **traced back** to its source document, guaranteeing transparency and accountability.
+
+### ✅ Advanced Graph Reasoning
+Answer **complex, multi-hop questions** that go beyond the capabilities of traditional vector search engines.
+
+### ✅ Open-Source & Sovereign
+Build a **sovereign knowledge asset**, free from vendor lock-in, with full ownership and customization.
 
 ## 🚀 Demo  
 
@@ -281,8 +294,6 @@ We acknowledge the influence of the following works:
 [![Star History Chart](https://api.star-history.com/svg?repos=bibinprathap/VeritasGraph&type=Date)](https://www.star-history.com/#bibinprathap/VeritasGraph&Date)
 
 
-## 🗺️ Stargazers World Map
-
-![Stargazers Map](stargazers.svg)
+ 
 
 
