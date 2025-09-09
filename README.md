@@ -269,6 +269,13 @@ We acknowledge the influence of the following works:
 - LangChain & LlamaIndex – robust ecosystems that accelerate modular RAG system development.
 
 - Neo4j – foundational graph database technology enabling scalable Graph RAG implementations.
+
+## Deconstructing VeritasGraph
+
+[![An In-Depth Look at the Four-Stage RAG Pipeline](./preview.png)](https://bibinprathap.github.io/VeritasGraph/index.html)
+
+**[➡️ Click here to view the Four-Stage](https://bibinprathap.github.io/VeritasGraph/index.html)**
+
 ## Star History
  
 [![Star History Chart](https://api.star-history.com/svg?repos=bibinprathap/VeritasGraph&type=Date)](https://www.star-history.com/#bibinprathap/VeritasGraph&Date)
@@ -277,3 +284,5 @@ We acknowledge the influence of the following works:
 ## 🗺️ Stargazers World Map
 
 ![Stargazers Map](stargazers.svg)
+
+
