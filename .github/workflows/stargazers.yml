@@ -1,8 +1,8 @@
-name: Stargazers map
+name: Stargazers Map
 
 on:
   schedule:
-    - cron: '0 0 * * *' # Runs every day
+    - cron: '0 0 * * *' # Runs daily at midnight
   workflow_dispatch: # Allows you to run it manually
 
 jobs:
@@ -12,8 +12,8 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Generate stargazers map
-        uses: badboy/stargazer-map@v1 # This is the new, working action
+      - name: Generate Stargazers Map
+        uses: smaranjitghose/stargazer-map@v3 # This is the new, verified action
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          output_file: 'stargazers.svg' # The name of the map image file
+          token: ${{ secrets.GITHUB_TOKEN }}
+          output_path: 'stargazers.svg' # The name of the map image file
