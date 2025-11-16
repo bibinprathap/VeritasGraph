@@ -3,9 +3,9 @@
 ![image](UI.png)
  
 ## Environment
-I'm using Ollama ( llama3.1) on Windows and  Ollama (nomic-text-embed) for text embeddings
- 
-Please don't use WSL if you use LM studio for embeddings because it will have issues connecting to the services on Windows (LM studio)
+This setup uses Ollama (llama3.1) and Ollama (nomic-embed-text) for text embeddings.
+
+**Note**: This configuration has been updated to work with GraphRAG v0.3.6 for compatibility with the Gradio UI.
  
 ### IMPORTANT! Fix your model context length in Ollama
  
@@ -32,75 +32,146 @@ ollama create llama3.1-12k -f ./Modelfile
 ```
  
 ## Steps for GraphRAG Indexing
-First, activate the conda enviroment
-```
-conda create -n rag python=<any version below 3.12>
+
+### 1. Setup Conda Environment
+```bash
+conda create -n rag python=3.11
 conda activate rag
 ```
- 
-Clone this project then cd the directory
-```
+
+### 2. Clone and Navigate to Directory
+```bash
 cd graphrag-ollama-config
 ```
- 
-Then pull the code of graphrag (I'm using a local fix for graphrag here) and install the package
+
+### 3. Install GraphRAG v0.3.6
+**IMPORTANT**: Use version 0.3.6 for compatibility with the Gradio UI
+```bash
+pip install graphrag==0.3.6
+pip install sympy future ollama
 ```
-cd graphrag-ollama
-pip install -e ./
- 
-```
- 
-You can skip this step if you used this repo, but this is for initializing the graphrag folder
-```
-pip install sympy
-pip install future
-pip install ollama
+
+### 4. Initialize GraphRAG (if not already done)
+```bash
 python -m graphrag.index --init --root .
 ```
- 
-Create your `.env` file
+
+### 5. Setup Environment Variables
+Create a `.env` file with the following content:
 ```
-cp .env.example .env
+GRAPHRAG_API_KEY=ollama
+GRAPHRAG_LLM_MODEL=llama3.1-12k
+GRAPHRAG_EMBEDDING_MODEL=nomic-embed-text
+GRAPHRAG_LLM_API_BASE=http://localhost:11434/v1
+GRAPHRAG_EMBEDDING_API_BASE=http://localhost:11434/v1
 ```
- 
-Move your input text to `./input/`
- 
-Double check the parameters in `.env` and `settings.yaml`, make sure in `setting.yaml`,
-it should be "community_reports" instead of "community_report"
- 
-Then finetune the prompts (this is important, this will generate a much better result)
- 
-You can find more about how to tune prompts [here](https://microsoft.github.io/graphrag/posts/prompt_tuning/auto_prompt_tuning/)
-```
-python -m graphrag.prompt_tune --root . --domain "Christmas" --method random --limit 20 --language English --max-tokens 2048 --chunk-size 256  --no-entity-types --output ./prompts
-```
- 
-Then you can start the indexing
-```
+
+### 6. Add Input Data
+Move your input text files to `./input/` directory
+
+### 7. Verify Configuration
+- Check `settings.yaml` - ensure it uses "community_reports" (not "community_report")
+- Verify the file_pattern uses double dollar signs: `.*\\.txt$$`
+
+### 8. Run Indexing
+```bash
 python -m graphrag.index --root .
 ```
+
+The indexing process will:
+- Create text units from your input files
+- Extract entities and relationships
+- Generate community reports
+- Output artifacts to `./output/artifacts/`
+
+Check logs at `./output/reports/indexing-engine.log` for any errors.
  
-You can check the logs in `./output/<timestamp>/reports/indexing-engine.log` for errors
- 
-Test a global query
+### 9. Prepare Output for Gradio UI
+The Gradio UI expects timestamp-based folder structure. After indexing completes, create it:
+```bash
+TIMESTAMP=$(date +%Y%m%d-%H%M%S)
+mkdir -p "output/$TIMESTAMP/artifacts"
+cp output/artifacts/*.parquet "output/$TIMESTAMP/artifacts/"
 ```
+
+## Testing Queries (Command Line)
+ 
+Test a global query:
+```bash
 python -m graphrag.query \
 --root . \
 --method global \
 "What are the top themes in this story?"
 ```
  
-## Using the UI
+## Using the Gradio UI
  
-First, make sure requirements are installed
-```
+### 1. Install UI Requirements
+```bash
 pip install -r requirements.txt
 ```
  
-Then run the app using
-```
-gradio app.py
+### 2. Start the Application
+```bash
+conda activate rag
+cd /home/sijo/VeritasGraph/graphrag-ollama-config
+python app.py
 ```
  
-To use the app, visit http://127.0.0.1:7860/
+### 3. Access the Interface
+Open your browser and visit: http://127.0.0.1:7860/
+
+### 4. Using the UI
+1. Select the timestamp folder from the dropdown (e.g., `20251116-113611`)
+2. Choose query type: **Global Search** or **Local Search**
+3. Enter your question/prompt
+4. Click submit to get AI-generated responses
+
+## Recent Code Changes
+
+### Fixed Output Folder Detection
+**File**: `app.py`
+**Function**: `list_output_folders()`
+**Change**: Added filter to only show timestamp-based folders (starting with digits)
+```python
+folders = [f for f in os.listdir(output_dir) if os.path.isdir(join(output_dir, f)) and f[0].isdigit()]
+```
+**Reason**: Prevented non-data folders like `reports` and `artifacts` from appearing in the folder selection dropdown, which was causing FileNotFoundError when trying to load parquet files.
+
+### GraphRAG Version
+**Downgraded to v0.3.6** from v2.5.0 for compatibility with the existing Gradio UI (`app.py`), which was built for the older GraphRAG API structure.
+
+### Environment Configuration
+Added required environment variables to `.env`:
+- `GRAPHRAG_API_KEY=ollama`
+- `GRAPHRAG_LLM_MODEL=llama3.1-12k`
+- `GRAPHRAG_EMBEDDING_MODEL=nomic-embed-text`
+- `GRAPHRAG_LLM_API_BASE=http://localhost:11434/v1`
+- `GRAPHRAG_EMBEDDING_API_BASE=http://localhost:11434/v1`
+
+### Settings.yaml Fix
+Fixed regex pattern for file matching:
+- Changed from: `.*\\.txt$`
+- Changed to: `.*\\.txt$$` (escaped dollar sign to prevent YAML variable substitution)
+
+## Troubleshooting
+
+### Unicode Encoding Errors
+If you get `UnicodeDecodeError` in prompt files:
+```bash
+rm -rf prompts
+python -m graphrag.index --init --root .
+```
+
+### Port Already in Use
+If port 7860 is occupied:
+```bash
+pkill -f "python app.py"
+```
+
+### Missing Parquet Files
+Ensure indexing completed successfully and created a timestamp folder with artifacts:
+```bash
+ls -la output/*/artifacts/*.parquet
+```
  
