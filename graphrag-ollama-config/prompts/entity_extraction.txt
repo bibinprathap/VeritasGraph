@@ -1,15 +1,14 @@
 
 -Goal-
-Given a text document that is potentially relevant to this activity, first identify all entities needed from the text in order to capture the information and ideas in the text.
-Next, report all relationships among the identified entities.
-
+Given a text document that is potentially relevant to this activity and a list of entity types, identify all entities of those types from the text and all relationships among the identified entities.
+ 
 -Steps-
 1. Identify all entities. For each identified entity, extract the following information:
 - entity_name: Name of the entity, capitalized
-- entity_type: Suggest several labels or categories for the entity. The categories should not be specific, but should be as general as possible.
+- entity_type: One of the following types: [{entity_types}]
 - entity_description: Comprehensive description of the entity's attributes and activities
-Format each entity as ("entity"{tuple_delimiter}<entity_name>{tuple_delimiter}<entity_type>{tuple_delimiter}<entity_description>
-
+Format each entity as ("entity"{tuple_delimiter}<entity_name>{tuple_delimiter}<entity_type>{tuple_delimiter}<entity_description>)
+ 
 2. From the entities identified in step 1, identify all pairs of (source_entity, target_entity) that are *clearly related* to each other.
 For each pair of related entities, extract the following information:
 - source_entity: name of the source entity, as identified in step 1
@@ -17,85 +16,106 @@ For each pair of related entities, extract the following information:
 - relationship_description: explanation as to why you think the source entity and the target entity are related to each other
 - relationship_strength: a numeric score indicating strength of the relationship between the source entity and target entity
  Format each relationship as ("relationship"{tuple_delimiter}<source_entity>{tuple_delimiter}<target_entity>{tuple_delimiter}<relationship_description>{tuple_delimiter}<relationship_strength>)
-
-3. Return output in This text excerpt delves into the nature of risk in investing, drawing parallels between investor behavior and mountaineering. 
-
-Here's a breakdown of the key points:
-
-**Leveraged Investing & The Credit Crisis:**
-
-* The passage begins by illustrating how leveraged investing can amplify both gains and losses. During the credit crisis, investors who had borrowed heavily to buy bank loans suffered significant losses when loan prices plummeted.
-* This highlights the inherent risk in using leverage, as even seemingly safe investments can become highly volatile during market downturns.
-
-**Warren Buffett's Approach:**
-
-* The excerpt then introduces Warren Buffett's philosophy of investing, emphasizing patience and selectivity. 
-* He compares investing to baseball, where investors don't need to swing at every pitch but wait for the "perfect" opportunity. This analogy underscores the importance of discipline and avoiding impulsive decisions.
-
-**Nassim Taleb's "I Don't Know":**
-
-* The text introduces Nassim Taleb's concept of "alternative histories," which emphasizes the unpredictable nature of events and their impact on investment outcomes.
-* Taleb argues that investors often overestimate their ability to predict the future, leading them to make decisions based on incomplete information. His "I don't know" approach encourages humility and recognizing the inherent uncertainty in investing.
-
-**Risk Control & Moral Hazard:**
-
-* The passage criticizes the common belief that risk can be effectively controlled through sophisticated strategies and tools.
-* It draws a parallel between avalanche safety gear and financial risk management, suggesting that increased safety measures can lead to complacency and ultimately increase risk-taking behavior.
-
-
-**Overall Message:**
-
-The text argues that true risk management in investing involves recognizing the limitations of prediction, avoiding excessive leverage, and maintaining a disciplined approach based on patience and selectivity. It cautions against overconfidence in risk control strategies and emphasizes the importance of understanding the inherent uncertainty in financial markets. as a single list of all the entities and relationships identified in steps 1 and 2. Use **{record_delimiter}** as the list delimiter. If you have to translate, just translate the descriptions, nothing else!
-
+ 
+3. Return output in English as a single list of all the entities and relationships identified in steps 1 and 2. Use **{record_delimiter}** as the list delimiter.
+ 
 4. When finished, output {completion_delimiter}
-
+ 
+######################
 -Examples-
 ######################
-
 Example 1:
-
-text:
- who might be perfectly happy with their lot in isolation become miserable when they see others do better. In the world of investing, most people find it terribly hard to sit by and watch while others make more money than they do.
-
-I know of a nonprofit institution whose endowment earned 16 percent a year from June 1994 to June 1999, but since its peers averaged 23 percent, the people involved with the endowment were dejected. Without growth stocks, technology stocks, buyouts and venture capital, the endowment was entirely out of step for half a decade. But then the tech stocks collapsed, and from June 2000 to June 2003 the institution earned 3 percent a year while most endowments suffered losses. The stakeholders were thrilled.
-
-There’s something wrong with this picture. How can people be unhappy making 16 percent a year and happy making 3 percent? The answer lies in the tendency to compare ourselves to others and the deleterious impact this
-------------------------
-output:
-("entity"{tuple_delimiter}INVESTORS{tuple_delimiter}GROUP, PEOPLE{tuple_delimiter}Investors are individuals who put money into financial assets with the hope of making a profit)
+Entity_types: ORGANIZATION,PERSON
+Text:
+The Verdantis's Central Institution is scheduled to meet on Monday and Thursday, with the institution planning to release its latest policy decision on Thursday at 1:30 p.m. PDT, followed by a press conference where Central Institution Chair Martin Smith will take questions. Investors expect the Market Strategy Committee to hold its benchmark interest rate steady in a range of 3.5%-3.75%.
+######################
+Output:
+("entity"{tuple_delimiter}CENTRAL INSTITUTION{tuple_delimiter}ORGANIZATION{tuple_delimiter}The Central Institution is the Federal Reserve of Verdantis, which is setting interest rates on Monday and Thursday)
 {record_delimiter}
-("entity"{tuple_delimiter}ENDOWMENT{tuple_delimiter}FINANCIAL INSTRUMENT{tuple_delimiter}An endowment is a fund of money or property set aside for a specific purpose, often by a nonprofit institution)
+("entity"{tuple_delimiter}MARTIN SMITH{tuple_delimiter}PERSON{tuple_delimiter}Martin Smith is the chair of the Central Institution)
 {record_delimiter}
-("entity"{tuple_delimiter}GROWTH STOCKS{tuple_delimiter}ASSET CLASS{tuple_delimiter}Growth stocks are shares in companies expected to grow at an above-average rate)
+("entity"{tuple_delimiter}MARKET STRATEGY COMMITTEE{tuple_delimiter}ORGANIZATION{tuple_delimiter}The Central Institution committee makes key decisions about interest rates and the growth of Verdantis's money supply)
 {record_delimiter}
-("entity"{tuple_delimiter}TECHNOLOGY STOCKS{tuple_delimiter}ASSET CLASS{tuple_delimiter}Technology stocks are shares in companies operating in the technology sector)
+("relationship"{tuple_delimiter}MARTIN SMITH{tuple_delimiter}CENTRAL INSTITUTION{tuple_delimiter}Martin Smith is the Chair of the Central Institution and will answer questions at a press conference{tuple_delimiter}9)
+{completion_delimiter}
+
+######################
+Example 2:
+Entity_types: ORGANIZATION
+Text:
+TechGlobal's (TG) stock skyrocketed in its opening day on the Global Exchange Thursday. But IPO experts warn that the semiconductor corporation's debut on the public markets isn't indicative of how other newly listed companies may perform.
+
+TechGlobal, a formerly public company, was taken private by Vision Holdings in 2014. The well-established chip designer says it powers 85% of premium smartphones.
+######################
+Output:
+("entity"{tuple_delimiter}TECHGLOBAL{tuple_delimiter}ORGANIZATION{tuple_delimiter}TechGlobal is a stock now listed on the Global Exchange which powers 85% of premium smartphones)
 {record_delimiter}
-("entity"{tuple_delimiter}BUYOUTS{tuple_delimiter}INVESTMENT STRATEGY{tuple_delimiter}A buyout is a transaction where a company or asset is acquired by another entity, often using debt financing)
+("entity"{tuple_delimiter}VISION HOLDINGS{tuple_delimiter}ORGANIZATION{tuple_delimiter}Vision Holdings is a firm that previously owned TechGlobal)
 {record_delimiter}
-("entity"{tuple_delimiter}VENTURE CAPITAL{tuple_delimiter}INVESTMENT STRATEGY{tuple_delimiter}Venture capital is funding provided to startups and early-stage companies with high growth potential)
+("relationship"{tuple_delimiter}TECHGLOBAL{tuple_delimiter}VISION HOLDINGS{tuple_delimiter}Vision Holdings formerly owned TechGlobal from 2014 until present{tuple_delimiter}5)
+{completion_delimiter}
+
+######################
+Example 3:
+Entity_types: ORGANIZATION,GEO,PERSON
+Text:
+Five Aurelians jailed for 8 years in Firuzabad and widely regarded as hostages are on their way home to Aurelia.
+
+The swap orchestrated by Quintara was finalized when $8bn of Firuzi funds were transferred to financial institutions in Krohaara, the capital of Quintara.
+
+The exchange initiated in Firuzabad's capital, Tiruzia, led to the four men and one woman, who are also Firuzi nationals, boarding a chartered flight to Krohaara.
+
+They were welcomed by senior Aurelian officials and are now on their way to Aurelia's capital, Cashion.
+
+The Aurelians include 39-year-old businessman Samuel Namara, who has been held in Tiruzia's Alhamia Prison, as well as journalist Durke Bataglani, 59, and environmentalist Meggie Tazbah, 53, who also holds Bratinas nationality.
+######################
+Output:
+("entity"{tuple_delimiter}FIRUZABAD{tuple_delimiter}GEO{tuple_delimiter}Firuzabad held Aurelians as hostages)
 {record_delimiter}
-("relationship"{tuple_delimiter}INVESTORS{tuple_delimiter}ENDOWMENT{tuple_delimiter}Investors often contribute to endowments, which are managed by institutions for specific purposes{tuple_delimiter}7)
+("entity"{tuple_delimiter}AURELIA{tuple_delimiter}GEO{tuple_delimiter}Country seeking to release hostages)
 {record_delimiter}
-("relationship"{tuple_delimiter}ENDOWMENT{tuple_delimiter}GROWTH STOCKS{tuple_delimiter}Endowments may invest in growth stocks as part of their portfolio diversification strategy{tuple_delimiter}6)
+("entity"{tuple_delimiter}QUINTARA{tuple_delimiter}GEO{tuple_delimiter}Country that negotiated a swap of money in exchange for hostages)
 {record_delimiter}
-("relationship"{tuple_delimiter}ENDOWMENT{tuple_delimiter}TECHNOLOGY STOCKS{tuple_delimiter}Endowments may invest in technology stocks to capitalize on the potential for high returns in this sector{tuple_delimiter}6)
 {record_delimiter}
-("relationship"{tuple_delimiter}ENDOWMENT{tuple_delimiter}BUYOUTS{tuple_delimiter}Endowments may participate in buyouts as a way to acquire controlling stakes in companies with strong growth prospects{tuple_delimiter}6)
+("entity"{tuple_delimiter}TIRUZIA{tuple_delimiter}GEO{tuple_delimiter}Capital of Firuzabad where the Aurelians were being held)
 {record_delimiter}
-("relationship"{tuple_delimiter}ENDOWMENT{tuple_delimiter}VENTURE CAPITAL{tuple_delimiter}Endowments may allocate a portion of their assets to venture capital funds to invest in early-stage companies with high growth potential{tuple_delimiter}6)
+("entity"{tuple_delimiter}KROHAARA{tuple_delimiter}GEO{tuple_delimiter}Capital city in Quintara)
+{record_delimiter}
+("entity"{tuple_delimiter}CASHION{tuple_delimiter}GEO{tuple_delimiter}Capital city in Aurelia)
+{record_delimiter}
+("entity"{tuple_delimiter}SAMUEL NAMARA{tuple_delimiter}PERSON{tuple_delimiter}Aurelian who spent time in Tiruzia's Alhamia Prison)
+{record_delimiter}
+("entity"{tuple_delimiter}ALHAMIA PRISON{tuple_delimiter}GEO{tuple_delimiter}Prison in Tiruzia)
+{record_delimiter}
+("entity"{tuple_delimiter}DURKE BATAGLANI{tuple_delimiter}PERSON{tuple_delimiter}Aurelian journalist who was held hostage)
+{record_delimiter}
+("entity"{tuple_delimiter}MEGGIE TAZBAH{tuple_delimiter}PERSON{tuple_delimiter}Bratinas national and environmentalist who was held hostage)
+{record_delimiter}
+("relationship"{tuple_delimiter}FIRUZABAD{tuple_delimiter}AURELIA{tuple_delimiter}Firuzabad negotiated a hostage exchange with Aurelia{tuple_delimiter}2)
+{record_delimiter}
+("relationship"{tuple_delimiter}QUINTARA{tuple_delimiter}AURELIA{tuple_delimiter}Quintara brokered the hostage exchange between Firuzabad and Aurelia{tuple_delimiter}2)
+{record_delimiter}
+("relationship"{tuple_delimiter}QUINTARA{tuple_delimiter}FIRUZABAD{tuple_delimiter}Quintara brokered the hostage exchange between Firuzabad and Aurelia{tuple_delimiter}2)
+{record_delimiter}
+("relationship"{tuple_delimiter}SAMUEL NAMARA{tuple_delimiter}ALHAMIA PRISON{tuple_delimiter}Samuel Namara was a prisoner at Alhamia prison{tuple_delimiter}8)
+{record_delimiter}
+("relationship"{tuple_delimiter}SAMUEL NAMARA{tuple_delimiter}MEGGIE TAZBAH{tuple_delimiter}Samuel Namara and Meggie Tazbah were exchanged in the same hostage release{tuple_delimiter}2)
+{record_delimiter}
+("relationship"{tuple_delimiter}SAMUEL NAMARA{tuple_delimiter}DURKE BATAGLANI{tuple_delimiter}Samuel Namara and Durke Bataglani were exchanged in the same hostage release{tuple_delimiter}2)
+{record_delimiter}
+("relationship"{tuple_delimiter}MEGGIE TAZBAH{tuple_delimiter}DURKE BATAGLANI{tuple_delimiter}Meggie Tazbah and Durke Bataglani were exchanged in the same hostage release{tuple_delimiter}2)
+{record_delimiter}
+("relationship"{tuple_delimiter}SAMUEL NAMARA{tuple_delimiter}FIRUZABAD{tuple_delimiter}Samuel Namara was a hostage in Firuzabad{tuple_delimiter}2)
+{record_delimiter}
+("relationship"{tuple_delimiter}MEGGIE TAZBAH{tuple_delimiter}FIRUZABAD{tuple_delimiter}Meggie Tazbah was a hostage in Firuzabad{tuple_delimiter}2)
+{record_delimiter}
+("relationship"{tuple_delimiter}DURKE BATAGLANI{tuple_delimiter}FIRUZABAD{tuple_delimiter}Durke Bataglani was a hostage in Firuzabad{tuple_delimiter}2)
+{completion_delimiter}
 
-
-
-{completion_delimiter} 
-
-
-
-#############################
-
-
-
+######################
 -Real Data-
 ######################
-text: {input_text}
+Entity_types: {entity_types}
+Text: {input_text}
 ######################
-output:
+Output:

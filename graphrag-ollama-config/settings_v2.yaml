@@ -1,0 +1,102 @@
+### GraphRAG settings for Ollama ###
+
+models:
+  default_chat_model:
+    type: openai_chat
+    api_base: http://localhost:11434/v1
+    auth_type: api_key
+    api_key: ${GRAPHRAG_API_KEY}
+    model: llama3.1-12k
+    encoding_model: cl100k_base
+    model_supports_json: true
+    concurrent_requests: 1
+    async_mode: threaded
+    retry_strategy: native
+    max_retries: 5
+    max_tokens: 4000
+    tokens_per_minute: null
+    requests_per_minute: null
+    
+  default_embedding_model:
+    type: openai_embedding
+    api_base: http://localhost:11434/v1
+    auth_type: api_key
+    api_key: ${GRAPHRAG_API_KEY}
+    model: nomic-embed-text
+    encoding_model: cl100k_base
+    concurrent_requests: 1
+    async_mode: threaded
+    retry_strategy: native
+    max_retries: 5
+    tokens_per_minute: null
+    requests_per_minute: null
+
+parallelization:
+  stagger: 0.3
+
+input:
+  storage:
+    type: file
+    base_dir: "input"
+  file_type: text
+  encoding: utf-8
+  file_pattern: ".*\\.txt$$"
+
+chunks:
+  size: 300
+  overlap: 100
+  group_by_columns: [id]
+
+output:
+  type: file
+  base_dir: "output"
+
+cache:
+  type: file
+  base_dir: "cache"
+
+reporting:
+  type: file
+  base_dir: "logs"
+
+vector_store:
+  default_vector_store:
+    type: lancedb
+    db_uri: output/lancedb
+    container_name: default
+    overwrite: true
+
+entity_extraction:
+  prompt: "prompts/entity_extraction.txt"
+  entity_types: [organization, person, geo, event, concept]
+  max_gleanings: 0
+
+summarize_descriptions:
+  prompt: "prompts/summarize_descriptions.txt"
+  max_length: 500
+
+claim_extraction:
+  prompt: "prompts/claim_extraction.txt"
+  description: "Any claims or facts that could be relevant to information discovery."
+  max_gleanings: 0
+
+community_reports:
+  prompt: "prompts/community_report.txt"
+
+cluster_graph:
+  max_cluster_size: 10
+
+local_search:
+  text_unit_prop: 0.5
+  community_prop: 0.1
+  conversation_history_max_turns: 5
+  top_k_mapped_entities: 10
+  top_k_relationships: 10
+  max_tokens: 12000
+
+global_search:
+  max_tokens: 12000
+  data_max_tokens: 12000
+  map_max_tokens: 1000
+  reduce_max_tokens: 2000
+  concurrency: 32

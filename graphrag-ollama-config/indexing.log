@@ -1,0 +1,257 @@
+nohup: ignoring input
+Logging enabled at 
+/home/sijo/VeritasGraph/graphrag-ollama-config/output/reports/indexing-engine.lo
+g
+/home/sijo/anaconda3/envs/rag/lib/python3.11/site-packages/numpy/core/fromnumeric.py:59: FutureWarning: 'DataFrame.swapaxes' is deprecated and will be removed in a future version. Please use 'DataFrame.transpose' instead.
+  return bound(*args, **kwds)
+🚀 create_base_text_units
+                                  id  ... n_tokens
+0   9eca376cac0c4b6ee79fa26738a56b07  ...      300
+1   8e9d5e840f89820368661eccc3d50743  ...      300
+2   1025eb5f6946ac57eb3b3eb57cf04324  ...      300
+3   e5f6b2988fbff31fbd9777d5ac7762ea  ...      300
+4   5aed08966b65d772f62a02bd6e82e167  ...      300
+5   745073f0da31e19a01e168a7b93ec4f3  ...      300
+6   bdfb6e034569c28c5ff74e39ed60bddb  ...      300
+7   1bcf576c5aed9c22d47fca3e6923a818  ...      300
+8   7db466b97a04074fc13a855687df0314  ...      300
+9   12849681677838fe17c97333d4b5cc58  ...      300
+10  5af3be659b20b1960069c6abaa712b6b  ...      300
+11  dd3b8b3c8a1c3af0fbbe9a253c9b7275  ...      300
+12  fb5bd78140bff7aa8d0456f194217751  ...      300
+13  8684f12a0f1b783e80ff7d576e868c1b  ...      300
+14  c3f934bb0a5338f3217afa67be53e7c5  ...      300
+15  7c30977b0536d47571c8ae4d0ffd18ad  ...      300
+16  0bc399f3fb8dd3588e38d0ba2724a22a  ...      300
+17  07111196ef13e79c177cdfbde54a37b7  ...      300
+18  c70732badbcd3c287bbdfde64836937c  ...      300
+19  2ba5d46dee4dfd446efab36d0feabe7a  ...      300
+20  138bf110f14e5eb8726d4430f51bd439  ...      300
+21  f07f041813eb27902b9798ed3f342398  ...      300
+22  45880147a54a102e932753edad5447d7  ...      300
+23  44df388cc631f36936b8ad9cc6f1fffd  ...      235
+24  9e80675107107eb1795f96f382452b1a  ...       35
+
+[25 rows x 5 columns]
+🚀 create_base_extracted_entities
+                                        entity_graph
+0  <graphml xmlns="http://graphml.graphdrawing.or...
+🚀 create_summarized_entities
+                                        entity_graph
+0  <graphml xmlns="http://graphml.graphdrawing.or...
+🚀 create_base_entity_graph
+   level                                    clustered_graph
+0      0  <graphml xmlns="http://graphml.graphdrawing.or...
+1      1  <graphml xmlns="http://graphml.graphdrawing.or...
+/home/sijo/anaconda3/envs/rag/lib/python3.11/site-packages/numpy/core/fromnumeric.py:59: FutureWarning: 'DataFrame.swapaxes' is deprecated and will be removed in a future version. Please use 'DataFrame.transpose' instead.
+  return bound(*args, **kwds)
+/home/sijo/anaconda3/envs/rag/lib/python3.11/site-packages/numpy/core/fromnumeric.py:59: FutureWarning: 'DataFrame.swapaxes' is deprecated and will be removed in a future version. Please use 'DataFrame.transpose' instead.
+  return bound(*args, **kwds)
+🚀 create_final_entities
+                                  id  ...                              
+description_embedding
+0   28145367e1874e60b339c59f681871f6  ...  [-0.022606837, 0.0020585193, 
+-0.18585566, -0.0...
+1   261109ac246d4686b6b2edced648d1fc  ...  [-0.01640732, 0.013687039, 
+-0.22291468, -0.009...
+2   2efffe0a54da471fa9497e65e920fc61  ...  [0.006178015, 0.013436676, 
+-0.2077778, -0.0469...
+3   c6d79d1be71c417ba465c71866c6d60e  ...  [0.0021466282, 0.030397836, 
+-0.2051502, -0.011...
+4   11b10d162ac347efb7cf45096ed31ef7  ...  [-0.014309864, 0.022331603, 
+-0.19477275, -0.01...
+5   fa6929f3065c48f9932c152dd481a1b9  ...  [-0.0116644, 0.049792547, 
+-0.21782121, -0.0164...
+6   3484775df0fc4deda08c722e96e73433  ...  [-0.007690976, 0.030671086, 
+-0.19356614, -0.08...
+7   cbb9afcf776044e28ecc27ff0d072dee  ...  [0.003816925, 0.05802873, 
+-0.16895396, -0.0542...
+8   82df9f547ec246d5b441a83a7760dcdd  ...  [-0.044129938, 0.048169006, 
+-0.19995123, 0.000...
+9   af980db4c215494b9e3fb86a2028aa51  ...  [0.017419022, 0.060308658, 
+-0.18567574, -0.032...
+10  291b453646a744249b8435bde5ee4122  ...  [-0.016893037, 0.006041339, 
+-0.18812464, -0.01...
+11  eb42e8fb85b64a8f94ab31a080c6ee49  ...  [0.002383256, 0.07305447, 
+-0.21134545, -0.0241...
+12  1b730db7511b45d293a34054619613de  ...  [0.022084985, -0.002467255, 
+-0.17806743, -0.05...
+13  6aab8d4ceeca4684bc6baf82c050e370  ...  [-0.020309364, 0.03890847, 
+-0.18690883, -0.086...
+14  9d4ba79c832e45e4b29db4fb3fe3bad8  ...  [0.040717628, 0.014334471, -0.179809,
+-0.05288...
+15  d5bcd648fb4346a9a13795ba822f4df8  ...  [-0.056745753, -0.00067482085, 
+-0.22501746, -0...
+16  3e868a0671e5442d90543e20d50186ef  ...  [0.04433458, 0.04697259, -0.15724196,
+-0.01063...
+17  6c696c1da19c456ab18f670972df129d  ...  [-0.010680458, 0.03690052, 
+-0.17703308, -0.087...
+18  c1e60be71bd144e3a6291322c47982a1  ...  [0.04611047, 0.054710496, 
+-0.18573879, -0.0328...
+19  e3f21cdfe0e743cd842aa8699c5e2927  ...  [0.009997124, -0.008245282, 
+-0.15636177, -0.02...
+20  2efa2cdac760409bb0cdcbe8c01d005f  ...  [0.032529566, -0.016719425, 
+-0.19444071, -0.03...
+21  794b73e522834d6bbb36ebf1e7bcbc44  ...  [0.019697696, 0.012827469, 
+-0.1998693, -0.0504...
+22  7424395b1a8445b98cedd82d17db46c8  ...  [0.051235877, 0.04489657, 
+-0.18282884, -0.0332...
+23  9c1e5438b2ee4b3a8e48bc4679df5589  ...  [-0.007615634, 0.034188174, 
+-0.19534235, -0.03...
+24  33b90b11aa5e4ad589726df613da41bc  ...  [-0.03067437, 0.0772706, -0.19521293,
+-0.05620...
+25  b5b1526a40fa4181b05db6c1b401f1c9  ...  [-0.009717987, 0.03704973, 
+-0.19763817, -0.012...
+26  0fa378b247e24bfeba8538e364684aed  ...  [-0.004019389, 0.025613455, 
+-0.19000208, 0.011...
+27  22fc85ed40404231bb488abdb1c8d301  ...  [0.017757576, 0.059606038, 
+-0.19112337, -0.040...
+28  173297c22af44b5aa3dc666e4c8756fc  ...  [0.012703228, 0.028427329, 
+-0.17246132, -0.033...
+29  ba5af5d37ec94cba9f56d4f435376cda  ...  [-0.0042809974, 0.07940871, 
+-0.18417294, -0.03...
+30  2b0407ff7d6043ffbed58aee96e88e3e  ...  [0.018264653, 0.073341064, 
+-0.16066945, -0.033...
+31  23d98d8d4d4e4715993e4f730e9a31eb  ...  [0.00057970325, 0.026580023, 
+-0.18484545, -0.0...
+32  6d9dc80dde354063bf7a5019464a27a4  ...  [0.010994536, 0.019593617, 
+-0.1949226, -0.0627...
+
+[33 rows x 8 columns]
+/home/sijo/anaconda3/envs/rag/lib/python3.11/site-packages/numpy/core/fromnumeric.py:59: FutureWarning: 'DataFrame.swapaxes' is deprecated and will be removed in a future version. Please use 'DataFrame.transpose' instead.
+  return bound(*args, **kwds)
+/home/sijo/anaconda3/envs/rag/lib/python3.11/site-packages/datashaper/engine/verbs/convert.py:72: FutureWarning: errors='ignore' is deprecated and will raise in a future version. Use to_datetime without passing `errors` and catch exceptions explicitly instead
+  datetime_column = pd.to_datetime(column, errors="ignore")
+/home/sijo/anaconda3/envs/rag/lib/python3.11/site-packages/datashaper/engine/verbs/convert.py:72: UserWarning: Could not infer format, so each element will be parsed individually, falling back to `dateutil`. To ensure parsing is consistent and as-expected, please specify a format.
+  datetime_column = pd.to_datetime(column, errors="ignore")
+🚀 create_final_nodes
+    level                               title  ...  x  y
+0       0                   AGENT ALEX MERCER  ...  0  0
+1       0                         TAYLOR CRUZ  ...  0  0
+2       0                        JORDAN HAYES  ...  0  0
+3       0                          SAM RIVERA  ...  0  0
+4       0                    OPERATION: DULCE  ...  0  0
+..    ...                                 ...  ... .. ..
+61      1                           HUMANKIND  ...  0  0
+62      1                              DEVICE  ...  0  0
+63      1  CRUZ'S VISION OF CONTROL AND ORDER  ...  0  0
+64      1                   THE BRIEFING ROOM  ...  0  0
+65      1                        MASK OF DUTY  ...  0  0
+
+[66 rows x 14 columns]
+🚀 create_final_communities
+  id  ...                                      text_unit_ids
+0  0  ...  [07111196ef13e79c177cdfbde54a37b7,9eca376cac0c...
+1  1  ...  [1025eb5f6946ac57eb3b3eb57cf04324,128496816778...
+2  3  ...  [1025eb5f6946ac57eb3b3eb57cf04324,128496816778...
+3  2  ...  [745073f0da31e19a01e168a7b93ec4f3, 0bc399f3fb8...
+4  4  ...  [1025eb5f6946ac57eb3b3eb57cf04324,128496816778...
+5  5  ...  [138bf110f14e5eb8726d4430f51bd439,2ba5d46dee4d...
+
+[6 rows x 5 columns]
+🚀 create_final_relationships
+               source                     target  ...  target_degree rank
+0   AGENT ALEX MERCER               JORDAN HAYES  ...             12   16
+1   AGENT ALEX MERCER           OPERATION: DULCE  ...              6   10
+2   AGENT ALEX MERCER  PARANORMAL MILITARY SQUAD  ...              4    8
+3   AGENT ALEX MERCER           DR. JORDAN HAYES  ...              3    7
+4         TAYLOR CRUZ  PARANORMAL MILITARY SQUAD  ...              4   15
+..                ...                        ...  ...            ...  ...
+61             RIVERA                      DRONE  ...              2    7
+62             RIVERA                       TEAM  ...              3    8
+63           THE TEAM                 DULCE BASE  ...              4    5
+64                SAM                      DRONE  ...              2    7
+65                SAM                       TEAM  ...              3    8
+
+[66 rows x 10 columns]
+🚀 create_final_text_units
+                                  id  ...                                   
+relationship_ids
+0   9eca376cac0c4b6ee79fa26738a56b07  ...  [f5cd068084604d0b844301cd0c8e6d08, 
+236b1e3cf03...
+1   8e9d5e840f89820368661eccc3d50743  ...  [23f674cb9e714ac89afcceac988454b0, 
+8b6f91acdc8...
+2   1025eb5f6946ac57eb3b3eb57cf04324  ...  [23f674cb9e714ac89afcceac988454b0, 
+8b6f91acdc8...
+3   e5f6b2988fbff31fbd9777d5ac7762ea  ...  [23f674cb9e714ac89afcceac988454b0, 
+6ad4d7bb8aa...
+4   5aed08966b65d772f62a02bd6e82e167  ...  [80f04df544ab489091ef9e041dc772dc, 
+6ad4d7bb8aa...
+5   745073f0da31e19a01e168a7b93ec4f3  ...  [9e6e3d13c5e14b4c837cfb66df3f4393, 
+df9d7efb814...
+6   bdfb6e034569c28c5ff74e39ed60bddb  ...  [3c096d58841e4f7dba14801a36b86434, 
+ee17d3a220d...
+7   1bcf576c5aed9c22d47fca3e6923a818  ...  [3c096d58841e4f7dba14801a36b86434, 
+ee17d3a220d...
+8   7db466b97a04074fc13a855687df0314  ...  [5515604198fc4fad93f4c2f44cb6b4c4, 
+098a532dc24...
+9   12849681677838fe17c97333d4b5cc58  ...  [23f674cb9e714ac89afcceac988454b0, 
+8b6f91acdc8...
+10  5af3be659b20b1960069c6abaa712b6b  ...  [55860953d9f341a1998042a84a254063, 
+73530072047...
+11  dd3b8b3c8a1c3af0fbbe9a253c9b7275  ...  [55860953d9f341a1998042a84a254063, 
+964d15a78e2...
+12  fb5bd78140bff7aa8d0456f194217751  ...  [f39df9d4f2a5455599a130d0e448dd46, 
+b0732c520b8...
+13  8684f12a0f1b783e80ff7d576e868c1b  ...                                       
+None
+14  c3f934bb0a5338f3217afa67be53e7c5  ...  [8b6f91acdc814d819966c94e624d0442, 
+8da6b51b63a...
+15  7c30977b0536d47571c8ae4d0ffd18ad  ...  [55860953d9f341a1998042a84a254063, 
+83fa9401722...
+16  0bc399f3fb8dd3588e38d0ba2724a22a  ...  [3c2b8cb27a734f799ef10b3b91f44c28, 
+ec2a1605f99...
+17  07111196ef13e79c177cdfbde54a37b7  ...  [2e3f6cdb968a4b4d8ab8bed362049531, 
+b078f5248d1...
+18  c70732badbcd3c287bbdfde64836937c  ...  [b078f5248d1140628a352c325e14e640, 
+46a16f4008e...
+19  2ba5d46dee4dfd446efab36d0feabe7a  ...  [edba8afe88bc4375bc32b8d4cb91e4aa, 
+07e3e023374...
+20  138bf110f14e5eb8726d4430f51bd439  ...  [f39df9d4f2a5455599a130d0e448dd46, 
+b3934ded714...
+21  f07f041813eb27902b9798ed3f342398  ...  [3c096d58841e4f7dba14801a36b86434, 
+ee17d3a220d...
+22  45880147a54a102e932753edad5447d7  ...  [23f674cb9e714ac89afcceac988454b0, 
+c6512d622ec...
+23  44df388cc631f36936b8ad9cc6f1fffd  ...  [8b6f91acdc814d819966c94e624d0442, 
+6ad4d7bb8aa...
+24  9e80675107107eb1795f96f382452b1a  ...                 
+[175ada888bb84ed4a5115e85828f952b]
+
+[25 rows x 6 columns]
+🚀 create_final_community_reports
+  community  ...                                    id
+0         4  ...  9a261e3c-5882-40ac-89dc-6cfe3bedefc0
+1         5  ...  63f8d6bf-ea42-4db1-8341-43dcd181465b
+2         0  ...  4bb64e6b-d59d-4991-9762-6098ad9ec6f3
+3         1  ...  dda7be18-a189-4d7a-a4f7-5384bb349167
+4         2  ...  9342b69e-717d-4df3-88cc-41261a141eaa
+5         3  ...  cac39122-00d3-4f6c-958f-f05672032999
+
+[6 rows x 10 columns]
+/home/sijo/anaconda3/envs/rag/lib/python3.11/site-packages/datashaper/engine/verbs/convert.py:72: FutureWarning: errors='ignore' is deprecated and will raise in a future version. Use to_datetime without passing `errors` and catch exceptions explicitly instead
+  datetime_column = pd.to_datetime(column, errors="ignore")
+🚀 create_base_documents
+                                 id  ...      title
+0  307d7b002c4432c3519f9c9317191a57  ...  dulce.txt
+
+[1 rows x 4 columns]
+🚀 create_final_documents
+                                 id  ...      title
+0  307d7b002c4432c3519f9c9317191a57  ...  dulce.txt
+
+[1 rows x 4 columns]
+⠋ GraphRAG Indexer 
+├── Loading Input (InputFileType.text) - 1 files loaded (1 filtered) ━ 100% … 0…
+├── create_base_text_units
+├── create_base_extracted_entities
+├── create_summarized_entities
+├── create_base_entity_graph
+├── create_final_entities
+├── create_final_nodes
+├── create_final_communities
+├── create_final_relationships
+├── create_final_text_units
+├── create_final_community_reports
+├── create_base_documents
+└── create_final_documents🚀 All workflows completed successfully.

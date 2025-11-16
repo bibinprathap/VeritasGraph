@@ -1,0 +1,746 @@
+2025-11-16 10:30:10.0464 - INFO - graphrag.cli.index - Logging enabled at /home/sijo/VeritasGraph/graphrag-ollama-config/logs/logs.txt
+2025-11-16 10:30:24.0458 - ERROR - graphrag.language_model.providers.fnllm.utils - Error Invoking LLM
+Traceback (most recent call last):
+  File "/home/sijo/anaconda3/envs/rag/lib/python3.11/site-packages/fnllm/base/base_llm.py", line 144, in __call__
+    return await self._decorated_target(prompt, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/sijo/anaconda3/envs/rag/lib/python3.11/site-packages/fnllm/base/services/json.py", line 78, in invoke
+    return await delegate(prompt, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/sijo/anaconda3/envs/rag/lib/python3.11/site-packages/fnllm/base/services/rate_limiter.py", line 80, in invoke
+    await self._handle_post_request_limiting(result)
+  File "/home/sijo/anaconda3/envs/rag/lib/python3.11/site-packages/fnllm/base/services/rate_limiter.py", line 57, in _handle_post_request_limiting
+    async with self._limiter.use(manifest):
+  File "/home/sijo/anaconda3/envs/rag/lib/python3.11/site-packages/fnllm/limiting/base.py", line 32, in __aenter__
+    await self._limiter.acquire(self._manifest)
+  File "/home/sijo/anaconda3/envs/rag/lib/python3.11/site-packages/fnllm/limiting/composite.py", line 33, in acquire
+    await limiter.acquire(manifest)
+  File "/home/sijo/anaconda3/envs/rag/lib/python3.11/site-packages/fnllm/limiting/tpm.py", line 40, in acquire
+    await self._limiter.acquire(min(total_tokens, self._tokens_per_minute))
+  File "/home/sijo/anaconda3/envs/rag/lib/python3.11/site-packages/aiolimiter/leakybucket.py", line 151, in acquire
+    await fut
+asyncio.exceptions.CancelledError
+2025-11-16 10:31:07.0307 - INFO - graphrag.cli.index - Logging enabled at /home/sijo/VeritasGraph/graphrag-ollama-config/logs/logs.txt
+2025-11-16 10:31:07.0573 - INFO - graphrag.index.validate_config - LLM Config Params Validated
+2025-11-16 10:31:08.0575 - INFO - graphrag.index.validate_config - Embedding LLM Config Params Validated
+2025-11-16 10:31:08.0575 - INFO - graphrag.cli.index - Starting pipeline run. False
+2025-11-16 10:31:08.0575 - INFO - graphrag.cli.index - Using default configuration: {
+    "root_dir": "/home/sijo/VeritasGraph/graphrag-ollama-config",
+    "models": {
+        "default_chat_model": {
+            "api_key": "==== REDACTED ====",
+            "auth_type": "api_key",
+            "type": "openai_chat",
+            "model": "llama3.1-12k",
+            "encoding_model": "cl100k_base",
+            "api_base": "http://localhost:11434/v1",
+            "api_version": null,
+            "deployment_name": null,
+            "proxy": null,
+            "audience": null,
+            "model_supports_json": true,
+            "request_timeout": 180.0,
+            "tokens_per_minute": null,
+            "requests_per_minute": null,
+            "retry_strategy": "native",
+            "max_retries": 5,
+            "max_retry_wait": 10.0,
+            "concurrent_requests": 1,
+            "async_mode": "threaded",
+            "responses": null,
+            "max_tokens": 4000,
+            "temperature": 0,
+            "max_completion_tokens": null,
+            "reasoning_effort": null,
+            "top_p": 1,
+            "n": 1,
+            "frequency_penalty": 0.0,
+            "presence_penalty": 0.0
+        },
+        "default_embedding_model": {
+            "api_key": "==== REDACTED ====",
+            "auth_type": "api_key",
+            "type": "openai_embedding",
+            "model": "nomic-embed-text",
+            "encoding_model": "cl100k_base",
+            "api_base": "http://localhost:11434/v1",
+            "api_version": null,
+            "deployment_name": null,
+            "proxy": null,
+            "audience": null,
+            "model_supports_json": null,
+            "request_timeout": 180.0,
+            "tokens_per_minute": null,
+            "requests_per_minute": null,
+            "retry_strategy": "native",
+            "max_retries": 5,
+            "max_retry_wait": 10.0,
+            "concurrent_requests": 1,
+            "async_mode": "threaded",
+            "responses": null,
+            "max_tokens": null,
+            "temperature": 0,
+            "max_completion_tokens": null,
+            "reasoning_effort": null,
+            "top_p": 1,
+            "n": 1,
+            "frequency_penalty": 0.0,
+            "presence_penalty": 0.0
+        }
+    },
+    "input": {
+        "storage": {
+            "type": "file",
+            "base_dir": "/home/sijo/VeritasGraph/graphrag-ollama-config/input",
+            "storage_account_blob_url": null,
+            "cosmosdb_account_url": null
+        },
+        "file_type": "text",
+        "encoding": "utf-8",
+        "file_pattern": ".*\\.txt$",
+        "file_filter": null,
+        "text_column": "text",
+        "title_column": null,
+        "metadata": null
+    },
+    "chunks": {
+        "size": 300,
+        "overlap": 100,
+        "group_by_columns": [
+            "id"
+        ],
+        "strategy": "tokens",
+        "encoding_model": "cl100k_base",
+        "prepend_metadata": false,
+        "chunk_size_includes_metadata": false
+    },
+    "output": {
+        "type": "file",
+        "base_dir": "/home/sijo/VeritasGraph/graphrag-ollama-config/output",
+        "storage_account_blob_url": null,
+        "cosmosdb_account_url": null
+    },
+    "outputs": null,
+    "update_index_output": {
+        "type": "file",
+        "base_dir": "/home/sijo/VeritasGraph/graphrag-ollama-config/update_output",
+        "storage_account_blob_url": null,
+        "cosmosdb_account_url": null
+    },
+    "cache": {
+        "type": "file",
+        "base_dir": "cache",
+        "storage_account_blob_url": null,
+        "cosmosdb_account_url": null
+    },
+    "reporting": {
+        "type": "file",
+        "base_dir": "/home/sijo/VeritasGraph/graphrag-ollama-config/logs",
+        "storage_account_blob_url": null
+    },
+    "vector_store": {
+        "default_vector_store": {
+            "type": "lancedb",
+            "db_uri": "/home/sijo/VeritasGraph/graphrag-ollama-config/output/lancedb",
+            "url": null,
+            "audience": null,
+            "container_name": "==== REDACTED ====",
+            "database_name": null,
+            "overwrite": true
+        }
+    },
+    "workflows": null,
+    "embed_text": {
+        "model_id": "default_embedding_model",
+        "vector_store_id": "default_vector_store",
+        "batch_size": 16,
+        "batch_max_tokens": 8191,
+        "names": [
+            "entity.description",
+            "community.full_content",
+            "text_unit.text"
+        ],
+        "strategy": null
+    },
+    "extract_graph": {
+        "model_id": "default_chat_model",
+        "prompt": null,
+        "entity_types": [
+            "organization",
+            "person",
+            "geo",
+            "event"
+        ],
+        "max_gleanings": 1,
+        "strategy": null
+    },
+    "summarize_descriptions": {
+        "model_id": "default_chat_model",
+        "prompt": "prompts/summarize_descriptions.txt",
+        "max_length": 500,
+        "max_input_tokens": 4000,
+        "strategy": null
+    },
+    "extract_graph_nlp": {
+        "normalize_edge_weights": true,
+        "text_analyzer": {
+            "extractor_type": "regex_english",
+            "model_name": "en_core_web_md",
+            "max_word_length": 15,
+            "word_delimiter": " ",
+            "include_named_entities": true,
+            "exclude_nouns": [
+                "stuff",
+                "thing",
+                "things",
+                "bunch",
+                "bit",
+                "bits",
+                "people",
+                "person",
+                "okay",
+                "hey",
+                "hi",
+                "hello",
+                "laughter",
+                "oh"
+            ],
+            "exclude_entity_tags": [
+                "DATE"
+            ],
+            "exclude_pos_tags": [
+                "DET",
+                "PRON",
+                "INTJ",
+                "X"
+            ],
+            "noun_phrase_tags": [
+                "PROPN",
+                "NOUNS"
+            ],
+            "noun_phrase_grammars": {
+                "PROPN,PROPN": "PROPN",
+                "NOUN,NOUN": "NOUNS",
+                "NOUNS,NOUN": "NOUNS",
+                "ADJ,ADJ": "ADJ",
+                "ADJ,NOUN": "NOUNS"
+            }
+        },
+        "concurrent_requests": 25
+    },
+    "prune_graph": {
+        "min_node_freq": 2,
+        "max_node_freq_std": null,
+        "min_node_degree": 1,
+        "max_node_degree_std": null,
+        "min_edge_weight_pct": 40.0,
+        "remove_ego_nodes": true,
+        "lcc_only": false
+    },
+    "cluster_graph": {
+        "max_cluster_size": 10,
+        "use_lcc": true,
+        "seed": 3735928559
+    },
+    "extract_claims": {
+        "enabled": false,
+        "model_id": "default_chat_model",
+        "prompt": null,
+        "description": "Any claims or facts that could be relevant to information discovery.",
+        "max_gleanings": 1,
+        "strategy": null
+    },
+    "community_reports": {
+        "model_id": "default_chat_model",
+        "graph_prompt": null,
+        "text_prompt": null,
+        "max_length": 2000,
+        "max_input_length": 8000,
+        "strategy": null
+    },
+    "embed_graph": {
+        "enabled": false,
+        "dimensions": 1536,
+        "num_walks": 10,
+        "walk_length": 40,
+        "window_size": 2,
+        "iterations": 3,
+        "random_seed": 597832,
+        "use_lcc": true
+    },
+    "umap": {
+        "enabled": false
+    },
+    "snapshots": {
+        "embeddings": false,
+        "graphml": false,
+        "raw_graph": false
+    },
+    "local_search": {
+        "prompt": null,
+        "chat_model_id": "default_chat_model",
+        "embedding_model_id": "default_embedding_model",
+        "text_unit_prop": 0.5,
+        "community_prop": 0.1,
+        "conversation_history_max_turns": 5,
+        "top_k_entities": 10,
+        "top_k_relationships": 10,
+        "max_context_tokens": 12000
+    },
+    "global_search": {
+        "map_prompt": null,
+        "reduce_prompt": null,
+        "chat_model_id": "default_chat_model",
+        "knowledge_prompt": null,
+        "max_context_tokens": 12000,
+        "data_max_tokens": 12000,
+        "map_max_length": 1000,
+        "reduce_max_length": 2000,
+        "dynamic_search_threshold": 1,
+        "dynamic_search_keep_parent": false,
+        "dynamic_search_num_repeats": 1,
+        "dynamic_search_use_summary": false,
+        "dynamic_search_max_level": 2
+    },
+    "drift_search": {
+        "prompt": null,
+        "reduce_prompt": null,
+        "chat_model_id": "default_chat_model",
+        "embedding_model_id": "default_embedding_model",
+        "data_max_tokens": 12000,
+        "reduce_max_tokens": null,
+        "reduce_temperature": 0,
+        "reduce_max_completion_tokens": null,
+        "concurrency": 32,
+        "drift_k_followups": 20,
+        "primer_folds": 5,
+        "primer_llm_max_tokens": 12000,
+        "n_depth": 3,
+        "local_search_text_unit_prop": 0.9,
+        "local_search_community_prop": 0.1,
+        "local_search_top_k_mapped_entities": 10,
+        "local_search_top_k_relationships": 10,
+        "local_search_max_data_tokens": 12000,
+        "local_search_temperature": 0,
+        "local_search_top_p": 1,
+        "local_search_n": 1,
+        "local_search_llm_max_gen_tokens": null,
+        "local_search_llm_max_gen_completion_tokens": null
+    },
+    "basic_search": {
+        "prompt": null,
+        "chat_model_id": "default_chat_model",
+        "embedding_model_id": "default_embedding_model",
+        "k": 10,
+        "max_context_tokens": 12000
+    }
+}
+2025-11-16 10:31:08.0576 - INFO - graphrag.api.index - Initializing indexing pipeline...
+2025-11-16 10:31:08.0576 - INFO - graphrag.index.workflows.factory - Creating pipeline with workflows: ['load_input_documents', 'create_base_text_units', 'create_final_documents', 'extract_graph', 'finalize_graph', 'extract_covariates', 'create_communities', 'create_final_text_units', 'create_community_reports', 'generate_text_embeddings']
+2025-11-16 10:31:08.0576 - INFO - graphrag.storage.file_pipeline_storage - Creating file storage at /home/sijo/VeritasGraph/graphrag-ollama-config/input
+2025-11-16 10:31:08.0576 - INFO - graphrag.storage.file_pipeline_storage - Creating file storage at /home/sijo/VeritasGraph/graphrag-ollama-config/output
+2025-11-16 10:31:08.0576 - INFO - graphrag.index.run.run_pipeline - Running standard indexing.
+2025-11-16 10:31:08.0577 - INFO - graphrag.index.run.run_pipeline - Executing pipeline...
+2025-11-16 10:31:08.0577 - INFO - graphrag.index.input.factory - loading input from root_dir=/home/sijo/VeritasGraph/graphrag-ollama-config/input
+2025-11-16 10:31:08.0577 - INFO - graphrag.index.input.factory - Loading Input InputFileType.text
+2025-11-16 10:31:08.0577 - INFO - graphrag.storage.file_pipeline_storage - search /home/sijo/VeritasGraph/graphrag-ollama-config/input for files matching .*\.txt$
+2025-11-16 10:31:08.0579 - INFO - graphrag.index.input.util - Found 1 InputFileType.text files, loading 1
+2025-11-16 10:31:08.0579 - INFO - graphrag.index.input.util - Total number of unfiltered InputFileType.text rows: 1
+2025-11-16 10:31:08.0579 - INFO - graphrag.index.workflows.load_input_documents - Final # of rows loaded: 1
+2025-11-16 10:31:08.0598 - INFO - graphrag.api.index - Workflow load_input_documents completed successfully
+2025-11-16 10:31:08.0603 - INFO - graphrag.index.workflows.create_base_text_units - Workflow started: create_base_text_units
+2025-11-16 10:31:08.0603 - INFO - graphrag.utils.storage - reading table from storage: documents.parquet
+2025-11-16 10:31:08.0612 - INFO - graphrag.index.workflows.create_base_text_units - Starting chunking process for 1 documents
+2025-11-16 10:31:08.0617 - INFO - graphrag.index.workflows.create_base_text_units - chunker progress:  1/1
+2025-11-16 10:31:08.0624 - INFO - graphrag.index.workflows.create_base_text_units - Workflow completed: create_base_text_units
+2025-11-16 10:31:08.0624 - INFO - graphrag.api.index - Workflow create_base_text_units completed successfully
+2025-11-16 10:31:08.0626 - INFO - graphrag.index.workflows.create_final_documents - Workflow started: create_final_documents
+2025-11-16 10:31:08.0626 - INFO - graphrag.utils.storage - reading table from storage: documents.parquet
+2025-11-16 10:31:08.0628 - INFO - graphrag.utils.storage - reading table from storage: text_units.parquet
+2025-11-16 10:31:08.0634 - INFO - graphrag.index.workflows.create_final_documents - Workflow completed: create_final_documents
+2025-11-16 10:31:08.0634 - INFO - graphrag.api.index - Workflow create_final_documents completed successfully
+2025-11-16 10:31:08.0636 - INFO - graphrag.index.workflows.extract_graph - Workflow started: extract_graph
+2025-11-16 10:31:08.0636 - INFO - graphrag.utils.storage - reading table from storage: text_units.parquet
+2025-11-16 10:31:19.0970 - INFO - graphrag.logger.progress - extract graph progress: 1/24
+2025-11-16 10:31:32.0493 - INFO - graphrag.logger.progress - extract graph progress: 2/24
+2025-11-16 10:31:44.0776 - INFO - graphrag.logger.progress - extract graph progress: 3/24
+2025-11-16 10:31:56.0010 - INFO - graphrag.logger.progress - extract graph progress: 4/24
+2025-11-16 10:32:02.0868 - INFO - graphrag.logger.progress - extract graph progress: 5/24
+2025-11-16 10:32:12.0332 - INFO - graphrag.logger.progress - extract graph progress: 6/24
+2025-11-16 10:32:17.0833 - INFO - graphrag.logger.progress - extract graph progress: 7/24
+2025-11-16 10:32:26.0074 - INFO - graphrag.logger.progress - extract graph progress: 8/24
+2025-11-16 10:32:38.0795 - INFO - graphrag.logger.progress - extract graph progress: 9/24
+2025-11-16 10:32:52.0023 - INFO - graphrag.logger.progress - extract graph progress: 10/24
+2025-11-16 10:33:07.0890 - INFO - graphrag.logger.progress - extract graph progress: 11/24
+2025-11-16 10:33:16.0032 - INFO - graphrag.logger.progress - extract graph progress: 12/24
+2025-11-16 10:33:29.0529 - INFO - graphrag.logger.progress - extract graph progress: 13/24
+2025-11-16 10:33:36.0242 - INFO - graphrag.logger.progress - extract graph progress: 14/24
+2025-11-16 10:33:47.0520 - INFO - graphrag.logger.progress - extract graph progress: 15/24
+2025-11-16 10:34:00.0026 - INFO - graphrag.logger.progress - extract graph progress: 16/24
+2025-11-16 10:34:10.0876 - INFO - graphrag.logger.progress - extract graph progress: 17/24
+2025-11-16 10:34:19.0865 - INFO - graphrag.logger.progress - extract graph progress: 18/24
+2025-11-16 10:35:04.0169 - INFO - graphrag.logger.progress - extract graph progress: 19/24
+2025-11-16 10:37:15.0705 - INFO - graphrag.cli.index - Logging enabled at /home/sijo/VeritasGraph/graphrag-ollama-config/logs/logs.txt
+2025-11-16 10:37:15.0925 - INFO - graphrag.index.validate_config - LLM Config Params Validated
+2025-11-16 10:37:16.0650 - INFO - graphrag.index.validate_config - Embedding LLM Config Params Validated
+2025-11-16 10:37:16.0650 - INFO - graphrag.cli.index - Starting pipeline run. False
+2025-11-16 10:37:16.0650 - INFO - graphrag.cli.index - Using default configuration: {
+    "root_dir": "/home/sijo/VeritasGraph/graphrag-ollama-config",
+    "models": {
+        "default_chat_model": {
+            "api_key": "==== REDACTED ====",
+            "auth_type": "api_key",
+            "type": "openai_chat",
+            "model": "llama3.1-12k",
+            "encoding_model": "cl100k_base",
+            "api_base": "http://localhost:11434/v1",
+            "api_version": null,
+            "deployment_name": null,
+            "proxy": null,
+            "audience": null,
+            "model_supports_json": true,
+            "request_timeout": 180.0,
+            "tokens_per_minute": null,
+            "requests_per_minute": null,
+            "retry_strategy": "native",
+            "max_retries": 5,
+            "max_retry_wait": 10.0,
+            "concurrent_requests": 1,
+            "async_mode": "threaded",
+            "responses": null,
+            "max_tokens": 4000,
+            "temperature": 0,
+            "max_completion_tokens": null,
+            "reasoning_effort": null,
+            "top_p": 1,
+            "n": 1,
+            "frequency_penalty": 0.0,
+            "presence_penalty": 0.0
+        },
+        "default_embedding_model": {
+            "api_key": "==== REDACTED ====",
+            "auth_type": "api_key",
+            "type": "openai_embedding",
+            "model": "nomic-embed-text",
+            "encoding_model": "cl100k_base",
+            "api_base": "http://localhost:11434/v1",
+            "api_version": null,
+            "deployment_name": null,
+            "proxy": null,
+            "audience": null,
+            "model_supports_json": null,
+            "request_timeout": 180.0,
+            "tokens_per_minute": null,
+            "requests_per_minute": null,
+            "retry_strategy": "native",
+            "max_retries": 5,
+            "max_retry_wait": 10.0,
+            "concurrent_requests": 1,
+            "async_mode": "threaded",
+            "responses": null,
+            "max_tokens": null,
+            "temperature": 0,
+            "max_completion_tokens": null,
+            "reasoning_effort": null,
+            "top_p": 1,
+            "n": 1,
+            "frequency_penalty": 0.0,
+            "presence_penalty": 0.0
+        }
+    },
+    "input": {
+        "storage": {
+            "type": "file",
+            "base_dir": "/home/sijo/VeritasGraph/graphrag-ollama-config/input",
+            "storage_account_blob_url": null,
+            "cosmosdb_account_url": null
+        },
+        "file_type": "text",
+        "encoding": "utf-8",
+        "file_pattern": ".*\\.txt$",
+        "file_filter": null,
+        "text_column": "text",
+        "title_column": null,
+        "metadata": null
+    },
+    "chunks": {
+        "size": 300,
+        "overlap": 100,
+        "group_by_columns": [
+            "id"
+        ],
+        "strategy": "tokens",
+        "encoding_model": "cl100k_base",
+        "prepend_metadata": false,
+        "chunk_size_includes_metadata": false
+    },
+    "output": {
+        "type": "file",
+        "base_dir": "/home/sijo/VeritasGraph/graphrag-ollama-config/output",
+        "storage_account_blob_url": null,
+        "cosmosdb_account_url": null
+    },
+    "outputs": null,
+    "update_index_output": {
+        "type": "file",
+        "base_dir": "/home/sijo/VeritasGraph/graphrag-ollama-config/update_output",
+        "storage_account_blob_url": null,
+        "cosmosdb_account_url": null
+    },
+    "cache": {
+        "type": "file",
+        "base_dir": "cache",
+        "storage_account_blob_url": null,
+        "cosmosdb_account_url": null
+    },
+    "reporting": {
+        "type": "file",
+        "base_dir": "/home/sijo/VeritasGraph/graphrag-ollama-config/logs",
+        "storage_account_blob_url": null
+    },
+    "vector_store": {
+        "default_vector_store": {
+            "type": "lancedb",
+            "db_uri": "/home/sijo/VeritasGraph/graphrag-ollama-config/output/lancedb",
+            "url": null,
+            "audience": null,
+            "container_name": "==== REDACTED ====",
+            "database_name": null,
+            "overwrite": true
+        }
+    },
+    "workflows": null,
+    "embed_text": {
+        "model_id": "default_embedding_model",
+        "vector_store_id": "default_vector_store",
+        "batch_size": 16,
+        "batch_max_tokens": 8191,
+        "names": [
+            "entity.description",
+            "community.full_content",
+            "text_unit.text"
+        ],
+        "strategy": null
+    },
+    "extract_graph": {
+        "model_id": "default_chat_model",
+        "prompt": null,
+        "entity_types": [
+            "organization",
+            "person",
+            "geo",
+            "event"
+        ],
+        "max_gleanings": 1,
+        "strategy": null
+    },
+    "summarize_descriptions": {
+        "model_id": "default_chat_model",
+        "prompt": "prompts/summarize_descriptions.txt",
+        "max_length": 500,
+        "max_input_tokens": 4000,
+        "strategy": null
+    },
+    "extract_graph_nlp": {
+        "normalize_edge_weights": true,
+        "text_analyzer": {
+            "extractor_type": "regex_english",
+            "model_name": "en_core_web_md",
+            "max_word_length": 15,
+            "word_delimiter": " ",
+            "include_named_entities": true,
+            "exclude_nouns": [
+                "stuff",
+                "thing",
+                "things",
+                "bunch",
+                "bit",
+                "bits",
+                "people",
+                "person",
+                "okay",
+                "hey",
+                "hi",
+                "hello",
+                "laughter",
+                "oh"
+            ],
+            "exclude_entity_tags": [
+                "DATE"
+            ],
+            "exclude_pos_tags": [
+                "DET",
+                "PRON",
+                "INTJ",
+                "X"
+            ],
+            "noun_phrase_tags": [
+                "PROPN",
+                "NOUNS"
+            ],
+            "noun_phrase_grammars": {
+                "PROPN,PROPN": "PROPN",
+                "NOUN,NOUN": "NOUNS",
+                "NOUNS,NOUN": "NOUNS",
+                "ADJ,ADJ": "ADJ",
+                "ADJ,NOUN": "NOUNS"
+            }
+        },
+        "concurrent_requests": 25
+    },
+    "prune_graph": {
+        "min_node_freq": 2,
+        "max_node_freq_std": null,
+        "min_node_degree": 1,
+        "max_node_degree_std": null,
+        "min_edge_weight_pct": 40.0,
+        "remove_ego_nodes": true,
+        "lcc_only": false
+    },
+    "cluster_graph": {
+        "max_cluster_size": 10,
+        "use_lcc": true,
+        "seed": 3735928559
+    },
+    "extract_claims": {
+        "enabled": false,
+        "model_id": "default_chat_model",
+        "prompt": null,
+        "description": "Any claims or facts that could be relevant to information discovery.",
+        "max_gleanings": 1,
+        "strategy": null
+    },
+    "community_reports": {
+        "model_id": "default_chat_model",
+        "graph_prompt": null,
+        "text_prompt": null,
+        "max_length": 2000,
+        "max_input_length": 8000,
+        "strategy": null
+    },
+    "embed_graph": {
+        "enabled": false,
+        "dimensions": 1536,
+        "num_walks": 10,
+        "walk_length": 40,
+        "window_size": 2,
+        "iterations": 3,
+        "random_seed": 597832,
+        "use_lcc": true
+    },
+    "umap": {
+        "enabled": false
+    },
+    "snapshots": {
+        "embeddings": false,
+        "graphml": false,
+        "raw_graph": false
+    },
+    "local_search": {
+        "prompt": null,
+        "chat_model_id": "default_chat_model",
+        "embedding_model_id": "default_embedding_model",
+        "text_unit_prop": 0.5,
+        "community_prop": 0.1,
+        "conversation_history_max_turns": 5,
+        "top_k_entities": 10,
+        "top_k_relationships": 10,
+        "max_context_tokens": 12000
+    },
+    "global_search": {
+        "map_prompt": null,
+        "reduce_prompt": null,
+        "chat_model_id": "default_chat_model",
+        "knowledge_prompt": null,
+        "max_context_tokens": 12000,
+        "data_max_tokens": 12000,
+        "map_max_length": 1000,
+        "reduce_max_length": 2000,
+        "dynamic_search_threshold": 1,
+        "dynamic_search_keep_parent": false,
+        "dynamic_search_num_repeats": 1,
+        "dynamic_search_use_summary": false,
+        "dynamic_search_max_level": 2
+    },
+    "drift_search": {
+        "prompt": null,
+        "reduce_prompt": null,
+        "chat_model_id": "default_chat_model",
+        "embedding_model_id": "default_embedding_model",
+        "data_max_tokens": 12000,
+        "reduce_max_tokens": null,
+        "reduce_temperature": 0,
+        "reduce_max_completion_tokens": null,
+        "concurrency": 32,
+        "drift_k_followups": 20,
+        "primer_folds": 5,
+        "primer_llm_max_tokens": 12000,
+        "n_depth": 3,
+        "local_search_text_unit_prop": 0.9,
+        "local_search_community_prop": 0.1,
+        "local_search_top_k_mapped_entities": 10,
+        "local_search_top_k_relationships": 10,
+        "local_search_max_data_tokens": 12000,
+        "local_search_temperature": 0,
+        "local_search_top_p": 1,
+        "local_search_n": 1,
+        "local_search_llm_max_gen_tokens": null,
+        "local_search_llm_max_gen_completion_tokens": null
+    },
+    "basic_search": {
+        "prompt": null,
+        "chat_model_id": "default_chat_model",
+        "embedding_model_id": "default_embedding_model",
+        "k": 10,
+        "max_context_tokens": 12000
+    }
+}
+2025-11-16 10:37:16.0651 - INFO - graphrag.api.index - Initializing indexing pipeline...
+2025-11-16 10:37:16.0651 - INFO - graphrag.index.workflows.factory - Creating pipeline with workflows: ['load_input_documents', 'create_base_text_units', 'create_final_documents', 'extract_graph', 'finalize_graph', 'extract_covariates', 'create_communities', 'create_final_text_units', 'create_community_reports', 'generate_text_embeddings']
+2025-11-16 10:37:16.0651 - INFO - graphrag.storage.file_pipeline_storage - Creating file storage at /home/sijo/VeritasGraph/graphrag-ollama-config/input
+2025-11-16 10:37:16.0651 - INFO - graphrag.storage.file_pipeline_storage - Creating file storage at /home/sijo/VeritasGraph/graphrag-ollama-config/output
+2025-11-16 10:37:16.0652 - INFO - graphrag.index.run.run_pipeline - Running standard indexing.
+2025-11-16 10:37:16.0652 - INFO - graphrag.index.run.run_pipeline - Executing pipeline...
+2025-11-16 10:37:16.0652 - INFO - graphrag.index.input.factory - loading input from root_dir=/home/sijo/VeritasGraph/graphrag-ollama-config/input
+2025-11-16 10:37:16.0652 - INFO - graphrag.index.input.factory - Loading Input InputFileType.text
+2025-11-16 10:37:16.0652 - INFO - graphrag.storage.file_pipeline_storage - search /home/sijo/VeritasGraph/graphrag-ollama-config/input for files matching .*\.txt$
+2025-11-16 10:37:16.0653 - INFO - graphrag.index.input.util - Found 1 InputFileType.text files, loading 1
+2025-11-16 10:37:16.0654 - INFO - graphrag.index.input.util - Total number of unfiltered InputFileType.text rows: 1
+2025-11-16 10:37:16.0654 - INFO - graphrag.index.workflows.load_input_documents - Final # of rows loaded: 1
+2025-11-16 10:37:16.0659 - INFO - graphrag.api.index - Workflow load_input_documents completed successfully
+2025-11-16 10:37:16.0662 - INFO - graphrag.index.workflows.create_base_text_units - Workflow started: create_base_text_units
+2025-11-16 10:37:16.0662 - INFO - graphrag.utils.storage - reading table from storage: documents.parquet
+2025-11-16 10:37:16.0668 - INFO - graphrag.index.workflows.create_base_text_units - Starting chunking process for 1 documents
+2025-11-16 10:37:16.0672 - INFO - graphrag.index.workflows.create_base_text_units - chunker progress:  1/1
+2025-11-16 10:37:16.0675 - INFO - graphrag.index.workflows.create_base_text_units - Workflow completed: create_base_text_units
+2025-11-16 10:37:16.0675 - INFO - graphrag.api.index - Workflow create_base_text_units completed successfully
+2025-11-16 10:37:16.0678 - INFO - graphrag.index.workflows.create_final_documents - Workflow started: create_final_documents
+2025-11-16 10:37:16.0678 - INFO - graphrag.utils.storage - reading table from storage: documents.parquet
+2025-11-16 10:37:16.0679 - INFO - graphrag.utils.storage - reading table from storage: text_units.parquet
+2025-11-16 10:37:16.0686 - INFO - graphrag.index.workflows.create_final_documents - Workflow completed: create_final_documents
+2025-11-16 10:37:16.0687 - INFO - graphrag.api.index - Workflow create_final_documents completed successfully
+2025-11-16 10:37:16.0689 - INFO - graphrag.index.workflows.extract_graph - Workflow started: extract_graph
+2025-11-16 10:37:16.0689 - INFO - graphrag.utils.storage - reading table from storage: text_units.parquet
+2025-11-16 10:37:17.0456 - INFO - graphrag.logger.progress - extract graph progress: 1/24
+2025-11-16 10:37:17.0457 - INFO - graphrag.logger.progress - extract graph progress: 2/24
+2025-11-16 10:37:17.0459 - INFO - graphrag.logger.progress - extract graph progress: 3/24
+2025-11-16 10:37:17.0460 - INFO - graphrag.logger.progress - extract graph progress: 4/24
+2025-11-16 10:37:17.0460 - INFO - graphrag.logger.progress - extract graph progress: 5/24
+2025-11-16 10:37:17.0461 - INFO - graphrag.logger.progress - extract graph progress: 6/24
+2025-11-16 10:37:17.0462 - INFO - graphrag.logger.progress - extract graph progress: 7/24
+2025-11-16 10:37:17.0463 - INFO - graphrag.logger.progress - extract graph progress: 8/24
+2025-11-16 10:37:17.0465 - INFO - graphrag.logger.progress - extract graph progress: 9/24
+2025-11-16 10:37:17.0465 - INFO - graphrag.logger.progress - extract graph progress: 10/24
+2025-11-16 10:37:17.0467 - INFO - graphrag.logger.progress - extract graph progress: 11/24
+2025-11-16 10:37:17.0467 - INFO - graphrag.logger.progress - extract graph progress: 12/24
+2025-11-16 10:37:17.0468 - INFO - graphrag.logger.progress - extract graph progress: 13/24
+2025-11-16 10:37:17.0469 - INFO - graphrag.logger.progress - extract graph progress: 14/24
+2025-11-16 10:37:17.0470 - INFO - graphrag.logger.progress - extract graph progress: 15/24
+2025-11-16 10:37:17.0471 - INFO - graphrag.logger.progress - extract graph progress: 16/24
+2025-11-16 10:37:17.0472 - INFO - graphrag.logger.progress - extract graph progress: 17/24
+2025-11-16 10:37:17.0474 - INFO - graphrag.logger.progress - extract graph progress: 18/24
+2025-11-16 10:37:17.0476 - INFO - graphrag.logger.progress - extract graph progress: 19/24
+2025-11-16 10:37:17.0478 - INFO - graphrag.logger.progress - extract graph progress: 20/24
+2025-11-16 10:37:33.0823 - INFO - graphrag.logger.progress - extract graph progress: 21/24
+2025-11-16 10:37:42.0143 - INFO - graphrag.logger.progress - extract graph progress: 22/24
+2025-11-16 11:46:16.0324 - INFO - graphrag.logger.progress - extract graph progress: 20/24

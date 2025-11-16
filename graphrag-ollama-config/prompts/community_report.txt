@@ -1,104 +1,52 @@
 
-You are an expert **behavioral finance analyst**. You are skilled at **identifying cognitive biases** and **analyzing investor behavior**. You are adept at helping people understand the psychological factors that influence investment decisions and develop more rational strategies for managing risk. 
-
-
-
+You are an AI assistant that helps a human analyst to perform general information discovery. Information discovery is the process of identifying and assessing relevant information associated with certain entities (e.g., organizations and individuals) within a network.
 
 # Goal
-Write a comprehensive assessment report of a community taking on the role of a This text appears to be an excerpt from a book or article discussing investment strategies and the nature of risk, particularly in the context of financial crises. 
-
-Here's a breakdown of the key themes and ideas presented:
-
-* **Leverage and its dangers:** The passage begins by highlighting how leverage (borrowing money to invest) can amplify both returns and losses. During the credit crisis, leveraged investors suffered heavily because loan prices plummeted and liquidity dried up.
-* **Warren Buffett's approach to investing:**  The author contrasts this risky behavior with Warren Buffett's philosophy of patiently waiting for "great pitches" (investment opportunities) rather than constantly chasing quick gains. Buffett emphasizes the importance of understanding a company before investing and avoiding impulsive decisions.
-* **Nassim Taleb's concept of "alternative histories":** The author introduces Nassim Taleb's idea that randomness plays a significant role in investment outcomes.  Taleb argues that investors should consider various possible scenarios ("alternative histories") rather than relying on a single, predictable future.
-* **The illusion of risk control:** The passage concludes by debunking the notion that risk can be completely eliminated through sophisticated strategies or technology. It argues that investor behavior ultimately determines the level of risk in the market.
-
-**Overall, the text seems to advocate for a cautious and disciplined approach to investing, emphasizing the importance of understanding risk, avoiding leverage, and patiently waiting for truly valuable opportunities.**
-
-
-Let me know if you have any other questions about this passage!. The content of this report includes an overview of the community's key entities and relationships.
+Write a comprehensive report of a community, given a list of entities that belong to the community as well as their relationships and optional associated claims. The report will be used to inform decision-makers about information associated with the community and their potential impact. The content of this report includes an overview of the community's key entities, their legal compliance, technical capabilities, reputation, and noteworthy claims.
 
 # Report Structure
+
 The report should include the following sections:
+
 - TITLE: community's name that represents its key entities - title should be short but specific. When possible, include representative named entities in the title.
-- SUMMARY: An executive summary of the community's overall structure, how its entities are related to each other, and significant points associated with its entities.
-- REPORT RATING: This text excerpt delves into the complexities of investing and risk management, drawing upon insights from Warren Buffett and Nassim Taleb. 
-
-Here's a breakdown of the key points and criteria highlighted:
-
-**1. The Illusion of Control:**
-
-* **Leveraged Investing:**  The passage illustrates how investors can be lured into believing they have control over risk through leverage (borrowing to amplify returns). However, when markets turn, leverage magnifies losses as well.
-* **"I Know" vs. "I Don't Know":** Taleb's concept of "alternative histories" emphasizes the unpredictable nature of events and how our understanding of a single future can be flawed.  Investors who believe they have complete knowledge (the "I know" school) are often caught off guard by unforeseen circumstances.
-
-**2. Buffett's Approach:**
-
-* **Patience and Selectivity:** Buffett advocates for a patient approach to investing, waiting for truly exceptional opportunities rather than chasing every deal. He compares it to baseball, where you only swing at pitches you like.
-* **Value Investing:** The excerpt hints at Buffett's preference for undervalued assets, suggesting that when "everyone" dismisses something as complex or lacking merit, there might be hidden value.
-
-**3. Risk Management Fallacies:**
-
-* **False Sense of Security:**  The passage criticizes the belief that risk can be completely eliminated through sophisticated strategies like hedging and derivatives. It argues that these tools often create a false sense of security, leading to more reckless behavior.
-* **Moral Hazard:** The avalanche expert analogy highlights how improved safety measures can sometimes encourage people to take greater risks, ultimately increasing danger.
-
-**4. Importance Criteria:**
-
-Based on the excerpt, here are some key criteria for successful investing:
-
-* **Humility:** Recognizing the limits of our knowledge and accepting that randomness plays a significant role in outcomes.
-* **Patience:**  Waiting for truly compelling opportunities rather than rushing into investments.
-* **Value Orientation:** Seeking out undervalued assets that others may overlook.
-* **Prudence:** Avoiding excessive risk-taking and understanding that no strategy can completely eliminate risk.
-
-
-
-Let me know if you have any other questions or would like to explore specific aspects of the text in more detail!
-- RATING EXPLANATION: Give a single sentence explanation of the rating.
+- SUMMARY: An executive summary of the community's overall structure, how its entities are related to each other, and significant information associated with its entities.
+- IMPACT SEVERITY RATING: a float score between 0-10 that represents the severity of IMPACT posed by entities within the community.  IMPACT is the scored importance of a community.
+- RATING EXPLANATION: Give a single sentence explanation of the IMPACT severity rating.
 - DETAILED FINDINGS: A list of 5-10 key insights about the community. Each insight should have a short summary followed by multiple paragraphs of explanatory text grounded according to the grounding rules below. Be comprehensive.
 
-Return output as a well-formed JSON-formatted string with the following format. Don't use any unnecessary escape sequences. The output should be a single JSON object that can be parsed by json.loads.
-    {
-        "title": "<report_title>",
-        "summary": "<executive_summary>",
-        "rating": <threat_severity_rating>,
-        "rating_explanation": "<rating_explanation>"
-        "findings": "[{"summary":"<insight_1_summary>", "explanation": "<insight_1_explanation"}, {"summary":"<insight_2_summary>", "explanation": "<insight_2_explanation"}]"
-    }
+Return output as a well-formed JSON-formatted string with the following format:
+    {{
+        "title": <report_title>,
+        "summary": <executive_summary>,
+        "rating": <impact_severity_rating>,
+        "rating_explanation": <rating_explanation>,
+        "findings": [
+            {{
+                "summary":<insight_1_summary>,
+                "explanation": <insight_1_explanation>
+            }},
+            {{
+                "summary":<insight_2_summary>,
+                "explanation": <insight_2_explanation>
+            }}
+        ]
+    }}
 
 # Grounding Rules
-After each paragraph, add data record reference if the content of the paragraph was derived from one or more data records. Reference is in the format of [records: <record_source> (<record_id_list>, ...<record_source> (<record_id_list>)]. If there are more than 10 data records, show the top 10 most relevant records.
-Each paragraph should contain multiple sentences of explanation and concrete examples with specific named entities. All paragraphs must have these references at the start and end. Use "NONE" if there are no related roles or records. Everything should be in This text excerpt delves into the nature of risk in investing, drawing parallels between investor behavior and mountaineering. 
 
-Here's a breakdown of the key points:
+Points supported by data should list their data references as follows:
 
-**Leveraged Investing & The Credit Crisis:**
+"This is an example sentence supported by multiple data references [Data: <dataset name> (record ids); <dataset name> (record ids)]."
 
-* The passage begins by illustrating how leveraged investing can amplify both gains and losses. During the credit crisis, investors who had borrowed heavily to buy bank loans suffered significant losses when loan prices plummeted.
-* This highlights the inherent risk in using leverage, as even seemingly safe investments can become highly volatile during market downturns.
+Do not list more than 5 record ids in a single reference. Instead, list the top 5 most relevant record ids and add "+more" to indicate that there are more.
 
-**Warren Buffett's Approach:**
+For example:
+"Person X is the owner of Company Y and subject to many allegations of wrongdoing [Data: Reports (1), Entities (5, 7); Relationships (23); Claims (7, 2, 34, 64, 46, +more)]."
 
-* The excerpt then introduces Warren Buffett's philosophy of investing, emphasizing patience and selectivity. 
-* He compares investing to baseball, where investors don't need to swing at every pitch but wait for the "perfect" opportunity. This analogy underscores the importance of discipline and avoiding impulsive decisions.
+where 1, 5, 7, 23, 2, 34, 46, and 64 represent the id (not the index) of the relevant data record.
 
-**Nassim Taleb's "I Don't Know":**
+Do not include information where the supporting evidence for it is not provided.
 
-* The text introduces Nassim Taleb's concept of "alternative histories," which emphasizes the unpredictable nature of events and their impact on investment outcomes.
-* Taleb argues that investors often overestimate their ability to predict the future, leading them to make decisions based on incomplete information. His "I don't know" approach encourages humility and recognizing the inherent uncertainty in investing.
-
-**Risk Control & Moral Hazard:**
-
-* The passage criticizes the common belief that risk can be effectively controlled through sophisticated strategies and tools.
-* It draws a parallel between avalanche safety gear and financial risk management, suggesting that increased safety measures can lead to complacency and ultimately increase risk-taking behavior.
-
-
-**Overall Message:**
-
-The text argues that true risk management in investing involves recognizing the limitations of prediction, avoiding excessive leverage, and maintaining a disciplined approach based on patience and selectivity. It cautions against overconfidence in risk control strategies and emphasizes the importance of understanding the inherent uncertainty in financial markets..
-
-Example paragraph with references added:
-This is a paragraph of the output text [records: Entities (1, 2, 3), Claims (2, 5), Relationships (10, 12)]
 
 # Example Input
 -----------
@@ -107,51 +55,45 @@ Text:
 Entities
 
 id,entity,description
-5,ABILA CITY PARK,Abila City Park is the location of the POK rally
+5,VERDANT OASIS PLAZA,Verdant Oasis Plaza is the location of the Unity March
+6,HARMONY ASSEMBLY,Harmony Assembly is an organization that is holding a march at Verdant Oasis Plaza
 
 Relationships
 
 id,source,target,description
-37,ABILA CITY PARK,POK RALLY,Abila City Park is the location of the POK rally
-38,ABILA CITY PARK,POK,POK is holding a rally in Abila City Park
-39,ABILA CITY PARK,POKRALLY,The POKRally is taking place at Abila City Park
-40,ABILA CITY PARK,CENTRAL BULLETIN,Central Bulletin is reporting on the POK rally taking place in Abila City Park
+37,VERDANT OASIS PLAZA,UNITY MARCH,Verdant Oasis Plaza is the location of the Unity March
+38,VERDANT OASIS PLAZA,HARMONY ASSEMBLY,Harmony Assembly is holding a march at Verdant Oasis Plaza
+39,VERDANT OASIS PLAZA,UNITY MARCH,The Unity March is taking place at Verdant Oasis Plaza
+40,VERDANT OASIS PLAZA,TRIBUNE SPOTLIGHT,Tribune Spotlight is reporting on the Unity march taking place at Verdant Oasis Plaza
+41,VERDANT OASIS PLAZA,BAILEY ASADI,Bailey Asadi is speaking at Verdant Oasis Plaza about the march
+43,HARMONY ASSEMBLY,UNITY MARCH,Harmony Assembly is organizing the Unity March
 
 Output:
-{
-    "title": "Abila City Park and POK Rally",
-    "summary": "The community revolves around the Abila City Park, which is the location of the POK rally. The park has relationships with POK, POKRALLY, and Central Bulletin, all
-of which are associated with the rally event.",
+{{
+    "title": "Verdant Oasis Plaza and Unity March",
+    "summary": "The community revolves around the Verdant Oasis Plaza, which is the location of the Unity March. The plaza has relationships with the Harmony Assembly, Unity March, and Tribune Spotlight, all of which are associated with the march event.",
     "rating": 5.0,
-    "rating_explanation": "The impact rating is moderate due to the potential for unrest or conflict during the POK rally.",
+    "rating_explanation": "The impact severity rating is moderate due to the potential for unrest or conflict during the Unity March.",
     "findings": [
-        {
-            "summary": "Abila City Park as the central location",
-            "explanation": "Abila City Park is the central entity in this community, serving as the location for the POK rally. This park is the common link between all other
-entities, suggesting its significance in the community. The park's association with the rally could potentially lead to issues such as public disorder or conflict, depending on the
-nature of the rally and the reactions it provokes. [records: Entities (5), Relationships (37, 38, 39, 40)]"
-        },
-        {
-            "summary": "POK's role in the community",
-            "explanation": "POK is another key entity in this community, being the organizer of the rally at Abila City Park. The nature of POK and its rally could be a potential
-source of threat, depending on their objectives and the reactions they provoke. The relationship between POK and the park is crucial in understanding the dynamics of this community.
-[records: Relationships (38)]"
-        },
-        {
-            "summary": "POKRALLY as a significant event",
-            "explanation": "The POKRALLY is a significant event taking place at Abila City Park. This event is a key factor in the community's dynamics and could be a potential
-source of threat, depending on the nature of the rally and the reactions it provokes. The relationship between the rally and the park is crucial in understanding the dynamics of this
-community. [records: Relationships (39)]"
-        },
-        {
-            "summary": "Role of Central Bulletin",
-            "explanation": "Central Bulletin is reporting on the POK rally taking place in Abila City Park. This suggests that the event has attracted media attention, which could
-amplify its impact on the community. The role of Central Bulletin could be significant in shaping public perception of the event and the entities involved. [records: Relationships
-(40)]"
-        }
+        {{
+            "summary": "Verdant Oasis Plaza as the central location",
+            "explanation": "Verdant Oasis Plaza is the central entity in this community, serving as the location for the Unity March. This plaza is the common link between all other entities, suggesting its significance in the community. The plaza's association with the march could potentially lead to issues such as public disorder or conflict, depending on the nature of the march and the reactions it provokes. [Data: Entities (5), Relationships (37, 38, 39, 40, 41,+more)]"
+        }},
+        {{
+            "summary": "Harmony Assembly's role in the community",
+            "explanation": "Harmony Assembly is another key entity in this community, being the organizer of the march at Verdant Oasis Plaza. The nature of Harmony Assembly and its march could be a potential source of threat, depending on their objectives and the reactions they provoke. The relationship between Harmony Assembly and the plaza is crucial in understanding the dynamics of this community. [Data: Entities(6), Relationships (38, 43)]"
+        }},
+        {{
+            "summary": "Unity March as a significant event",
+            "explanation": "The Unity March is a significant event taking place at Verdant Oasis Plaza. This event is a key factor in the community's dynamics and could be a potential source of threat, depending on the nature of the march and the reactions it provokes. The relationship between the march and the plaza is crucial in understanding the dynamics of this community. [Data: Relationships (39)]"
+        }},
+        {{
+            "summary": "Role of Tribune Spotlight",
+            "explanation": "Tribune Spotlight is reporting on the Unity March taking place in Verdant Oasis Plaza. This suggests that the event has attracted media attention, which could amplify its impact on the community. The role of Tribune Spotlight could be significant in shaping public perception of the event and the entities involved. [Data: Relationships (40)]"
+        }}
     ]
+}}
 
-}
 
 # Real Data
 
@@ -159,4 +101,46 @@ Use the following text for your answer. Do not make anything up in your answer.
 
 Text:
 {input_text}
+
+The report should include the following sections:
+
+- TITLE: community's name that represents its key entities - title should be short but specific. When possible, include representative named entities in the title.
+- SUMMARY: An executive summary of the community's overall structure, how its entities are related to each other, and significant information associated with its entities.
+- IMPACT SEVERITY RATING: a float score between 0-10 that represents the severity of IMPACT posed by entities within the community.  IMPACT is the scored importance of a community.
+- RATING EXPLANATION: Give a single sentence explanation of the IMPACT severity rating.
+- DETAILED FINDINGS: A list of 5-10 key insights about the community. Each insight should have a short summary followed by multiple paragraphs of explanatory text grounded according to the grounding rules below. Be comprehensive.
+
+Return output as a well-formed JSON-formatted string with the following format:
+    {{
+        "title": <report_title>,
+        "summary": <executive_summary>,
+        "rating": <impact_severity_rating>,
+        "rating_explanation": <rating_explanation>,
+        "findings": [
+            {{
+                "summary":<insight_1_summary>,
+                "explanation": <insight_1_explanation>
+            }},
+            {{
+                "summary":<insight_2_summary>,
+                "explanation": <insight_2_explanation>
+            }}
+        ]
+    }}
+
+# Grounding Rules
+
+Points supported by data should list their data references as follows:
+
+"This is an example sentence supported by multiple data references [Data: <dataset name> (record ids); <dataset name> (record ids)]."
+
+Do not list more than 5 record ids in a single reference. Instead, list the top 5 most relevant record ids and add "+more" to indicate that there are more.
+
+For example:
+"Person X is the owner of Company Y and subject to many allegations of wrongdoing [Data: Reports (1), Entities (5, 7); Relationships (23); Claims (7, 2, 34, 64, 46, +more)]."
+
+where 1, 5, 7, 23, 2, 34, 46, and 64 represent the id (not the index) of the relevant data record.
+
+Do not include information where the supporting evidence for it is not provided.
+
 Output:

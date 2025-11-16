@@ -319,7 +319,7 @@ async def chat_graphrag(
 
 def list_output_folders(root_dir):
     output_dir = join(root_dir, "output")
-    folders = [f for f in os.listdir(output_dir) if os.path.isdir(join(output_dir, f))]
+    folders = [f for f in os.listdir(output_dir) if os.path.isdir(join(output_dir, f)) and f[0].isdigit()]
     return sorted(folders, reverse=True)
 
 def create_gradio_interface():
