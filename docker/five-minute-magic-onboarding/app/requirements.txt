@@ -1,0 +1,5 @@
+Flask==2.1.1
+neo4j==4.4.6
+requests==2.26.0
+ollama==0.1.0
+gunicorn==20.1.0

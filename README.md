@@ -64,6 +64,24 @@ The following diagram illustrates the end-to-end pipeline of the VeritasGraph sy
 ```
  
 ---
+## Five-Minute Magic Onboarding (Docker)
+
+Clone the repo and run a full VeritasGraph stack (Ollama + Neo4j + Gradio app) with one command:
+
+1. Update `docker/five-minute-magic-onboarding/.env` with your Neo4j password (defaults for the rest).
+2. From the same folder run:
+    ```bash
+    cd docker/five-minute-magic-onboarding
+    docker compose up --build
+    ```
+3. Services exposed:
+    - Gradio UI: http://127.0.0.1:7860/
+    - Neo4j Browser: http://localhost:7474/
+    - Ollama API: http://localhost:11434/
+
+See `docker/five-minute-magic-onboarding/README.md` for deeper details.
+
+---
 # Guide to build graphrag with local LLM
  
 ![image](assets/UI.png)

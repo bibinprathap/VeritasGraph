@@ -1,0 +1,6 @@
+model: "llama3.1"
+context_length: 12288
+embedding_model: "nomic-embed-text"
+output_dir: "./output"
+cache_dir: "./cache"
+log_level: "info"
