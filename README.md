@@ -25,6 +25,8 @@ Baseline RAG systems excel at finding direct answers but falter when faced with 
 
 **[📄 Research Paper](VeritasGraph%20-%20A%20Sovereign%20GraphRAG%20Framework%20for%20Enterprise-Grade%20AI%20with%20Verifiable%20Attribution.pdf)**
 
+**[🔬 Veritas-Scope: Visual RAG Reasoning](veritas-scope/README.md)** ⭐ NEW!
+
  
 ---
 ## Why VeritasGraph?
@@ -38,10 +40,46 @@ Every generated claim is **traced back** to its source document, guaranteeing tr
 ### ✅ Advanced Graph Reasoning
 Answer **complex, multi-hop questions** that go beyond the capabilities of traditional vector search engines.
 
+### ✅ Visual Reasoning Trace (NEW!)
+**Veritas-Scope**: Interactive UI that shows the "brain" of the system working - watch multi-hop reasoning unfold in real-time with full source attribution.
+
 ### ✅ Open-Source & Sovereign
 Build a **sovereign knowledge asset**, free from vendor lock-in, with full ownership and customization.
 
 ## 🚀 Demo  
+
+### 🔬 Veritas-Scope: Visual RAG Reasoning (NEW!)
+
+**See the "Brain" of VeritasGraph Working in Real-Time**
+
+Instead of just trusting a black box, Veritas-Scope shows you exactly how multi-hop reasoning works:
+
+```
+┌────────────────────────────────────────────────────────────────────┐
+│  [Query] ──────► [Vector Search] ──────► [Entity A]                │
+│                                              │                      │
+│                                              ▼                      │
+│                   [Entity B] ◄───────── [Relationship]             │
+│                       │                                             │
+│                       ▼                                             │
+│                 [Source Text] ──────────► [ANSWER]                 │
+│                                                                     │
+│  ✓ Click any node to see source text                               │
+│  ✓ Animated reasoning path                                         │
+│  ✓ Step-by-step playback controls                                  │
+└────────────────────────────────────────────────────────────────────┘
+```
+
+**Quick Start:**
+```bash
+cd veritas-scope
+docker compose up --build
+# Visit http://localhost:3000
+```
+
+[📖 Full Documentation](veritas-scope/README.md)
+
+---
 
 ### Video Walkthrough  
 A brief video demonstrating the core functionality of VeritasGraph, from data ingestion to multi-hop querying with full source attribution.  
@@ -296,13 +334,13 @@ This stands in contrast to reliance on opaque, proprietary, cloud-based APIs, em
 
 **Planned future enhancements include:**
 
+- ~~Visualization UI – A web interface for graph exploration and attribution path inspection.~~ ✅ **DONE: Veritas-Scope**
+
 - Expanded Database Support – Integration with more graph databases and vector stores.
 
-- Advanced Graph Analytics – Community detection and summarization for holistic dataset insights (inspired by Microsoft’s GraphRAG).
+- Advanced Graph Analytics – Community detection and summarization for holistic dataset insights (inspired by Microsoft's GraphRAG).
 
 - Agentic Framework – Multi-step reasoning tasks, breaking down complex queries into sub-queries.
-
-- Visualization UI – A web interface for graph exploration and attribution path inspection.
 
 ## 🏆 Awards & Recognition
 

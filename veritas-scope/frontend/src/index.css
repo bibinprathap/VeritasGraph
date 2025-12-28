@@ -1,0 +1,139 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --veritas-primary: #4ECDC4;
+  --veritas-secondary: #45B7D1;
+  --veritas-accent: #FF6B6B;
+  --veritas-dark: #1a1a2e;
+  --veritas-darker: #16162a;
+}
+
+html, body, #root {
+  height: 100%;
+  overflow: hidden;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(78, 205, 196, 0.4);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(78, 205, 196, 0.6);
+}
+
+/* Force graph container */
+.force-graph-container canvas {
+  border-radius: 8px;
+}
+
+/* Glow effects */
+.glow-effect {
+  box-shadow: 0 0 20px rgba(78, 205, 196, 0.3);
+}
+
+.glow-effect-strong {
+  box-shadow: 0 0 30px rgba(78, 205, 196, 0.5);
+}
+
+/* Node animations */
+@keyframes nodeAppear {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes linkDraw {
+  0% {
+    stroke-dashoffset: 100%;
+  }
+  100% {
+    stroke-dashoffset: 0%;
+  }
+}
+
+@keyframes pulseGlow {
+  0%, 100% {
+    filter: drop-shadow(0 0 5px currentColor);
+  }
+  50% {
+    filter: drop-shadow(0 0 15px currentColor);
+  }
+}
+
+.animate-node-appear {
+  animation: nodeAppear 0.5s ease-out forwards;
+}
+
+.animate-link-draw {
+  animation: linkDraw 1s ease-out forwards;
+  stroke-dasharray: 100%;
+}
+
+.animate-pulse-glow {
+  animation: pulseGlow 2s ease-in-out infinite;
+}
+
+/* Loading animation */
+.loading-dots span {
+  animation: blink 1.4s infinite both;
+}
+
+.loading-dots span:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.loading-dots span:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes blink {
+  0%, 80%, 100% {
+    opacity: 0;
+  }
+  40% {
+    opacity: 1;
+  }
+}
+
+/* Reasoning step animation */
+.reasoning-step {
+  opacity: 0;
+  transform: translateX(-20px);
+  animation: slideIn 0.3s ease-out forwards;
+}
+
+@keyframes slideIn {
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Source document highlight */
+.source-highlight {
+  background: linear-gradient(120deg, rgba(78, 205, 196, 0.2) 0%, rgba(78, 205, 196, 0.1) 100%);
+  border-left: 3px solid var(--veritas-primary);
+  padding-left: 12px;
+}

@@ -1,0 +1,29 @@
+# Veritas-Scope Backend Dockerfile
+FROM python:3.11-slim
+
+WORKDIR /app
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    gcc \
+    g++ \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy requirements
+COPY backend/requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy GraphRAG dependencies
+COPY graphrag-ollama-config/graphrag-ollama /app/graphrag-ollama
+RUN pip install -e /app/graphrag-ollama
+
+# Copy backend code
+COPY backend/api /app/api
+COPY graphrag-ollama-config/output /app/output
+COPY graphrag-ollama-config/.env /app/.env
+
+# Expose port
+EXPOSE 8000
+
+# Run the API
+CMD ["uvicorn", "api.main:app", "--host", "0.0.0.0", "--port", "8000"]

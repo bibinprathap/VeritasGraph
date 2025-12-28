@@ -1,0 +1,86 @@
+# Veritas-Scope Docker Compose
+# Interactive Reasoning Trace UI for VeritasGraph
+
+version: '3.8'
+
+services:
+  # Frontend - React UI with graph visualization
+  frontend:
+    build:
+      context: ..
+      dockerfile: veritas-scope/Dockerfile.frontend
+    container_name: veritas-scope-ui
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+    networks:
+      - veritas-network
+    restart: unless-stopped
+
+  # Backend - FastAPI with reasoning trace endpoints
+  backend:
+    build:
+      context: ..
+      dockerfile: veritas-scope/Dockerfile.backend
+    container_name: veritas-scope-api
+    ports:
+      - "8000:8000"
+    environment:
+      - GRAPHRAG_API_KEY=${GRAPHRAG_API_KEY:-ollama}
+      - GRAPHRAG_LLM_MODEL=${GRAPHRAG_LLM_MODEL:-llama3.1-12k}
+      - GRAPHRAG_EMBEDDING_MODEL=${GRAPHRAG_EMBEDDING_MODEL:-nomic-embed-text}
+      - GRAPHRAG_LLM_API_BASE=${GRAPHRAG_LLM_API_BASE:-http://ollama:11434/v1}
+      - GRAPHRAG_EMBEDDING_API_BASE=${GRAPHRAG_EMBEDDING_API_BASE:-http://ollama:11434/v1}
+    volumes:
+      - ../graphrag-ollama-config/output:/app/output:ro
+    depends_on:
+      - ollama
+    networks:
+      - veritas-network
+    restart: unless-stopped
+
+  # Ollama - Local LLM server
+  ollama:
+    image: ollama/ollama:latest
+    container_name: veritas-ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+    networks:
+      - veritas-network
+    restart: unless-stopped
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+
+  # Neo4j - Graph database (optional, for future features)
+  neo4j:
+    image: neo4j:5.15.0
+    container_name: veritas-neo4j
+    ports:
+      - "7474:7474"  # Browser
+      - "7687:7687"  # Bolt
+    environment:
+      - NEO4J_AUTH=neo4j/${NEO4J_PASSWORD:-veritasgraph}
+      - NEO4J_PLUGINS=["apoc"]
+    volumes:
+      - neo4j_data:/data
+      - neo4j_logs:/logs
+    networks:
+      - veritas-network
+    restart: unless-stopped
+
+networks:
+  veritas-network:
+    driver: bridge
+
+volumes:
+  ollama_data:
+  neo4j_data:
+  neo4j_logs:

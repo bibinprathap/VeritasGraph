@@ -1,0 +1,118 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="1200" height="630" fill="#1a1a2e"/>
+  
+  <!-- Grid pattern -->
+  <defs>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#4ECDC420" stroke-width="1"/>
+    </pattern>
+  </defs>
+  <rect width="1200" height="630" fill="url(#grid)"/>
+  
+  <!-- Glowing circles background -->
+  <circle cx="200" cy="200" r="150" fill="#4ECDC410"/>
+  <circle cx="1000" cy="450" r="200" fill="#FF6B6B10"/>
+  <circle cx="600" cy="100" r="100" fill="#45B7D110"/>
+  
+  <!-- Logo area -->
+  <g transform="translate(100, 50)">
+    <rect x="0" y="0" width="50" height="50" rx="10" fill="url(#logoGradient)"/>
+    <text x="60" y="35" font-family="Inter, sans-serif" font-size="28" font-weight="700" fill="white">
+      Veritas<tspan fill="#4ECDC4">Scope</tspan>
+    </text>
+  </g>
+  
+  <defs>
+    <linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#4ECDC4"/>
+      <stop offset="100%" style="stop-color:#45B7D1"/>
+    </linearGradient>
+  </defs>
+  
+  <!-- Main headline -->
+  <text x="100" y="180" font-family="Inter, sans-serif" font-size="52" font-weight="700" fill="white">
+    Stop Trusting Black Box RAG.
+  </text>
+  <text x="100" y="250" font-family="Inter, sans-serif" font-size="52" font-weight="700" fill="#4ECDC4">
+    See the Reasoning.
+  </text>
+  
+  <!-- Subtitle -->
+  <text x="100" y="310" font-family="Inter, sans-serif" font-size="24" fill="#ffffff80">
+    Interactive Visual Provenance for Multi-Hop Knowledge Graph Reasoning
+  </text>
+  
+  <!-- Graph visualization mockup -->
+  <g transform="translate(600, 350)">
+    <!-- Nodes -->
+    <!-- Query node -->
+    <circle cx="0" cy="0" r="25" fill="#FF6B6B" opacity="0.9"/>
+    <text x="0" y="5" font-family="Inter, sans-serif" font-size="12" fill="white" text-anchor="middle">Query</text>
+    
+    <!-- Entity nodes -->
+    <circle cx="120" cy="-60" r="20" fill="#4ECDC4" opacity="0.9"/>
+    <circle cx="120" cy="60" r="20" fill="#4ECDC4" opacity="0.9"/>
+    <circle cx="240" cy="0" r="18" fill="#4ECDC4" opacity="0.8"/>
+    
+    <!-- Source nodes -->
+    <circle cx="360" cy="-40" r="15" fill="#45B7D1" opacity="0.7"/>
+    <circle cx="360" cy="40" r="15" fill="#45B7D1" opacity="0.7"/>
+    
+    <!-- Answer node -->
+    <circle cx="480" cy="0" r="30" fill="#DDA0DD" opacity="0.9"/>
+    <text x="480" y="5" font-family="Inter, sans-serif" font-size="11" fill="white" text-anchor="middle">Answer</text>
+    
+    <!-- Connections (animated paths) -->
+    <line x1="25" y1="0" x2="95" y2="-50" stroke="#FF6B6B" stroke-width="3" opacity="0.8"/>
+    <line x1="25" y1="0" x2="95" y2="50" stroke="#FF6B6B" stroke-width="3" opacity="0.8"/>
+    <line x1="140" y1="-50" x2="218" y2="-10" stroke="#4ECDC4" stroke-width="2" opacity="0.6"/>
+    <line x1="140" y1="50" x2="218" y2="10" stroke="#4ECDC4" stroke-width="2" opacity="0.6"/>
+    <line x1="258" y1="-5" x2="342" y2="-35" stroke="#45B7D1" stroke-width="2" opacity="0.5"/>
+    <line x1="258" y1="5" x2="342" y2="35" stroke="#45B7D1" stroke-width="2" opacity="0.5"/>
+    <line x1="375" y1="-30" x2="448" y2="-8" stroke="#DDA0DD" stroke-width="2" opacity="0.7"/>
+    <line x1="375" y1="30" x2="448" y2="8" stroke="#DDA0DD" stroke-width="2" opacity="0.7"/>
+    
+    <!-- Labels -->
+    <text x="120" y="-85" font-family="Inter, sans-serif" font-size="10" fill="#ffffff80" text-anchor="middle">Entity A</text>
+    <text x="120" y="90" font-family="Inter, sans-serif" font-size="10" fill="#ffffff80" text-anchor="middle">Entity B</text>
+    <text x="240" y="-25" font-family="Inter, sans-serif" font-size="10" fill="#ffffff80" text-anchor="middle">Related</text>
+    <text x="360" y="-60" font-family="Inter, sans-serif" font-size="9" fill="#ffffff60" text-anchor="middle">Source 1</text>
+    <text x="360" y="65" font-family="Inter, sans-serif" font-size="9" fill="#ffffff60" text-anchor="middle">Source 2</text>
+  </g>
+  
+  <!-- Feature badges -->
+  <g transform="translate(100, 400)">
+    <rect x="0" y="0" width="180" height="40" rx="20" fill="#4ECDC420" stroke="#4ECDC4" stroke-width="1"/>
+    <text x="90" y="25" font-family="Inter, sans-serif" font-size="14" fill="#4ECDC4" text-anchor="middle">🔍 Multi-Hop Trace</text>
+  </g>
+  
+  <g transform="translate(200, 400)">
+    <rect x="0" y="0" width="180" height="40" rx="20" fill="#FF6B6B20" stroke="#FF6B6B" stroke-width="1"/>
+    <text x="90" y="25" font-family="Inter, sans-serif" font-size="14" fill="#FF6B6B" text-anchor="middle">📍 Click-to-Verify</text>
+  </g>
+  
+  <g transform="translate(400, 400)">
+    <rect x="0" y="0" width="180" height="40" rx="20" fill="#DDA0DD20" stroke="#DDA0DD" stroke-width="1"/>
+    <text x="90" y="25" font-family="Inter, sans-serif" font-size="14" fill="#DDA0DD" text-anchor="middle">🎬 Step Playback</text>
+  </g>
+  
+  <!-- CTA -->
+  <g transform="translate(100, 500)">
+    <rect x="0" y="0" width="200" height="50" rx="25" fill="url(#logoGradient)"/>
+    <text x="100" y="32" font-family="Inter, sans-serif" font-size="16" font-weight="600" fill="white" text-anchor="middle">Try Veritas-Scope →</text>
+  </g>
+  
+  <!-- GitHub badge -->
+  <g transform="translate(100, 570)">
+    <text font-family="Inter, sans-serif" font-size="14" fill="#ffffff60">
+      github.com/bibinprathap/VeritasGraph
+    </text>
+  </g>
+  
+  <!-- Version badge -->
+  <g transform="translate(1050, 580)">
+    <rect x="0" y="0" width="80" height="25" rx="12" fill="#4ECDC420"/>
+    <text x="40" y="17" font-family="Inter, sans-serif" font-size="12" fill="#4ECDC4" text-anchor="middle">v1.0</text>
+  </g>
+</svg>
