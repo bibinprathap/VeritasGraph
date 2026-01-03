@@ -27,6 +27,8 @@ Baseline RAG systems excel at finding direct answers but falter when faced with 
 
 **[🔬 Veritas-Scope: Visual RAG Reasoning](veritas-scope/README.md)** ⭐ NEW!
 
+**[🔗 Standalone Example for awesome-llm-apps](awesome-llm-apps-submission/knowledge_graph_rag_with_citations/)** - Self-contained Streamlit demo
+
  
 ---
 ## Why VeritasGraph?
