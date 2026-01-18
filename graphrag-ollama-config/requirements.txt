@@ -4,3 +4,6 @@ pandas
 tiktoken
 pyvis
 networkx
+youtube-transcript-api
+trafilatura
+yt-dlp

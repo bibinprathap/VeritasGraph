@@ -129,12 +129,12 @@ Keep Ollama running locally while exposing the UI to the internet:
 2. **Start your app locally:**
    ```bash
    cd graphrag-ollama-config
-   python app.py --host 0.0.0.0 --port 7861
+   python app.py --host 0.0.0.0 --port 7860
    ```
 
 3. **In another terminal, create the tunnel:**
    ```bash
-   ngrok http 7861
+   ngrok http 7860
    ```
 
 4. **Share the ngrok URL** (e.g., `https://abc123.ngrok.io`) with developers.
@@ -148,7 +148,7 @@ Keep Ollama running locally while exposing the UI to the internet:
 # Linux: https://developers.cloudflare.com/cloudflare-one/connections/connect-apps/install-and-setup/
 
 # Start the tunnel
-cloudflared tunnel --url http://localhost:7861
+cloudflared tunnel --url http://localhost:7860
 ```
 
 ### Option 4: Hugging Face Spaces (Permanent Free Hosting)

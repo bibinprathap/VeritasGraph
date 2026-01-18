@@ -124,7 +124,7 @@ Options:
 - `--host 0.0.0.0` - Bind to all interfaces for external access
 
 ### 3. Access the Interface
-Open your browser and visit: http://127.0.0.1:7861/
+Open your browser and visit: http://127.0.0.1:7860/
 
 ### 4. Using the UI
 1. Select the output folder from the dropdown

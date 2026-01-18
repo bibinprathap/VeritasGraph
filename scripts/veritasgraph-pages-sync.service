@@ -1,0 +1,22 @@
+[Unit]
+Description=VeritasGraph with GitHub Pages Sync
+After=network-online.target ollama.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=sijo
+Group=sijo
+WorkingDirectory=/home/sijo/VeritasGraph/graphrag-ollama-config
+ExecStart=/home/sijo/VeritasGraph/scripts/start-with-pages-sync.sh
+Restart=on-failure
+RestartSec=10
+StandardOutput=append:/home/sijo/VeritasGraph/veritasgraph.log
+StandardError=append:/home/sijo/VeritasGraph/veritasgraph.log
+
+# Environment
+Environment=HOME=/home/sijo
+Environment=PATH=/home/sijo/VeritasGraph/.venv/bin:/usr/local/bin:/usr/bin:/bin
+
+[Install]
+WantedBy=multi-user.target

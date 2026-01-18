@@ -103,7 +103,7 @@ main() {
     # Start the Gradio app in background
     log "Starting VeritasGraph app..."
     cd "$PROJECT_DIR"
-    $PYTHON_PATH app.py --host 0.0.0.0 --port 7861 &
+    $PYTHON_PATH app.py --host 0.0.0.0 --port 7860 &
     APP_PID=$!
     
     # Wait for app to start
@@ -115,13 +115,13 @@ main() {
         exit 1
     fi
     
-    log "${GREEN}✅ App started on port 7861${NC}"
+    log "${GREEN}✅ App started on port 7860${NC}"
     
     # Start Cloudflare tunnel and capture URL
     log "Starting Cloudflare tunnel..."
     
     TEMP_LOG=$(mktemp)
-    cloudflared tunnel --url http://localhost:7861 2>&1 | tee "$TEMP_LOG" &
+    cloudflared tunnel --url http://localhost:7860 2>&1 | tee "$TEMP_LOG" &
     CF_PID=$!
     
     # Wait for tunnel URL to appear

@@ -218,7 +218,7 @@ cloudflared tunnel create veritasgraph
 cloudflared tunnel route dns veritasgraph demo.yourdomain.com
 
 # Run tunnel
-cloudflared tunnel run --url http://localhost:7861 veritasgraph
+cloudflared tunnel run --url http://localhost:7860 veritasgraph
 ```
 
 This gives you a **permanent URL** without needing to update Netlify!

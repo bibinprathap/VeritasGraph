@@ -1,0 +1,163 @@
+[0;32m[2026-01-18 12:37:52][0m Shutting down...
+[0;32m[2026-01-18 12:45:33][0m ============================================
+[0;32m[2026-01-18 12:45:33][0m ============================================
+[0;32m[2026-01-18 12:45:33][0m 🚀 VeritasGraph - Starting with GitHub Pages Sync
+[0;32m[2026-01-18 12:45:33][0m 🚀 VeritasGraph - Starting with GitHub Pages Sync
+[0;32m[2026-01-18 12:45:33][0m ============================================
+[0;32m[2026-01-18 12:45:33][0m ============================================
+[0;32m[2026-01-18 12:45:33][0m Starting VeritasGraph app...
+[0;32m[2026-01-18 12:45:33][0m Starting VeritasGraph app...
+/home/sijo/VeritasGraph/graphrag-ollama-config/app.py:422: UserWarning: The parameters have been moved from the Blocks constructor to the launch() method in Gradio 6.0: theme, css. Please pass these parameters to launch() instead.
+  with gr.Blocks(css=custom_css, theme=gr.themes.Base(), title="VeritasGraph - GraphRAG Demo") as demo:
+[0;32m[2026-01-18 12:45:38][0m ✅ App started on port 7860
+[0;32m[2026-01-18 12:45:38][0m ✅ App started on port 7860
+[0;32m[2026-01-18 12:45:38][0m Starting Cloudflare tunnel...
+[0;32m[2026-01-18 12:45:38][0m Starting Cloudflare tunnel...
+[0;32m[2026-01-18 12:45:38][0m ⏳ Waiting for Cloudflare tunnel URL...
+[0;32m[2026-01-18 12:45:38][0m ⏳ Waiting for Cloudflare tunnel URL...
+2026-01-18T07:15:38Z INF Thank you for trying Cloudflare Tunnel. Doing so, without a Cloudflare account, is a quick way to experiment and try it out. However, be aware that these account-less Tunnels have no uptime guarantee, are subject to the Cloudflare Online Services Terms of Use (https://www.cloudflare.com/website-terms/), and Cloudflare reserves the right to investigate your use of Tunnels for violations of such terms. If you intend to use Tunnels in production you should use a pre-created named tunnel by following: https://developers.cloudflare.com/cloudflare-one/connections/connect-apps
+2026-01-18T07:15:38Z INF Requesting new quick Tunnel on trycloudflare.com...
+2026-01-18T07:15:43Z INF +--------------------------------------------------------------------------------------------+
+2026-01-18T07:15:43Z INF |  Your quick Tunnel has been created! Visit it at (it may take some time to be reachable):  |
+2026-01-18T07:15:43Z INF |  https://shaped-subdivision-configured-leeds.trycloudflare.com                             |
+[0;32m[2026-01-18 12:45:43][0m ✅ Tunnel URL: https://shaped-subdivision-configured-leeds.trycloudflare.com
+[0;32m[2026-01-18 12:45:43][0m ✅ Tunnel URL: https://shaped-subdivision-configured-leeds.trycloudflare.com
+[0;32m[2026-01-18 12:45:43][0m [1;33m📝 Updating GitHub Pages redirect...[0m
+[0;32m[2026-01-18 12:45:43][0m [1;33m📝 Updating GitHub Pages redirect...[0m
+[0;32m[2026-01-18 12:45:43][0m [0;32m✅ GitHub Pages redirect updated![0m
+[0;32m[2026-01-18 12:45:43][0m [0;32m✅ GitHub Pages redirect updated![0m
+[0;32m[2026-01-18 12:45:43][0m [0;36m📍 Stable URL: https://bibinprathap.github.io/VeritasGraph/demo/[0m
+[0;32m[2026-01-18 12:45:43][0m [0;36m📍 Stable URL: https://bibinprathap.github.io/VeritasGraph/demo/[0m
+[0;32m[2026-01-18 12:45:43][0m [0;36m📍 Current tunnel: https://shaped-subdivision-configured-leeds.trycloudflare.com[0m
+[0;32m[2026-01-18 12:45:43][0m [0;36m📍 Current tunnel: https://shaped-subdivision-configured-leeds.trycloudflare.com[0m
+[0;32m[2026-01-18 12:45:43][0m 🌐 Server is running. Press Ctrl+C to stop.
+[0;32m[2026-01-18 12:45:43][0m 🌐 Server is running. Press Ctrl+C to stop.
+2026-01-18T07:15:43Z INF +--------------------------------------------------------------------------------------------+
+2026-01-18T07:15:43Z INF Cannot determine default configuration path. No file [config.yml config.yaml] in [~/.cloudflared ~/.cloudflare-warp ~/cloudflare-warp /etc/cloudflared /usr/local/etc/cloudflared]
+2026-01-18T07:15:43Z INF Version 2025.11.1 (Checksum 991dffd8889ee9f0147b6b48933da9e4407e68ea8c6d984f55fa2d3db4bb431d)
+2026-01-18T07:15:43Z INF GOOS: linux, GOVersion: go1.24.9, GoArch: amd64
+2026-01-18T07:15:43Z INF Settings: map[ha-connections:1 protocol:quic url:http://localhost:7860]
+2026-01-18T07:15:43Z INF Autoupdate frequency is set autoupdateFreq=86400000
+2026-01-18T07:15:43Z INF Generated Connector ID: be0cd7b4-563c-4315-a6f4-813f5b415bf2
+2026-01-18T07:15:43Z INF Initial protocol quic
+2026-01-18T07:15:43Z INF ICMP proxy will use 192.168.0.186 as source for IPv4
+2026-01-18T07:15:43Z INF ICMP proxy will use 2001:8f8:1c29:8bf:a845:8304:ea37:f398 in zone enp12s0 as source for IPv6
+2026-01-18T07:15:43Z WRN The user running cloudflared process has a GID (group ID) that is not within ping_group_range. You might need to add that user to a group within that range, or instead update the range to encompass a group the user is already in by modifying /proc/sys/net/ipv4/ping_group_range. Otherwise cloudflared will not be able to ping this network error="Group ID 1000 is not between ping group 1 to 0"
+2026-01-18T07:15:43Z WRN ICMP proxy feature is disabled error="cannot create ICMPv4 proxy: Group ID 1000 is not between ping group 1 to 0 nor ICMPv6 proxy: socket: permission denied"
+2026-01-18T07:15:43Z ERR Cannot determine default origin certificate path. No file cert.pem in [~/.cloudflared ~/.cloudflare-warp ~/cloudflare-warp /etc/cloudflared /usr/local/etc/cloudflared]. You need to specify the origin certificate path by specifying the origincert option in the configuration file, or set TUNNEL_ORIGIN_CERT environment variable originCertPath=
+2026-01-18T07:15:43Z INF ICMP proxy will use 192.168.0.186 as source for IPv4
+2026-01-18T07:15:43Z INF ICMP proxy will use 2001:8f8:1c29:8bf:a845:8304:ea37:f398 in zone enp12s0 as source for IPv6
+2026-01-18T07:15:43Z INF Starting metrics server on 127.0.0.1:20241/metrics
+2026-01-18T07:15:43Z INF Tunnel connection curve preferences: [X25519MLKEM768 CurveP256] connIndex=0 event=0 ip=198.41.200.193
+2026/01/18 12:45:43 failed to sufficiently increase receive buffer size (was: 208 kiB, wanted: 7168 kiB, got: 416 kiB). See https://github.com/quic-go/quic-go/wiki/UDP-Buffer-Sizes for details.
+2026-01-18T07:15:43Z INF Registered tunnel connection connIndex=0 connection=1b57449a-d308-4290-9777-3100ea14c46a event=0 ip=198.41.200.193 location=sin12 protocol=quic
+[0;32m[2026-01-18 13:03:33][0m Shutting down...
+[0;32m[2026-01-18 13:03:33][0m Shutting down...
+[0;32m[2026-01-18 13:04:24][0m ============================================
+[0;32m[2026-01-18 13:04:24][0m ============================================
+[0;32m[2026-01-18 13:04:24][0m 🚀 VeritasGraph - Starting with GitHub Pages Sync
+[0;32m[2026-01-18 13:04:24][0m 🚀 VeritasGraph - Starting with GitHub Pages Sync
+[0;32m[2026-01-18 13:04:24][0m ============================================
+[0;32m[2026-01-18 13:04:24][0m ============================================
+[0;32m[2026-01-18 13:04:24][0m Starting VeritasGraph app...
+[0;32m[2026-01-18 13:04:24][0m Starting VeritasGraph app...
+[0;32m[2026-01-18 13:04:29][0m ✅ App started on port 7861
+[0;32m[2026-01-18 13:04:29][0m ✅ App started on port 7861
+[0;32m[2026-01-18 13:04:29][0m Starting Cloudflare tunnel...
+[0;32m[2026-01-18 13:04:29][0m Starting Cloudflare tunnel...
+[0;32m[2026-01-18 13:04:29][0m ⏳ Waiting for Cloudflare tunnel URL...
+[0;32m[2026-01-18 13:04:29][0m ⏳ Waiting for Cloudflare tunnel URL...
+/home/sijo/VeritasGraph/graphrag-ollama-config/app.py:422: UserWarning: The parameters have been moved from the Blocks constructor to the launch() method in Gradio 6.0: theme, css. Please pass these parameters to launch() instead.
+  with gr.Blocks(css=custom_css, theme=gr.themes.Base(), title="VeritasGraph - GraphRAG Demo") as demo:
+2026-01-18T07:34:29Z INF Thank you for trying Cloudflare Tunnel. Doing so, without a Cloudflare account, is a quick way to experiment and try it out. However, be aware that these account-less Tunnels have no uptime guarantee, are subject to the Cloudflare Online Services Terms of Use (https://www.cloudflare.com/website-terms/), and Cloudflare reserves the right to investigate your use of Tunnels for violations of such terms. If you intend to use Tunnels in production you should use a pre-created named tunnel by following: https://developers.cloudflare.com/cloudflare-one/connections/connect-apps
+2026-01-18T07:34:29Z INF Requesting new quick Tunnel on trycloudflare.com...
+2026-01-18T07:34:32Z INF +--------------------------------------------------------------------------------------------+
+2026-01-18T07:34:32Z INF |  Your quick Tunnel has been created! Visit it at (it may take some time to be reachable):  |
+2026-01-18T07:34:32Z INF |  https://coal-california-glory-milwaukee.trycloudflare.com                                 |
+[0;32m[2026-01-18 13:04:32][0m ✅ Tunnel URL: https://coal-california-glory-milwaukee.trycloudflare.com
+[0;32m[2026-01-18 13:04:32][0m ✅ Tunnel URL: https://coal-california-glory-milwaukee.trycloudflare.com
+[0;32m[2026-01-18 13:04:32][0m [1;33m📝 Updating GitHub Pages redirect...[0m
+[0;32m[2026-01-18 13:04:32][0m [1;33m📝 Updating GitHub Pages redirect...[0m
+[0;32m[2026-01-18 13:04:33][0m [0;32m✅ GitHub Pages redirect updated![0m
+[0;32m[2026-01-18 13:04:33][0m [0;32m✅ GitHub Pages redirect updated![0m
+[0;32m[2026-01-18 13:04:33][0m [0;36m📍 Stable URL: https://bibinprathap.github.io/VeritasGraph/demo/[0m
+[0;32m[2026-01-18 13:04:33][0m [0;36m📍 Stable URL: https://bibinprathap.github.io/VeritasGraph/demo/[0m
+[0;32m[2026-01-18 13:04:33][0m [0;36m📍 Current tunnel: https://coal-california-glory-milwaukee.trycloudflare.com[0m
+[0;32m[2026-01-18 13:04:33][0m [0;36m📍 Current tunnel: https://coal-california-glory-milwaukee.trycloudflare.com[0m
+[0;32m[2026-01-18 13:04:33][0m 🌐 Server is running. Press Ctrl+C to stop.
+[0;32m[2026-01-18 13:04:33][0m 🌐 Server is running. Press Ctrl+C to stop.
+2026-01-18T07:34:32Z INF +--------------------------------------------------------------------------------------------+
+2026-01-18T07:34:32Z INF Cannot determine default configuration path. No file [config.yml config.yaml] in [~/.cloudflared ~/.cloudflare-warp ~/cloudflare-warp /etc/cloudflared /usr/local/etc/cloudflared]
+2026-01-18T07:34:32Z INF Version 2025.11.1 (Checksum 991dffd8889ee9f0147b6b48933da9e4407e68ea8c6d984f55fa2d3db4bb431d)
+2026-01-18T07:34:32Z INF GOOS: linux, GOVersion: go1.24.9, GoArch: amd64
+2026-01-18T07:34:32Z INF Settings: map[ha-connections:1 protocol:quic url:http://localhost:7861]
+2026-01-18T07:34:32Z INF Autoupdate frequency is set autoupdateFreq=86400000
+2026-01-18T07:34:32Z INF Generated Connector ID: 78a9ecbe-4016-4981-ade9-eb935e57c6a4
+2026-01-18T07:34:32Z INF Initial protocol quic
+2026-01-18T07:34:32Z INF ICMP proxy will use 192.168.0.186 as source for IPv4
+2026-01-18T07:34:32Z INF ICMP proxy will use 2001:8f8:1c29:8bf:a845:8304:ea37:f398 in zone enp12s0 as source for IPv6
+2026-01-18T07:34:32Z WRN The user running cloudflared process has a GID (group ID) that is not within ping_group_range. You might need to add that user to a group within that range, or instead update the range to encompass a group the user is already in by modifying /proc/sys/net/ipv4/ping_group_range. Otherwise cloudflared will not be able to ping this network error="Group ID 1000 is not between ping group 1 to 0"
+2026-01-18T07:34:32Z WRN ICMP proxy feature is disabled error="cannot create ICMPv4 proxy: Group ID 1000 is not between ping group 1 to 0 nor ICMPv6 proxy: socket: permission denied"
+2026-01-18T07:34:32Z ERR Cannot determine default origin certificate path. No file cert.pem in [~/.cloudflared ~/.cloudflare-warp ~/cloudflare-warp /etc/cloudflared /usr/local/etc/cloudflared]. You need to specify the origin certificate path by specifying the origincert option in the configuration file, or set TUNNEL_ORIGIN_CERT environment variable originCertPath=
+2026-01-18T07:34:32Z INF ICMP proxy will use 192.168.0.186 as source for IPv4
+2026-01-18T07:34:32Z INF ICMP proxy will use 2001:8f8:1c29:8bf:a845:8304:ea37:f398 in zone enp12s0 as source for IPv6
+2026-01-18T07:34:32Z INF Starting metrics server on 127.0.0.1:20241/metrics
+2026-01-18T07:34:32Z INF Tunnel connection curve preferences: [X25519MLKEM768 CurveP256] connIndex=0 event=0 ip=198.41.192.57
+2026/01/18 13:04:32 failed to sufficiently increase receive buffer size (was: 208 kiB, wanted: 7168 kiB, got: 416 kiB). See https://github.com/quic-go/quic-go/wiki/UDP-Buffer-Sizes for details.
+2026-01-18T07:34:33Z INF Registered tunnel connection connIndex=0 connection=caf18ff2-1cb5-4a9b-a62c-0ec7049de71a event=0 ip=198.41.192.57 location=dxb01 protocol=quic
+2026-01-18T07:42:04Z ERR  error="Unable to reach the origin service. The service may be down or it may not be responding to traffic from cloudflared: dial tcp 127.0.0.1:7861: connect: connection refused" connIndex=0 event=1 ingressRule=0 originService=http://localhost:7861
+2026-01-18T07:42:04Z ERR Request failed error="Unable to reach the origin service. The service may be down or it may not be responding to traffic from cloudflared: dial tcp 127.0.0.1:7861: connect: connection refused" connIndex=0 dest=https://coal-california-glory-milwaukee.trycloudflare.com/ event=0 ip=198.41.192.57 type=http
+[0;32m[2026-01-18 13:12:04][0m ✅ Tunnel URL: https://coal-california-glory-milwaukee.trycloudflare.com
+[0;32m[2026-01-18 13:12:04][0m ✅ Tunnel URL: https://coal-california-glory-milwaukee.trycloudflare.com
+[0;32m[2026-01-18 13:12:04][0m [1;33m📝 Updating GitHub Pages redirect...[0m
+[0;32m[2026-01-18 13:12:04][0m [1;33m📝 Updating GitHub Pages redirect...[0m
+[0;32m[2026-01-18 13:12:04][0m [0;32m✅ GitHub Pages redirect updated![0m
+[0;32m[2026-01-18 13:12:04][0m [0;32m✅ GitHub Pages redirect updated![0m
+[0;32m[2026-01-18 13:12:04][0m [0;36m📍 Stable URL: https://bibinprathap.github.io/VeritasGraph/demo/[0m
+[0;32m[2026-01-18 13:12:04][0m [0;36m📍 Stable URL: https://bibinprathap.github.io/VeritasGraph/demo/[0m
+[0;32m[2026-01-18 13:12:04][0m [0;36m📍 Current tunnel: https://coal-california-glory-milwaukee.trycloudflare.com[0m
+[0;32m[2026-01-18 13:12:04][0m [0;36m📍 Current tunnel: https://coal-california-glory-milwaukee.trycloudflare.com[0m
+[0;32m[2026-01-18 13:12:04][0m 🌐 Server is running. Press Ctrl+C to stop.
+[0;32m[2026-01-18 13:12:04][0m 🌐 Server is running. Press Ctrl+C to stop.
+2026-01-18T07:42:04Z ERR  error="Unable to reach the origin service. The service may be down or it may not be responding to traffic from cloudflared: dial tcp 127.0.0.1:7861: connect: connection refused" connIndex=0 event=1 ingressRule=0 originService=http://localhost:7861
+2026-01-18T07:42:04Z ERR Request failed error="Unable to reach the origin service. The service may be down or it may not be responding to traffic from cloudflared: dial tcp 127.0.0.1:7861: connect: connection refused" connIndex=0 dest=https://coal-california-glory-milwaukee.trycloudflare.com/favicon.ico event=0 ip=198.41.192.57 type=http
+[0;32m[2026-01-18 13:12:04][0m ✅ Tunnel URL: https://coal-california-glory-milwaukee.trycloudflare.com
+[0;32m[2026-01-18 13:12:04][0m ✅ Tunnel URL: https://coal-california-glory-milwaukee.trycloudflare.com
+[0;32m[2026-01-18 13:12:04][0m [1;33m📝 Updating GitHub Pages redirect...[0m
+[0;32m[2026-01-18 13:12:04][0m [1;33m📝 Updating GitHub Pages redirect...[0m
+[0;32m[2026-01-18 13:12:05][0m [0;32m✅ GitHub Pages redirect updated![0m
+[0;32m[2026-01-18 13:12:05][0m [0;32m✅ GitHub Pages redirect updated![0m
+[0;32m[2026-01-18 13:12:05][0m [0;36m📍 Stable URL: https://bibinprathap.github.io/VeritasGraph/demo/[0m
+[0;32m[2026-01-18 13:12:05][0m [0;36m📍 Stable URL: https://bibinprathap.github.io/VeritasGraph/demo/[0m
+[0;32m[2026-01-18 13:12:05][0m [0;36m📍 Current tunnel: https://coal-california-glory-milwaukee.trycloudflare.com[0m
+[0;32m[2026-01-18 13:12:05][0m [0;36m📍 Current tunnel: https://coal-california-glory-milwaukee.trycloudflare.com[0m
+[0;32m[2026-01-18 13:12:05][0m 🌐 Server is running. Press Ctrl+C to stop.
+[0;32m[2026-01-18 13:12:05][0m 🌐 Server is running. Press Ctrl+C to stop.
+2026-01-18T07:42:11Z ERR  error="Unable to reach the origin service. The service may be down or it may not be responding to traffic from cloudflared: dial tcp 127.0.0.1:7861: connect: connection refused" connIndex=0 event=1 ingressRule=0 originService=http://localhost:7861
+2026-01-18T07:42:11Z ERR Request failed error="Unable to reach the origin service. The service may be down or it may not be responding to traffic from cloudflared: dial tcp 127.0.0.1:7861: connect: connection refused" connIndex=0 dest=https://coal-california-glory-milwaukee.trycloudflare.com/ event=0 ip=198.41.192.57 type=http
+[0;32m[2026-01-18 13:12:11][0m ✅ Tunnel URL: https://coal-california-glory-milwaukee.trycloudflare.com
+[0;32m[2026-01-18 13:12:11][0m ✅ Tunnel URL: https://coal-california-glory-milwaukee.trycloudflare.com
+[0;32m[2026-01-18 13:12:11][0m [1;33m📝 Updating GitHub Pages redirect...[0m
+[0;32m[2026-01-18 13:12:11][0m [1;33m📝 Updating GitHub Pages redirect...[0m
+[0;32m[2026-01-18 13:12:11][0m [0;32m✅ GitHub Pages redirect updated![0m
+[0;32m[2026-01-18 13:12:11][0m [0;32m✅ GitHub Pages redirect updated![0m
+[0;32m[2026-01-18 13:12:11][0m [0;36m📍 Stable URL: https://bibinprathap.github.io/VeritasGraph/demo/[0m
+[0;32m[2026-01-18 13:12:11][0m [0;36m📍 Stable URL: https://bibinprathap.github.io/VeritasGraph/demo/[0m
+[0;32m[2026-01-18 13:12:11][0m [0;36m📍 Current tunnel: https://coal-california-glory-milwaukee.trycloudflare.com[0m
+[0;32m[2026-01-18 13:12:11][0m [0;36m📍 Current tunnel: https://coal-california-glory-milwaukee.trycloudflare.com[0m
+[0;32m[2026-01-18 13:12:11][0m 🌐 Server is running. Press Ctrl+C to stop.
+[0;32m[2026-01-18 13:12:11][0m 🌐 Server is running. Press Ctrl+C to stop.
+2026-01-18T07:42:11Z ERR  error="Unable to reach the origin service. The service may be down or it may not be responding to traffic from cloudflared: dial tcp 127.0.0.1:7861: connect: connection refused" connIndex=0 event=1 ingressRule=0 originService=http://localhost:7861
+2026-01-18T07:42:11Z ERR Request failed error="Unable to reach the origin service. The service may be down or it may not be responding to traffic from cloudflared: dial tcp 127.0.0.1:7861: connect: connection refused" connIndex=0 dest=https://coal-california-glory-milwaukee.trycloudflare.com/favicon.ico event=0 ip=198.41.192.57 type=http
+[0;32m[2026-01-18 13:12:11][0m ✅ Tunnel URL: https://coal-california-glory-milwaukee.trycloudflare.com
+[0;32m[2026-01-18 13:12:11][0m ✅ Tunnel URL: https://coal-california-glory-milwaukee.trycloudflare.com
+[0;32m[2026-01-18 13:12:11][0m [1;33m📝 Updating GitHub Pages redirect...[0m
+[0;32m[2026-01-18 13:12:11][0m [1;33m📝 Updating GitHub Pages redirect...[0m
+[0;32m[2026-01-18 13:12:12][0m [0;32m✅ GitHub Pages redirect updated![0m
+[0;32m[2026-01-18 13:12:12][0m [0;32m✅ GitHub Pages redirect updated![0m
+[0;32m[2026-01-18 13:12:12][0m [0;36m📍 Stable URL: https://bibinprathap.github.io/VeritasGraph/demo/[0m
+[0;32m[2026-01-18 13:12:12][0m [0;36m📍 Stable URL: https://bibinprathap.github.io/VeritasGraph/demo/[0m
+[0;32m[2026-01-18 13:12:12][0m [0;36m📍 Current tunnel: https://coal-california-glory-milwaukee.trycloudflare.com[0m
+[0;32m[2026-01-18 13:12:12][0m [0;36m📍 Current tunnel: https://coal-california-glory-milwaukee.trycloudflare.com[0m
+[0;32m[2026-01-18 13:12:12][0m 🌐 Server is running. Press Ctrl+C to stop.
+[0;32m[2026-01-18 13:12:12][0m 🌐 Server is running. Press Ctrl+C to stop.

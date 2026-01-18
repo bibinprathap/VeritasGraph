@@ -107,7 +107,7 @@ monitor_gradio() {
     
     # Start Gradio and capture output
     cd "$PROJECT_DIR"
-    $PYTHON_PATH app.py --share --host 0.0.0.0 --port 7861 2>&1 | tee "$TEMP_LOG" &
+    $PYTHON_PATH app.py --share --host 0.0.0.0 --port 7860 2>&1 | tee "$TEMP_LOG" &
     GRADIO_PID=$!
     
     echo -e "${YELLOW}⏳ Waiting for Gradio share URL...${NC}"

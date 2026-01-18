@@ -40,6 +40,20 @@ from graphrag.vector_stores.lancedb import LanceDBVectorStore
 # Import OpenAI-compatible API configuration from separate module
 from openai_config import get_api_type, get_llm_config, get_embedding_config
 
+# Import Instant Knowledge ingest module
+from ingest import (
+    ingest_url,
+    ingest_text_content,
+    trigger_graphrag_index,
+    trigger_graphrag_index_async,
+    trigger_graphrag_index_with_progress,
+    get_indexing_status,
+    list_input_files, 
+    delete_input_file,
+    get_file_preview,
+    check_dependencies
+)
+
 # Load .env from the same directory as this script
 script_dir = os.path.dirname(os.path.abspath(__file__))
 load_dotenv(os.path.join(script_dir, '.env'))
@@ -501,6 +515,213 @@ What would you like to know?"""}]
                             value="<div style='padding: 40px; text-align: center; color: #888; background: #0a0a0a; border-radius: 8px; min-height: 500px;'><h3>🔗 Knowledge Graph</h3><p>Run a query to see the related subgraph visualization</p></div>",
                             elem_id="graph-display"
                         )
+                    
+                    with gr.Tab("⚡ Instant Knowledge", id="ingest-tab"):
+                        # Check dependencies
+                        deps = check_dependencies()
+                        dep_status = []
+                        if deps['youtube']:
+                            dep_status.append("✅ YouTube")
+                        else:
+                            dep_status.append("❌ YouTube (install: pip install youtube-transcript-api yt-dlp)")
+                        if deps['web']:
+                            dep_status.append("✅ Web Articles")
+                        else:
+                            dep_status.append("❌ Web Articles (install: pip install trafilatura)")
+                        
+                        gr.Markdown(f"""
+                        ### ⚡ Instant Knowledge Ingest
+                        **Paste a YouTube URL or Web Article URL** to instantly add it to your knowledge graph!
+                        
+                        **Supported Sources:**
+                        - 📺 **YouTube Videos** - Automatically extracts transcripts (including auto-generated captions)
+                        - 📰 **Web Articles** - Extracts main content from blog posts, news articles, documentation
+                        
+                        **Status:** {' | '.join(dep_status)}
+                        """)
+                        
+                        with gr.Row():
+                            ingest_url_input = gr.Textbox(
+                                label="🔗 Source URL",
+                                placeholder="Paste YouTube or article URL here... (e.g., https://youtube.com/watch?v=... or https://blog.example.com/article)",
+                                scale=4
+                            )
+                            ingest_btn = gr.Button("⚡ Ingest URL", variant="primary", scale=1)
+                        
+                        gr.Markdown("---")
+                        gr.Markdown("""
+                        ### 📝 Paste Text Content
+                        **Copy-paste text content** directly from files, documents, PDFs, or any other source!
+                        """)
+                        
+                        with gr.Row():
+                            text_title_input = gr.Textbox(
+                                label="📌 Title",
+                                placeholder="Enter a descriptive title for this content...",
+                                scale=2
+                            )
+                        
+                        text_content_input = gr.Textbox(
+                            label="📄 Text Content",
+                            placeholder="Paste your text content here... (minimum 50 characters)",
+                            lines=8,
+                            max_lines=20
+                        )
+                        
+                        with gr.Row():
+                            text_ingest_btn = gr.Button("📝 Add Text to Knowledge", variant="primary")
+                            text_clear_btn = gr.Button("🗑️ Clear", variant="secondary")
+                        
+                        ingest_status = gr.Markdown(
+                            value="*Paste a URL or text content above and click the corresponding button to add to your knowledge base.*"
+                        )
+                        
+                        with gr.Row():
+                            index_btn = gr.Button("📊 Full Index", variant="primary")
+                            update_index_btn = gr.Button("🔄 Update Index", variant="secondary")
+                            check_status_btn = gr.Button("📋 Check Status", variant="secondary")
+                            refresh_files_btn = gr.Button("🔃 Refresh Files", variant="secondary")
+                        
+                        gr.Markdown("---")
+                        gr.Markdown("### 📁 Input Files")
+                        
+                        # File list table
+                        def format_file_list():
+                            files = list_input_files()
+                            if not files:
+                                return "*No files in input folder yet. Ingest some content above!*"
+                            rows = ["| File | Size | Modified |\n|------|------|----------|"]
+                            for f in files[:20]:  # Limit to 20 most recent
+                                size_kb = f['size'] / 1024
+                                rows.append(f"| {f['name']} | {size_kb:.1f} KB | {f['modified']} |")
+                            if len(files) > 20:
+                                rows.append(f"\n*... and {len(files) - 20} more files*")
+                            return '\n'.join(rows)
+                        
+                        file_list_display = gr.Markdown(value=format_file_list())
+                        
+                        with gr.Accordion("📄 File Preview", open=False):
+                            file_select = gr.Dropdown(
+                                label="Select file to preview",
+                                choices=[f['name'] for f in list_input_files()],
+                                interactive=True
+                            )
+                            file_preview = gr.Textbox(
+                                label="Content Preview",
+                                lines=10,
+                                max_lines=20,
+                                interactive=False
+                            )
+                            delete_file_btn = gr.Button("🗑️ Delete Selected File", variant="stop")
+                        
+                        # Ingest button handler
+                        def handle_ingest(url):
+                            if not url or not url.strip():
+                                return "⚠️ Please enter a URL first."
+                            success, message, filepath = ingest_url(url)
+                            return message
+                        
+                        ingest_btn.click(
+                            fn=handle_ingest,
+                            inputs=[ingest_url_input],
+                            outputs=[ingest_status]
+                        ).then(
+                            fn=format_file_list,
+                            outputs=[file_list_display]
+                        ).then(
+                            fn=lambda: gr.update(choices=[f['name'] for f in list_input_files()]),
+                            outputs=[file_select]
+                        )
+                        
+                        # Text content ingest button handler
+                        def handle_text_ingest(title, content):
+                            success, message, filepath = ingest_text_content(title, content)
+                            return message
+                        
+                        text_ingest_btn.click(
+                            fn=handle_text_ingest,
+                            inputs=[text_title_input, text_content_input],
+                            outputs=[ingest_status]
+                        ).then(
+                            fn=format_file_list,
+                            outputs=[file_list_display]
+                        ).then(
+                            fn=lambda: gr.update(choices=[f['name'] for f in list_input_files()]),
+                            outputs=[file_select]
+                        ).then(
+                            fn=lambda: ("", ""),
+                            outputs=[text_title_input, text_content_input]
+                        )
+                        
+                        # Clear text content button handler
+                        text_clear_btn.click(
+                            fn=lambda: ("", ""),
+                            outputs=[text_title_input, text_content_input]
+                        )
+                        
+                        # Full Index button handler - runs full index with streaming progress
+                        def handle_full_index():
+                            for progress_msg in trigger_graphrag_index_with_progress(update_mode=False):
+                                yield progress_msg
+                        
+                        index_btn.click(
+                            fn=handle_full_index,
+                            outputs=[ingest_status]
+                        )
+                        
+                        # Update Index button handler - runs incremental update with streaming progress
+                        def handle_update_index():
+                            for progress_msg in trigger_graphrag_index_with_progress(update_mode=True):
+                                yield progress_msg
+                        
+                        update_index_btn.click(
+                            fn=handle_update_index,
+                            outputs=[ingest_status]
+                        )
+                        
+                        # Check status button handler
+                        def handle_check_status():
+                            status, is_complete = get_indexing_status()
+                            return status
+                        
+                        check_status_btn.click(
+                            fn=handle_check_status,
+                            outputs=[ingest_status]
+                        )
+                        
+                        # Refresh file list
+                        refresh_files_btn.click(
+                            fn=format_file_list,
+                            outputs=[file_list_display]
+                        ).then(
+                            fn=lambda: gr.update(choices=[f['name'] for f in list_input_files()]),
+                            outputs=[file_select]
+                        )
+                        
+                        # File preview handler
+                        def handle_preview(filename):
+                            if filename:
+                                return get_file_preview(filename, max_chars=2000)
+                            return ""
+                        
+                        file_select.change(
+                            fn=handle_preview,
+                            inputs=[file_select],
+                            outputs=[file_preview]
+                        )
+                        
+                        # Delete file handler
+                        def handle_delete(filename):
+                            if filename:
+                                success, msg = delete_input_file(filename)
+                                return msg, format_file_list(), gr.update(choices=[f['name'] for f in list_input_files()], value=None), ""
+                            return "⚠️ No file selected", format_file_list(), gr.update(choices=[f['name'] for f in list_input_files()]), ""
+                        
+                        delete_file_btn.click(
+                            fn=handle_delete,
+                            inputs=[file_select],
+                            outputs=[ingest_status, file_list_display, file_select, file_preview]
+                        )
                 
                 # Sample prompts as clickable examples
                 gr.Markdown("**📝 Sample Prompts (click to use):**", elem_classes=["sample-prompts"])
@@ -596,7 +817,7 @@ if __name__ == "__main__":
     import argparse
     parser = argparse.ArgumentParser(description="VeritasGraph - GraphRAG Demo")
     parser.add_argument("--share", action="store_true", help="Create a public shareable link")
-    parser.add_argument("--port", type=int, default=7861, help="Port to run the server on")
+    parser.add_argument("--port", type=int, default=7860, help="Port to run the server on")
     parser.add_argument("--host", type=str, default="127.0.0.1", help="Host to bind to (use 0.0.0.0 for external access)")
     args = parser.parse_args()
     

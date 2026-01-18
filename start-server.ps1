@@ -5,7 +5,7 @@
 param(
     [switch]$Share,
     [switch]$Ngrok,
-    [int]$Port = 7861
+    [int]$Port = 7860
 )
 
 $ErrorActionPreference = "Stop"
