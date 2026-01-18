@@ -50,10 +50,36 @@ Build a **sovereign knowledge asset**, free from vendor lock-in, with full owner
 
 ### Video Walkthrough  
 A brief video demonstrating the core functionality of VeritasGraph, from data ingestion to multi-hop querying with full source attribution.  
+
+### 📺 YouTube Tutorial
+[![VeritasGraph YouTube Tutorial](https://img.youtube.com/vi/NGVDQbkY1wE/maxresdefault.jpg)](https://youtu.be/NGVDQbkY1wE?si=wJV08Vp5tfVHoQbc)
+> 🎬 **Watch on YouTube:** [VeritasGraph - Enterprise Graph RAG Demo](https://youtu.be/NGVDQbkY1wE?si=wJV08Vp5tfVHoQbc)
+
 ## Windows
 [![Video Walkthrough](https://github.com/bibinprathap/VeritasGraph/blob/master/assets/graphrag.JPG)](https://drive.google.com/file/d/1lEmAOUCLV0h98kY-ars96SNf5O6lVmiY/view?usp=sharing)  
 ## Linux
-[![Video Walkthrough](https://github.com/bibinprathap/VeritasGraph/blob/master/assets/VertasGraph-Linux.png)](https://drive.google.com/file/d/1OmeCj9-HKTCDoznPDE8u7Bbb3qxYBs9n/view?usp=sharing)  
+[![Video Walkthrough](https://github.com/bibinprathap/VeritasGraph/blob/master/assets/VertasGraph-Linux.png)](https://drive.google.com/file/d/1OmeCj9-HKTCDoznPDE8u7Bbb3qxYBs9n/view?usp=sharing)
+
+---
+
+## ⚡ NEW: Instant Knowledge Ingest
+
+**Instantly add YouTube videos and web articles to your knowledge graph!**
+
+<img src="https://github.com/bibinprathap/VeritasGraph/blob/master/assets/instantknowledge.png" alt="Instant Knowledge Ingest Feature" width="800">
+
+### Features:
+- 📺 **YouTube Videos** - Automatically extracts transcripts (including auto-generated captions)
+- 📰 **Web Articles** - Extracts main content from blog posts, news articles, documentation
+- 📝 **Paste Text** - Copy-paste content directly from files, documents, PDFs
+- 🔄 **One-Click Indexing** - Build or update your knowledge graph instantly
+
+### How to Use:
+1. Go to the **⚡ Instant Knowledge** tab
+2. Paste a YouTube URL or web article URL
+3. Click **Ingest URL** to extract content
+4. Click **Update Index** to add to your knowledge graph
+5. Switch to **Chat** tab and start querying!  
  
 ---
 
