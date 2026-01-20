@@ -1,0 +1,18 @@
+# Power BI MCP Server V2 Dependencies
+
+# MCP SDK
+mcp>=1.0.0
+
+# Power BI Cloud connectivity
+requests>=2.31.0
+python-dotenv>=1.0.0
+
+# XMLA connectivity (requires ADOMD.NET on Windows)
+pythonnet>=3.0.0
+pyadomd>=0.1.0
+
+# Security features
+pyyaml>=6.0.0
+
+# Optional: For test scripts (OAuth2 token acquisition)
+msal>=1.24.0

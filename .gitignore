@@ -2,3 +2,5 @@ graphrag-ollama-config/graphrag-ollama/
 scripts/start-with-pages-sync.sh
 graphrag/
 .venv/
+mcp/client/*
+mcp/powerbi-mcp/.env

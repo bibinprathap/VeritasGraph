@@ -1,0 +1,34 @@
+# Backend API Dependencies
+
+# FastAPI and web server
+fastapi>=0.104.0
+uvicorn[standard]>=0.24.0
+pydantic>=2.5.0
+pydantic-settings>=2.1.0
+
+# LangChain and LangGraph
+langchain>=0.1.0
+langchain-core>=0.1.0
+langchain-community>=0.0.10
+langgraph>=0.0.20
+
+# MCP Client
+mcp>=1.0.0
+
+# LLM Providers
+openai>=1.3.0  # For OpenAI-compatible endpoints
+ollama>=0.1.0  # For local Ollama
+
+# HTTP client
+httpx>=0.25.0
+requests>=2.31.0
+
+# Environment and config
+python-dotenv>=1.0.0
+
+# Logging
+structlog>=23.2.0
+
+# Async support
+asyncio>=3.4.3
+

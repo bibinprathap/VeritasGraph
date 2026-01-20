@@ -1,0 +1,281 @@
+# Guide to build graphrag with local LLM
+ 
+![image](UI.png)
+ 
+## Environment
+This setup uses Ollama (llama3.1) and Ollama (nomic-embed-text) for text embeddings.
+
+**Note**: This configuration has been updated to work with GraphRAG v0.3.6 for compatibility with the Gradio UI.
+ 
+### IMPORTANT! Fix your model context length in Ollama
+ 
+Ollama's default context length is 2048, which might truncate the input and output when indexing
+ 
+I'm using 12k context here (10*1024=12288), I tried using 10k before, but the results still gets truncated
+ 
+**Input / Output truncated might get you a completely out of context report in local search!!**
+ 
+Note that if you change the model in `setttings.yaml` and try to reindex, it will restart the whole indexing!
+ 
+First, pull the models we need to use
+ 
+```
+ollama serve
+# in another terminal
+ollama pull llama3.1
+ollama pull nomic-embed-text
+```
+ 
+Then build the model with the `Modelfile` in this repo
+```
+ollama create llama3.1-12k -f ./Modelfile
+```
+ 
+## Steps for GraphRAG Indexing
+
+### 1. Setup Conda Environment
+```bash
+conda create -n rag python=3.11
+conda activate rag
+```
+
+### 2. Clone and Navigate to Directory
+```bash
+cd graphrag-ollama-config
+```
+
+### 3. Install GraphRAG v0.3.6
+**IMPORTANT**: Use version 0.3.6 for compatibility with the Gradio UI
+```bash
+pip install graphrag==0.3.6
+pip install sympy future ollama
+```
+
+### 4. Initialize GraphRAG (if not already done)
+```bash
+python -m graphrag.index --init --root .
+```
+
+### 5. Setup Environment Variables
+Create a `.env` file with the following content:
+```
+GRAPHRAG_API_KEY=ollama
+GRAPHRAG_LLM_MODEL=llama3.1-12k
+GRAPHRAG_EMBEDDING_MODEL=nomic-embed-text
+GRAPHRAG_LLM_API_BASE=http://localhost:11434/v1
+GRAPHRAG_EMBEDDING_API_BASE=http://localhost:11434/v1
+```
+
+### 6. Add Input Data
+Move your input text files to `./input/` directory
+
+### 7. Verify Configuration
+- Check `settings.yaml` - ensure it uses "community_reports" (not "community_report")
+- Verify the file_pattern uses double dollar signs: `.*\\.txt$$`
+
+### 8. Run Indexing
+```bash
+python -m graphrag.index --root .
+```
+
+The indexing process will:
+- Create text units from your input files
+- Extract entities and relationships
+- Generate community reports
+- Output artifacts to `./output/artifacts/`
+
+Check logs at `./output/reports/indexing-engine.log` for any errors.
+ 
+### 9. Prepare Output for Gradio UI
+The Gradio UI expects timestamp-based folder structure. After indexing completes, create it:
+```bash
+TIMESTAMP=$(date +%Y%m%d-%H%M%S)
+mkdir -p "output/$TIMESTAMP/artifacts"
+cp output/artifacts/*.parquet "output/$TIMESTAMP/artifacts/"
+```
+
+## Testing Queries (Command Line)
+ 
+Test a global query:
+```bash
+python -m graphrag.query \
+--root . \
+--method global \
+"What are the top themes in this story?"
+```
+ ## OpenAI-Compatible API
+
+VeritasGraph includes an OpenAI-compatible REST API, allowing you to use GraphRAG with any client that supports the OpenAI chat completion format.
+
+### Start the API Server
+```bash
+python api.py --host 127.0.0.1 --port 7860
+```
+
+### Available Endpoints
+
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `/v1/chat/completions` | POST | OpenAI-compatible chat completion |
+| `/v1/models` | GET | List available models |
+| `/query` | POST | Direct GraphRAG query |
+| `/ingest` | POST | Ingest text content |
+| `/index` | POST | Trigger indexing |
+| `/status` | GET | Get indexing status |
+| `/health` | GET | Health check |
+
+### Chat Completion Example
+
+```bash
+curl -X POST http://127.0.0.1:7860/v1/chat/completions \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "graphrag-local",
+    "messages": [
+      {"role": "user", "content": "What are the main entities in the knowledge graph?"}
+    ],
+    "temperature": 0.7
+  }'
+```
+
+### Available Models
+
+| Model | Description |
+|-------|-------------|
+| `graphrag-local` | Local search - best for specific entity queries |
+| `graphrag-global` | Global search - best for broad summarization |
+
+### Python Client Example
+
+```python
+import requests
+
+response = requests.post(
+    "http://127.0.0.1:7860/v1/chat/completions",
+    json={
+        "model": "graphrag-local",
+        "messages": [{"role": "user", "content": "What do you know about visa types?"}]
+    }
+)
+print(response.json()["choices"][0]["message"]["content"])
+```
+
+### Using with OpenAI Python SDK
+
+```python
+from openai import OpenAI
+
+client = OpenAI(
+    base_url="http://127.0.0.1:7860/v1",
+    api_key="not-needed"  # API key not required for local server
+)
+
+response = client.chat.completions.create(
+    model="graphrag-local",
+    messages=[{"role": "user", "content": "Summarize the key themes"}]
+)
+print(response.choices[0].message.content)
+```
+## Using the Gradio UI
+ 
+### 1. Install UI Requirements
+```bash
+pip install -r requirements.txt
+```
+ 
+### 2. Start the Application
+```bash
+conda activate rag
+cd /home/sijo/VeritasGraph/graphrag-ollama-config
+python app.py
+```
+
+Options:
+- `--share` - Create a public shareable link (Gradio tunneling)
+- `--port 8080` - Run on a custom port
+- `--host 0.0.0.0` - Bind to all interfaces for external access
+
+### 3. Access the Interface
+Open your browser and visit: http://127.0.0.1:7861/
+
+### 4. Using the UI
+1. Select the output folder from the dropdown
+2. Choose query type: **Global Search** or **Local Search**
+3. Enter your question/prompt
+4. Click submit to get AI-generated responses
+5. Switch to the **Graph Explorer** tab to see the interactive knowledge graph!
+
+## 🔗 Interactive Graph Visualization
+
+VeritasGraph now includes an **interactive 2D knowledge graph** that visualizes the entities and relationships used in each query response!
+
+### Features
+- **PyVis-powered visualization** - Interactive, physics-based graph layout
+- **Query-aware subgraph extraction** - Highlights entities mentioned in your query and response
+- **Community-based coloring** - Nodes colored by their community membership
+- **Interactive exploration** - Drag, zoom, hover for entity details
+- **Full graph explorer** - Click "Explore Full Graph" to see the entire knowledge graph
+
+### How It Works
+1. After each query, the system extracts the relevant subgraph (nodes/edges) used for reasoning
+2. PyVis generates an interactive HTML visualization
+3. **Red nodes** = Query-related entities
+4. **Node size** = Importance (connection count)
+5. **Hover** over nodes to see their descriptions
+
+### Graph Stats for Current Dataset
+- 📊 **98 entities** (organizations, visa types, categories, etc.)
+- 🔗 **53 relationships** connecting entities
+- 🏘️ **2 communities** (clusters of related entities)
+
+### Toggle Visualization
+Use the checkbox "🔗 Show Graph Visualization" in the left panel to enable/disable automatic graph updates after each query.
+
+## Recent Code Changes
+
+### Fixed Output Folder Detection
+**File**: `app.py`
+**Function**: `list_output_folders()`
+**Change**: Added filter to only show timestamp-based folders (starting with digits)
+```python
+folders = [f for f in os.listdir(output_dir) if os.path.isdir(join(output_dir, f)) and f[0].isdigit()]
+```
+**Reason**: Prevented non-data folders like `reports` and `artifacts` from appearing in the folder selection dropdown, which was causing FileNotFoundError when trying to load parquet files.
+
+### GraphRAG Version
+**Downgraded to v0.3.6** from v2.5.0 for compatibility with the existing Gradio UI (`app.py`), which was built for the older GraphRAG API structure.
+
+### Environment Configuration
+Added required environment variables to `.env`:
+- `GRAPHRAG_API_KEY=ollama`
+- `GRAPHRAG_LLM_MODEL=llama3.1-12k`
+- `GRAPHRAG_EMBEDDING_MODEL=nomic-embed-text`
+- `GRAPHRAG_LLM_API_BASE=http://localhost:11434/v1`
+- `GRAPHRAG_EMBEDDING_API_BASE=http://localhost:11434/v1`
+
+### Settings.yaml Fix
+Fixed regex pattern for file matching:
+- Changed from: `.*\\.txt$`
+- Changed to: `.*\\.txt$$` (escaped dollar sign to prevent YAML variable substitution)
+
+## Troubleshooting
+
+### Unicode Encoding Errors
+If you get `UnicodeDecodeError` in prompt files:
+```bash
+rm -rf prompts
+python -m graphrag.index --init --root .
+```
+
+### Port Already in Use
+If port 7860 is occupied:
+```bash
+pkill -f "python app.py"
+```
+
+### Missing Parquet Files
+Ensure indexing completed successfully and created a timestamp folder with artifacts:
+```bash
+ls -la output/*/artifacts/*.parquet
+```
+ 

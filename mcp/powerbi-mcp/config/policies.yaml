@@ -1,0 +1,164 @@
+# Power BI MCP Server - Data Access Policies
+# This file defines security policies for data access, PII detection, and auditing
+
+# =============================================================================
+# GLOBAL SETTINGS
+# =============================================================================
+global:
+  # Master switch - set to false to disable all policy enforcement
+  enabled: true
+
+  # Default action for columns/tables not explicitly defined
+  # Options: allow, mask, block, redact, hash
+  default_action: allow
+
+  # Maximum rows returned per query (prevents bulk data extraction)
+  max_rows_per_query: 1000
+
+  # Automatically detect and mask PII patterns in results
+  enable_pii_detection: true
+
+  # Default action when PII is detected
+  # Options: allow, mask, block, redact, hash
+  pii_default_action: mask
+
+  # Log all queries to audit log
+  audit_all_queries: true
+
+  # Blocked query patterns (regex) - queries matching these are rejected
+  blocked_patterns:
+    # Block attempts to query all columns
+    # - "SELECT\\s+\\*\\s+FROM"
+    # Block system table queries (uncomment if needed)
+    # - "\\$SYSTEM\\."
+
+# =============================================================================
+# PII DETECTION SETTINGS
+# =============================================================================
+pii:
+  # Which PII types to detect
+  enabled_types:
+    - ssn
+    - credit_card
+    - email
+    - phone
+    - ip_address
+
+  # Masking strategy for each type
+  strategies:
+    ssn: partial          # ***-**-1234
+    credit_card: partial  # ****-****-****-1234
+    email: partial        # j***@e****.com
+    phone: partial        # (***) ***-1234
+    ip_address: partial   # 192.168.***.***
+    name: partial         # J*** S****
+
+# =============================================================================
+# TABLE-SPECIFIC POLICIES
+# =============================================================================
+tables:
+  # Example: Customer table with sensitive data
+  # - name: Customers
+  #   description: "Customer master data with PII"
+  #   sensitivity: high
+  #   default_action: allow
+  #   max_rows: 100  # Limit results from this table
+  #   require_filter: true  # Require a filter clause
+  #   columns:
+  #     - name: SSN
+  #       action: block
+  #       reason: "Social Security Numbers are never exposed"
+  #       sensitivity: critical
+  #     - name: Email
+  #       action: mask
+  #       mask_strategy: partial
+  #       reason: "Email addresses are masked for privacy"
+  #     - name: CreditCardNumber
+  #       action: block
+  #       reason: "Credit card data is blocked"
+  #     - name: Phone
+  #       action: mask
+  #       mask_strategy: partial
+  #     - name: CustomerName
+  #       action: allow
+
+  # Example: Employee table
+  # - name: Employees
+  #   description: "Employee data"
+  #   sensitivity: high
+  #   default_action: allow
+  #   columns:
+  #     - name: Salary
+  #       action: block
+  #       reason: "Salary data is confidential"
+  #     - name: SSN
+  #       action: block
+  #     - name: BankAccount
+  #       action: block
+
+  # Wildcard table - applies to ALL tables
+  - name: "*"
+    description: "Default policies for all tables"
+    default_action: allow
+    columns:
+      # Block these columns everywhere
+      - name: ssn
+        action: block
+        reason: "Social Security Numbers are never exposed"
+        sensitivity: critical
+      - name: social_security_number
+        action: block
+        reason: "Social Security Numbers are never exposed"
+        sensitivity: critical
+      - name: password
+        action: block
+        reason: "Password fields are never exposed"
+        sensitivity: critical
+      - name: password_hash
+        action: block
+        reason: "Password hashes are never exposed"
+        sensitivity: critical
+      - name: api_key
+        action: block
+        reason: "API keys are never exposed"
+        sensitivity: critical
+      - name: secret
+        action: block
+        reason: "Secret fields are never exposed"
+        sensitivity: critical
+      - name: token
+        action: block
+        reason: "Token fields are never exposed"
+        sensitivity: critical
+      - name: credit_card_number
+        action: mask
+        mask_strategy: partial
+        reason: "Credit card numbers are masked"
+        sensitivity: critical
+      - name: card_number
+        action: mask
+        mask_strategy: partial
+        reason: "Credit card numbers are masked"
+        sensitivity: critical
+
+# =============================================================================
+# AUDIT SETTINGS
+# =============================================================================
+audit:
+  # Log directory (relative to project root or absolute path)
+  log_dir: "./logs"
+
+  # Log file name
+  log_file: "audit.log"
+
+  # Maximum log file size in MB before rotation
+  max_file_size_mb: 10
+
+  # Number of backup files to keep
+  backup_count: 5
+
+  # Include full query text in logs (set to false for extra privacy)
+  include_query_text: true
+
+  # Redact potentially sensitive values in logs
+  redact_sensitive: true
