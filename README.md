@@ -46,6 +46,112 @@ Explore your knowledge graph with an **interactive 2D graph explorer** powered b
 ### ✅ Open-Source & Sovereign
 Build a **sovereign knowledge asset**, free from vendor lock-in, with full ownership and customization.
 
+### ✅ MCP (Model Context Protocol) Integration
+Connect AI assistants to **Power BI** and enterprise tools through the cutting-edge Model Context Protocol standard.
+
+---
+
+## 🔌 NEW: Power BI MCP Server - AI Meets Business Intelligence
+
+<p align="center">
+  <img src="https://img.shields.io/badge/MCP-Compatible-blue?style=for-the-badge" alt="MCP Compatible">
+  <img src="https://img.shields.io/badge/Tools-34+-purple?style=for-the-badge" alt="34+ Tools">
+  <img src="https://img.shields.io/badge/Power%20BI-Desktop%20%26%20Cloud-yellow?style=for-the-badge" alt="Power BI">
+</p>
+
+**VeritasGraph now includes an enterprise-grade Model Context Protocol (MCP) server for Power BI!** Enable AI assistants like Claude, ChatGPT, or any MCP-compatible client to interact with your Power BI data through natural language.
+
+### 🎯 What is MCP?
+
+The **Model Context Protocol (MCP)** is an open standard that enables AI models to securely interact with external tools and data sources. Think of it as a universal API for AI assistants - allowing them to query databases, call APIs, and perform actions while maintaining security and auditability.
+
+### ⚡ Key Features
+
+| Feature | Description |
+|---------|-------------|
+| 🔄 **Dual Connectivity** | Connect to both Power BI Desktop (local) and Power BI Service (cloud) |
+| 💬 **Natural Language DAX** | Execute DAX queries through conversational AI |
+| 📊 **34+ Tools** | Comprehensive toolkit for data exploration and model management |
+| 🔒 **Enterprise Security** | PII detection, audit logging, and configurable access policies |
+| 🛡️ **RLS Testing** | Test Row-Level Security roles during development |
+| ✏️ **Safe Refactoring** | PBIP-based editing preserves report visual integrity |
+
+### 🏗️ Architecture
+
+```
+┌─────────────────────────────────────────────────────────┐
+│              AI Assistant (Claude/ChatGPT)              │
+└────────────────────────┬────────────────────────────────┘
+                         │ MCP Protocol
+                         ▼
+┌─────────────────────────────────────────────────────────┐
+│              Power BI MCP Server (34 Tools)             │
+├─────────────────────────────────────────────────────────┤
+│  Security Layer │ Audit Logger │ Access Policies        │
+├─────────────────────────────────────────────────────────┤
+│  Desktop Connector │ XMLA Connector │ PBIP Connector    │
+└────────┬───────────────────┬────────────────┬───────────┘
+         ▼                   ▼                ▼
+   Power BI Desktop    Power BI Service    PBIP Files
+```
+
+### 🛠️ Available Tools
+
+**Desktop Operations:**
+- `desktop_discover_instances` - Auto-discover running Power BI Desktop
+- `desktop_execute_dax` - Run DAX queries with security processing
+- `desktop_list_tables/columns/measures` - Explore your data model
+
+**Cloud Operations:**
+- `list_workspaces` - Access Power BI Service workspaces
+- `list_datasets` - Browse cloud-hosted datasets
+- `execute_dax` - Query cloud data with full security
+
+**PBIP Operations (Safe Refactoring):**
+- `pbip_rename_table/column/measure` - Rename without breaking visuals
+- `scan_table_dependencies` - Preview rename impact before changes
+
+### 🚀 Quick Start
+
+```bash
+# Navigate to the MCP server
+cd mcp/powerbi-mcp
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Start the backend API
+cd backend
+# Install dependencies
+pip install -r requirements.txt
+uvicorn app:app --host 0.0.0.0 --port 8002
+
+# Or run the MCP server directly
+python src/server.py
+```
+
+### 💡 Example: Natural Language to DAX
+
+**User:** "Show me total sales by region for Q4 2025"
+
+**AI Assistant (via MCP):**
+```dax
+EVALUATE
+SUMMARIZE(
+    FILTER(Sales, Sales[Date] >= DATE(2025,10,1)),
+    Geography[Region],
+    "Total Sales", SUM(Sales[Amount])
+)
+```
+
+### 📖 Documentation
+
+- **[Power BI MCP Server README](mcp/powerbi-mcp/README.md)** - Full setup guide and tool reference
+- **[Backend API Documentation](mcp/powerbi-mcp/backend/README.md)** - REST API endpoints
+- **[MCP Client Setup](mcp/client/README.md)** - Next.js chat interface
+
+---
+
 ## 🚀 Demo  
 
 ### Video Walkthrough  
