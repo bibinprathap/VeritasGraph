@@ -95,47 +95,106 @@ SCHEMA:
 USER QUESTION:
 {user_query}
 
-TASK:
-Generate a DAX query to answer the question.
+=== CRITICAL SYNTAX RULES ===
+1. Table names with spaces MUST be in single quotes: 'Table Name'
+2. Column references: 'Table Name'[Column Name]
+3. Measure references (NO table prefix): [Measure Name]
+4. MUST start with EVALUATE
 
-CRITICAL DAX SYNTAX RULES (MUST follow exactly):
-1. Table names with spaces MUST be wrapped in single quotes: 'Table Name'
-2. Column references MUST use: 'Table Name'[Column Name]
-3. DAX MUST start with EVALUATE
+=== SUMMARIZECOLUMNS SYNTAX (VERY IMPORTANT!) ===
+Arguments in EXACT order:
+1. Group-by COLUMNS (must be 'Table'[Column], NOT just 'Table')
+2. Optional FILTER expressions
+3. "Label", Value pairs (label in quotes, then measure)
 
-QUERY PATTERNS (use these exact patterns):
+CORRECT:
+  SUMMARIZECOLUMNS('Table'[Column], "Label", [Measure])
+  SUMMARIZECOLUMNS('Table'[Column], FILTER(...), "Label", [Measure])
+  SUMMARIZECOLUMNS("Label", [Measure])  -- no grouping
 
-For DISTINCT/UNIQUE VALUES (list all unique values in a column):
-  EVALUATE DISTINCT('Table Name'[Column Name])
+WRONG (NEVER DO THIS):
+  SUMMARIZECOLUMNS('Table', ...)  -- WRONG: table without column!
+  SUMMARIZECOLUMNS('Table1', 'Table2', ...)  -- WRONG: multiple tables!
+  SUMMARIZECOLUMNS(..., [Measure])  -- WRONG: missing "Label"!
 
-For COUNTING distinct values:
-  EVALUATE ROW("Count", DISTINCTCOUNT('Table Name'[Column Name]))
+=== USE EXISTING MEASURES ===
+If question mentions a KPI/metric name, USE THE MEASURE DIRECTLY with [Measure Name]!
 
-For AGGREGATIONS (sum, average, count):
-  EVALUATE ROW("Result", SUM('Table Name'[Column Name]))
-  EVALUATE ROW("Result", AVERAGE('Table Name'[Column Name]))
-  EVALUATE ROW("Result", COUNT('Table Name'[Column Name]))
+=== FEW-SHOT EXAMPLES ===
 
-For FILTERED aggregations:
-  EVALUATE ROW("Result", CALCULATE(SUM('Table Name'[Column]), 'Table Name'[Filter Col] = "Value"))
+EXAMPLE 1: "Revenue of my latest quarter"
+EVALUATE
+VAR MaxYear = MAX('Revenue'[Revenue Reporting Year])
+VAR MaxQuarter = CALCULATE(MAX('Revenue'[Revenue Reporting Quarter]), 'Revenue'[Revenue Reporting Year] = MaxYear)
+RETURN SUMMARIZECOLUMNS("Latest Year", IGNORE(MaxYear), "Latest Quarter", IGNORE(MaxQuarter), "Latest Revenue", CALCULATE(SUM('Revenue'[Revenue]), 'Revenue'[Revenue Reporting Year] = MaxYear, 'Revenue'[Revenue Reporting Quarter] = MaxQuarter))
 
-For GROUPED data:
-  EVALUATE SUMMARIZECOLUMNS('Table Name'[Group Column], "Total", SUM('Table Name'[Value Column]))
+EXAMPLE 2: "Total Seizures This Year"
+EVALUATE ROW("Total Seizures This Year", CALCULATE(COUNTROWS('Seizure'), 'Seizure'[Seizure Reporting Year] = YEAR(TODAY())))
 
-For TOP N:
-  EVALUATE TOPN(10, 'Table Name', 'Table Name'[Column], DESC)
+EXAMPLE 3: "Center with Highest Seizures"
+EVALUATE TOPN(1, SUMMARIZE('Seizure', 'Seizure'[Center Description En], "Total Seizures", COUNTROWS('Seizure')), [Total Seizures], DESC)
 
-RULES:
-- NEVER use ROW() with DISTINCT() - DISTINCT returns a table, not a scalar
-- AVERAGEX/SUMX/COUNTX take exactly 2 arguments: (table, expression)
-- Use FILTER() for row-level conditions inside iterator functions
+EXAMPLE 4: "Count for each category"
+EVALUATE SUMMARIZECOLUMNS('Table'[Category], "Count", COUNTROWS('Table'))
 
-OUTPUT:
-Return ONLY valid JSON:
-{
+EXAMPLE 5: "Count by gender for this year"
+EVALUATE SUMMARIZECOLUMNS('Table'[Gender], FILTER('Table', 'Table'[Year] = YEAR(TODAY())), "Count", DISTINCTCOUNT('Table'[Name]))
+
+EXAMPLE 6: "Count by gender for previous year"
+EVALUATE SUMMARIZECOLUMNS('Table'[Gender], FILTER('Table', 'Table'[Year] = YEAR(TODAY()) - 1), "Count", DISTINCTCOUNT('Table'[Name]))
+
+EXAMPLE 7: "Graduated Students in Federal Government by institute" (USES MEASURE)
+EVALUATE
+SUMMARIZECOLUMNS (
+    'GDS LGDS'[INSTITUTE_ID],
+    "Total", [Total Number of Graduated Students have been working in Federal Government]
+)
+
+EXAMPLE 8: "Graduated Students in Federal Government THIS YEAR by institute" (MEASURE + FILTER)
+EVALUATE
+SUMMARIZECOLUMNS (
+    'GDS LGDS'[INSTITUTE_ID],
+    FILTER(
+        'GDS LGDS',
+        'GDS LGDS'[Report Year] = YEAR(TODAY())
+    ),
+    "Total", [Total Number of Graduated Students have been working in Federal Government]
+)
+
+EXAMPLE 9: "Graduated Students in Other Sector" (USES MEASURE ONLY)
+EVALUATE
+SUMMARIZECOLUMNS (
+    "Total",
+    [Total Number of Graduated Students have been working in Other Sector]
+)
+
+EXAMPLE 10: "Internationally Accredited Programs" (USES MEASURE)
+EVALUATE
+SUMMARIZECOLUMNS (
+    "Total",
+    [List of Internationally Accredited Higher Education Programs]
+)
+
+=== COMMON MISTAKES TO AVOID ===
+WRONG: SUMMARIZECOLUMNS('GDS LGDS', 'HE Students', ...)
+CORRECT: SUMMARIZECOLUMNS('GDS LGDS'[INSTITUTE_ID], ...)
+
+WRONG: SUMMARIZECOLUMNS('Table'[Col], [Measure])
+CORRECT: SUMMARIZECOLUMNS('Table'[Col], "Label", [Measure])
+
+=== PATTERN RULES ===
+- "by institute/category" → SUMMARIZECOLUMNS('Table'[GroupColumn], "Label", [Measure])
+- "this year" → add FILTER('Table', 'Table'[Year] = YEAR(TODAY()))
+- "previous year" → YEAR(TODAY()) - 1
+- "highest/top" → TOPN(N, ..., [col], DESC)
+- Single value → SUMMARIZECOLUMNS("Label", [Measure])
+
+OUTPUT (ONLY valid JSON):
+{{
   "intent": "<scalar|list|grouped|tabular>",
-  "dax": "EVALUATE ..."
-}
+  "dax": "EVALUATE ...",
+  "tables_used": ["table1", "table2"]
+}}
 
 NO explanations. NO markdown. NO extra text.
 """

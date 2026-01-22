@@ -1,0 +1,197 @@
+{
+  "metadata": {
+    "version": "1.0.0",
+    "description": "Verified DAX patterns and business logic definitions - Source of Truth for AI-generated queries",
+    "last_updated": "2026-01-20",
+    "maintainer": "BI Team"
+  },
+  "patterns": [
+    {
+      "metric": "Revenue - Latest Quarter",
+      "keywords": ["revenue", "latest quarter", "current quarter", "quarterly revenue"],
+      "logic_description": "Returns revenue for the most recent quarter by first determining the maximum year, then the maximum quarter within that year.",
+      "verified_dax_pattern": "EVALUATE\nVAR MaxYear = MAX(Revenue[Revenue Reporting Year])\nVAR MaxQuarter = CALCULATE(MAX(Revenue[Revenue Reporting Quarter]), Revenue[Revenue Reporting Year] = MaxYear)\nRETURN\nSUMMARIZECOLUMNS(\n    \"Latest Year\", IGNORE(MaxYear),\n    \"Latest Quarter\", IGNORE(MaxQuarter),\n    \"Last Month Revenue\",\n    CALCULATE(\n        SUM(Revenue[Revenue]),\n        Revenue[Revenue Reporting Year] = MaxYear,\n        Revenue[Revenue Reporting Quarter] = MaxQuarter\n    )\n)",
+      "usage_note": "Always use VAR to first determine MaxYear, then MaxQuarter within that year. Use IGNORE() for display columns in SUMMARIZECOLUMNS.",
+      "tables_required": ["Revenue"],
+      "columns_required": ["Revenue Reporting Year", "Revenue Reporting Quarter", "Revenue"]
+    },
+    {
+      "metric": "Total Seizures This Year",
+      "keywords": ["seizures", "this year", "current year seizures", "total seizures"],
+      "logic_description": "Counts all seizure records where the reporting year equals the current year using YEAR(TODAY()).",
+      "verified_dax_pattern": "EVALUATE\nROW(\n    \"Total Seizures This Year\",\n    CALCULATE(\n        COUNTROWS(Seizure),\n        Seizure[Seizure Reporting Year] = YEAR(TODAY())\n    )\n)",
+      "usage_note": "Use ROW() for single value results. Use YEAR(TODAY()) for dynamic current year filtering.",
+      "tables_required": ["Seizure"],
+      "columns_required": ["Seizure Reporting Year"]
+    },
+    {
+      "metric": "Center with Highest Seizures",
+      "keywords": ["center", "highest seizures", "top center", "most seizures"],
+      "logic_description": "Returns the center (English description) with the highest total seizure count using TOPN and SUMMARIZE.",
+      "verified_dax_pattern": "EVALUATE\nTOPN(\n    1,\n    SUMMARIZE(\n        Seizure,\n        Seizure[Center Description En],\n        \"Total Seizures\", COUNTROWS(Seizure)\n    ),\n    [Total Seizures], DESC\n)",
+      "usage_note": "Use TOPN(1, ..., [measure], DESC) pattern for finding maximum. SUMMARIZE creates the grouping.",
+      "tables_required": ["Seizure"],
+      "columns_required": ["Center Description En"]
+    },
+    {
+      "metric": "CSDT Cases by Category",
+      "keywords": ["csdt", "cases", "category", "csdt cases", "mast type"],
+      "logic_description": "Counts CSDT cases grouped by MAST Type category in English.",
+      "verified_dax_pattern": "EVALUATE\nSUMMARIZECOLUMNS(\n    'Seizure'[CSDT MAST Type En],\n    \"Count of CSDT Cases\", COUNTROWS('Seizure')\n)",
+      "usage_note": "Use SUMMARIZECOLUMNS for grouped aggregations. COUNTROWS for counting records.",
+      "tables_required": ["Seizure"],
+      "columns_required": ["CSDT MAST Type En"]
+    },
+    {
+      "metric": "Institutes by Gender - Current Year",
+      "keywords": ["institutes", "gender", "this year", "current year", "institute gender"],
+      "logic_description": "Counts distinct institutes grouped by gender for the current academic year.",
+      "verified_dax_pattern": "EVALUATE\nSUMMARIZECOLUMNS(\n    'HE Institutes'[Institute Gender EN],\n    FILTER(\n        'HE Institutes',\n        'HE Institutes'[Academic Year] = YEAR(TODAY())\n    ),\n    \"Count of Institute by Gender\", DISTINCTCOUNT('HE Institutes'[Institute Name EN])\n)",
+      "usage_note": "Use DISTINCTCOUNT for unique counts. Use FILTER within SUMMARIZECOLUMNS for row-level filtering.",
+      "tables_required": ["HE Institutes"],
+      "columns_required": ["Institute Gender EN", "Academic Year", "Institute Name EN"]
+    },
+    {
+      "metric": "Institutes by Gender - Previous Year",
+      "keywords": ["institutes", "gender", "previous year", "last year", "institute gender"],
+      "logic_description": "Counts distinct institutes grouped by gender for the previous academic year (current year minus 1).",
+      "verified_dax_pattern": "EVALUATE\nSUMMARIZECOLUMNS(\n    'HE Institutes'[Institute Gender EN],\n    FILTER(\n        'HE Institutes',\n        'HE Institutes'[Academic Year] = YEAR(TODAY()) - 1\n    ),\n    \"Count of Institute by Gender\", DISTINCTCOUNT('HE Institutes'[Institute Name EN])\n)",
+      "usage_note": "Use YEAR(TODAY()) - 1 for previous year. DISTINCTCOUNT ensures unique institute counting.",
+      "tables_required": ["HE Institutes"],
+      "columns_required": ["Institute Gender EN", "Academic Year", "Institute Name EN"]
+    },
+    {
+      "metric": "Approved Loans Count",
+      "keywords": ["approved loans", "loan count", "approved", "loans status"],
+      "logic_description": "Counts loans where Status is 'Approved' and ApprovalDate is not null.",
+      "verified_dax_pattern": "EVALUATE\nROW(\n    \"Approved Loans Count\",\n    CALCULATE(\n        COUNTROWS(Loans),\n        Loans[Status] = \"Approved\",\n        NOT(ISBLANK(Loans[ApprovalDate]))\n    )\n)",
+      "usage_note": "Do not use simple COUNT; must use Status filter AND ApprovalDate validation with NOT(ISBLANK()).",
+      "tables_required": ["Loans"],
+      "columns_required": ["Status", "ApprovalDate"]
+    },
+    {
+      "metric": "Year-over-Year Growth",
+      "keywords": ["yoy", "year over year", "growth", "yoy growth", "annual growth"],
+      "logic_description": "Calculates percentage growth comparing current year to previous year.",
+      "verified_dax_pattern": "EVALUATE\nVAR CurrentYear = YEAR(TODAY())\nVAR CurrentYearValue = CALCULATE(SUM([Value]), [Year] = CurrentYear)\nVAR PreviousYearValue = CALCULATE(SUM([Value]), [Year] = CurrentYear - 1)\nRETURN\nROW(\n    \"YoY Growth %\",\n    DIVIDE(CurrentYearValue - PreviousYearValue, PreviousYearValue, 0) * 100\n)",
+      "usage_note": "Always use DIVIDE() to avoid division by zero errors. Multiply by 100 for percentage.",
+      "tables_required": [],
+      "columns_required": ["Year", "Value"]
+    },
+    {
+      "metric": "Active Users",
+      "keywords": ["active users", "current users", "users active"],
+      "logic_description": "Counts users where Status column equals 'Active'.",
+      "verified_dax_pattern": "EVALUATE\nROW(\n    \"Active Users\",\n    CALCULATE(\n        COUNTROWS(Users),\n        Users[Status] = \"Active\"\n    )\n)",
+      "usage_note": "Status must be exactly 'Active' - case sensitive match required.",
+      "tables_required": ["Users"],
+      "columns_required": ["Status"]
+    },
+    {
+      "metric": "Net Revenue",
+      "keywords": ["net revenue", "revenue after tax", "net sales"],
+      "logic_description": "Calculates revenue minus tax deductions. Net Revenue = Gross Revenue - Tax Amount.",
+      "verified_dax_pattern": "EVALUATE\nROW(\n    \"Net Revenue\",\n    SUM(Sales[GrossRevenue]) - SUM(Sales[TaxAmount])\n)",
+      "usage_note": "Net Revenue must ALWAYS exclude tax. Never use Gross Revenue alone for Net calculations.",
+      "tables_required": ["Sales"],
+      "columns_required": ["GrossRevenue", "TaxAmount"]
+    },
+    {
+      "metric": "ADHA House Exchange Requests by Year",
+      "keywords": ["exchange requests", "house exchange", "adha exchange", "housing exchange", "exchange by year"],
+      "logic_description": "Returns the number of house exchange requests grouped by year, ordered chronologically.",
+      "verified_dax_pattern": "EVALUATE\nSUMMARIZE(\n    'ADHA Exchange Requests',\n    'ADHA Exchange Requests'[Year],\n    \"Number of House Exchange Requests\",\n    SUM('ADHA Exchange Requests'[Number of house exchange requests])\n)\nORDER BY\n    'ADHA Exchange Requests'[Year]",
+      "usage_note": "Use SUMMARIZE with ORDER BY for chronological grouping. SUM aggregates the request counts per year.",
+      "tables_required": ["ADHA Exchange Requests"],
+      "columns_required": ["Year", "Number of house exchange requests"]
+    },
+    {
+      "metric": "ADHA Loan Instalments by Quarter",
+      "keywords": ["loan instalments", "adha loan", "loan installment", "repayment", "customers repayment", "quarterly loan", "customers in repayment", "number of customers", "repayment stage", "loan customers"],
+      "logic_description": "Returns average loan installment percentage and number of customers in repayment stage, grouped by year and quarter.",
+      "verified_dax_pattern": "EVALUATE\nSUMMARIZE(\n    'ADHA Loan Instalments',\n    'ADHA Loan Instalments'[Year],\n    'ADHA Loan Instalments'[Quarter],\n    \"Average % of loan installment\",\n    AVERAGE('ADHA Loan Instalments'[Average % of loan installment]),\n    \"Number of Customers in repayment stage\",\n    AVERAGE('ADHA Loan Instalments'[Number of Customers in repayment stage])\n)\nORDER BY\n    'ADHA Loan Instalments'[Year]",
+      "usage_note": "Use SUMMARIZE for multi-column grouping (Year + Quarter). AVERAGE for percentage and customer counts. Table is 'ADHA Loan Instalments' NOT 'Customer Repayment Status'.",
+      "tables_required": ["ADHA Loan Instalments"],
+      "columns_required": ["Year", "Quarter", "Average % of loan installment", "Number of Customers in repayment stage"]
+    },
+    {
+      "metric": "Number of Customers in Repayment Stage",
+      "keywords": ["customers in repayment", "repayment stage", "number of customers", "repayment customers", "loan repayment", "customers repaying"],
+      "logic_description": "Returns the number of customers in the repayment stage from ADHA Loan Instalments data, grouped by year and quarter.",
+      "verified_dax_pattern": "EVALUATE\nSUMMARIZE(\n    'ADHA Loan Instalments',\n    'ADHA Loan Instalments'[Year],\n    'ADHA Loan Instalments'[Quarter],\n    \"Number of Customers in repayment stage\",\n    AVERAGE('ADHA Loan Instalments'[Number of Customers in repayment stage])\n)\nORDER BY\n    'ADHA Loan Instalments'[Year]",
+      "usage_note": "CRITICAL: Table is 'ADHA Loan Instalments' - NOT 'Customer Repayment Status'. Column is [Number of Customers in repayment stage]. Use AVERAGE aggregation.",
+      "tables_required": ["ADHA Loan Instalments"],
+      "columns_required": ["Year", "Quarter", "Number of Customers in repayment stage"]
+    },
+    {
+      "metric": "Graduated Students in Federal Government by Institute",
+      "keywords": ["graduated students", "federal government", "institute", "gds lgds", "government employment"],
+      "logic_description": "Returns the total number of graduated students working in Federal Government, grouped by institute ID.",
+      "verified_dax_pattern": "EVALUATE\nSUMMARIZECOLUMNS(\n    'GDS LGDS'[INSTITUTE_ID],\n    \"Total\", [Total Number of Graduated Students have been working in Federal Government]\n)",
+      "usage_note": "Uses pre-defined measure [Total Number of Graduated Students have been working in Federal Government]. Group by INSTITUTE_ID.",
+      "tables_required": ["GDS LGDS"],
+      "columns_required": ["INSTITUTE_ID"]
+    },
+    {
+      "metric": "Graduated Students in Federal Government This Year by Institute",
+      "keywords": ["graduated students", "federal government", "this year", "current year", "institute", "gds lgds"],
+      "logic_description": "Returns graduated students in Federal Government for the current year, filtered by Report Year = YEAR(TODAY()), grouped by institute.",
+      "verified_dax_pattern": "EVALUATE\nSUMMARIZECOLUMNS(\n    'GDS LGDS'[INSTITUTE_ID],\n    FILTER(\n        'GDS LGDS',\n        'GDS LGDS'[Report Year] = YEAR(TODAY())\n    ),\n    \"Total\", [Total Number of Graduated Students have been working in Federal Government]\n)",
+      "usage_note": "Use FILTER within SUMMARIZECOLUMNS for current year filtering. YEAR(TODAY()) ensures dynamic year.",
+      "tables_required": ["GDS LGDS"],
+      "columns_required": ["INSTITUTE_ID", "Report Year"]
+    },
+    {
+      "metric": "Graduated Students in Other Sector",
+      "keywords": ["graduated students", "other sector", "private sector", "non-government", "gds lgds"],
+      "logic_description": "Returns total count of graduated students working in sectors other than Federal Government.",
+      "verified_dax_pattern": "EVALUATE\nSUMMARIZECOLUMNS(\n    \"Total\",\n    [Total Number of Graduated Students have been working in Other Sector]\n)",
+      "usage_note": "Uses pre-defined measure for Other Sector employment. Returns single aggregated value.",
+      "tables_required": ["GDS LGDS"],
+      "columns_required": []
+    },
+    {
+      "metric": "Internationally Accredited Higher Education Programs",
+      "keywords": ["accredited programs", "international accreditation", "higher education programs", "accredited"],
+      "logic_description": "Returns the list/count of internationally accredited higher education programs.",
+      "verified_dax_pattern": "EVALUATE\nSUMMARIZECOLUMNS(\n    \"Total\",\n    [List of Internationally Accredited Higher Education Programs]\n)",
+      "usage_note": "Uses pre-defined measure for accredited programs. Returns aggregated total.",
+      "tables_required": [],
+      "columns_required": []
+    }
+  ],
+  "common_patterns": {
+    "single_value_result": {
+      "description": "Use ROW() when returning a single calculated value",
+      "pattern": "EVALUATE ROW(\"Label\", <expression>)"
+    },
+    "grouped_aggregation": {
+      "description": "Use SUMMARIZECOLUMNS for grouping with aggregations",
+      "pattern": "EVALUATE SUMMARIZECOLUMNS(Table[GroupColumn], \"Measure\", <aggregation>)"
+    },
+    "top_n_items": {
+      "description": "Use TOPN with SUMMARIZE for finding top/bottom items",
+      "pattern": "EVALUATE TOPN(N, SUMMARIZE(Table, GroupColumn, \"Measure\", <agg>), [Measure], DESC)"
+    },
+    "filtered_count": {
+      "description": "Use CALCULATE with COUNTROWS for filtered counts",
+      "pattern": "CALCULATE(COUNTROWS(Table), Table[Column] = \"Value\")"
+    },
+    "current_year_filter": {
+      "description": "Use YEAR(TODAY()) for dynamic current year",
+      "pattern": "Table[YearColumn] = YEAR(TODAY())"
+    },
+    "previous_year_filter": {
+      "description": "Use YEAR(TODAY()) - 1 for previous year",
+      "pattern": "Table[YearColumn] = YEAR(TODAY()) - 1"
+    },
+    "distinct_count": {
+      "description": "Use DISTINCTCOUNT for unique value counting",
+      "pattern": "DISTINCTCOUNT(Table[Column])"
+    },
+    "safe_division": {
+      "description": "Always use DIVIDE() to prevent division by zero",
+      "pattern": "DIVIDE(numerator, denominator, 0)"
+    }
+  }
+}

@@ -439,8 +439,9 @@ class PowerBIMCPServer:
             logger.error(f"List datasets error: {e}")
             return f"Error listing datasets: {str(e)}"
 
+    
     async def _handle_list_tables(self, args: Dict[str, Any]) -> str:
-        """List tables in a Cloud dataset using REST API with COLUMNSTATISTICS()"""
+        """List tables and their columns in a Cloud dataset using REST API with COLUMNSTATISTICS()"""
         try:
             workspace_id = args.get("workspace_id")
             dataset_id = args.get("dataset_id")
@@ -451,26 +452,57 @@ class PowerBIMCPServer:
 
             rest_connector = self._get_rest_connector(access_token)
             if not rest_connector:
-                return "Error: Access token not set. Use set_access_token tool or set POWERBI_ACCESS_TOKEN env var."
+                return (
+                    "Error: Access token not set. "
+                    "Use set_access_token tool or set POWERBI_ACCESS_TOKEN env var."
+                )
 
-            # Use REST API with COLUMNSTATISTICS() - works with semantic models
+            # Fetch tables (includes column stats via COLUMNSTATISTICS())
             tables = await asyncio.get_event_loop().run_in_executor(
                 None, rest_connector.get_tables, workspace_id, dataset_id
             )
 
-            if tables:
-                result = f"Tables in dataset ({len(tables)}):\n\n"
-                for table in tables:
-                    result += f"  - {table['name']}\n"
-                    result += f"    Columns: {len(table.get('columns', []))}\n"
+            if not tables:
+                return "No tables found or error occurred. Check workspace_id and dataset_id."
+
+            result = f"Tables in dataset ({len(tables)}):\n\n"
+
+            for table in tables:
+                table_name = table.get("name", "Unknown")
+                columns = table.get("columns", [])
+
+                result += f"📘 **{table_name}**\n"
+
+                if not columns:
+                    result += "  (No columns found)\n\n"
+                    continue
+
+                for col in columns:
+                    col_name = col.get("name", "Unknown")
+                    cardinality = col.get("cardinality")
+                    min_val = col.get("min")
+                    max_val = col.get("max")
+
+                    result += f"  - {col_name}"
+
+                    if cardinality is not None:
+                        result += f" [Cardinality: {cardinality}]"
+                    if min_val is not None:
+                        result += f" [Min: {min_val}]"
+                    if max_val is not None:
+                        result += f" [Max: {max_val}]"
+
                     result += "\n"
-                return result
-            else:
-                return f"No tables found or error occurred. Check workspace_id and dataset_id are correct."
+
+                result += "\n"
+
+            return result
 
         except Exception as e:
-            logger.error(f"List tables error: {e}", exc_info=True)
+            logger.error("List tables error", exc_info=True)
             return f"Error listing tables: {str(e)}"
+
+    
 
     async def _handle_list_columns(self, args: Dict[str, Any]) -> str:
         """List columns for a table in Cloud dataset using REST API with COLUMNSTATISTICS()"""
@@ -545,16 +577,43 @@ class PowerBIMCPServer:
             if not rest_connector:
                 return "Error: Access token not set. Use set_access_token tool or set POWERBI_ACCESS_TOKEN env var."
 
-            # Execute query using REST connector
-            rows = await asyncio.get_event_loop().run_in_executor(
+            # Execute query using REST connector (returns dict with success, rows, error)
+            query_result = await asyncio.get_event_loop().run_in_executor(
                 None, 
                 lambda: rest_connector.execute_dax_query(workspace_id, dataset_id, dax_query)
             )
 
-            # Build response
+            # Handle new structured response format
+            if isinstance(query_result, dict):
+                if not query_result.get("success", False):
+                    # Query failed - return detailed error
+                    error_msg = query_result.get("error", "Unknown error")
+                    query_used = query_result.get("query", dax_query)
+                    status_code = query_result.get("status_code", "N/A")
+                    
+                    result = f"❌ DAX Query Failed\n\n"
+                    result += f"**Error:** {error_msg}\n\n"
+                    result += f"**Status Code:** {status_code}\n\n"
+                    result += f"**Query Used:**\n```dax\n{query_used}\n```\n\n"
+                    result += "**Troubleshooting Tips:**\n"
+                    result += "1. Check table and column names match exactly (case-sensitive)\n"
+                    result += "2. Use list_tables to see available tables\n"
+                    result += "3. Use list_columns to see column names for a table\n"
+                    result += "4. Use get_verified_dax_patterns to find pre-built queries\n"
+                    return result
+                
+                # Query succeeded
+                rows = query_result.get("rows", [])
+                row_count = query_result.get("row_count", len(rows))
+                
+                result = f"✅ Query returned {row_count} row(s)\n\n"
+                result += json.dumps(rows, indent=2, default=str)
+                return result
+            
+            # Fallback for old list format (backward compatibility)
+            rows = query_result if isinstance(query_result, list) else []
             result = f"Query returned {len(rows)} row(s)\n\n"
             result += json.dumps(rows, indent=2, default=str)
-
             return result
 
         except Exception as e:

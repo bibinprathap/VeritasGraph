@@ -156,29 +156,57 @@ class PowerBIMCPClient:
         dataset_id: str,
         access_token: Optional[str] = None
     ) -> List[Dict[str, Any]]:
-        """List tables in a dataset"""
+        """List tables with columns in a dataset"""
+
         if not self.session:
             await self.connect()
-        
+
         args = {
             "workspace_id": workspace_id,
             "dataset_id": dataset_id
         }
         if access_token:
             args["access_token"] = access_token
-        
+
         result = await self.session.call_tool("list_tables", arguments=args)
+
+        # MCP tool returns text — parse it
         response_text = result.content[0].text if result.content else ""
-        
-        # Parse response text to extract table names
-        tables = []
-        for line in response_text.split("\n"):
+
+        tables: List[Dict[str, Any]] = []
+        current_table = None
+
+        for line in response_text.splitlines():
             line = line.strip()
-            if line.startswith("- "):
-                table_name = line[2:].strip()
-                tables.append({"name": table_name})
-        
+
+            # Table header: 📘 **TableName**
+            if line.startswith("📘"):
+                table_name = line.replace("📘", "").replace("**", "").strip()
+                current_table = {"name": table_name, "columns": []}
+                tables.append(current_table)
+
+            # Column line: - ColumnName [Cardinality: X] [Min: Y]
+            elif line.startswith("-") and current_table:
+                col = {}
+
+                # Column name
+                col_name = line[1:].split("[")[0].strip()
+                col["name"] = col_name
+
+                # Optional stats
+                if "Cardinality:" in line:
+                    col["cardinality"] = int(
+                        line.split("Cardinality:")[1].split("]")[0].strip()
+                    )
+                if "Min:" in line:
+                    col["min"] = line.split("Min:")[1].split("]")[0].strip()
+                if "Max:" in line:
+                    col["max"] = line.split("Max:")[1].split("]")[0].strip()
+
+                current_table["columns"].append(col)
+
         return tables
+
     
     async def list_columns(
         self,

@@ -3,12 +3,20 @@ Schema caching service for Power BI datasets
 Caches dataset structure (tables, columns) to avoid repeated API calls
 """
 import asyncio
+import hashlib
 import logging
 import time
 from typing import Any, Dict, List, Optional
 from dataclasses import dataclass, field
 
 logger = logging.getLogger(__name__)
+
+
+def _token_hash(token: str) -> str:
+    """Create a short hash of the token for comparison"""
+    if not token:
+        return ""
+    return hashlib.md5(token.encode()).hexdigest()[:8]
 
 
 @dataclass
@@ -43,9 +51,15 @@ class WorkspaceCache:
     schemas: Dict[str, CachedSchema] = field(default_factory=dict)  # dataset_id -> schema
     cached_at: float = field(default_factory=time.time)
     ttl_seconds: int = 3600
+    token_hash: str = ""  # Track which token was used for this cache
     
     def is_expired(self) -> bool:
         return time.time() - self.cached_at > self.ttl_seconds
+    
+    def is_token_changed(self, current_token: str) -> bool:
+        """Check if token has changed since caching"""
+        current_hash = _token_hash(current_token)
+        return self.token_hash != current_hash
 
 
 class SchemaCache:
@@ -78,24 +92,56 @@ class SchemaCache:
     ) -> WorkspaceCache:
         """Get or fetch workspace information including datasets"""
         async with self._lock:
+            current_token_hash = _token_hash(access_token or "")
+            
+            # Check existing cache
             if workspace_id in self._workspaces and not force_refresh:
                 cache = self._workspaces[workspace_id]
-                if not cache.is_expired():
-                    logger.debug(f"Using cached workspace info for {workspace_id}")
-                    return cache
+                
+                # IMPORTANT: Invalidate cache if token changed
+                # This handles the case where previous token was expired
+                if cache.is_token_changed(access_token or ""):
+                    logger.info(f"Token changed for workspace {workspace_id}, invalidating cache")
+                    # Don't use cached data - token changed
+                elif not cache.is_expired():
+                    # Also don't use cache if it's empty (likely from failed auth)
+                    if cache.datasets and len(cache.datasets) > 0:
+                        logger.debug(f"Using cached workspace info for {workspace_id} ({len(cache.datasets)} datasets)")
+                        return cache
+                    else:
+                        logger.info(f"Cache has 0 datasets for {workspace_id}, refreshing")
             
             # Fetch fresh data
-            logger.info(f"Fetching workspace info for {workspace_id}")
+            logger.info(f"Fetching workspace info for {workspace_id} with token hash: {current_token_hash}")
             datasets = await mcp_client.list_datasets(workspace_id, access_token=access_token)
             
-            cache = WorkspaceCache(
-                workspace_id=workspace_id,
-                workspace_name=workspace_id,  # Could fetch name if needed
-                datasets=datasets,
-                schemas=self._workspaces.get(workspace_id, WorkspaceCache(workspace_id, "")).schemas
-            )
-            self._workspaces[workspace_id] = cache
-            return cache
+            # Check if we got an error response (string instead of list)
+            if isinstance(datasets, str):
+                logger.warning(f"list_datasets returned string (likely error): {datasets[:100]}")
+                datasets = []
+            
+            # Only cache if we got valid data (non-empty)
+            # Don't cache empty results as they might be from auth errors
+            if datasets and len(datasets) > 0:
+                cache = WorkspaceCache(
+                    workspace_id=workspace_id,
+                    workspace_name=workspace_id,
+                    datasets=datasets,
+                    schemas=self._workspaces.get(workspace_id, WorkspaceCache(workspace_id, "")).schemas,
+                    token_hash=current_token_hash
+                )
+                self._workspaces[workspace_id] = cache
+                logger.info(f"Cached {len(datasets)} datasets for workspace {workspace_id}")
+                return cache
+            else:
+                # Return empty cache but DON'T store it
+                logger.warning(f"Got 0 datasets for workspace {workspace_id}, not caching (possible auth error)")
+                return WorkspaceCache(
+                    workspace_id=workspace_id,
+                    workspace_name=workspace_id,
+                    datasets=[],
+                    token_hash=current_token_hash
+                )
     
     async def get_dataset_schema(
         self,
@@ -108,18 +154,34 @@ class SchemaCache:
     ) -> CachedSchema:
         """Get or fetch schema for a specific dataset"""
         async with self._lock:
+            current_token_hash = _token_hash(access_token or "")
+            
             # Check existing cache
             if workspace_id in self._workspaces:
                 workspace = self._workspaces[workspace_id]
-                if dataset_id in workspace.schemas and not force_refresh:
+                
+                # Check if token changed - invalidate all schemas for this workspace
+                if workspace.is_token_changed(access_token or ""):
+                    logger.info(f"Token changed, invalidating schema cache for workspace {workspace_id}")
+                    workspace.schemas.clear()
+                elif dataset_id in workspace.schemas and not force_refresh:
                     schema = workspace.schemas[dataset_id]
                     if not schema.is_expired():
-                        logger.debug(f"Using cached schema for dataset {dataset_id}")
-                        return schema
+                        # Don't use empty cached schemas
+                        if schema.tables and len(schema.tables) > 0:
+                            logger.debug(f"Using cached schema for dataset {dataset_id} ({len(schema.tables)} tables)")
+                            return schema
+                        else:
+                            logger.info(f"Cached schema for {dataset_id} is empty, refreshing")
             
             # Fetch fresh schema
             logger.info(f"Fetching schema for dataset {dataset_id}")
             tables = await mcp_client.list_tables(workspace_id, dataset_id, access_token=access_token)
+            
+            # Check for error response
+            if isinstance(tables, str):
+                logger.warning(f"list_tables returned string (likely error): {tables[:100]}")
+                tables = []
             
             schema = CachedSchema(
                 workspace_id=workspace_id,
@@ -134,15 +196,22 @@ class SchemaCache:
                     columns = await mcp_client.list_columns(
                         workspace_id, dataset_id, table_name, access_token=access_token
                     )
-                    schema.tables[table_name] = columns
+                    if isinstance(columns, list):
+                        schema.tables[table_name] = columns
             
-            # Store in cache
-            if workspace_id not in self._workspaces:
-                self._workspaces[workspace_id] = WorkspaceCache(
-                    workspace_id=workspace_id,
-                    workspace_name=workspace_id
-                )
-            self._workspaces[workspace_id].schemas[dataset_id] = schema
+            # Only cache if we got valid data
+            if schema.tables and len(schema.tables) > 0:
+                if workspace_id not in self._workspaces:
+                    self._workspaces[workspace_id] = WorkspaceCache(
+                        workspace_id=workspace_id,
+                        workspace_name=workspace_id,
+                        token_hash=current_token_hash
+                    )
+                self._workspaces[workspace_id].schemas[dataset_id] = schema
+                self._workspaces[workspace_id].token_hash = current_token_hash  # Update token hash
+                logger.info(f"Cached schema for dataset {dataset_id} ({len(schema.tables)} tables)")
+            else:
+                logger.warning(f"Got 0 tables for dataset {dataset_id}, not caching")
             
             return schema
     

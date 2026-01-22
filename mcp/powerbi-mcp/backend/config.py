@@ -40,7 +40,7 @@ class Settings(BaseSettings):
     
     # LangChain/LangGraph Settings
     MAX_ITERATIONS: int = int(os.getenv("MAX_ITERATIONS", "15"))
-    TEMPERATURE: float = float(os.getenv("TEMPERATURE", "0.1"))  # Low temperature for deterministic DAX
+    TEMPERATURE: float = float(os.getenv("TEMPERATURE", "0"))  # Low temperature for deterministic DAX
     
     # Logging
     LOG_LEVEL: str = os.getenv("LOG_LEVEL", "INFO")

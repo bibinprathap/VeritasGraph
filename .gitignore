@@ -4,3 +4,4 @@ graphrag/
 .venv/
 mcp/client/*
 mcp/powerbi-mcp/.env
+mcp/clientv1.zip
