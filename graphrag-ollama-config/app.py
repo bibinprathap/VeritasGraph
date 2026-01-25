@@ -54,6 +54,20 @@ from ingest import (
     check_dependencies
 )
 
+# Import PageIndex-inspired Reasoning Search (for 99%+ accuracy)
+try:
+    from reasoning_search import (
+        enhanced_search,
+        reasoning_local_search,
+        reasoning_global_search,
+        hybrid_reasoning_search,
+        ReasoningSearchEngine
+    )
+    REASONING_SEARCH_AVAILABLE = True
+except ImportError:
+    REASONING_SEARCH_AVAILABLE = False
+    print("Warning: reasoning_search module not available. Using standard search.")
+
 # Load .env from the same directory as this script
 script_dir = os.path.dirname(os.path.abspath(__file__))
 load_dotenv(os.path.join(script_dir, '.env'))
@@ -89,6 +103,14 @@ PRESET_MAPPING = {
         "response_type": "Multiple Paragraphs"
     }
 }
+
+# Query type options with reasoning-based search
+QUERY_TYPE_OPTIONS = [
+    "global",           # Standard community-based search
+    "local",            # Standard entity-based search
+    "reasoning",        # PageIndex-inspired reasoning search (highest accuracy)
+    "hybrid",           # Combined local + global with reasoning
+]
 
 async def global_search(query, input_dir, community_level=2, temperature=0.5, response_type="Multiple Paragraphs"):
         llm_config = get_llm_config()
@@ -338,6 +360,37 @@ async def chat_graphrag(
         response = await local_question_generate(
             question_history, input_dir, community_level, temperature
         )
+    elif query_type == "reasoning" and REASONING_SEARCH_AVAILABLE:
+        # PageIndex-inspired reasoning-based search (highest accuracy)
+        result = await enhanced_search(
+            query=query,
+            input_dir=input_dir,
+            query_type="auto",
+            community_level=community_level,
+            temperature=temperature,
+            response_type=response_type
+        )
+        response = result["response"]
+        # Add confidence and verification info
+        confidence = result.get("confidence", 0)
+        verified = result.get("verified", False)
+        if confidence > 0:
+            response += f"\n\n---\n📊 **Confidence:** {confidence:.0%} | ✅ **Verified:** {verified}"
+        query_entities = [word for word in query.split() if len(word) > 3]
+    elif query_type == "hybrid" and REASONING_SEARCH_AVAILABLE:
+        # Hybrid reasoning search (combined local + global)
+        result = await hybrid_reasoning_search(
+            query=query,
+            input_dir=input_dir,
+            community_level=community_level,
+            temperature=temperature,
+            response_type=response_type
+        )
+        response = result["response"]
+        confidence = result.get("confidence", 0)
+        if confidence > 0:
+            response += f"\n\n---\n📊 **Confidence:** {confidence:.0%} | 🔄 **Strategy:** Hybrid"
+        query_entities = [word for word in query.split() if len(word) > 3]
     elif query_type == "global":
         response = await global_search(
             query, input_dir, community_level, temperature, response_type
@@ -442,10 +495,10 @@ def create_gradio_interface():
                 )
 
                 query_type = gr.Radio(
-                    ["global", "local"],
+                    ["global", "local", "reasoning", "hybrid"],
                     label="Query Type",
-                    value="global",
-                    info="Global: community-based search, Local: entity-based search"
+                    value="reasoning" if REASONING_SEARCH_AVAILABLE else "global",
+                    info="🎯 Reasoning: PageIndex-style (99% acc) | 🔄 Hybrid: Combined | 🌐 Global: Communities | 📍 Local: Entities"
                 )
 
                 temperature = gr.Slider(
@@ -492,8 +545,10 @@ I can help you explore the **Student Visa & Athlete Recruitment** knowledge grap
 - "How does NCAA eligibility work?"
 
 **Tips:**
-- Use **Global Search** for high-level summaries across all data
-- Use **Local Search** for specific entity queries (e.g., "NCAA", "F-1 visa")
+- 🎯 **Reasoning Search** (NEW!) - PageIndex-inspired, 99% accuracy with verification
+- 🔄 **Hybrid Search** - Combines local + global with LLM reasoning
+- 🌐 **Global Search** - High-level summaries across all data
+- 📍 **Local Search** - Specific entity queries (e.g., "NCAA", "F-1 visa")
 - Type `/generate` to get AI-suggested follow-up questions
 - Toggle **Show Graph Visualization** to see the knowledge graph!
 

@@ -1,7 +1,51 @@
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Build artifacts
+dist/
+build/
+*.egg-info/
+*.egg
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Project specific
 graphrag-ollama-config/graphrag-ollama/
 scripts/start-with-pages-sync.sh
 graphrag/
 .venv/
+
+# Logs and outputs
+*.log
+output/
+graphrag-ollama-config/output/
+graphrag-ollama-config/cache/
+graphrag-ollama-config/graph_cache/
+graphrag-ollama-config/logs/
+
+# Environment files (keep .env.example, ignore actual .env)
+.env
+!.env.example
+
+# OS files
+.DS_Store
+Thumbs.db
 mcp/client/*
 mcp/powerbi-mcp/.env
 mcp/clientv1.zip
+mcp/client/node_modules/*
+mcp/powerbi-mcp/node_modules/*

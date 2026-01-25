@@ -3,11 +3,139 @@
  
 <img src="https://github.com/bibinprathap/VeritasGraph/blob/master/VeritasGraph.jpeg" alt="Project Logo" style="max-width:140px; height:150px;">
 
+[![PyPI version](https://badge.fury.io/py/veritasgraph.svg)](https://badge.fury.io/py/veritasgraph)
+[![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 VeritasGraph is a production-ready, end-to-end framework for building advanced question-answering and summarization systems that operate entirely within your private infrastructure.  
 
 It is architected to overcome the fundamental limitations of traditional vector-search-based Retrieval-Augmented Generation (RAG) by leveraging a knowledge graph to perform complex, multi-hop reasoning.  
 
 Baseline RAG systems excel at finding direct answers but falter when faced with questions that require connecting disparate information or understanding a topic holistically. **VeritasGraph addresses this challenge directly, providing not just answers, but transparent, auditable reasoning paths with full source attribution for every generated claim, establishing a new standard for trust and reliability in enterprise AI.**
+
+## 📦 Installation
+
+```bash
+# Install from PyPI
+pip install veritasgraph
+
+# With optional dependencies
+pip install veritasgraph[web]      # Gradio UI + visualization
+pip install veritasgraph[graphrag] # Microsoft GraphRAG integration  
+pip install veritasgraph[ingest]   # YouTube & web article ingestion
+pip install veritasgraph[all]      # Everything
+```
+
+### Quick Start
+
+```python
+from veritasgraph import VisionRAGPipeline, VisionRAGConfig
+
+# Configure for local Ollama models
+config = VisionRAGConfig(vision_model="llama3.2-vision:11b")
+pipeline = VisionRAGPipeline(config)
+
+# Ingest a PDF document (automatically extracts hierarchical structure)
+doc = pipeline.ingest_pdf("document.pdf")
+
+# Query with full visual context
+result = pipeline.query("What are the key findings in the tables?")
+```
+
+### 🌳 NEW: Hierarchical Tree Support
+
+**The Power of PageIndex's Tree + The Flexibility of a Graph**
+
+VeritasGraph now combines two powerful retrieval paradigms:
+- **Tree-based navigation** - Human-like retrieval through Table of Contents structure
+- **Graph-based search** - Semantic similarity across the entire document
+
+```python
+from veritasgraph import VisionRAGPipeline
+
+pipeline = VisionRAGPipeline()
+doc = pipeline.ingest_pdf("report.pdf")
+
+# View the document's hierarchical structure (like a Table of Contents)
+print(pipeline.get_document_tree())
+# Output:
+# Document Root
+# ├── [1] Introduction (pp. 1-5)
+# │   ├── [1.1] Background (pp. 1-2)
+# │   └── [1.2] Objectives (pp. 3-5)
+# ├── [2] Methodology (pp. 6-15)
+# │   ├── [2.1] Data Collection (pp. 6-10)
+# │   └── [2.2] Analysis Framework (pp. 11-15)
+# └── [3] Results (pp. 16-30)
+
+# Navigate to a specific section (tree-based retrieval)
+section = pipeline.navigate_to_section("Methodology")
+print(section['breadcrumb'])  # ['Document Root', 'Methodology']
+print(section['children'])    # [Data Collection, Analysis Framework]
+
+# Or use graph-based semantic search
+result = pipeline.query("What methodology was used?")
+# Returns answer with section context: "📍 Location: Document > Methodology > Analysis Framework"
+```
+
+#### Why Hierarchical Trees Matter
+
+| Traditional RAG | VeritasGraph with Trees |
+|-----------------|------------------------|
+| Chunks documents randomly | Preserves document structure |
+| Loses section context | Maintains parent-child relationships |
+| Can't navigate by structure | Supports TOC-style navigation |
+| No hierarchy awareness | Full tree traversal (ancestors, siblings, children) |
+
+### CLI Usage
+
+```bash
+veritasgraph --version                                    # Show version
+veritasgraph info                                         # Check dependencies  
+veritasgraph init my_project                              # Initialize new project
+veritasgraph ingest document.pdf --ingest-mode=document-centric  # Don't Chunk. Graph.
+```
+
+### 📄 NEW: "Don't Chunk. Graph." - Document-Centric Ingestion
+
+**Stop Chunking. Start Graphing.**
+
+Traditional RAG systems split documents into arbitrary 500-token chunks, destroying context and structure. VeritasGraph's **document-centric mode** treats whole pages or sections as single retrievable nodes:
+
+```python
+from veritasgraph import VisionRAGPipeline, VisionRAGConfig, IngestMode
+
+# "Don't Chunk. Graph." - Document-centric mode (default)
+config = VisionRAGConfig(
+    vision_model="llama3.2-vision:11b",
+    ingest_mode="document-centric"  # whole pages/sections as nodes
+)
+pipeline = VisionRAGPipeline(config)
+doc = pipeline.ingest_pdf("annual_report.pdf")
+
+# Each page is a single node with full content preserved
+# Tables stay intact. Charts stay with their context.
+```
+
+#### Ingestion Modes
+
+| Mode | Description | Best For |
+|------|-------------|----------|
+| `document-centric` | Whole pages/sections as nodes (default) | Most documents |
+| `page` | Each page = one node | Slide decks, reports |
+| `section` | Each section = one node | Structured documents |
+| `chunk` | Traditional 500-token chunks | Legacy compatibility |
+| `auto` | Automatically choose | Mixed content |
+
+#### Why Document-Centric Wins
+
+| Traditional Chunking | Document-Centric |
+|---------------------|------------------|
+| Splits tables mid-row | Tables stay complete |
+| Loses chart context | Charts with captions |
+| Arbitrary boundaries | Natural structure |
+| 500-token fragments | Full page/section |
+
 <p align="center"> 
 <img alt="stars" title="stars" src="https://img.shields.io/github/stars/bibinprathap/VeritasGraph" />
 <img alt="issues" title="issues" src="https://img.shields.io/github/issues/bibinprathap/VeritasGraph" />
@@ -39,6 +167,9 @@ Every generated claim is **traced back** to its source document, guaranteeing tr
 
 ### ✅ Advanced Graph Reasoning
 Answer **complex, multi-hop questions** that go beyond the capabilities of traditional vector search engines.
+
+### ✅ Hierarchical Tree + Graph (NEW!)
+Combines **PageIndex-style TOC navigation** with **graph flexibility**. Navigate documents like humans do (through sections and subsections) while also leveraging semantic search across the entire graph.
 
 ### ✅ Interactive Graph Visualization
 Explore your knowledge graph with an **interactive 2D graph explorer** powered by PyVis, showing entities, relationships, and reasoning paths in real-time.
@@ -565,6 +696,118 @@ VeritasGraph includes an **interactive 2D knowledge graph explorer** that visual
 
 ### Toggle Visualization
 Use the checkbox **"🔗 Show Graph Visualization"** in the left panel to enable/disable automatic graph updates after each query.
+
+---
+
+## 🔌 Power BI MCP Integration
+
+VeritasGraph includes a **Model Context Protocol (MCP) server** that integrates the GraphRAG knowledge graph with Power BI, enabling intelligent dataset selection and DAX query generation.
+
+### Architecture
+
+```
+┌─────────────────────┐     ┌──────────────────────┐     ┌─────────────────────┐
+│   Next.js Client    │────▶│  Power BI MCP Server │────▶│  GraphRAG API       │
+│   (Chat Interface)  │     │  (Python + MCP)      │     │  (FastAPI)          │
+└─────────────────────┘     └──────────────────────┘     └─────────────────────┘
+         │                           │                            │
+         │                           ▼                            ▼
+         │                  ┌──────────────────┐         ┌─────────────────────┐
+         │                  │  Power BI API    │         │  Knowledge Graph    │
+         │                  │  (REST/XMLA)     │         │  (Parquet Files)    │
+         └──────────────────┴──────────────────┴─────────┴─────────────────────┘
+```
+
+### Components
+
+| Component | Location | Port | Description |
+|-----------|----------|------|-------------|
+| **GraphRAG API** | `graphrag-ollama-config/api.py` | 7860 | REST API exposing GraphRAG search functions |
+| **Power BI MCP Server** | `mcp/powerbi-mcp/src/server.py` | - | MCP server with Power BI tools |
+| **Next.js Client** | `mcp/Client/` | 3000 | Chat interface for interacting with Power BI |
+
+### GraphRAG API Endpoints
+
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `/health` | GET | Health check and index status |
+| `/query` | POST | Execute GraphRAG queries (local/global search) |
+| `/ingest` | POST | Ingest text content into knowledge graph |
+| `/index` | POST | Trigger GraphRAG indexing |
+| `/status` | GET | Get current indexing status |
+| `/files` | GET | List input files |
+
+### Quick Start
+
+1. **Start GraphRAG API Server:**
+   ```powershell
+   cd graphrag-ollama-config
+   python api.py --host 127.0.0.1 --port 7860
+   ```
+   Or use the startup script:
+   ```powershell
+   .\start-graphrag-api.ps1
+   ```
+
+2. **Start Ollama (LLM):**
+   ```powershell
+   ollama serve
+   ```
+
+3. **Start the MCP Client:**
+   ```powershell
+   cd mcp/Client
+   npm run dev
+   ```
+
+4. **Access the Chat Interface:**
+   - Open http://localhost:3000
+   - Chat with your Power BI data using natural language
+
+### Available MCP Tools
+
+The Power BI MCP server provides these tools:
+
+| Tool | Description |
+|------|-------------|
+| `list_workspaces` | List all Power BI workspaces |
+| `list_datasets` | List datasets in a workspace |
+| `get_tables` | Get tables from a dataset |
+| `get_columns` | Get columns from a table |
+| `execute_dax` | Execute DAX queries |
+| `suggest_dataset_for_query` | Use knowledge graph to suggest best dataset |
+| `generate_dax_with_context` | Generate DAX with schema-aware context |
+| `index_schema_to_knowledge` | Index Power BI schema to GraphRAG |
+
+### Configuration
+
+Set these environment variables in `mcp/Client/.env`:
+
+```env
+PYTHON_PATH=C:/Projects/graphrag/VeritasGraph/.venv/Scripts/python.exe
+MCP_SERVER_SCRIPT=c:/Projects/graphrag/VeritasGraph/mcp/powerbi-mcp/src/server.py
+LLM_API_URL=http://127.0.0.1:11434/v1/chat/completions
+LLM_MODEL=llama3.1:latest
+GRAPHRAG_API_URL=http://127.0.0.1:7860
+POWERBI_ACCESS_TOKEN=<your-power-bi-token>
+```
+
+### Example Usage
+
+Query the chat interface with natural language:
+
+```
+"Show me the top 10 customers by revenue from last month"
+```
+
+The system will:
+1. Query the GraphRAG knowledge graph for relevant schema context
+2. Identify the appropriate Power BI dataset
+3. Generate a valid DAX query
+4. Execute it against Power BI
+5. Return formatted results with source attribution
+
+---
  
 ## 📑 Table of Contents  
 

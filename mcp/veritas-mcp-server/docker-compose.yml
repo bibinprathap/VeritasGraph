@@ -1,0 +1,62 @@
+version: '3.8'
+
+services:
+  veritas-mcp-server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: veritas-mcp-server
+    ports:
+      - "8000:8000"
+    environment:
+      # LLM Configuration - update these for your setup
+      - GRAPHRAG_API_KEY=${GRAPHRAG_API_KEY:-ollama}
+      - GRAPHRAG_LLM_API_BASE=${GRAPHRAG_LLM_API_BASE:-http://host.docker.internal:11434/v1}
+      - GRAPHRAG_LLM_MODEL=${GRAPHRAG_LLM_MODEL:-llama3.1:latest}
+      - GRAPHRAG_EMBEDDING_API_BASE=${GRAPHRAG_EMBEDDING_API_BASE:-http://host.docker.internal:11434/v1}
+      - EMBEDDING_MODEL=${EMBEDDING_MODEL:-nomic-embed-text}
+      # VeritasGraph paths (inside container)
+      - VERITAS_OUTPUT_DIR=/app/graphrag-config/output/artifacts
+      - VERITAS_INPUT_DIR=/app/graphrag-config/input
+    volumes:
+      # Mount the graphrag-ollama-config directory
+      - ../../graphrag-ollama-config:/app/graphrag-config:rw
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    networks:
+      - veritas-network
+    # For Linux hosts to access host network (Ollama)
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  # Optional: Ollama service for local LLM
+  # Uncomment if you want to run Ollama in the same compose
+  # ollama:
+  #   image: ollama/ollama:latest
+  #   container_name: ollama
+  #   ports:
+  #     - "11434:11434"
+  #   volumes:
+  #     - ollama-data:/root/.ollama
+  #   restart: unless-stopped
+  #   networks:
+  #     - veritas-network
+  #   deploy:
+  #     resources:
+  #       reservations:
+  #         devices:
+  #           - driver: nvidia
+  #             count: all
+  #             capabilities: [gpu]
+
+networks:
+  veritas-network:
+    driver: bridge
+
+# volumes:
+#   ollama-data:

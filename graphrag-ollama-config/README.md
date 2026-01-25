@@ -103,7 +103,79 @@ python -m graphrag.query \
 --method global \
 "What are the top themes in this story?"
 ```
- 
+ ## OpenAI-Compatible API
+
+VeritasGraph includes an OpenAI-compatible REST API, allowing you to use GraphRAG with any client that supports the OpenAI chat completion format.
+
+### Start the API Server
+```bash
+python api.py --host 127.0.0.1 --port 7860
+```
+
+### Available Endpoints
+
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `/v1/chat/completions` | POST | OpenAI-compatible chat completion |
+| `/v1/models` | GET | List available models |
+| `/query` | POST | Direct GraphRAG query |
+| `/ingest` | POST | Ingest text content |
+| `/index` | POST | Trigger indexing |
+| `/status` | GET | Get indexing status |
+| `/health` | GET | Health check |
+
+### Chat Completion Example
+
+```bash
+curl -X POST http://127.0.0.1:7860/v1/chat/completions \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "graphrag-local",
+    "messages": [
+      {"role": "user", "content": "What are the main entities in the knowledge graph?"}
+    ],
+    "temperature": 0.7
+  }'
+```
+
+### Available Models
+
+| Model | Description |
+|-------|-------------|
+| `graphrag-local` | Local search - best for specific entity queries |
+| `graphrag-global` | Global search - best for broad summarization |
+
+### Python Client Example
+
+```python
+import requests
+
+response = requests.post(
+    "http://127.0.0.1:7860/v1/chat/completions",
+    json={
+        "model": "graphrag-local",
+        "messages": [{"role": "user", "content": "What do you know about visa types?"}]
+    }
+)
+print(response.json()["choices"][0]["message"]["content"])
+```
+
+### Using with OpenAI Python SDK
+
+```python
+from openai import OpenAI
+
+client = OpenAI(
+    base_url="http://127.0.0.1:7860/v1",
+    api_key="not-needed"  # API key not required for local server
+)
+
+response = client.chat.completions.create(
+    model="graphrag-local",
+    messages=[{"role": "user", "content": "Summarize the key themes"}]
+)
+print(response.choices[0].message.content)
+```
 ## Using the Gradio UI
  
 ### 1. Install UI Requirements

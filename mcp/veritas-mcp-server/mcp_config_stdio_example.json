@@ -1,0 +1,18 @@
+{
+  "mcpServers": {
+    "veritasgraph": {
+      "command": "python",
+      "args": [
+        "C:/Projects/graphrag/VeritasGraph/mcp/veritas-mcp-server/veritas_mcp_server.py",
+        "--transport", "stdio"
+      ],
+      "env": {
+        "GRAPHRAG_API_KEY": "your-api-key-here",
+        "GRAPHRAG_LLM_API_BASE": "http://127.0.0.1:11434/v1",
+        "GRAPHRAG_LLM_MODEL": "llama3.1:latest",
+        "GRAPHRAG_EMBEDDING_API_BASE": "http://127.0.0.1:11434/v1",
+        "EMBEDDING_MODEL": "nomic-embed-text"
+      }
+    }
+  }
+}

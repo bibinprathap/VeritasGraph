@@ -1,0 +1,80 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "veritas-mcp-server"
+version = "1.0.0"
+description = "MCP Server for VeritasGraph - Expose GraphRAG knowledge graph as MCP tools"
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.10"
+authors = [
+    { name = "VeritasGraph Team" }
+]
+keywords = [
+    "mcp",
+    "model-context-protocol",
+    "graphrag",
+    "knowledge-graph",
+    "rag",
+    "claude",
+    "ai-agent"
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+
+dependencies = [
+    "mcp>=1.0.0",
+    "fastmcp>=0.1.0",
+    "pydantic>=2.0.0",
+    "python-dotenv>=1.0.0",
+    "graphrag>=0.3.0",
+    "tiktoken>=0.5.0",
+    "pandas>=2.0.0",
+    "pyarrow>=14.0.0",
+    "lancedb>=0.4.0",
+    "trafilatura>=1.6.0",
+    "youtube-transcript-api>=0.6.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0.0",
+    "pytest-asyncio>=0.21.0",
+    "black>=23.0.0",
+    "ruff>=0.1.0",
+]
+
+[project.scripts]
+veritas-mcp-server = "veritas_mcp_server:main"
+
+[project.urls]
+Homepage = "https://github.com/yourusername/VeritasGraph"
+Documentation = "https://github.com/yourusername/VeritasGraph/blob/main/mcp/veritas-mcp-server/README.md"
+Repository = "https://github.com/yourusername/VeritasGraph"
+Issues = "https://github.com/yourusername/VeritasGraph/issues"
+
+[tool.hatch.build.targets.wheel]
+packages = ["."]
+
+[tool.black]
+line-length = 100
+target-version = ["py310", "py311", "py312"]
+
+[tool.ruff]
+line-length = 100
+select = ["E", "F", "I", "W"]
+ignore = ["E501"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]

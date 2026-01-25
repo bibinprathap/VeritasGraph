@@ -2,6 +2,7 @@
 -Goal-
 Given a text document that is potentially relevant to this activity, first identify all entities needed from the text in order to capture the information and ideas in the text.
 Next, report all relationships among the identified entities.
+Additionally, identify any hierarchical document structure (sections, subsections) present in the text.
 
 -Steps-
 1. Identify all entities. For each identified entity, extract the following information:
@@ -18,11 +19,21 @@ For each pair of related entities, extract the following information:
 - relationship_strength: a numeric score indicating strength of the relationship between the source entity and target entity
 Format each relationship as ("relationship"{tuple_delimiter}<source_entity>{tuple_delimiter}<target_entity>{tuple_delimiter}<relationship_description>{tuple_delimiter}<relationship_strength>)
 
-3. Return output in English as a single list of all the entities and relationships identified in steps 1 and 2. Use **{record_delimiter}** as the list delimiter.
+3. Identify any hierarchical document structure (sections, chapters, subsections). For each section:
+- section_title: The title or heading of the section
+- section_level: The hierarchical level (1=main section/chapter, 2=subsection, 3=sub-subsection, etc.)
+- parent_section: The title of the parent section (if applicable)
+- section_description: Brief description of what the section covers
+Format each section as ("section"{tuple_delimiter}<section_title>{tuple_delimiter}<section_level>{tuple_delimiter}<parent_section>{tuple_delimiter}<section_description>)
 
-4. If you have to translate into English, just translate the descriptions, nothing else!
+4. Create "contains" relationships between sections and the entities they contain:
+Format as ("relationship"{tuple_delimiter}<section_title>{tuple_delimiter}<entity_name>{tuple_delimiter}Section contains entity{tuple_delimiter}10)
 
-5. When finished, output {completion_delimiter}.
+5. Return output in English as a single list of all the entities, relationships, and sections identified. Use **{record_delimiter}** as the list delimiter.
+
+6. If you have to translate into English, just translate the descriptions, nothing else!
+
+7. When finished, output {completion_delimiter}.
 
 -Examples-
 ######################

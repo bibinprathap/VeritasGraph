@@ -1,0 +1,21 @@
+{
+  "document": {
+    "id": "3a723518b5e4",
+    "title": "chart_demo.pdf",
+    "pages": 1
+  },
+  "tree_extraction": {
+    "toc_detected": false,
+    "toc_pages": [],
+    "total_sections": 8
+  },
+  "metrics": {
+    "structure_coverage": 1.0,
+    "max_depth": 5,
+    "avg_depth": 3.75,
+    "page_coverage": 1.0,
+    "relationship_integrity": 1.0,
+    "title_quality": 1.0,
+    "overall_score": 1.0
+  }
+}
