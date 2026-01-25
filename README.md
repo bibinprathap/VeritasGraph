@@ -130,6 +130,12 @@ uvicorn app:app --host 0.0.0.0 --port 8002
 python src/server.py
 ```
 
+### 🎥 MCP Server Demo (YouTube)
+
+[![Watch the MCP demo](https://img.youtube.com/vi/dt4ubeCLmtQ/hqdefault.jpg)](https://www.youtube.com/watch?v=dt4ubeCLmtQ)
+
+> Full walk-through of the Power BI MCP server: starting the backend, calling tools via the Model Context Protocol, and chatting with datasets through VeritasGraph.
+
 ### 💡 Example: Natural Language to DAX
 
 **User:** "Show me total sales by region for Q4 2025"
