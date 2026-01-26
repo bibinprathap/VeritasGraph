@@ -1,5 +1,5 @@
-# VeritasGraph  
-**Enterprise-Grade Graph RAG for Secure, On-Premise AI with Verifiable Attribution**
+﻿# VeritasGraph: The All-in-One GraphRAG Framework
+**Stop chunking blindly. Combine the structure of Tree-Search with the reasoning of Knowledge Graphs. Runs locally or in the cloud.**
  
 <img src="https://github.com/bibinprathap/VeritasGraph/blob/master/VeritasGraph.jpeg" alt="Project Logo" style="max-width:140px; height:150px;">
 
@@ -7,16 +7,129 @@
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-VeritasGraph is a production-ready, end-to-end framework for building advanced question-answering and summarization systems that operate entirely within your private infrastructure.  
+> **🎯 Traditional RAG guesses based on similarity. VeritasGraph reasons based on structure.**  
+> Don't just find the document—understand the connection.
 
-It is architected to overcome the fundamental limitations of traditional vector-search-based Retrieval-Augmented Generation (RAG) by leveraging a knowledge graph to perform complex, multi-hop reasoning.  
+---
 
-Baseline RAG systems excel at finding direct answers but falter when faced with questions that require connecting disparate information or understanding a topic holistically. **VeritasGraph addresses this challenge directly, providing not just answers, but transparent, auditable reasoning paths with full source attribution for every generated claim, establishing a new standard for trust and reliability in enterprise AI.**
+### 🌳 + 🔗 Graph + Tree: The Ultimate Retrieval
+
+<table>
+<tr>
+<td width="50%" valign="top">
+
+**Why choose?** VeritasGraph includes the hierarchical "Table of Contents" navigation of PageIndex **PLUS** the semantic reasoning of a Knowledge Graph.
+
+</td>
+<td width="50%" valign="top">
+
+```
+Document Root
+├── [1] Introduction
+│   ├── [1.1] Background ←── Tree Navigation
+│   └── [1.2] Objectives
+├── [2] Methodology ←───────── Graph Links
+│   └── relates_to ──────────→ [3.1] Findings
+└── [3] Results
+```
+
+</td>
+</tr>
+</table>
+
+### 📊 Feature Comparison
+
+| Feature | Vector RAG | PageIndex | **VeritasGraph** |
+|---------|:----------:|:---------:|:----------------:|
+| **Retrieval Type** | Similarity | Tree Search | 🏆 Tree + Graph Reasoning |
+| **Attribution** | ❌ Low | ⚠️ Medium | ✅ **100% Verifiable** |
+| **Multi-hop Reasoning** | ❌ | ❌ | ✅ |
+| **Tree Navigation (TOC)** | ❌ | ✅ | ✅ |
+| **Semantic Search** | ✅ | ❌ | ✅ |
+| **Cross-section Linking** | ❌ | ❌ | ✅ |
+| **Visual Graph Explorer** | ❌ | ❌ | ✅ **Built-in UI** |
+| **Power BI Integration** | ❌ | ❌ | ✅ **Native MCP** |
+| **100% Local/Private** | ⚠️ Varies | ❌ Cloud | ✅ **On-Premise** |
+| **Open Source** | ⚠️ Varies | ❌ Proprietary | ✅ **MIT License** |
+| Cross-section linking | ❌ | ❌ | ✅ |
+
+---
+
+VeritasGraph is a production-ready framework that solves the fundamental problem with vector-search RAG: **context blindness**. While traditional RAG chunks your documents into isolated fragments and hopes cosine similarity finds the right one, VeritasGraph builds a knowledge graph that actually understands how your information connects.
+
+**The result?** Multi-hop reasoning that answers complex questions, transparent attribution for every claim, and a hierarchical tree structure that navigates documents like a human would—all running on your own infrastructure.
+
+<p align="center">
+  <img src="assets/veritasgraph-comparison.svg" alt="Traditional RAG vs VeritasGraph comparison" width="100%">
+</p>
+
+## 🚀 Get Started in 2 Lines
+
+No GPU? No problem. Try VeritasGraph instantly:
+
+```bash
+pip install veritasgraph
+veritasgraph demo --mode=lite
+```
+
+That's it. This launches an interactive demo using cloud APIs (OpenAI/Anthropic)—no local models required.
+
+<p align="center">
+  <a href="https://colab.research.google.com/github/bibinprathap/VeritasGraph/blob/master/graphrag-ollama-config/cookbook/veritasgraph_demo.ipynb">
+    <img src="https://img.shields.io/badge/Open%20in%20Colab-Vectorless%20RAG-blue?logo=googlecolab" alt="Open in Colab: Vectorless RAG"/>
+  </a>
+  &nbsp;&nbsp;
+  <a href="https://colab.research.google.com/github/bibinprathap/VeritasGraph/blob/master/graphrag-ollama-config/cookbook/vision_native_rag.ipynb">
+    <img src="https://img.shields.io/badge/Open%20in%20Colab-Vision%20RAG-blue?logo=googlecolab" alt="Open in Colab: Vision RAG"/>
+  </a>
+  &nbsp;&nbsp;
+  <a href="https://colab.research.google.com/github/bibinprathap/VeritasGraph/blob/master/cookbook/test_hierarchical_tree_accuracy.ipynb">
+    <img src="https://img.shields.io/badge/Open%20in%20Colab-Tree%20Accuracy-blue?logo=googlecolab" alt="Open in Colab: Tree Accuracy"/>
+  </a>
+</p>
+
+---
+
+### 🎬 See It In Action
+
+<p align="center">
+  <a href="https://youtu.be/NGVDQbkY1wE?si=wJV08Vp5tfVHoQbc">
+    <img src="https://img.youtube.com/vi/NGVDQbkY1wE/maxresdefault.jpg" alt="Watch VeritasGraph build reasoning paths in real-time" width="80%">
+  </a>
+  <br>
+  <em>▶️ Watch VeritasGraph build reasoning paths in real-time.</em>
+</p>
+
+> **💡 What you're seeing:** A query triggers multi-hop reasoning across the knowledge graph. Nodes light up as connections are discovered, showing exactly *how* the answer was found—not just *what* was found.
+
+---
+
+### Choose Your Path
+
+| Mode | Best For | Requirements |
+|------|----------|--------------|
+| `--mode=lite` | Quick demo, no GPU | OpenAI/Anthropic API key |
+| `--mode=local` | Privacy, offline use | Ollama + 8GB RAM |
+| `--mode=full` | Production, all features | Docker + Neo4j |
+
+```bash
+# Lite mode (cloud APIs, zero setup)
+export OPENAI_API_KEY="sk-..."
+veritasgraph demo --mode=lite
+
+# Local mode (100% offline with Ollama)
+veritasgraph demo --mode=local --model=llama3.2
+
+# Full mode (complete GraphRAG pipeline)
+veritasgraph start --mode=full
+```
+
+---
 
 ## 📦 Installation
 
 ```bash
-# Install from PyPI
+# Basic install (includes lite mode)
 pip install veritasgraph
 
 # With optional dependencies
@@ -26,7 +139,24 @@ pip install veritasgraph[ingest]   # YouTube & web article ingestion
 pip install veritasgraph[all]      # Everything
 ```
 
-### Quick Start
+---
+
+## 📖 Quick Start (Python API)
+
+Once you're ready to integrate VeritasGraph into your code:
+
+```python
+from veritasgraph import VisionRAGPipeline
+
+# Simplest usage - auto-detects available models
+pipeline = VisionRAGPipeline()
+doc = pipeline.ingest_pdf("document.pdf")
+result = pipeline.query("What are the key findings?")
+print(result.answer)
+```
+
+<details>
+<summary><b>🔧 Advanced: Custom Configuration</b></summary>
 
 ```python
 from veritasgraph import VisionRAGPipeline, VisionRAGConfig
@@ -42,7 +172,9 @@ doc = pipeline.ingest_pdf("document.pdf")
 result = pipeline.query("What are the key findings in the tables?")
 ```
 
-### 🌳 NEW: Hierarchical Tree Support
+</details>
+
+### 🌳 Hierarchical Tree Support
 
 **The Power of PageIndex's Tree + The Flexibility of a Graph**
 
@@ -96,25 +228,38 @@ veritasgraph init my_project                              # Initialize new proje
 veritasgraph ingest document.pdf --ingest-mode=document-centric  # Don't Chunk. Graph.
 ```
 
-### 📄 NEW: "Don't Chunk. Graph." - Document-Centric Ingestion
+### � Ingestion Capabilities
 
-**Stop Chunking. Start Graphing.**
+VeritasGraph offers multiple ways to ingest content into your knowledge graph:
 
-Traditional RAG systems split documents into arbitrary 500-token chunks, destroying context and structure. VeritasGraph's **document-centric mode** treats whole pages or sections as single retrievable nodes:
+#### "Don't Chunk. Graph." - Document-Centric Mode
+
+Traditional RAG splits documents into arbitrary 500-token chunks, destroying context. VeritasGraph's **document-centric mode** treats whole pages or sections as single retrievable nodes:
 
 ```python
-from veritasgraph import VisionRAGPipeline, VisionRAGConfig, IngestMode
+from veritasgraph import VisionRAGPipeline, VisionRAGConfig
 
-# "Don't Chunk. Graph." - Document-centric mode (default)
-config = VisionRAGConfig(
-    vision_model="llama3.2-vision:11b",
-    ingest_mode="document-centric"  # whole pages/sections as nodes
-)
+config = VisionRAGConfig(ingest_mode="document-centric")  # Tables stay intact!
 pipeline = VisionRAGPipeline(config)
 doc = pipeline.ingest_pdf("annual_report.pdf")
+```
 
-# Each page is a single node with full content preserved
-# Tables stay intact. Charts stay with their context.
+#### ⚡ Instant Knowledge Ingest
+
+Add content to your knowledge graph with one click:
+
+| Source | How It Works |
+|--------|-------------|
+| 📺 **YouTube** | Paste URL → auto-extracts transcript |
+| 📰 **Web Articles** | Paste URL → extracts main content |
+| 📄 **PDFs** | Upload → document-centric extraction |
+| 📝 **Text** | Paste directly → instant indexing |
+
+```bash
+# CLI ingestion
+veritasgraph ingest https://youtube.com/watch?v=xxx
+veritasgraph ingest https://example.com/article
+veritasgraph ingest document.pdf --mode=document-centric
 ```
 
 #### Ingestion Modes
@@ -125,16 +270,6 @@ doc = pipeline.ingest_pdf("annual_report.pdf")
 | `page` | Each page = one node | Slide decks, reports |
 | `section` | Each section = one node | Structured documents |
 | `chunk` | Traditional 500-token chunks | Legacy compatibility |
-| `auto` | Automatically choose | Mixed content |
-
-#### Why Document-Centric Wins
-
-| Traditional Chunking | Document-Centric |
-|---------------------|------------------|
-| Splits tables mid-row | Tables stay complete |
-| Loses chart context | Charts with captions |
-| Arbitrary boundaries | Natural structure |
-| 500-token fragments | Full page/section |
 
 <p align="center"> 
 <img alt="stars" title="stars" src="https://img.shields.io/github/stars/bibinprathap/VeritasGraph" />
@@ -303,27 +438,6 @@ A brief video demonstrating the core functionality of VeritasGraph, from data in
 ## Linux
 [![Video Walkthrough](https://github.com/bibinprathap/VeritasGraph/blob/master/assets/VertasGraph-Linux.png)](https://drive.google.com/file/d/1OmeCj9-HKTCDoznPDE8u7Bbb3qxYBs9n/view?usp=sharing)
 
----
-
-## ⚡ NEW: Instant Knowledge Ingest
-
-**Instantly add YouTube videos and web articles to your knowledge graph!**
-
-<img src="https://github.com/bibinprathap/VeritasGraph/blob/master/assets/instantknowledge.png" alt="Instant Knowledge Ingest Feature" width="800">
-
-### Features:
-- 📺 **YouTube Videos** - Automatically extracts transcripts (including auto-generated captions)
-- 📰 **Web Articles** - Extracts main content from blog posts, news articles, documentation
-- 📝 **Paste Text** - Copy-paste content directly from files, documents, PDFs
-- 🔄 **One-Click Indexing** - Build or update your knowledge graph instantly
-
-### How to Use:
-1. Go to the **⚡ Instant Knowledge** tab
-2. Paste a YouTube URL or web article URL
-3. Click **Ingest URL** to extract content
-4. Click **Update Index** to add to your knowledge graph
-5. Switch to **Chat** tab and start querying!  
- 
 ---
 
 ### System Architecture Screenshot  
@@ -908,32 +1022,6 @@ This stands in contrast to reliance on opaque, proprietary, cloud-based APIs, em
 
 - Visualization UI – A web interface for graph exploration and attribution path inspection.
 
-## 🏆 Awards & Recognition
-
-VeritasGraph has been recognized for its contribution to the field of AI and Knowledge Graphs.
-
-### ICASF 2025
-Presented at the **International Conference on Applied Science and Future Technology (ICASF 2025)**.
-
-![ICASF 2025 Presentation](presentation.jpeg)
-
-**[📄 View Appreciation Certificate](ICASF%202025%20-%20Appreciation%20Certificate.pdf)**
-
-## 📚 Citation
-
-If you use VeritasGraph in your research, please cite our paper:
-
-**[VeritasGraph: A Sovereign GraphRAG Framework for Enterprise-Grade AI with Verifiable Attribution](VeritasGraph%20-%20A%20Sovereign%20GraphRAG%20Framework%20for%20Enterprise-Grade%20AI%20with%20Verifiable%20Attribution.pdf)**
-
-```bibtex
-@article{VeritasGraph2025,
-  title={VeritasGraph: A Sovereign GraphRAG Framework for Enterprise-Grade AI with Verifiable Attribution},
-  author={Bibin Prathap},
-  journal={International Conference on Applied Science and Future Technology (ICASF)},
-  year={2025}
-}
-```
-
 ## 7. Acknowledgments & Citations
 
 This project builds upon the foundational research and open-source contributions of the AI community.
@@ -953,5 +1041,37 @@ We acknowledge the influence of the following works:
  
 [![Star History Chart](https://api.star-history.com/svg?repos=bibinprathap/VeritasGraph&type=Date)](https://www.star-history.com/#bibinprathap/VeritasGraph&Date)
 
+---
+
+## 🏆 Awards & Citation
+
+<details>
+<summary><b>📜 ICASF 2025 Recognition</b></summary>
+
+Presented at the **International Conference on Applied Science and Future Technology (ICASF 2025)**.
+
+**[📄 View Appreciation Certificate](ICASF%202025%20-%20Appreciation%20Certificate.pdf)**
+
+</details>
+
+<details>
+<summary><b>📚 Cite This Work</b></summary>
+
+If you use VeritasGraph in your research, please cite:
+
+```bibtex
+@article{VeritasGraph2025,
+  title={VeritasGraph: A Sovereign GraphRAG Framework for Enterprise-Grade AI with Verifiable Attribution},
+  author={Bibin Prathap},
+  journal={International Conference on Applied Science and Future Technology (ICASF)},
+  year={2025}
+}
+```
+
+**[📄 Read the Paper](VeritasGraph%20-%20A%20Sovereign%20GraphRAG%20Framework%20for%20Enterprise-Grade%20AI%20with%20Verifiable%20Attribution.pdf)**
+
+</details>
+
 
   
+
