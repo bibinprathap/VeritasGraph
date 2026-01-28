@@ -14,7 +14,7 @@ from veritasgraph import __version__
 
 
 def create_parser() -> argparse.ArgumentParser:
-    """Create the main argument parser."""
+
     parser = argparse.ArgumentParser(
         prog="veritasgraph",
         description="VeritasGraph - Enterprise-Grade Graph RAG Framework",
@@ -44,6 +44,32 @@ For more information, visit: https://github.com/bibinprathap/VeritasGraph
     )
 
     subparsers = parser.add_subparsers(dest="command", help="Available commands")
+
+    # Demo command
+    demo_parser = subparsers.add_parser("demo", help="Run VeritasGraph demo in different modes")
+    demo_parser.add_argument(
+        "--mode",
+        type=str,
+        choices=["lite", "local"],
+        default="lite",
+        help="Demo mode: 'lite' (cloud APIs, zero setup) or 'local' (offline with Ollama)"
+    )
+    demo_parser.add_argument(
+        "--model",
+        type=str,
+        default=None,
+        help="Model to use in local mode (e.g., llama3.2)"
+    )
+
+    # Start command
+    start_parser = subparsers.add_parser("start", help="Start the complete GraphRAG pipeline")
+    start_parser.add_argument(
+        "--mode",
+        type=str,
+        choices=["full"],
+        default="full",
+        help="Start mode: 'full' (complete GraphRAG pipeline)"
+    )
 
     # Info command
     info_parser = subparsers.add_parser("info", help="Show system information")
@@ -263,6 +289,46 @@ def cmd_query(args: argparse.Namespace) -> int:
     return 0
 
 
+# --- DEMO COMMAND ---
+def cmd_demo(args: argparse.Namespace) -> int:
+    import os
+    print(f"🚀 Running VeritasGraph demo")
+    print(f"   Mode: {args.mode}")
+    if args.model:
+        print(f"   Model: {args.model}")
+
+    if args.mode == "lite":
+        api_key = os.environ.get("OPENAI_API_KEY")
+        if not api_key or api_key == "sk-...":
+            print("❌ Please set your OPENAI_API_KEY environment variable for lite mode.")
+            return 1
+        print("🌐 Using cloud APIs (OpenAI/Anthropic). Zero local setup required.")
+        print("   Launching demo pipeline...")
+        # Here you would call the appropriate pipeline or server for lite mode
+        print("⚠️  Demo pipeline for lite mode not yet implemented. Use the Gradio UI or API.")
+        return 0
+    elif args.mode == "local":
+        print("🖥️  Using local Ollama models. 100% offline.")
+        if args.model:
+            print(f"   Launching with model: {args.model}")
+        else:
+            print("   Using default local model.")
+        # Here you would call the appropriate pipeline or server for local mode
+        print("⚠️  Demo pipeline for local mode not yet implemented. Use the Gradio UI or API.")
+        return 0
+    else:
+        print(f"❌ Unknown demo mode: {args.mode}")
+        return 1
+
+
+# --- START COMMAND ---
+def cmd_start(args: argparse.Namespace) -> int:
+    print(f"🚀 Starting VeritasGraph in full mode (complete GraphRAG pipeline)")
+    # Here you would launch the full pipeline (API server, background workers, etc.)
+    print("⚠️  Full pipeline startup not yet implemented. Use 'veritasgraph serve' or the Gradio UI for now.")
+    return 0
+
+
 def cmd_serve(args: argparse.Namespace) -> int:
     """Start the API server."""
     print(f"🚀 Starting VeritasGraph API server...")
@@ -380,6 +446,8 @@ def main(argv: Optional[list] = None) -> int:
         "query": cmd_query,
         "serve": cmd_serve,
         "init": cmd_init,
+        "demo": cmd_demo,
+        "start": cmd_start,
     }
     
     handler = commands.get(args.command)
