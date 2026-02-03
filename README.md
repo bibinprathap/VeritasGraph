@@ -328,8 +328,7 @@ A brief video demonstrating the core functionality of VeritasGraph, from data in
 [![VeritasGraph YouTube Tutorial](https://img.youtube.com/vi/NGVDQbkY1wE/maxresdefault.jpg)](https://youtu.be/NGVDQbkY1wE?si=wJV08Vp5tfVHoQbc)
 > 🎬 **Watch on YouTube:** [VeritasGraph - Enterprise Graph RAG Demo](https://youtu.be/NGVDQbkY1wE?si=wJV08Vp5tfVHoQbc)
 
-## Windows
-[![Video Walkthrough](https://github.com/bibinprathap/VeritasGraph/blob/master/assets/graphrag.JPG)](https://drive.google.com/file/d/1lEmAOUCLV0h98kY-ars96SNf5O6lVmiY/view?usp=sharing)  
+ 
 ## Linux
 [![Video Walkthrough](https://github.com/bibinprathap/VeritasGraph/blob/master/assets/VertasGraph-Linux.png)](https://drive.google.com/file/d/1OmeCj9-HKTCDoznPDE8u7Bbb3qxYBs9n/view?usp=sharing)
 
