@@ -1,0 +1,165 @@
+[build-system]
+requires = ["hatchling>=1.18.0"]
+build-backend = "hatchling.build"
+
+[project]
+name = "veritasgraph"
+version = "0.3.0"
+description = "Enterprise-Grade Graph RAG Framework - Don't Chunk. Graph. Vision-Native Document Analysis with Hierarchical Tree Support"
+readme = "README.md"
+license = {text = "MIT"}
+requires-python = ">=3.10"
+authors = [
+    { name = "Bibin Prathap", email = "bibinprathap@gmail.com" }
+]
+maintainers = [
+    { name = "VeritasGraph Team" }
+]
+
+keywords = [
+    "rag",
+    "graphrag",
+    "vision",
+    "llm",
+    "document-analysis",
+    "pdf",
+    "multimodal",
+    "knowledge-graph",
+    "ollama",
+    "enterprise-ai",
+    "retrieval-augmented-generation",
+    "graph-database",
+    "hierarchical-tree",
+    "table-of-contents",
+    "ai-reasoning"
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "Intended Audience :: Information Technology",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Text Processing :: General",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Typing :: Typed",
+]
+dependencies = [
+    "ollama>=0.2.0",
+    "pillow>=10.0.0",
+    "pdf2image>=1.16.0",
+    "networkx>=3.0",
+    "numpy>=1.24.0",
+    "matplotlib>=3.7.0",
+    "python-dotenv>=1.0.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0.0",
+    "pytest-asyncio>=0.21.0",
+    "pytest-cov>=4.0.0",
+    "black>=23.0.0",
+    "ruff>=0.1.0",
+    "mypy>=1.0.0",
+    "pre-commit>=3.0.0",
+]
+graphrag = [
+    "graphrag>=0.3.0",
+    "tiktoken>=0.5.0",
+]
+web = [
+    "gradio>=4.0.0",
+    "pyvis>=0.3.0",
+    "pandas>=2.0.0",
+]
+ingest = [
+    "youtube-transcript-api>=0.6.0",
+    "trafilatura>=1.6.0",
+    "yt-dlp>=2024.1.0",
+]
+all = [
+    "veritasgraph[dev,graphrag,web,ingest]",
+]
+
+[project.scripts]
+veritasgraph = "veritasgraph.cli:main"
+vg = "veritasgraph.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/bibinprathap/VeritasGraph"
+Documentation = "https://bibinprathap.github.io/VeritasGraph/"
+Repository = "https://github.com/bibinprathap/VeritasGraph"
+Issues = "https://github.com/bibinprathap/VeritasGraph/issues"
+Changelog = "https://github.com/bibinprathap/VeritasGraph/releases"
+
+[tool.hatch.version]
+path = "veritasgraph/__init__.py"
+
+[tool.hatch.build.targets.sdist]
+include = [
+    "/veritasgraph",
+    "/README.md",
+    "/LICENSE",
+    "/pyproject.toml",
+]
+exclude = [
+    "/.git",
+    "/.github",
+    "/.venv",
+    "/.vscode",
+    "/docker",
+    "/docs",
+    "/finetune",
+    "/graphrag-ollama-config",
+    "/scripts",
+    "/output",
+    "*.pyc",
+    "__pycache__",
+    "*.egg-info",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["veritasgraph"]
+
+[tool.black]
+line-length = 100
+target-version = ["py310", "py311", "py312"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+select = ["E", "F", "W", "I", "UP", "B", "SIM"]
+ignore = ["E501", "B008"]
+
+[tool.ruff.isort]
+known-first-party = ["veritasgraph"]
+
+[tool.mypy]
+python_version = "3.10"
+warn_return_any = true
+warn_unused_configs = true
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+asyncio_mode = "auto"
+addopts = "-v --tb=short"
+
+[tool.coverage.run]
+source = ["veritasgraph"]
+omit = ["tests/*"]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "if TYPE_CHECKING:",
+    "raise NotImplementedError",
+]
+

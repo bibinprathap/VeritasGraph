@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- DEMO_URL: https://digit-host-antarctica-ant.trycloudflare.com -->
+    <meta http-equiv="refresh" content="0;url=https://digit-host-antarctica-ant.trycloudflare.com">
+    <title>VeritasGraph Live Demo - Redirecting...</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        .container {
+            text-align: center;
+            padding: 40px;
+            max-width: 500px;
+        }
+        h1 { font-size: 2.5rem; margin-bottom: 20px; }
+        .spinner {
+            border: 4px solid rgba(255,255,255,0.3);
+            border-top: 4px solid white;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 30px auto;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        p { font-size: 1.2rem; margin-bottom: 20px; opacity: 0.9; }
+        a {
+            display: inline-block;
+            color: white;
+            background: rgba(255,255,255,0.2);
+            padding: 15px 30px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: background 0.3s;
+        }
+        a:hover { background: rgba(255,255,255,0.3); }
+        .status {
+            margin-top: 30px;
+            padding: 15px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 8px;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 VeritasGraph Demo</h1>
+        <div class="spinner"></div>
+        <p>Redirecting to live demo...</p>
+        <a href="https://digit-host-antarctica-ant.trycloudflare.com">Click here if not redirected</a>
+        <div class="status">
+            <strong>Status:</strong> Server is online<br>
+            <small>Last updated: 2026-02-03 05:41 UTC</small>
+        </div>
+    </div>
+    <script>
+        setTimeout(function() {
+            window.location.href = "https://digit-host-antarctica-ant.trycloudflare.com";
+        }, 2000);
+    </script>
+</body>
+</html>

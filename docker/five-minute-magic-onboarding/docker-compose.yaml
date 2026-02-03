@@ -1,0 +1,80 @@
+version: "3.9"
+
+services:
+  ollama:
+    image: ollama/ollama:latest
+    container_name: vg_ollama
+    restart: unless-stopped
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_models:/root/.ollama
+      - ./ollama/Modelfile:/Modelfile
+    command: >
+      /bin/sh -c "
+        ollama serve &
+        sleep 3 &&
+        if ! ollama list | grep -q 'llama3.1-12k'; then
+          ollama create llama3.1-12k -f /Modelfile;
+        fi &&
+        tail -f /dev/null
+      "
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:11434/api/tags"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+    networks:
+      - veritasgraph
+
+  neo4j:
+    image: neo4j:5.23
+    container_name: vg_neo4j
+    restart: unless-stopped
+    environment:
+      NEO4J_AUTH: ${NEO4J_USER}/${NEO4J_PASS}
+      NEO4J_dbms_security_auth__enabled: "true"
+    ports:
+      - "7474:7474"
+      - "7687:7687"
+    volumes:
+      - neo4j_data:/data
+      - ./neo4j/conf/neo4j.conf:/var/lib/neo4j/conf/neo4j.conf
+    networks:
+      - veritasgraph
+    depends_on:
+      - ollama
+
+  app:
+    build:
+      context: ./app
+      dockerfile: Dockerfile
+    container_name: vg_app
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      GRAPHRAG_LLM_API_BASE: http://ollama:11434
+      GRAPHRAG_EMBEDDING_API_BASE: http://ollama:11434
+      NEO4J_URI: bolt://neo4j:7687
+      NEO4J_USER: ${NEO4J_USER}
+      NEO4J_PASS: ${NEO4J_PASS}
+    volumes:
+      - ../graphrag-ollama-config:/workspace
+    ports:
+      - "7860:7860"
+    depends_on:
+      ollama:
+        condition: service_healthy
+      neo4j:
+        condition: service_started
+    networks:
+      - veritasgraph
+
+volumes:
+  ollama_models:
+  neo4j_data:
+
+networks:
+  veritasgraph:
+    driver: bridge

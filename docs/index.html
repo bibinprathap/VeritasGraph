@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VeritasGraph Documentation</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-okaidia.min.css" />
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+        }
+       .stage-card {
+            background-color: white;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            border-left: 4px solid;
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+        }
+       .stage-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        }
+       .flow-step {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem;
+            background-color: #f9fafb;
+            border-radius: 0.375rem;
+            border: 1px solid #e5e7eb;
+        }
+       .flow-arrow {
+            font-size: 1.5rem;
+            color: #9ca3af;
+            margin: 0.5rem 0;
+        }
+        /* Custom scrollbar for webkit browsers */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+        /* PrismJS line number styling */
+        pre[class*="language-"].line-numbers {
+            position: relative;
+            padding-left: 3.8em;
+            counter-reset: linenumber;
+        }
+        pre[class*="language-"].line-numbers > code {
+            position: relative;
+            white-space: inherit;
+        }
+       .line-numbers.line-numbers-rows {
+            position: absolute;
+            pointer-events: none;
+            top: 0;
+            font-size: 100%;
+            left: -3.8em;
+            width: 3em;
+            letter-spacing: -1px;
+            border-right: 1px solid #999;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+       .line-numbers-rows > span {
+            display: block;
+            counter-increment: linenumber;
+        }
+       .line-numbers-rows > span:before {
+            content: counter(linenumber);
+            color: #999;
+            display: block;
+            padding-right: 0.8em;
+            text-align: right;
+        }
+    </style>
+</head>
+<body class="text-gray-800">
+
+    <div class="flex">
+        <aside id="sidebar" class="bg-slate-800 text-white w-64 min-h-screen p-4 fixed transform -translate-x-full md:translate-x-0 transition-transform duration-300 ease-in-out z-30">
+            <div class="text-2xl font-bold mb-8">VeritasGraph</div>
+            <nav>
+                <ul class="space-y-2">
+                    <li><a href="#introduction" class="block py-2.5 px-4 rounded transition duration-200 hover:bg-slate-700">Introduction</a></li>
+                    <li><a href="#architecture" class="block py-2.5 px-4 rounded transition duration-200 hover:bg-slate-700">Architecture</a></li>
+                    <li><a href="#getting-started" class="block py-2.5 px-4 rounded transition duration-200 hover:bg-slate-700">Getting Started</a></li>
+                    <li><a href="#code-reference" class="block py-2.5 px-4 rounded transition duration-200 hover:bg-slate-700">Code Reference</a></li>
+                    <li><a href="#philosophy" class="block py-2.5 px-4 rounded transition duration-200 hover:bg-slate-700">Philosophy & Roadmap</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <header class="md:hidden fixed top-0 left-0 right-0 bg-slate-800 text-white p-4 z-20 flex justify-between items-center">
+            <div class="text-xl font-bold">VeritasGraph</div>
+            <button id="menu-toggle" class="text-white focus:outline-none">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+            </button>
+        </header>
+
+        <main class="md:ml-64 flex-1 p-8 pt-20 md:pt-8">
+            
+            <section id="introduction" class="mb-16">
+                <h1 class="text-4xl font-bold text-slate-900 mb-4">Introduction to VeritasGraph</h1>
+                <p class="text-lg text-gray-600 mb-6">
+                    VeritasGraph is a production-ready, end-to-end framework for building advanced question-answering and summarization systems that operate entirely within your private infrastructure. It is architected to overcome the fundamental limitations of traditional vector-search-based Retrieval-Augmented Generation (RAG) by leveraging a knowledge graph to perform complex, multi-hop reasoning.
+                </p>
+                <p class="text-lg text-gray-600">
+                    Baseline RAG systems excel at finding direct answers but falter when faced with questions that require connecting disparate information. VeritasGraph addresses this challenge directly, providing not just answers, but transparent, auditable reasoning paths with full source attribution for every generated claim, establishing a new standard for trust and reliability in enterprise AI.
+                </p>
+            </section>
+
+            <section id="architecture" class="mb-16">
+                <h1 class="text-4xl font-bold text-slate-900 mb-8">The Architectural Blueprint</h1>
+                <p class="text-lg text-gray-600 mb-12">
+                    The VeritasGraph pipeline is a four-stage process that systematically transforms a corpus of raw, unstructured documents into a structured knowledge asset capable of sophisticated, attributable reasoning.
+                </p>
+                <div class="grid grid-cols-1 xl:grid-cols-2 gap-12">
+                    <div class="stage-card border-l-[#ffa600] p-6">
+                        <h2 class="text-2xl font-bold text-[#ffa600] mb-4">Stage 1: Knowledge Graph Construction</h2>
+                        <p class="mb-6 text-gray-600">This initial stage transforms raw, unstructured documents into a structured, interconnected knowledge graph. The goal is to create a rich data foundation that enables complex reasoning, moving beyond simple keyword or vector search.</p>
+                        <div class="flex flex-col items-center space-y-2">
+                            <div class="flow-step w-full"><strong>Input:</strong> Unstructured Documents (.txt,.pdf)</div>
+                            <div class="flow-arrow">▼</div>
+                            <div class="flow-step w-full"><strong>Process:</strong> Document Chunking & LLM Extraction</div>
+                            <div class="flow-arrow">▼</div>
+                            <div class="flow-step w-full"><strong>Output:</strong> Assembled Knowledge Graph (Nodes & Edges)</div>
+                        </div>
+                         <div class="mt-6">
+                            <h3 class="text-lg font-semibold text-center mb-2 text-[#2f4b7c]">Graph Composition</h3>
+                            <div class="relative h-64 md:h-72"><canvas id="stage1Chart"></canvas></div>
+                        </div>
+                    </div>
+                    <div class="stage-card border-l-[#ff7c43] p-6">
+                        <h2 class="text-2xl font-bold text-[#ff7c43] mb-4">Stage 2: Hybrid Retrieval</h2>
+                        <p class="mb-6 text-gray-600">Instead of relying on a single method, this stage uses a hybrid approach to find the most relevant information. It combines the broad reach of semantic search with the precision of graph traversal to uncover connections that would otherwise be missed.</p>
+                        <div class="flex flex-col items-center space-y-2">
+                            <div class="flow-step w-full"><strong>Input:</strong> User Query</div>
+                            <div class="flow-arrow">▼</div>
+                            <div class="flow-step w-full"><strong>Process:</strong> Vector Search + Graph Traversal</div>
+                            <div class="flow-arrow">▼</div>
+                            <div class="flow-step w-full"><strong>Output:</strong> Pruned & Ranked Contextual Facts</div>
+                        </div>
+                        <div class="mt-6">
+                            <h3 class="text-lg font-semibold text-center mb-2 text-[#2f4b7c]">Retrieval Effectiveness</h3>
+                             <div class="relative h-64 md:h-72"><canvas id="stage2Chart"></canvas></div>
+                        </div>
+                    </div>
+                    <div class="stage-card border-l-[#f95d6a] p-6">
+                        <h2 class="text-2xl font-bold text-[#f95d6a] mb-4">Stage 3: LoRA-Tuned Reasoning</h2>
+                        <p class="mb-6 text-gray-600">Once the context is retrieved, a Large Language Model (LLM) synthesizes the final answer. The LLM is fine-tuned using Low-Rank Adaptation (LoRA), making it highly efficient and specialized for generating attributed, factual responses.</p>
+                        <div class="mt-6">
+                            <h3 class="text-lg font-semibold text-center mb-2 text-[#2f4b7c]">Model Enhancement via LoRA</h3>
+                             <div class="relative h-64 md:h-72"><canvas id="stage3Chart"></canvas></div>
+                        </div>
+                    </div>
+                    <div class="stage-card border-l-[#d45087] p-6">
+                        <h2 class="text-2xl font-bold text-[#d45087] mb-4">Stage 4: Attribution & Provenance</h2>
+                        <p class="mb-6 text-gray-600">The final and most critical stage ensures trust and transparency. Every claim in the generated answer is linked back to its source documents and the reasoning path taken through the graph, providing a verifiable proof.</p>
+                        <div class="mt-6">
+                            <h3 class="text-lg font-semibold text-center mb-2 text-[#2f4b7c]">Components of a Final Response</h3>
+                            <div class="relative h-64 md:h-72"><canvas id="stage4Chart"></canvas></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="getting-started" class="mb-16">
+                <h1 class="text-4xl font-bold text-slate-900 mb-8">Getting Started</h1>
+                <div class="bg-white p-8 rounded-lg shadow-md">
+                    <h2 class="text-2xl font-bold mb-4">Environment Setup</h2>
+                    <p class="mb-4">This guide uses Ollama with `llama3.1` for generation and `nomic-text-embed` for embeddings. It is recommended to run on Windows without WSL if using LM Studio for embeddings to avoid connection issues.</p>
+                    <div class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 mb-6" role="alert">
+                        <p class="font-bold">Important: Fix Model Context Length</p>
+                        <p>Ollama's default context length is 2048, which can truncate I/O during indexing. This guide uses a 12k context window. Note that changing the model in `settings.yaml` will restart the entire indexing process.</p>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2">1. Pull Required Models</h3>
+<pre class="line-numbers"><code class="language-bash">
+# Terminal 1
+ollama serve
+
+# Terminal 2
+ollama pull llama3.1
+ollama pull nomic-embed-text
+</code></pre>
+                    <h3 class="text-xl font-semibold mt-6 mb-2">2. Build Model with Custom Context Length</h3>
+<pre class="line-numbers"><code class="language-bash">
+ollama create llama3.1-12k -f./Modelfile
+</code></pre>
+                    <h2 class="text-2xl font-bold mt-8 mb-4">GraphRAG Indexing Steps</h2>
+                    <h3 class="text-xl font-semibold mb-2">1. Activate Conda Environment</h3>
+<pre class="line-numbers"><code class="language-bash">
+conda create -n rag python=&lt;3.12
+conda activate rag
+</code></pre>
+                    <h3 class="text-xl font-semibold mt-6 mb-2">2. Install GraphRAG</h3>
+<pre class="line-numbers"><code class="language-bash">
+# Clone the project and navigate to the config directory
+cd graphrag-ollama-config
+
+# Navigate to the local graphrag fix and install
+cd graphrag-ollama
+pip install -e./
+</code></pre>
+                    <h3 class="text-xl font-semibold mt-6 mb-2">3. Initialize and Configure</h3>
+<pre class="line-numbers"><code class="language-bash">
+# Install dependencies
+pip install sympy future ollama
+
+# Initialize graphrag folder (can be skipped if using this repo's setup)
+python -m graphrag.index --init --root.
+
+# Create your.env file
+cp.env.example.env
+</code></pre>
+                    <p class="mt-4">Move your input text files to the `./input/` directory and double-check parameters in `.env` and `settings.yaml`.</p>
+                    <h3 class="text-xl font-semibold mt-6 mb-2">4. Start Indexing</h3>
+<pre class="line-numbers"><code class="language-bash">
+python -m graphrag.index --root.
+</code></pre>
+                    <h2 class="text-2xl font-bold mt-8 mb-4">Using the UI</h2>
+                    <h3 class="text-xl font-semibold mb-2">1. Install Requirements</h3>
+<pre class="line-numbers"><code class="language-bash">
+pip install -r requirements.txt
+</code></pre>
+                    <h3 class="text-xl font-semibold mt-6 mb-2">2. Run the Application</h3>
+<pre class="line-numbers"><code class="language-bash">
+gradio app.py
+</code></pre>
+                    <p class="mt-4">Access the UI by visiting <a href="http://127.0.0.1:7860/" class="text-blue-600 hover:underline">http://127.0.0.1:7860/</a> in your browser.</p>
+                </div>
+            </section>
+
+            <section id="code-reference" class="mb-16">
+                <h1 class="text-4xl font-bold text-slate-900 mb-8">Code Reference</h1>
+                <div class="space-y-8">
+                    <div>
+                        <h2 class="text-2xl font-bold mb-4">Gradio UI: `app.py`</h2>
+                        <div class="bg-gray-800 rounded-lg shadow-lg overflow-hidden">
+<pre class="line-numbers max-h-[500px] overflow-y-auto"><code class="language-python">
+import gradio as gr
+import os
+import asyncio
+import pandas as pd
+import tiktoken
+from dotenv import load_dotenv
+
+from graphrag.query.indexer_adapters import read_indexer_entities, read_indexer_reports
+from graphrag.query.structured_search.global_search.community_context import GlobalCommunityContext
+from graphrag.query.structured_search.global_search.search import GlobalSearch
+from graphrag.query.llm.oai.chat_openai import ChatOpenAI
+from graphrag.query.llm.oai.typing import OpenaiApiType
+from graphrag.query.question_gen.local_gen import LocalQuestionGen
+from graphrag.query.context_builder.entity_extraction import EntityVectorStoreKey
+from graphrag.query.indexer_adapters import (
+    read_indexer_covariates,
+    read_indexer_entities,
+    read_indexer_relationships,
+    read_indexer_reports,
+    read_indexer_text_units,
+)
+from graphrag.query.input.loaders.dfs import (
+    store_entity_semantic_embeddings,
+)
+from graphrag.query.llm.oai.embedding import OpenAIEmbedding
+from graphrag.query.question_gen.local_gen import LocalQuestionGen
+from graphrag.query.structured_search.local_search.mixed_context import (
+    LocalSearchMixedContext,
+)
+from graphrag.query.structured_search.local_search.search import LocalSearch
+from graphrag.vector_stores.lancedb import LanceDBVectorStore
+
+load_dotenv('.env')
+join = os.path.join
+
+PRESET_MAPPING = {
+    "Default": {
+        "community_level": 2,
+        "response_type": "Multiple Paragraphs"
+    },
+    "Detailed": {
+        "community_level": 4,
+        "response_type": "Multi-Page Report"
+    },
+    "Quick": {
+        "community_level": 1,
+        "response_type": "Single Paragraph"
+    },
+    "Bullet": {
+        "community_level": 2,
+        "response_type": "List of 3-7 Points"
+    },
+    "Comprehensive": {
+        "community_level": 5,
+        "response_type": "Multi-Page Report"
+    },
+    "High-Level": {
+        "community_level": 1,
+        "response_type": "Single Page"
+    },
+    "Focused": {
+        "community_level": 3,
+        "response_type": "Multiple Paragraphs"
+    }
+}
+
+async def global_search(query, input_dir, community_level=2, temperature=0.5, response_type="Multiple Paragraphs"):
+        api_key = os.environ
+        llm_model = os.environ
+        api_base = os.environ
+
+        llm = ChatOpenAI(
+            api_key=api_key,
+            api_base=api_base,
+            model=llm_model,
+            api_type=OpenaiApiType.OpenAI,  
+            max_retries=10,
+        )
+
+        token_encoder = tiktoken.get_encoding("cl100k_base")
+
+        COMMUNITY_REPORT_TABLE = "create_final_community_reports"
+        ENTITY_TABLE = "create_final_nodes"
+        ENTITY_EMBEDDING_TABLE = "create_final_entities"
+        
+        entity_df = pd.read_parquet(join(input_dir, f"{ENTITY_TABLE}.parquet"))
+        report_df = pd.read_parquet(join(input_dir, f"{COMMUNITY_REPORT_TABLE}.parquet"))
+        entity_embedding_df = pd.read_parquet(join(input_dir, f"{ENTITY_EMBEDDING_TABLE}.parquet"))
+
+        reports = read_indexer_reports(report_df, entity_df, community_level)
+        entities = read_indexer_entities(entity_df, entity_embedding_df, community_level)
+
+        context_builder = GlobalCommunityContext(
+            community_reports=reports,
+            entities=entities,
+            token_encoder=token_encoder,
+        )
+
+        context_builder_params = {
+            "use_community_summary": False,
+            "shuffle_data": True,
+            "include_community_rank": True,
+            "min_community_rank": 0,
+            "community_rank_name": "rank",
+            "include_community_weight": True,
+            "community_weight_name": "occurrence weight",
+            "normalize_community_weight": True,
+            "max_tokens": 4000,
+            "context_name": "Reports",
+        }
+
+        map_llm_params = {
+            "max_tokens": 1000,
+            "temperature": temperature,
+            "response_format": {"type": "json_object"},
+        }
+
+        reduce_llm_params = {
+            "max_tokens": 2000,
+            "temperature": temperature,
+        }
+
+        search_engine = GlobalSearch(
+            llm=llm,
+            context_builder=context_builder,
+            token_encoder=token_encoder,
+            max_data_tokens=5000,
+            map_llm_params=map_llm_params,
+            reduce_llm_params=reduce_llm_params,
+            allow_general_knowledge=False,
+            json_mode=True,
+            context_builder_params=context_builder_params,
+            concurrent_coroutines=1,
+            response_type=response_type,
+        )
+
+        result = await search_engine.asearch(query)
+        return result.response
+
+#... (rest of app.py code)...
+</code></pre>
+                        </div>
+                    </div>
+                    <div>
+                        <h2 class="text-2xl font-bold mb-4">LoRA Fine-Tuning: `offlinetraining.py`</h2>
+                        <div class="bg-gray-800 rounded-lg shadow-lg overflow-hidden">
+<pre class="line-numbers max-h-[500px] overflow-y-auto"><code class="language-python">
+import torch
+import os
+from transformers import AutoModelForCausalLM, AutoTokenizer
+from transformers import TrainingArguments
+from peft import LoraConfig, get_peft_model
+from datasets import load_dataset
+from trl import SFTConfig, SFTTrainer
+
+# Model configuration
+max_seq_length = 2048
+model_path = r'D:\work\models\Meta-Llama-3.2-3B-Instruct'
+
+# Load model and tokenizer
+model = AutoModelForCausalLM.from_pretrained(
+    model_path,
+    torch_dtype=torch.bfloat16 if torch.cuda.is_available() and torch.cuda.get_device_capability() >= 8 else torch.float16,
+    device_map="auto"
+)
+
+tokenizer = AutoTokenizer.from_pretrained(
+    model_path,
+    model_max_length=max_seq_length,
+    padding_side="right"
+)
+
+# Configure LoRA
+lora_config = LoraConfig(
+    r=16,  # rank
+    lora_alpha=16,
+    target_modules=["q_proj", "k_proj", "v_proj", "o_proj", "gate_proj", "up_proj", "down_proj"],
+    lora_dropout=0,
+    bias="none",
+    task_type="CAUSAL_LM"
+)
+
+# Apply PEFT
+model = get_peft_model(model, lora_config)
+
+# Define prompt template for formatting
+llama31_prompt = """&lt;|begin_of_text|&gt;&lt;|start_header_id|&gt;system&lt;|end_header_id|&gt;
+
+{}&lt;|eot_id|&gt;&lt;|start_header_id|&gt;user&lt;|end_header_id|&gt;
+
+{}&lt;|eot_id|&gt;&lt;|start_header_id|&gt;assistant&lt;|end_header_id|&gt;
+
+{}&lt;|eot_id|&gt;"""
+
+def formatting_prompts_func(examples):
+    fields = examples["conversations"]
+    texts =
+    for convos in fields:
+        instruction = convos['value']
+        input_text = convos[1]['value']
+        output = convos[2]['value']
+        text = llama31_prompt.format(instruction, input_text, output)
+        texts.append(text)
+    return {"text": texts}
+
+# Load and process dataset
+dataset = load_dataset("json", data_files={"train": "data.jsonl"}, split="train")
+dataset = dataset.map(formatting_prompts_func, batched=True)
+
+# Configure training arguments
+training_args = TrainingArguments(
+    output_dir="outputs",
+    per_device_train_batch_size=2,
+    gradient_accumulation_steps=4,
+    warmup_steps=5,
+    num_train_epochs=3,
+    learning_rate=2e-4,
+    fp16=(torch.cuda.is_available() and not (torch.cuda.get_device_capability() >= 8)),
+    bf16=(torch.cuda.is_available() and torch.cuda.get_device_capability() >= 8),
+    logging_steps=1,
+    optim="adamw_torch",
+    weight_decay=0.01,
+    lr_scheduler_type="linear",
+    seed=3407,
+    report_to="none"
+)
+
+#... (rest of offlinetraining.py code)...
+</code></pre>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="philosophy" class="mb-16">
+                <h1 class="text-4xl font-bold text-slate-900 mb-8">Project Philosophy & Roadmap</h1>
+                <div class="bg-white p-8 rounded-lg shadow-md">
+                    <h2 class="text-2xl font-bold mb-4">Philosophy</h2>
+                    <p class="text-gray-600 mb-6">
+                        VeritasGraph is founded on the principle that the most powerful AI systems should also be the most transparent, secure, and controllable. The project's philosophy is a commitment to democratizing enterprise-grade AI, providing organizations with the tools to build their own sovereign knowledge assets. This stands in contrast to a reliance on opaque, proprietary, cloud-based APIs, empowering organizations to maintain full control over their data and the reasoning processes applied to it.
+                    </p>
+                    <h2 class="text-2xl font-bold mb-4">Roadmap</h2>
+                    <p class="text-gray-600 mb-4">The project is under active development. Future enhancements are planned to expand its capabilities and ecosystem integration:</p>
+                    <ul class="list-disc list-inside text-gray-600 space-y-2">
+                        <li>**Expanded Database Support:** Integration with a wider range of graph databases and vector stores.</li>
+                        <li>**Advanced Graph Analytics:** Incorporation of community detection and summarization techniques.</li>
+                        <li>**Agentic Framework:** Development of an agentic layer that can perform more complex, multi-step reasoning tasks.</li>
+                        <li>**Visualization UI:** A web-based user interface for visualizing the knowledge graph and exploring attribution paths.</li>
+                    </ul>
+                </div>
+            </section>
+
+            <footer class="text-center text-gray-500 text-sm mt-12">
+                <p>&copy; 2024 VeritasGraph. All Rights Reserved.</p>
+            </footer>
+        </main>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+
+    <script>
+        // Mobile menu toggle
+        const menuToggle = document.getElementById('menu-toggle');
+        const sidebar = document.getElementById('sidebar');
+        menuToggle.addEventListener('click', () => {
+            sidebar.classList.toggle('-translate-x-full');
+        });
+
+        // Chart.js implementation
+        const brilliantBlues = ['#003f5c', '#665191', '#d45087', '#ff7c43', '#ffa600', '#2f4b7c', '#a05195', '#f95d6a'];
+        const commonChartOptions = {
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { position: 'bottom', labels: { color: '#4b5563' } },
+                tooltip: {
+                    callbacks: {
+                        title: function(tooltipItems) {
+                            const item = tooltipItems;
+                            let label = item.chart.data.labels[item.dataIndex];
+                            return Array.isArray(label)? label.join(' ') : label;
+                        }
+                    }
+                }
+            }
+        };
+
+        new Chart(document.getElementById('stage1Chart'), {
+            type: 'doughnut',
+            data: {
+                labels:,
+                datasets: [{ data: [3, 4, 5], backgroundColor:, brilliantBlues[7], brilliantBlues[8]], hoverOffset: 4 }]
+            },
+            options: {...commonChartOptions, plugins: {...commonChartOptions.plugins, legend: { display: true, position: 'bottom' } } }
+        });
+        
+        new Chart(document.getElementById('stage2Chart'), {
+            type: 'bar',
+            data: {
+                labels:,
+                datasets:, backgroundColor: brilliantBlues[8] + 'B3', borderColor: brilliantBlues[8], borderWidth: 1 },
+                    { label: 'VeritasGraph Hybrid', data: , backgroundColor: brilliantBlues[7] + 'B3', borderColor: brilliantBlues[7], borderWidth: 1 }
+                ]
+            },
+            options: {...commonChartOptions, scales: { y: { beginAtZero: true, max: 100, ticks: { color: '#4b5563' } }, x: { ticks: { color: '#4b5563' } } } }
+        });
+
+        new Chart(document.getElementById('stage3Chart'), {
+            type: 'radar',
+            data: {
+                labels:,
+                datasets:, fill: true, backgroundColor: 'rgba(47, 75, 124, 0.2)', borderColor: 'rgb(47, 75, 124)', pointBackgroundColor: 'rgb(47, 75, 124)' },
+                    { label: 'LoRA-Tuned LLM', data: [9, 9, 8, 9, 7], fill: true, backgroundColor: 'rgba(249, 93, 106, 0.2)', borderColor: 'rgb(249, 93, 106)', pointBackgroundColor: 'rgb(249, 93, 106)' }
+                ]
+            },
+            options: {...commonChartOptions, scales: { r: { beginAtZero: true, max: 10, pointLabels: { color: '#4b5563' }, ticks: { backdropColor: 'transparent', color: '#4b5563' } } } }
+        });
+        
+        new Chart(document.getElementById('stage4Chart'), {
+            type: 'polarArea',
+            data: {
+                labels:,
+                datasets: [{ data: [40, 25, 25, 10], backgroundColor:, brilliantBlues[1], brilliantBlues[9], brilliantBlues] }]
+            },
+            options: {...commonChartOptions, scales: { r: { ticks: { display: false }, grid: { circular: true } } }, plugins: {...commonChartOptions.plugins, legend: { display: true, position: 'bottom' } } }
+        });
+    </script>
+</body>
+</html>
