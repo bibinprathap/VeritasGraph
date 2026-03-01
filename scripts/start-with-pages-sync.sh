@@ -46,26 +46,16 @@ error() {
     echo -e "${RED}[$(date '+%Y-%m-%d %H:%M:%S')] ERROR:${NC} $1" | tee -a "$LOG_FILE"
 }
 
-# Function to update GitHub Pages redirect
+# Function to update GitHub Pages redirect (uses git push - works with fine-grained PATs)
 update_github_redirect() {
     local DEMO_URL=$1
-    
-    log "${YELLOW}📝 Updating GitHub Pages redirect...${NC}"
-    
-    # Get current file content and SHA
-    RESPONSE=$(curl -s -H "Authorization: token $GITHUB_TOKEN" \
-        -H "Accept: application/vnd.github.v3+json" \
-        "https://api.github.com/repos/$GITHUB_REPO/contents/$REDIRECT_FILE_PATH?ref=$GITHUB_BRANCH")
-    
-    CURRENT_SHA=$(echo "$RESPONSE" | grep -o '"sha": "[^"]*"' | head -1 | cut -d'"' -f4)
-    
-    if [ -z "$CURRENT_SHA" ]; then
-        error "Failed to get file SHA. Check your GitHub token."
-        return 1
-    fi
-    
-    # Create new redirect HTML content
-    NEW_CONTENT=$(cat << EOF
+    local NOW
+    NOW=$(date -u '+%Y-%m-%d %H:%M UTC')
+
+    log "${YELLOW}📝 Updating GitHub Pages redirect via git...${NC}"
+
+    # Write the updated redirect HTML directly into the repo's docs/demo/index.html
+    cat > "$SCRIPT_DIR/../$REDIRECT_FILE_PATH" << HTMLEOF
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -85,43 +75,29 @@ update_github_redirect() {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
         }
-        .container {
-            text-align: center;
-            padding: 40px;
-            max-width: 500px;
-        }
+        .container { text-align: center; padding: 40px; max-width: 500px; }
         h1 { font-size: 2.5rem; margin-bottom: 20px; }
         .spinner {
             border: 4px solid rgba(255,255,255,0.3);
             border-top: 4px solid white;
             border-radius: 50%;
-            width: 50px;
-            height: 50px;
+            width: 50px; height: 50px;
             animation: spin 1s linear infinite;
             margin: 30px auto;
         }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         p { font-size: 1.2rem; margin-bottom: 20px; opacity: 0.9; }
         a {
-            display: inline-block;
-            color: white;
-            background: rgba(255,255,255,0.2);
-            padding: 15px 30px;
-            border-radius: 8px;
-            text-decoration: none;
-            font-weight: 600;
-            transition: background 0.3s;
+            display: inline-block; color: white;
+            background: rgba(255,255,255,0.2); padding: 15px 30px;
+            border-radius: 8px; text-decoration: none;
+            font-weight: 600; transition: background 0.3s;
         }
         a:hover { background: rgba(255,255,255,0.3); }
         .status {
-            margin-top: 30px;
-            padding: 15px;
+            margin-top: 30px; padding: 15px;
             background: rgba(255,255,255,0.1);
-            border-radius: 8px;
-            font-size: 0.9rem;
+            border-radius: 8px; font-size: 0.9rem;
         }
     </style>
 </head>
@@ -133,41 +109,36 @@ update_github_redirect() {
         <a href="${DEMO_URL}">Click here if not redirected</a>
         <div class="status">
             <strong>Status:</strong> Server is online<br>
-            <small>Last updated: $(date -u '+%Y-%m-%d %H:%M UTC')</small>
+            <small>Last updated: ${NOW}</small>
         </div>
     </div>
     <script>
-        setTimeout(function() {
-            window.location.href = "${DEMO_URL}";
-        }, 2000);
+        setTimeout(function() { window.location.href = "${DEMO_URL}"; }, 2000);
     </script>
 </body>
 </html>
-EOF
-)
-    
-    # Encode content to base64
-    ENCODED_CONTENT=$(echo "$NEW_CONTENT" | base64 -w 0)
-    
-    # Update file via GitHub API
-    UPDATE_RESPONSE=$(curl -s -X PUT \
-        -H "Authorization: token $GITHUB_TOKEN" \
-        -H "Accept: application/vnd.github.v3+json" \
-        "https://api.github.com/repos/$GITHUB_REPO/contents/$REDIRECT_FILE_PATH" \
-        -d "{
-            \"message\": \"🔄 Update demo redirect: ${DEMO_URL}\",
-            \"content\": \"${ENCODED_CONTENT}\",
-            \"sha\": \"${CURRENT_SHA}\",
-            \"branch\": \"${GITHUB_BRANCH}\"
-        }")
-    
-    if echo "$UPDATE_RESPONSE" | grep -q '"commit"'; then
+HTMLEOF
+
+    # Commit and push via git using the token
+    cd "$SCRIPT_DIR/.."
+    REMOTE_URL="https://${GITHUB_TOKEN}@github.com/${GITHUB_REPO}.git"
+
+    git add "$REDIRECT_FILE_PATH"
+    if git diff --cached --quiet; then
+        log "No change in redirect URL, skipping commit."
+        return 0
+    fi
+
+    git commit -m "🔄 Update demo redirect: ${DEMO_URL}"
+    git push "$REMOTE_URL" "$GITHUB_BRANCH"
+
+    if [ $? -eq 0 ]; then
         log "${GREEN}✅ GitHub Pages redirect updated!${NC}"
         log "${CYAN}📍 Stable URL: https://bibinprathap.github.io/VeritasGraph/demo/${NC}"
         log "${CYAN}📍 Current tunnel: ${DEMO_URL}${NC}"
         return 0
     else
-        error "Failed to update redirect: $UPDATE_RESPONSE"
+        error "Failed to push redirect update."
         return 1
     fi
 }
