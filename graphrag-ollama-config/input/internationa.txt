@@ -1,0 +1,115 @@
+Dashboard Title: STUDENT VISA & ADMISSION ELIGIBILITY ANALYTICS (DETAILED) Total Candidates Evaluated: 7,773
+
+1. ACADEMIC ELIGIBILITY METRICS Minimum GPA Requirement (Region specific):
+
+High Eligibility (> 3.5 GPA): 2,597 candidates (Ivy League / Top Tier Eligible)
+
+Standard Eligibility (3.0 - 3.49 GPA): 3,115 candidates (State/Public Universities)
+
+Conditional Eligibility (2.5 - 2.99 GPA): 1,544 candidates (Pathway Programs/Community Colleges)
+
+At-Risk/Ineligible (< 2.5 GPA): 517 candidates
+
+Standardized Test Status (GRE/GMAT/SAT):
+
+Scores Verified (Above Threshold): 3,200 candidates
+
+Waiver Granted (Experience/GPA based): 1,850 candidates
+
+Pending Scores: 2,123 candidates
+
+Below Threshold (Retake Required): 600 candidates
+
+2. LANGUAGE PROFICIENCY CRITERIA (CEFR Standards) English (IELTS / TOEFL / PTE):
+
+C1/C2 Advanced (IELTS 7.5+ / TOEFL 100+): 1,940 candidates
+
+B2 Upper Intermediate (IELTS 6.5 / TOEFL 80-99): 4,200 candidates (Meets standard US/UK requirement)
+
+B1 Intermediate (IELTS 5.5 - 6.0): 1,250 candidates (Requires Pre-sessional English)
+
+Below Requirement: 383 candidates
+
+European Languages (German/French - For Public Universities):
+
+B2/C1 Certified (Direct Entry): 450 candidates
+
+A1/A2 Basic (Conditional Admission): 890 candidates
+
+No Proficiency (English-taught programs only): 6,433 candidates
+
+3. FINANCIAL ELIGIBILITY & FUNDING PROOF USA (Liquid Assets ~ $35,000 - $60,000/year):
+
+Fully Funded (Scholarship/Assistantship): 850 candidates
+
+Self-Funded (Bank Statement Verified): 2,400 candidates
+
+Loan Sanctioned: 1,200 candidates
+
+Insufficient Funds (Risk of 214(b) Denial): 450 candidates
+
+Europe/Germany (Blocked Account ~ €11,208/year):
+
+Deposit Confirmed: 1,800 candidates
+
+Sponsorship Letter Verified: 600 candidates
+
+Pending Financial Proof: 473 candidates
+
+4. VISA COMPLIANCE & TIES TO HOME COUNTRY Gap Year Justification:
+
+No Gap (Fresh Graduate): 4,500 candidates
+
+Gap Explained (Work Experience verified): 2,100 candidates
+
+Unexplained Gap (> 1 year): 673 candidates (High Visa Risk)
+
+Immigration Intent (USA Specific):
+
+Clear Non-Immigrant Intent Demonstrated: 5,200 candidates
+
+Potential Dual Intent Flagged: 800 candidates
+
+Previous Visa Refusals: 320 candidates (Requires complex review)
+
+5. REGION-SPECIFIC ELIGIBILITY CHECKS United States (F-1 Criteria):
+
+I-20 Issued: 2,100
+
+DS-160 Completed: 1,850
+
+SEVIS Fee Paid: 1,900
+
+United Kingdom (CAS Criteria):
+
+CAS Letter Received: 950
+
+Tuberculosis (TB) Test Cleared: 900
+
+Credibility Interview Passed: 880
+
+Schengen Area (Germany/France):
+
+APS Certificate (India/China specific): 650 Verified
+
+Campus France/Uni-Assist Evaluation Cleared: 820
+
+Reasons for Ineligibility (Top Factors):
+
+Academic Mismatch: 40% (Background does not match Master's prereqs)
+
+Financial Shortfall: 25% (Cannot show liquid funds for Year 1)
+
+Language Barrier: 20% (Failed to meet IELTS 6.5 minimum)
+
+Unjustified Study Gap: 10%
+
+Age/Visa History: 5%
+
+Metadata:
+
+Compliance Standard: US INA Act 214(b) / UKVI Tier 4 Guidelines
+
+Last Updated: 2025-04-14
+
+Verification Level: Pre-Screening Phase 2
