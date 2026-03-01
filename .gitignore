@@ -1,0 +1,17 @@
+graphrag-ollama-config/__pycache__/*
+graphrag-ollama-config/cache/*
+graphrag-ollama-config/graphrag-ollama/*
+graphrag-ollama-config/output/*
+mcp/client/node_modules/*
+veritasgraph/__pycache__/*
+mcp/veritas-mcp-server/__pycache__/*
+mcp/client/.next/*
+tests/__pycache__/*
+graphrag-ollama-config/input/youtube_EY_CAP_Discover_How_to_Analyze_your_Climate_Risks__a5f1e91a.txt
+scripts/*.sh
+
+# Environment files with secrets
+.env
+*.env
+!*.env.example
+!*.env.template
