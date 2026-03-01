@@ -1,0 +1,367 @@
+# NCAA Eligibility Requirements for Student Athletes
+
+## Executive Summary
+
+The National Collegiate Athletic Association (NCAA) establishes eligibility requirements for student-athletes participating in Division I, Division II, and Division III athletics. These requirements ensure that student-athletes maintain academic standards while competing at the collegiate level.
+
+## Part 1: Initial Eligibility Requirements
+
+### 1.1 NCAA Eligibility Center Registration
+
+All prospective student-athletes must register with the NCAA Eligibility Center (formerly NCAA Clearinghouse). This registration process includes:
+
+- Creating an account at eligibilitycenter.org
+- Submitting official high school transcripts
+- Submitting ACT or SAT test scores
+- Paying the registration fee ($90 for domestic students)
+- Requesting amateurism certification
+
+### 1.2 Academic Requirements for Division I
+
+**Core Course Requirements:**
+- 16 core courses required for full qualifier status
+- 4 years of English
+- 3 years of mathematics (Algebra I or higher)
+- 2 years of natural/physical science (including 1 lab course)
+- 1 additional year of English, math, or natural science
+- 2 years of social science
+- 4 additional years from any core area
+
+**GPA and Test Score Requirements:**
+- Minimum core GPA: 2.3 for full qualifier
+- Sliding scale: Higher GPA allows lower test scores
+- SAT minimum: 400 combined (math and critical reading)
+- ACT sum score minimum: 37
+
+**Sliding Scale Example (Division I):**
+| Core GPA | SAT Score | ACT Sum Score |
+|----------|-----------|---------------|
+| 2.300 | 1010 | 86 |
+| 2.400 | 960 | 82 |
+| 2.500 | 910 | 78 |
+| 2.600 | 860 | 74 |
+| 2.700 | 820 | 70 |
+| 2.800 | 780 | 66 |
+| 2.900 | 740 | 62 |
+| 3.000 | 700 | 58 |
+| 3.200 | 620 | 52 |
+| 3.550+ | 400 | 37 |
+
+### 1.3 Academic Requirements for Division II
+
+**Core Course Requirements:**
+- 16 core courses required
+- 3 years of English
+- 2 years of mathematics (Algebra I or higher)
+- 2 years of natural/physical science (including 1 lab course)
+- 3 additional years of English, math, or science
+- 2 years of social science
+- 4 additional years from any core area
+
+**GPA and Test Score Requirements:**
+- Minimum core GPA: 2.2
+- Sliding scale similar to Division I
+- SAT minimum: 400 combined
+- ACT sum score minimum: 37
+
+### 1.4 Division III Requirements
+
+Division III does not require NCAA Eligibility Center certification. However, student-athletes must:
+- Be admitted to the institution as a regular student
+- Meet institutional academic standards
+- Maintain satisfactory academic progress
+
+## Part 2: Continuing Eligibility Requirements
+
+### 2.1 Progress Toward Degree (PTD)
+
+Student-athletes must demonstrate progress toward a degree:
+
+**Division I:**
+- Complete 40% of degree requirements by end of Year 2
+- Complete 60% of degree requirements by end of Year 3
+- Complete 80% of degree requirements by end of Year 4
+
+**Division II:**
+- Slightly less stringent requirements
+- Must maintain progress toward graduation
+
+### 2.2 Academic Performance Requirements
+
+**Academic Progress Rate (APR):**
+- Measures eligibility, retention, and graduation
+- Maximum points: 1,000 (all athletes eligible and retained)
+- Minimum team APR: 930 (2024-25 season)
+- Penalties for teams below threshold
+
+**Graduation Success Rate (GSR):**
+- Tracks graduation rates of scholarship athletes
+- Accounts for transfers and mid-year enrollees
+- Federal graduation rate comparison metric
+
+### 2.3 Credit Hour Requirements
+
+**Division I:**
+- Minimum 6 credit hours per term to compete
+- 18 credit hours earned since previous fall term
+- 24 credit hours earned since start of previous academic year
+- Must be enrolled full-time (12+ credit hours)
+
+**Division II:**
+- Similar credit hour requirements
+- Must maintain full-time enrollment
+- Satisfactory progress toward degree
+
+## Part 3: Amateurism Requirements
+
+### 3.1 Definition of Amateurism
+
+Student-athletes must maintain amateur status by:
+- Not signing contracts with professional teams
+- Not receiving salary for sport participation
+- Not competing with professionals (with exceptions)
+- Not accepting prize money above expenses
+
+### 3.2 Permissible Activities
+
+Student-athletes MAY:
+- Receive athletics scholarships
+- Accept limited expense reimbursement for tryouts
+- Participate in Olympic or national team competitions
+- Receive awards (subject to value limits)
+
+### 3.3 Prohibited Activities
+
+Student-athletes may NOT:
+- Receive payment for their athletic abilities
+- Sign with agents (affects eligibility)
+- Use athletic skill for pay (endorsements - pre-NIL era)
+- Accept excessive gifts or benefits
+
+### 3.4 Name, Image, and Likeness (NIL) Rules
+
+Since July 2021, NCAA student-athletes may:
+- Profit from their name, image, and likeness
+- Sign endorsement deals
+- Create and monetize social media content
+- Participate in promotional activities
+
+NIL Guidelines:
+- Cannot be used as recruiting inducement
+- Must comply with state NIL laws
+- Cannot conflict with team or school contracts
+- Must disclose NIL activities to institution
+
+## Part 4: Transfer Eligibility
+
+### 4.1 Transfer Portal
+
+The NCAA Transfer Portal allows:
+- Athletes to notify their intent to transfer
+- Coaches from other schools to contact them
+- Streamlined transfer process
+
+### 4.2 Transfer Requirements
+
+**One-Time Transfer Exception:**
+- Athletes in good academic standing
+- May transfer and compete immediately
+- Applies to most sports (football has limitations)
+
+**Notification Requirements:**
+- Must enter transfer portal by specific dates
+- Spring sports: May 1 deadline
+- Fall sports: May 1 deadline (varies by sport)
+- Winter sports: May 1 deadline
+
+### 4.3 Academic Requirements for Transfers
+
+Transferring athletes must:
+- Be academically eligible at previous institution
+- Meet minimum credit hour requirements
+- Have transferable credits toward degree
+- Meet receiving institution's admission standards
+
+## Part 5: Medical and Health Requirements
+
+### 5.1 Pre-Participation Medical Examination
+
+All student-athletes must complete:
+- Comprehensive medical history
+- Physical examination
+- Cardiac screening (ECG for high-risk sports)
+- Sickle cell trait testing
+
+### 5.2 Concussion Protocol
+
+NCAA concussion guidelines require:
+- Baseline testing before competition
+- Immediate removal from play if concussion suspected
+- Gradual return-to-play protocol
+- Medical clearance before return
+
+### 5.3 Drug Testing
+
+Student-athletes are subject to:
+- NCAA year-round drug testing
+- Championship testing
+- Institutional drug testing programs
+- Penalties for positive tests (up to permanent ban)
+
+Banned Substances Include:
+- Performance enhancing drugs
+- Stimulants
+- Anabolic agents
+- Certain hormones
+- Recreational drugs
+
+## Part 6: Financial Aid and Scholarships
+
+### 6.1 Types of Athletics Aid
+
+**Full Scholarship (Grant-in-Aid):**
+- Tuition and fees
+- Room and board
+- Required course books
+- Can include cost of attendance stipend
+
+**Partial Scholarship:**
+- Portion of full scholarship
+- Common in equivalency sports
+- Can be combined with academic aid
+
+### 6.2 Scholarship Limitations by Sport
+
+**Head Count Sports (Full scholarships only):**
+- Football (Division I-A): 85 scholarships
+- Men's Basketball: 13 scholarships
+- Women's Basketball: 15 scholarships
+- Women's Volleyball: 12 scholarships
+- Women's Tennis: 8 scholarships
+- Women's Gymnastics: 12 scholarships
+
+**Equivalency Sports (Can divide scholarships):**
+- Baseball: 11.7 equivalencies
+- Soccer: 9.9 equivalencies
+- Track and Field: 12.6 equivalencies
+
+### 6.3 Academic Scholarships
+
+Student-athletes may also receive:
+- Merit-based academic scholarships
+- Need-based financial aid
+- Institutional grants
+- External scholarships (with limitations)
+
+## Part 7: Compliance and Violations
+
+### 7.1 Major Violations
+
+Major violations include:
+- Academic fraud
+- Impermissible benefits to recruits
+- Booster involvement in recruitment
+- Falsifying eligibility documents
+- Systematic failures to comply with rules
+
+Penalties for Major Violations:
+- Scholarship reductions
+- Postseason bans
+- Show-cause orders for coaches
+- Vacated wins
+- Probation periods
+
+### 7.2 Secondary Violations
+
+Secondary violations are:
+- Isolated or inadvertent
+- Provide limited recruiting advantage
+- Minor extra benefits
+
+Typical Secondary Violations:
+- Recruiting contact on wrong date
+- Providing small impermissible gift
+- Practice outside allowed hours
+
+### 7.3 Self-Reporting
+
+Institutions must:
+- Self-report violations to NCAA
+- Implement corrective actions
+- Cooperate with investigations
+- Maintain compliance programs
+
+## Part 8: International Student-Athlete Requirements
+
+### 8.1 Academic Evaluation
+
+International students must:
+- Submit international transcripts for evaluation
+- Meet core course requirements (evaluated differently)
+- Demonstrate English proficiency
+- Complete credential evaluation through approved service
+
+### 8.2 Amateurism Certification
+
+International students must verify:
+- No professional contracts
+- No payment for athletic participation
+- Limited prize money received
+- Proper documentation of all competitions
+
+### 8.3 Visa and Immigration Compliance
+
+International student-athletes must maintain:
+- Valid F-1 or J-1 visa status
+- Full-time enrollment
+- Work authorization for compensation
+- Compliance with immigration regulations
+
+## Part 9: Academic Support Services
+
+### 9.1 Required Academic Support
+
+Institutions must provide:
+- Academic advisors for student-athletes
+- Tutoring services
+- Study hall requirements (for certain athletes)
+- Priority registration (permitted)
+
+### 9.2 Freshman Requirements
+
+First-year student-athletes often have:
+- Mandatory study hall hours (typically 8-10 hours/week)
+- Academic monitoring
+- Progress reports from professors
+- Early intervention programs
+
+### 9.3 Success Programs
+
+Academic success programs include:
+- Summer bridge programs
+- Learning specialists
+- Career counseling
+- Life skills development
+
+## Part 10: Conclusion
+
+NCAA eligibility is a complex system designed to:
+- Ensure academic integrity
+- Maintain competitive balance
+- Protect student-athlete welfare
+- Preserve the amateur model (evolving with NIL)
+
+Student-athletes must understand and comply with:
+- Initial eligibility requirements
+- Continuing eligibility standards
+- Amateurism rules
+- Transfer regulations
+- Financial aid limitations
+
+Success as a student-athlete requires balancing athletic and academic excellence while navigating NCAA regulations.
+
+---
+
+*Document Version: 2024.2*
+*Last Updated: January 2024*
+*This guide is for informational purposes. Always verify current requirements with NCAA.org.*

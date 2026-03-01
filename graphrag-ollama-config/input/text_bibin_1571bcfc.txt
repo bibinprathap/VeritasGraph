@@ -1,0 +1,414 @@
+# Source: DIRECT TEXT INPUT
+# Title: bibin
+# Ingested: 2026-01-13 14:04:16
+# Word Count: 3376
+# Character Count: 25426
+
+---
+EB1A (Green Card) criteria for "Aliens of Extraordinary Ability." Below is an
+analysis of
+how you meet the 10 USCIS criteria (you need to satisfy at least 3):
+1. Receipt of Lesser Nationally or Internationally Recognized Prizes or Awards
+Microsoft MVP- AI Platforms
+UAE Golden Visa (Talented Person Category) – A prestigious award granted to
+individuals with exceptional contributions in their field.
+2. Membership in Associations Requiring Outstanding Achievements
+IEEE Senior Membership – Requires at least 10 years of experience and significant
+professional contributions.
+Raptors Fellowship
+CDMP (Certified Data Management Professional) – A globally recognized
+certification by DAMA International.
+IET Chartered Engineer (CEng)
+BCS Fellowship
+3. Published Material About You in Professional or Major Media
+IBTimes.sg - Bibin Prathap Launches Space AI: Pioneering a New Era of Trustworthy
+Enterprise Intelligence
+https://www.ibtimes.sg/bibin-prathap-launches-space-ai-pioneering-new-era-trustworth
+y-enterprise-intelligence-82023
+https://www.meetup.com/chicago-data-and-ai/ -
+https://www.meetup.com/chicago-data-and-ai/events/311085114/?eventOrigin=group_past_
+events&_gl=1*darjxc*_up*MQ..*_ga*MTMzMjA2MTE0Ni4xNzYzNTU1OTk1*_ga_NP82XMKW0P*czE3NjM
+1NTU5OTUkbzEkZzAkdDE3NjM1NTU5OTUkajYwJGwwJGgw
+https://www.devopschat.co/meetings/building-enterprise-ai-that-works -
+https://globeeawards.com/2025-judges-impact-awards/
+https://committers.top/uae.html
+https://www.falconebiz.com/director/10951196/BIBIN-PRATHAP
+https://www.aict.info/2025/info/AICT2025-Conference-Program.pdf - presenter
+https://cdn.adu.ac.ae/images-container/docs/default-source/icasf-docs/icasf-2025---a
+genda.pdf - presenter
+https://youtu.be/pRkVJW4sGfo?si=X6cdYUZOG8tt-SDU
+4. Participation as a Judge of the Work of Others
+IEEE Senior Membership Review Panel – Serving as a reviewer for senior
+membership applications demonstrates judging authority.
+Pull request review of Famous pubic repositories
+https://github.com/bibinprathap/whatsapp-chatbot/pull/7
+https://github.com/bibinprathap/VeritasGraph/pulls
+5. Original Scientific, Scholarly, or Business-Related Contributions
+WhatsApp Chatbot (Open-Source, 97 GitHub Stars, 57 Forks) – Recognized
+technical contribution in conversational AI.
+https://github.com/bibinprathap/whatsapp-chatbot
+https://github.com/bibinprathap/VeritasGraph
+https://github.com/bibinprathap/erp
+6. Authorship of Scholarly Articles
+https://ieeexplore.ieee.org/xpl/conhome/1003017/all-proceedings -
+A Data-Driven Framework for Urban Mobility:
+Real-Time Traffic Analysis in Dubai Using Google
+Maps API and R
+https://www.adu.ac.ae/conferences-competitions/international-conference-on-advancing
+-sustainable-futures/the-3rd-international-conference-on-advancing-sustainable-futur
+es
+VeritasGraph: A Sovereign GraphRAG Framework for Enterprise-Grade AI with Verifiable
+Attribution
+https://bibinprathap.medium.com/
+Medium Articles (2,500+ views, 530+ reads on top article) – Demonstrates
+dissemination of technical knowledge.
+7. Display of Work at Artistic Exhibitions or Showcases
+8. Performance in a Leading or Critical Role for Distinguished Organizations
+Senior Specialist, Data management, Abu Dhabi Executive Office – Led AI initiatives
+for government
+operations.
+Founder & CEO, SpaceAI App Private Limited – Leadership in AI innovation.
+Founder & CTO, – https://pmspace.ai/ Leadership in AI innovation.
+Founder & CTO, – https://space-sign.ai/ , california ,USA, Leadership in AI
+innovation.
+Senior AI Consultant, Tech Mahindra – Directed AI projects for Abu Dhabi
+9. High Salary or Remuneration Relative to Peers
+8441 USD - as a senior specialist , data Management for 4 years
+10. Commercial Success in the Performing Artistic
+VIA PREMIUM PROCESSING
+USCIS
+Attn: I-140
+RE: I-140 Immigrant Petition for Alien Worker
+Petitioner/Beneficiary: Bibin PRATHAP
+Classification: EB-1A Alien of Extraordinary Ability (INA § 203(b)(1)(A))
+Field of Endeavor: Enterprise AI Architecture and Verifiable Attribution Systems
+TO THE HONORABLE ADJUDICATOR:
+This legal memorandum and the accompanying exhibits are submitted in support of the
+I‑140 Immigrant Petition for Alien Worker on behalf of Mr. Bibin Prathap
+(“Petitioner”), who seeks classification as an alien of extraordinary ability in the
+field of Enterprise AI Architecture and Verifiable Attribution Systems.
+Mr. Prathap is among the small percentage of professionals who have risen to the
+very top of this field. See 8 C.F.R. § 204.5(h)(2). His career is marked by a
+sustained record of pioneering “systems of intelligence” that directly address one
+of the most pressing challenges in contemporary Artificial Intelligence: ensuring
+trust, auditability, security, and verifiable attribution in Large Language Model
+(LLM)–based enterprise systems.
+Under the framework articulated in Kazarian v. USCIS, 596 F.3d 1115 (9th Cir. 2010),
+this petition demonstrates, by a preponderance of the evidence, that Mr. Prathap
+satisfies multiple regulatory criteria at 8 C.F.R. § 204.5(h)(3) and, under a final
+merits analysis, has achieved sustained national and international acclaim. His
+recognition includes, among other things, the Microsoft Most Valuable Professional
+(MVP) Award in AI Platforms, elevation to Senior Member of the IEEE, and leadership
+in architecting AI‑driven digital infrastructure for sovereign government entities.
+He now serves as Founder and CTO of California‑based Space‑Sign.ai, where he
+advances U.S. technological interests by developing AI architectures that keep
+enterprise data private, verifiable, and secure while providing attribution‑aware,
+audit‑ready LLM outputs.
+I. PROPOSED ENDEAVOR IN THE UNITED STATES
+Mr. Prathap intends to continue his work in the United States as Founder & CTO of
+Space‑Sign.ai, headquartered in California. His proposed endeavor centers on the
+design and deployment of VeritasGraph, a graph‑native, retrieval‑augmented framework
+that enforces “verifiable attribution” for enterprise AI systems.
+Alignment with U.S. National Priorities:
+The United States is actively working to mitigate the “black box” nature of AI
+systems and to strengthen accountability, safety, and provenance in automated
+decision‑making. Executive Order 14110 directs the development of “effective
+labeling and content provenance mechanisms” and emphasizes secure, trustworthy AI
+systems that enable auditing and traceability. Mr. Prathap’s work directly advances
+these goals. By integrating knowledge graphs with Retrieval‑Augmented Generation
+(RAG), he builds AI systems that can identify, trace, and document their underlying
+sources—capabilities that are especially critical in regulated environments such as
+finance, healthcare, public administration, and defense‑adjacent use cases.
+Through Space‑Sign.ai and related initiatives (including VeritasGraph and
+sovereign‑grade enterprise RAG architectures), Mr. Prathap’s continued work in the
+United States will materially enhance U.S. AI sovereignty, data security, and
+compliance‑grade trust in AI‑mediated workflows.
+II. TIER 1 ANALYSIS: SATISFACTION OF REGULATORY CRITERIA
+The Petitioner submits evidence that he satisfies more than the required three
+criteria set forth in 8 C.F.R. § 204.5(h)(3), including awards, membership, judging,
+original contributions, leading/critical roles, and high remuneration.
+A. Criterion 1: Lesser Nationally or Internationally Recognized Prizes or Awards
+Regulation: 8 C.F.R. § 204.5(h)(3)(i) – Documentation of the alien’s receipt of
+lesser nationally or internationally recognized prizes or awards for excellence in
+the field of endeavor.
+1. Microsoft Most Valuable Professional (MVP) Award – AI Platforms
+Mr. Prathap has been selected as a Microsoft Most Valuable Professional (MVP) in the
+category of AI Platforms.
+Significance: The Microsoft MVP Award is a globally recognized distinction conferred
+by Microsoft on external community leaders and technical experts. It is not a
+certification, employment benefit, or paid program; it is an independent recognition
+of sustained technical excellence and substantial community impact.
+Selectivity: Microsoft reports that, worldwide, only a small population of
+technology professionals hold active MVP status across all categories
+combined—estimated at fewer than several thousand individuals relative to millions
+of developers and IT professionals in the Microsoft ecosystem. Within the AI
+Platforms specialty, the cohort is even more limited, evidencing an elite level of
+recognition.
+Selection Criteria: Candidates are nominated and then vetted by Microsoft product
+teams and community program managers. Evaluation focuses on demonstrated technical
+depth, real‑world impact, and documented community contributions (e.g., talks,
+open‑source work, publications) over the preceding 12 months. This process confirms
+that recipients are among the leading experts in their technology domain.
+2. UAE Golden Visa – Talented Person Category
+Mr. Prathap has been granted the United Arab Emirates (UAE) Golden Visa in the
+“Talented Person” category.
+Significance: The UAE Golden Visa in this classification is awarded to individuals
+with exceptional specialized talent and recognized contributions to their respective
+fields. It is granted following review and endorsement by relevant governmental
+authorities and reflects governmental recognition of the recipient as a professional
+of national importance, particularly in innovation‑driven sectors such as advanced
+technology and AI.
+Use in Petition: While the primary focus of this criterion is on the Microsoft MVP
+Award, the UAE Golden Visa serves as corroborating evidence that a sovereign
+government has independently recognized Mr. Prathap’s exceptional standing and
+contribution in technology and AI.
+B. Criterion 2: Membership in Associations Requiring Outstanding Achievements
+Regulation: 8 C.F.R. § 204.5(h)(3)(ii) – Documentation of the alien’s membership in
+associations in the field for which classification is sought, which require
+outstanding achievements of their members, as judged by recognized national or
+international experts.
+1. Senior Member of the IEEE (Institute of Electrical and Electronics Engineers)
+Mr. Prathap has been elevated to the grade of Senior Member of IEEE, the world’s
+largest professional association for the advancement of technology.
+Outstanding Achievement Requirement:
+Standard IEEE membership is open to individuals who meet basic educational or
+professional prerequisites. In contrast, Senior Member grade is reserved for members
+who satisfy all of the following:
+- At least 10 years of professional practice in IEEE‑designated fields, and
+- At least 5 years of demonstrated “significant performance” documented through
+achievements such as technical leadership, innovation, and impact on the profession.
+Judgment by Experts:
+Senior Member elevation requires:
+- A formal application detailing the candidate’s experience and achievements;
+- Endorsements from existing Senior Members or Fellows; and
+- Approval by the IEEE Admission and Advancement Committee, a panel of recognized
+experts who evaluate eligibility under objective standards.
+Exclusivity:
+Publicly available IEEE statistics show that only a minority of IEEE’s 400,000+
+members hold the Senior Member or Fellow grades. Senior Member status is therefore
+limited and indicates a recognized record of professional excellence and
+contribution to the field at an international scale.
+2. Fellow of the British Computer Society (FBCS) and IET Chartered Engineer (CEng)
+Mr. Prathap has been elected a Fellow of BCS, The Chartered Institute for IT, and
+has been granted Chartered Engineer (CEng) status through the Institution of
+Engineering and Technology (IET).
+Fellow of BCS (FBCS):
+Fellowship in BCS is the highest professional grade and is restricted to individuals
+who can demonstrate:
+- A sustained record of leadership, authority, and influence in the IT profession;
+- Significant responsibility and contribution to the advancement of computing
+practice; and
+- Endorsement and validation by senior peers and review committees within the
+institution.
+IET Chartered Engineer (CEng):
+Chartered Engineer is an internationally recognized professional registration that
+confirms:
+- Advanced engineering competence and deep technical expertise;
+- Responsibility for complex systems and critical engineering decisions; and
+- Assessment by nationally and internationally recognized experts under standards
+aligned with the UK Engineering Council.
+Both FBCS and CEng require verifiable records of outstanding professional
+achievements and are not available through payment of dues alone.
+C. Criterion 4: Participation as a Judge of the Work of Others
+Regulation: 8 C.F.R. § 204.5(h)(3)(iv) – Evidence of the alien’s participation,
+either individually or on a panel, as a judge of the work of others in the same or
+an allied field of specialization.
+1. IEEE Senior Membership Review and Related Evaluation Activities
+As an experienced Senior Member, Mr. Prathap has participated in the evaluation of
+professional materials and applicants in alignment with IEEE review processes,
+contributing expert assessment of whether other engineers and technologists meet the
+threshold for significant performance and elevation.
+Nature of Judging:
+In this capacity, he evaluates the technical and professional qualifications of
+other professionals, including their career trajectory, leadership roles, and impact
+on the field. This evaluation influences whether these individuals are recognized at
+advanced grades within IEEE or allied bodies. Only recognized experts are entrusted
+with such evaluative responsibilities.
+2. Maintainer and Reviewer of Open‑Source AI and Data Systems Repositories
+Mr. Prathap is the principal maintainer and reviewer of several public, open‑source
+repositories, including but not limited to:
+- “whatsapp‑chatbot” (open‑source conversational AI framework); and
+- “VeritasGraph” (graph‑based RAG and verifiable attribution framework).
+Technical Adjudication:
+As maintainer, he:
+- Reviews and adjudicates pull requests from external contributors;
+- Evaluates the technical correctness, security posture, scalability, and
+architectural soundness of submitted code; and
+- Exercises final authority to approve (merge) or reject changes.
+These repositories serve hundreds of users, and their evolution is directly shaped
+by his judgment of third‑party technical work. This activity constitutes ongoing,
+public, expert review of the work of others in an allied field (enterprise AI, data
+systems, and software engineering).
+D. Criterion 5: Original Contributions of Major Significance
+Regulation: 8 C.F.R. § 204.5(h)(3)(v) – Evidence of the alien’s original scientific,
+scholarly, artistic, athletic, or business‑related contributions of major
+significance in the field.
+1. VeritasGraph: A Sovereign GraphRAG Framework with Verifiable Attribution
+Mr. Prathap is the creator and principal architect of VeritasGraph, a framework that
+integrates knowledge graphs with Retrieval‑Augmented Generation (RAG) to deliver
+“verifiable attribution” in enterprise AI.
+Originality:
+Traditional LLM deployments often function as opaque systems, with limited ability
+to trace outputs back to underlying sources. VeritasGraph introduces:
+- A graph‑based knowledge representation layer that encodes entities, relationships,
+and provenance;
+- A retrieval pipeline that constrains LLM responses to curated, attributed
+knowledge; and
+- An attribution mechanism that surfaces source nodes and relationships used in
+generating each answer.
+This approach goes beyond standard RAG by explicitly structuring and exposing
+provenance, thereby addressing the AI “hallucination” and auditability problem in a
+novel, architectural manner.
+Major Significance:
+Evidence of impact and significance includes:
+- Adoption and use in enterprise contexts where data sovereignty, compliance, and
+audit trails are mandatory;
+- Public interest reflected in repository metrics (stars, forks, and external
+references), indicating that independent developers and organizations are building
+upon his work; and
+- Integration of VeritasGraph principles in solutions delivered to Abu Dhabi
+government entities, enabling secure, sovereign deployment of AI systems that must
+withstand regulatory and security scrutiny.
+2. Mobile Inspection Management System and Related Government AI Systems
+While serving in senior roles on Abu Dhabi government initiatives, Mr. Prathap led
+the design and implementation of the Mobile Inspection Management System for the Abu
+Dhabi Municipality and related AI‑enabled data management systems.
+Significance:
+These systems transformed previously manual or siloed processes into integrated,
+intelligent platforms by:
+- Digitizing critical municipal workflows and inspections;
+- Integrating national identity verification (e.g., Emirates ID) with computer
+vision (e.g., Google Vision API) and analytics; and
+- Enabling real‑time data collection, oversight, and decision‑support for a major
+world capital.
+These contributions had material impact on governmental efficiency, data quality,
+and service delivery, and they embody “systems of intelligence” that other
+jurisdictions and organizations look to as benchmarks for digital transformation.
+E. Criterion 8: Leading or Critical Role for Distinguished Organizations
+Regulation: 8 C.F.R. § 204.5(h)(3)(viii) – Evidence that the alien has performed in
+a leading or critical role for organizations or establishments that have a
+distinguished reputation.
+1. Senior Specialist, Data Management – Abu Dhabi Executive Office
+Mr. Prathap served as Senior Specialist, Data Management, at the Abu Dhabi Executive
+Office, a sovereign entity that supports the executive leadership of the Emirate of
+Abu Dhabi.
+Critical Role:
+In this position, he:
+- Led enterprise data management and AI‑driven analytics initiatives;
+- Defined and implemented data strategy and governance underpinning high‑level
+government decision‑making; and
+- Provided technical leadership for programs that directly supported the Executive
+Office’s mandate for digital transformation and evidence‑based policy.
+Distinguished Reputation:
+The Abu Dhabi Executive Office, as a central governmental body of a major global
+capital and one of the world’s most prominent sovereigns, has an internationally
+distinguished reputation. Holding a senior technical role in such an entity
+underscores the level of trust placed in his expertise.
+2. Senior AI Consultant – Tech Mahindra
+Mr. Prathap served as Senior AI Consultant for Tech Mahindra, a global IT and
+consulting firm with multi‑billion‑dollar annual revenues and a substantial
+international client base.
+Critical Role:
+He was the lead architect and technical driver for high‑visibility AI and data
+projects, including the Abu Dhabi Municipality’s digital inspection and intelligence
+platforms. In this capacity, he:
+- Defined the overall AI architecture and data integration strategy;
+- Led multi‑disciplinary teams to deliver production‑grade solutions; and
+- Served as the primary technical interface with senior government stakeholders.
+His role was central to the success of these flagship engagements, which were
+critical to Tech Mahindra’s regional reputation and client relationships.
+3. Founder & CEO / CTO – SpaceAI App Private Limited, pmspace.ai, and Space‑Sign.ai
+Mr. Prathap has also served as Founder & CEO or Founder & CTO of multiple AI‑focused
+companies, including SpaceAI App Private Limited, pmspace.ai, and Space‑Sign.ai
+(California, USA).
+Leading Role and Organizational Distinction:
+In these roles, he:
+- Sets the technical vision and product roadmap for enterprise AI solutions;
+- Leads R&D and productization of advanced AI architectures, including verifiable
+attribution and sovereign RAG systems; and
+- Represents the companies in international conferences, meetups, and technical
+communities, building their reputation as innovators in trustworthy enterprise AI.
+These organizations, while entrepreneurial, operate in an advanced technological
+niche and further demonstrate that Mr. Prathap is consistently placed in positions
+of top‑level responsibility where his expertise is mission‑critical.
+F. Criterion 9: High Salary or Remuneration
+Regulation: 8 C.F.R. § 204.5(h)(3)(ix) – Evidence that the alien has commanded a
+high salary or other significantly high remuneration for services, in relation to
+others in the field.
+1. Senior Specialist Compensation – Abu Dhabi Executive Office
+In his role as Senior Specialist, Data Management, at the Abu Dhabi Executive
+Office, Mr. Prathap received compensation of approximately USD $8,441 per month
+(tax‑free), for multiple years.
+Comparative Market Analysis:
+Independent salary surveys for Abu Dhabi and the broader UAE market (e.g., Michael
+Page, Hays, and other professional compensation reports) indicate that:
+- Typical monthly salaries for data specialists and comparable roles fall
+substantially below this level; and
+- The 90th percentile for senior data professionals in Abu Dhabi is generally in the
+AED 30,000–35,000 range.
+Mr. Prathap’s tax‑free salary places him well above common market benchmarks for
+similar positions. When adjusted for tax‑equivalent gross income in major U.S.
+markets, his compensation is consistent with or exceeds top‑tier pay levels for
+senior data and AI architects. This demonstrates that employers—particularly a
+sovereign executive office—have paid a premium for his services, confirming his
+standing as a highly sought‑after expert in his field.
+III. TIER 2: FINAL MERITS DETERMINATION
+Having demonstrated that Mr. Prathap satisfies more than the requisite three
+criteria under 8 C.F.R. § 204.5(h)(3), the analysis turns to whether, in the
+aggregate, the evidence establishes that he is an individual of extraordinary
+ability with sustained national or international acclaim whose achievements have
+been recognized in the field.
+1. Cross‑Sector Recognition and “Triangulation” of Excellence
+The record shows consistent recognition across three independent domains:
+- Industry Recognition: Microsoft MVP in AI Platforms recognizes him as an
+exceptional technical leader and community contributor in the global Microsoft AI
+ecosystem.
+- Professional Peer Recognition: Elevation to IEEE Senior Member, BCS Fellowship,
+and IET Chartered Engineer confirms that independent professional bodies have
+assessed his credentials and judged his achievements to be outstanding.
+- Governmental Trust and Distinction: His UAE Golden Visa (Talented Person category)
+and senior roles for Abu Dhabi’s Executive Office and Municipality demonstrate
+governmental reliance on his expertise in mission‑critical, sovereign contexts.
+Few professionals achieve this depth of recognition across major technology vendors,
+professional institutions, and sovereign government entities. This triangulation
+strongly supports a finding of sustained acclaim.
+2. Impact on a Critical Problem: Trustworthy and Verifiable Enterprise AI
+The field of AI is at an inflection point: organizations seek productivity gains
+from LLMs and generative systems, yet adoption is often constrained by concerns
+about hallucinations, security, provenance, and regulatory compliance. Mr. Prathap’s
+work directly addresses these barriers through:
+- VeritasGraph (graph‑based RAG with verifiable attribution);
+- Enterprise‑grade architectures for sovereign, private deployments; and
+- Systems of intelligence that convert raw data into auditable, explainable
+decisions.
+These contributions do not merely implement existing techniques; they define
+practical patterns and frameworks that organizations can adopt to safely scale AI.
+As such, his contributions are of major significance to the maturation of enterprise
+AI as a trustworthy infrastructure layer.
+3. Sustained, Multi‑Year Record of Accomplishment
+Mr. Prathap’s record is sustained and cumulative, rather than isolated:
+- Early work on open‑source projects (e.g., whatsapp‑chatbot) gained international
+traction and community use;
+- He progressed into senior consulting and architectural roles at a major global IT
+services firm (Tech Mahindra), leading high‑impact public sector AI initiatives;
+- He then advanced to a senior post at the Abu Dhabi Executive Office, directing
+data and AI strategy at the sovereign level;
+- In parallel, he earned prestigious professional memberships and awards (IEEE
+Senior Member, FBCS, CEng, Microsoft MVP, UAE Golden Visa); and
+- He now leads Space‑Sign.ai in California, focusing on sovereign‑grade,
+attribution‑aware enterprise AI architectures.
+This trajectory evidences a consistent pattern of achievement and recognition over
+more than a decade, satisfying the requirement for sustained national and
+international acclaim.
+IV. CONCLUSION
+The totality of the evidence demonstrates that Mr. Bibin Prathap:
+- Has risen to the very top of the field of Enterprise AI Architecture and
+Verifiable Attribution Systems;
+- Has achieved and maintained sustained national and international acclaim; and
+- Intends to continue work in the United States that will substantially benefit the
+nation by advancing secure, trustworthy, and auditable AI infrastructure.
+Accordingly, the Petitioner respectfully requests that USCIS approve the I‑140
+Immigrant Petition for Alien Worker in the EB‑1A classification on behalf of Mr.
+Bibin Prathap.
+Respectfully submitted,
+Attorney for Petitioner

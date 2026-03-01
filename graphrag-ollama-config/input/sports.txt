@@ -1,0 +1,127 @@
+Dashboard Title: ELITE ATHLETE RECRUITMENT & ELIGIBILITY DASHBOARD Total Athletes Scouted: 5,432
+
+1. ATHLETIC PERFORMANCE & PHYSICAL STANDARDS Performance Tiers (Sport Specific):
+
+Tier 1 (World Class/Elite): 450 athletes (Olympic Qualifier / Top 5 League Starter)
+
+Tier 2 (Professional/National Level): 1,890 athletes (First Division Regulars)
+
+Tier 3 (Developmental/Academy): 2,150 athletes (High Potential U-21)
+
+Tier 4 (Amateur/Recreational): 942 athletes (Club Level)
+
+Physical Metrics (Verified):
+
+Speed/Agility (Top 10%): 850 athletes (Sub-11s 100m / High V02 Max)
+
+Strength/Power: 1,200 athletes (Meets Combine Benchmarks)
+
+Technical Proficiency Score (>8/10): 1,500 athletes
+
+Injury Prone / Medical Flag: 320 athletes (Failed Medical Screening)
+
+2. LEAGUE & REGULATORY COMPLIANCE (Visa & Work Permit) United Kingdom (GBE - Governing Body Endorsement):
+
+Auto-Pass (15+ Points): 350 athletes (Regular International Caps for Top 50 Nations)
+
+Exceptions Panel (10-14 Points): 120 athletes (Requires Appeal)
+
+Ineligible (<10 Points): 400 athletes (Cannot obtain Sportsperson Visa)
+
+United States (P-1 Visa / NCAA Eligibility):
+
+P-1A (Internationally Recognized): 280 athletes
+
+NCAA Division I Qualifier: 1,400 athletes (Amateur Status Verified)
+
+NCAA Academic Non-Qualifier: 150 athletes (GPA < 2.3)
+
+European Union (Non-EU Quota Rules):
+
+EU Passport Holders (No Restrictions): 1,200 athletes
+
+Non-EU (Quota Slot Required): 850 athletes
+
+Kolpak/Cotonou Eligible: 300 athletes
+
+3. SCOUTING & RECRUITMENT STATUS Current Pipeline Stage:
+
+Initial Observation: 2,100 athletes
+
+Detailed Data Analysis: 1,500 athletes
+
+In-Person Scouting: 900 athletes
+
+Trial Invited: 450 athletes
+
+Contract Offer Extended: 182 athletes
+
+Signed: 45 athletes
+
+4. ACADEMIC ELIGIBILITY (For Student-Athletes/US Scholarships) GPA Requirements:
+
+High Academic (GPA > 3.5): 950 athletes (Ivy League/Stanford Eligible)
+
+NCAA Standard (GPA 2.3 - 3.0): 1,800 athletes
+
+Junior College Route (GPA < 2.3): 450 athletes
+
+Standardized Tests (SAT/ACT):
+
+Scores Submitted & Verified: 1,200 athletes
+
+Test Optional/Waiver: 800 athletes
+
+Pending Scores: 600 athletes
+
+5. FINANCIAL VALUATION & BUDGET FIT Market Value Estimation:
+
+Premium (> $10M Transfer Fee): 25 athletes
+
+High Value ($1M - $10M): 150 athletes
+
+Mid-Range ($100k - $1M): 800 athletes
+
+Free Agent / Scholarship (Zero Fee): 4,457 athletes
+
+Funding Status:
+
+Full Scholarship Available: 300 spots
+
+Partial Scholarship: 500 spots
+
+Club Budget Approved: $15.5M Total
+
+Most Targeted Sports by Region:
+
+Football (Soccer): 2,100 athletes (Primary: South America, Europe, West Africa)
+
+Basketball: 1,200 athletes (Primary: USA, Balkans, Spain)
+
+Track & Field: 800 athletes (Primary: USA, Jamaica, East Africa)
+
+Cricket: 650 athletes (Primary: India, Australia, UK)
+
+Rugby: 350 athletes (Primary: New Zealand, South Africa, France)
+
+Reasons for Ineligibility/Rejection (Top Factors):
+
+Visa Denial: 30% (Failed to meet GBE points or "Internationally Recognized" standard)
+
+Medical Failure: 25% (Undisclosed chronic injuries)
+
+Academic Ineligibility: 20% (Low GPA/SAT for NCAA)
+
+Character/Behavioral Flag: 10%
+
+Agent/Representation Issues: 15%
+
+Metadata:
+
+Compliance Standard: FIFA Transfer Regulations / NCAA Bylaws / UK Home Office
+
+Last Updated: 2025-04-15 09:00:00 UTC
+
+Data Source: Global Scouting Network (Wyscout, Hudl, NCAA Clearinghouse)
+
+Version: 3.0.1
