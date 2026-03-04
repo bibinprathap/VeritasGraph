@@ -123,6 +123,12 @@ HTMLEOF
     cd "$SCRIPT_DIR/.."
     REMOTE_URL="https://${GITHUB_TOKEN}@github.com/${GITHUB_REPO}.git"
 
+    # Configure git user identity if not already set (required for commits in automated environments)
+    if ! git config user.email > /dev/null 2>&1; then
+        git config user.email "veritasgraph@localhost"
+        git config user.name "VeritasGraph Auto-Updater"
+    fi
+
     git add "$REDIRECT_FILE_PATH"
     if git diff --cached --quiet; then
         log "No change in redirect URL, skipping commit."
@@ -171,35 +177,39 @@ main() {
     
     log "✅ App started on port 7860"
     
-    # Start Cloudflare tunnel
+    # Handle shutdown
+    trap "log 'Shutting down...'; kill $APP_PID 2>/dev/null; exit 0" SIGINT SIGTERM
+
+    # Start Cloudflare tunnel and monitor output in the current shell (no subshell)
+    # Using process substitution < <(...) keeps the while loop in the current shell,
+    # so update_github_redirect can log errors and git operations are visible.
     log "Starting Cloudflare tunnel..."
-    cloudflared tunnel --url http://localhost:7860 2>&1 | while read line; do
-        echo "$line"
-        
-        # Extract the tunnel URL when it appears
-        if echo "$line" | grep -q "trycloudflare.com"; then
-            TUNNEL_URL=$(echo "$line" | extract_cf_url)
+    URL_FOUND=false
+    while IFS= read -r line; do
+        # Strip ANSI escape codes that cloudflared injects (breaks grep/regex)
+        clean_line=$(printf '%s' "$line" | sed 's/\x1b\[[0-9;]*[mGKHFJl]//g')
+        echo "$clean_line" | tee -a "$LOG_FILE"
+
+        # Extract the tunnel URL when it first appears; skip if already found
+        if [ "$URL_FOUND" = "false" ] && echo "$clean_line" | grep -q "trycloudflare.com"; then
+            TUNNEL_URL=$(echo "$clean_line" | grep -oP 'https://[a-zA-Z0-9-]+\.trycloudflare\.com' | head -1)
             if [ -n "$TUNNEL_URL" ]; then
+                URL_FOUND=true
                 log "✅ Tunnel URL: $TUNNEL_URL"
-                
+
                 # Update GitHub Pages redirect
-                update_github_redirect "$TUNNEL_URL"
-                
-                log "🌐 Server is running. Press Ctrl+C to stop."
+                if update_github_redirect "$TUNNEL_URL"; then
+                    log "🌐 Server is running. Press Ctrl+C to stop."
+                else
+                    error "GitHub Pages update failed — check token permissions and git config"
+                fi
             fi
         fi
-    done &
-    TUNNEL_PID=$!
-    
-    # Wait a bit for tunnel to establish
-    log "⏳ Waiting for Cloudflare tunnel URL..."
-    sleep 10
-    
-    # Handle shutdown
-    trap "log 'Shutting down...'; kill $APP_PID $TUNNEL_PID 2>/dev/null; exit 0" SIGINT SIGTERM
-    
-    # Keep running
-    wait $APP_PID
+    done < <(cloudflared tunnel --url http://localhost:7860 2>&1)
+
+    # Tunnel exited — stop the app too
+    log "Cloudflare tunnel exited. Stopping app..."
+    kill $APP_PID 2>/dev/null || true
 }
 
 main "$@"
