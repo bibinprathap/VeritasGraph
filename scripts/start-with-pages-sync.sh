@@ -21,7 +21,7 @@ if [ -z "$GITHUB_TOKEN" ]; then
 fi
 
 GITHUB_REPO="bibinprathap/VeritasGraph"
-GITHUB_BRANCH="master"
+GITHUB_BRANCH="restored-main"
 REDIRECT_FILE_PATH="docs/demo/index.html"
 
 PROJECT_DIR="/home/sijo/VeritasGraph/graphrag-ollama-config"
@@ -128,6 +128,15 @@ HTMLEOF
         git config user.email "veritasgraph@localhost"
         git config user.name "VeritasGraph Auto-Updater"
     fi
+
+    # Fetch and checkout the target branch
+    git fetch origin "$GITHUB_BRANCH" 2>/dev/null || true
+    CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
+    if [ "$CURRENT_BRANCH" != "$GITHUB_BRANCH" ]; then
+        git checkout "$GITHUB_BRANCH" 2>/dev/null || git checkout -B "$GITHUB_BRANCH" "origin/$GITHUB_BRANCH"
+    fi
+    # Pull latest changes from remote
+    git pull origin "$GITHUB_BRANCH" --rebase 2>/dev/null || true
 
     git add "$REDIRECT_FILE_PATH"
     if git diff --cached --quiet; then
