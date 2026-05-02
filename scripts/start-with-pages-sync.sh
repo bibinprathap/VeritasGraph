@@ -146,6 +146,7 @@ HTMLEOF
 
     git commit -m "🔄 Update demo redirect: ${DEMO_URL}"
     git push "$REMOTE_URL" "$GITHUB_BRANCH"
+    
 
     if [ $? -eq 0 ]; then
         log "${GREEN}✅ GitHub Pages redirect updated!${NC}"
