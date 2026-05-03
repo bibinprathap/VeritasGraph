@@ -1,0 +1,263 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "veritas-reason"
+version = "0.4.1"
+description = "🧠 VeritasReason - An Open Source Framework for building Semantic Layers and Knowledge Engineering"
+readme = "README.md"
+license = { text = "MIT" }
+
+authors = [{ name = "Hawksight AI", email = "veritas-reason-dev@users.noreply.github.com" }]
+maintainers = [{ name = "Hawksight AI", email = "veritas-reason-dev@users.noreply.github.com" }]
+
+requires-python = ">=3.8"
+
+classifiers = [
+  "Development Status :: 5 - Production/Stable",
+  "Intended Audience :: Developers",
+  "Intended Audience :: Science/Research",
+  "License :: OSI Approved :: MIT License",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.8",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Topic :: Scientific/Engineering :: Artificial Intelligence",
+  "Topic :: Software Development :: Libraries :: Python Modules"
+]
+
+keywords = [
+  "semantic-layer", "knowledge-graph", "nlp", "embeddings",
+  "entity-extraction", "relationship-extraction", "rdf", "ontology",
+  "graphrag", "veritasgraph", "policy-compliance", "rule-engine",
+  "forward-chaining", "provenance", "prov-o", "compliance"
+]
+
+# ---------------- CORE DEPENDENCIES (SAFE DEFAULT) ----------------
+# Slim runtime — installs in seconds. Enough for the rule engine, the
+# triplet store, RDF, the policy-compliance example, and the CLI.
+# For the full ML stack (torch, transformers, spaCy, FAISS, etc.)
+# install:  pip install veritas-reason[full]
+dependencies = [
+  "numpy>=1.21.0",
+  "pandas>=1.3.0",
+  "rdflib>=6.2.0",
+  "networkx>=2.8.0",
+  "requests>=2.28.0",
+  "pydantic>=2.0.0",
+  "click>=8.1.0",
+  "rich>=12.5.0",
+  "tqdm>=4.64.0",
+  "pyyaml>=6.0",
+  "toml>=0.10.0",
+  "python-dotenv>=0.20.0",
+  "loguru>=0.6.0",
+  "structlog>=22.1.0",
+]
+
+[project.urls]
+Homepage      = "https://github.com/Hawksight-AI/veritas-reason"
+Documentation = "https://veritas-reason.readthedocs.io/"
+Repository    = "https://github.com/Hawksight-AI/veritas-reason"
+Issues        = "https://github.com/Hawksight-AI/veritas-reason/issues"
+Changelog     = "https://github.com/Hawksight-AI/veritas-reason/blob/main/CHANGELOG.md"
+VeritasGraph  = "https://github.com/bibinprathap/VeritasGraph"
+
+# Heavy ML / parsing stack — opt-in via veritas-reason[full]
+[project.optional-dependencies]
+full = [
+  "scipy>=1.9.0",
+  "scikit-learn>=1.0.0",
+  "umap-learn>=0.5.0",
+  "spacy>=3.4.0",
+  "transformers>=4.20.0",
+  "torch>=1.12.0",
+  "sentence-transformers>=2.2.0",
+  "matplotlib>=3.5.0",
+  "seaborn>=0.11.0",
+  "plotly>=5.10.0",
+  "ipywidgets>=8.0.0",
+  "GitPython>=3.1.30",
+  "chardet>=5.1.0",
+  "protobuf>=5.29.1,<7.0",
+  "grpcio>=1.71.2",
+  "beautifulsoup4>=4.11.0",
+  "lxml>=4.9.0",
+  "pypdf2>=2.10.0",
+  "python-docx>=0.8.11",
+  "openpyxl>=3.0.10",
+  "pillow>=9.2.0",
+  "librosa>=0.9.0",
+  "opencv-python>=4.6.0",
+  "faiss-cpu>=1.7.0",
+  "fastembed>=0.2.0",
+  "onnxruntime>=1.17.0",
+  "tokenizers>=0.15.0",
+  "gensim>=4.3.0",
+]
+
+# ---- LLM Providers ----
+llm-openai = ["openai>=1.0.0"]
+llm-groq = ["groq>=0.4.0"]
+llm-gemini = ["google-genai>=0.1.0"]
+llm-anthropic = ["anthropic>=0.18.0"]
+llm-ollama = ["ollama>=0.1.0"]
+llm-deepseek = ["openai>=1.0.0"]
+llm-litellm = ["litellm>=1.0.0"]
+llm-instructor = ["instructor>=1.0.0"]
+
+llm-all = [
+  "veritas-reason[llm-openai,llm-groq,llm-gemini,llm-anthropic,llm-ollama,llm-deepseek,llm-litellm,llm-instructor]"
+]
+
+# ---- Document Parsing ----
+parse-docling = ["docling>=1.0.0"]
+
+# ---- Database Connectors ----
+db-snowflake = ["snowflake-connector-python>=3.0.0", "cryptography>=3.4.0"]
+db-arrow = ["pyarrow>=10.0.0"]
+
+db-all = [
+  "veritas-reason[db-snowflake,db-arrow]"
+]
+
+# ---- Embedding / Models ----
+models-huggingface = [
+  "transformers>=4.20.0",
+  "torch>=1.12.0"
+]
+
+# ---- Graph Backends ----
+graph-neo4j = ["neo4j>=5.0.0"]
+graph-falkordb = ["falkordb>=1.0.0", "redis>=4.3.0"]
+graph-amazon-neptune = ["boto3>=1.24.0", "neo4j>=5.0.0"]
+
+graph-all = [
+  "veritas-reason[graph-neo4j,graph-falkordb,graph-amazon-neptune]"
+]
+
+# ---- Vector Store Backends ----
+vectorstore-qdrant = ["qdrant-client>=1.0.0"]
+vectorstore-weaviate = ["weaviate-client>=4.0.0"]
+vectorstore-pinecone = ["pinecone-client>=3.0.0"]
+vectorstore-milvus = ["pymilvus>=2.0.0"]
+vectorstore-pgvector = ["psycopg[binary,pool]>=3.0.0", "pgvector>=0.2.0"]
+
+vectorstore-all = [
+  "veritas-reason[vectorstore-qdrant,vectorstore-weaviate,vectorstore-pinecone,vectorstore-milvus,vectorstore-pgvector]"
+]
+
+# ---- Infra / Queues / Workers ----
+infra = [
+  "redis>=4.3.0",
+  "celery>=5.2.0",
+  "kafka-python>=2.0.0",
+  "pulsar-client>=3.0.0",
+  "pika>=1.3.0"
+]
+
+# ---- Cloud Providers ----
+cloud = [
+  "boto3>=1.24.0",
+  "azure-storage-blob>=12.12.0",
+  "google-cloud-storage>=2.5.0"
+]
+
+# ---- Monitoring (FIXED) ----
+monitoring = [
+  "prometheus-client>=0.14.0",
+  "opentelemetry-api>=1.30.0,<2.0.0",
+  "opentelemetry-sdk>=1.30.0,<2.0.0",
+  "opentelemetry-semantic-conventions>=0.58b0,<0.62",
+  "opentelemetry-instrumentation>=0.58b0,<0.62"
+]
+
+# ---- Visualization ----
+viz = [
+  "pyvis>=0.3.0",
+  "graphviz>=0.20.0",
+  "d3blocks>=1.0.0"
+]
+
+# ---- GPU ----
+gpu = [
+  "faiss-gpu>=1.7.0",
+  "cupy>=10.0.0"
+]
+
+# ---- Agentic Framework Integrations ----
+agno = ["agno>=1.0.0"]
+
+# ---- Splitting / Chunking ----
+split-tiktoken = ["tiktoken>=0.5.0"]
+split-community = ["python-louvain>=0.16"]
+split-topic = ["bertopic>=0.15.0", "gensim>=4.3.0"]
+
+split-all = [
+  "veritas-reason[split-tiktoken,split-community,split-topic]"
+]
+
+# ---- Dev ----
+dev = [
+  "pytest>=7.1.0",
+  "pytest-cov>=3.0.0",
+  "pytest-asyncio>=0.19.0",
+  "black>=22.6.0",
+  "isort>=5.10.0",
+  "flake8>=4.0.0",
+  "mypy>=0.971",
+  "pre-commit>=2.19.0",
+  "jupyter>=1.0.0",
+  "ipykernel>=6.15.0"
+]
+
+# Explorer Dashboard
+explorer = [
+  "fastapi>=0.100.0",
+  "uvicorn[standard]>=0.22.0",
+  "websockets>=11.0",
+  "python-multipart>=0.0.6"
+]
+explorer-lite = [
+  "streamlit>=1.25.0",
+  "streamlit-agraph>=0.0.45"
+]
+
+# Everything
+all = [
+  "veritas-reason[full,dev,viz,gpu,infra,cloud,monitoring,llm-all,models-huggingface,split-all,graph-all,vectorstore-all,parse-docling,explorer,agno]"
+]
+
+# ---------------- ENTRYPOINTS ----------------
+[project.scripts]
+veritasreason = "veritasreason.cli:main"
+veritasreason-server = "veritasreason.server:main"
+veritasreason-worker = "veritasreason.worker:main"
+veritasreason-policy-demo = "veritasreason.examples.policy_compliance.run_demo:main"
+
+# ---------------- TOOLING ----------------
+[tool.setuptools]
+include-package-data = true
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["veritasreason*", "integrations*"]
+
+[tool.setuptools.package-data]
+"veritasreason.examples.policy_compliance" = ["*.yaml", "*.md"]
+
+[tool.black]
+line-length = 88
+
+[tool.isort]
+profile = "black"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+markers = [
+    "integration: marks tests that require external services or API keys (deselect with '-m not integration')",
+]

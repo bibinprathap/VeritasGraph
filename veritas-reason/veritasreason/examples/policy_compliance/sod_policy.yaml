@@ -1,0 +1,62 @@
+# Segregation-of-Duties (SoD) policy rules for VeritasReason.
+#
+# These rules are evaluated by the forward-chainer over triples emitted by
+# graphrag-ollama-config/ingest_structured.py. Each derivation carries the
+# `cite` block as W3C PROV-O attribution back to the source policy clause.
+
+- id: SOD-01
+  description: >
+    The same employee must not both APPROVE and PAY a purchase order
+    (separation of authorisation and disbursement).
+  when:
+    - (?po rdf:type proc:PurchaseOrder)
+    - (?po proc:approvedBy ?e)
+    - (?po proc:paidBy    ?e)
+  then:
+    - (?po proc:violates  policy:SoD#SOD-01)
+    - (?e  proc:involvedIn ?po)
+  cite:
+    - policy_doc: "Procurement_Policy_2026.pdf#section-3.1"
+    - clause:     "No individual may both approve and disburse funds for the same transaction."
+
+- id: SOD-02
+  description: >
+    The same employee must not both REQUEST and APPROVE a purchase order.
+  when:
+    - (?po rdf:type proc:PurchaseOrder)
+    - (?po proc:requestedBy ?e)
+    - (?po proc:approvedBy  ?e)
+  then:
+    - (?po proc:violates policy:SoD#SOD-02)
+  cite:
+    - policy_doc: "Procurement_Policy_2026.pdf#section-3.2"
+
+- id: SOD-03
+  description: >
+    Purchase orders above the high-value threshold ($25,000) must be approved
+    by an employee with the role 'Director' or above.
+  when:
+    - (?po rdf:type proc:PurchaseOrder)
+    - (?po proc:amount  ?amt)  filter(?amt > 25000)
+    - (?po proc:approvedBy ?e)
+    - (?e  proc:hasRole ?r)    filter(?r not in [role:Director, role:VP, role:CFO])
+  then:
+    - (?po proc:violates policy:SoD#SOD-03)
+  cite:
+    - policy_doc: "Procurement_Policy_2026.pdf#section-4.5"
+    - clause:     "Purchases above $25,000 require Director-level approval or higher."
+
+- id: SOD-04
+  description: >
+    A purchase order to a vendor that is RELATED to the approver is a
+    conflict-of-interest violation.
+  when:
+    - (?po rdf:type proc:PurchaseOrder)
+    - (?po proc:approvedBy ?e)
+    - (?po proc:vendor    ?v)
+    - (?v  proc:relatedEmployee ?e)
+  then:
+    - (?po proc:violates policy:SoD#SOD-04)
+  cite:
+    - policy_doc: "Procurement_Policy_2026.pdf#section-7.2"
+    - clause:     "Approvers must recuse themselves from vendors with which they have a related-party interest."
