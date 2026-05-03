@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>VeritasGraph + VeritasReason — Policy Compliance Demo</title>
+<style>
+  :root {
+    --bg: #0b1220;
+    --panel: #111a2e;
+    --line: #1f2c4a;
+    --accent: #4f8cff;
+    --good: #34d399;
+    --bad:  #f87171;
+    --text: #e5edff;
+    --dim:  #8aa0c8;
+    --warn: #fbbf24;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    padding: 24px 32px;
+    font-family: 'Inter', -apple-system, system-ui, sans-serif;
+    background: linear-gradient(160deg, #0b1220 0%, #0f1830 100%);
+    color: var(--text);
+    height: 100vh;
+    overflow: hidden;
+  }
+  .header {
+    display: flex; align-items: center; gap: 14px;
+    border-bottom: 1px solid var(--line); padding-bottom: 14px; margin-bottom: 18px;
+  }
+  .logo {
+    width: 40px; height: 40px; border-radius: 10px;
+    background: linear-gradient(135deg, var(--accent), #34d399);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px; font-weight: 800;
+  }
+  .title { font-size: 20px; font-weight: 700; }
+  .sub   { font-size: 12px; color: var(--dim); margin-top: 2px; }
+
+  .row { display: grid; grid-template-columns: 1fr 1fr 1.4fr; gap: 18px; height: calc(100vh - 110px); }
+  .panel {
+    background: var(--panel); border: 1px solid var(--line); border-radius: 12px;
+    padding: 16px; overflow: hidden; display: flex; flex-direction: column;
+  }
+  .panel h3 { margin: 0 0 10px 0; font-size: 13px; color: var(--accent); letter-spacing: 0.06em; text-transform: uppercase; }
+
+  .question {
+    font-size: 17px; line-height: 1.45;
+    background: #1a2542; padding: 14px 16px; border-radius: 10px;
+    border-left: 3px solid var(--accent);
+  }
+
+  .stage {
+    margin-top: 14px; display: flex; flex-direction: column; gap: 10px;
+  }
+  .step {
+    opacity: 0.25; transition: opacity 0.4s;
+    padding: 8px 10px; border-radius: 6px;
+    font-size: 13px;
+  }
+  .step.active { opacity: 1; background: rgba(79, 140, 255, 0.12); }
+  .step.done   { opacity: 0.7; }
+  .step .ok    { color: var(--good); margin-right: 6px; }
+
+  pre {
+    margin: 0; font-size: 12px; line-height: 1.5;
+    color: var(--dim); font-family: 'JetBrains Mono', 'Fira Code', monospace;
+    overflow: hidden;
+  }
+  pre b { color: var(--text); font-weight: 600; }
+  pre span.k { color: var(--warn); }
+
+  table { width: 100%; border-collapse: collapse; margin-top: 6px; font-size: 13px; }
+  th, td { padding: 8px 10px; text-align: left; border-bottom: 1px solid var(--line); }
+  th { color: var(--dim); font-weight: 500; font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; }
+  tr.violation { background: rgba(248, 113, 113, 0.06); }
+  tr.violation.fade-in { animation: fadeIn 0.5s ease both; }
+  td.rule { font-weight: 700; color: var(--bad); font-family: monospace; }
+  td.po   { font-family: monospace; color: var(--text); }
+  td.evidence { color: var(--dim); }
+  .citation { font-size: 11px; color: var(--dim); margin-top: 4px; }
+
+  .footer {
+    margin-top: 14px; font-size: 12px; color: var(--dim);
+    border-top: 1px solid var(--line); padding-top: 10px;
+  }
+  .badge {
+    display: inline-block; padding: 2px 8px; border-radius: 999px;
+    font-size: 11px; background: rgba(52, 211, 153, 0.15); color: var(--good);
+    margin-left: 8px;
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+</style>
+</head>
+<body>
+  <div class="header">
+    <div class="logo">V</div>
+    <div>
+      <div class="title">VeritasGraph + VeritasReason</div>
+      <div class="sub">GraphRAG over policy text · Deterministic reasoning over ERP records · Full PROV-O citations</div>
+    </div>
+    <div style="margin-left:auto" class="badge" id="status">running</div>
+  </div>
+
+  <div class="row">
+    <!-- Left: question + steps -->
+    <div class="panel">
+      <h3>1 · User question</h3>
+      <div class="question" id="question">
+        “Which purchase orders violated our Segregation-of-Duties policy in Q1 2026?”
+      </div>
+      <h3 style="margin-top:18px">2 · Pipeline</h3>
+      <div class="stage">
+        <div class="step" id="s1"><span class="ok">●</span> VeritasGraph RAG → identifies <b>policy:SoD</b></div>
+        <div class="step" id="s2"><span class="ok">●</span> Loads 4 rules from <code>rules/sod_policy.yaml</code></div>
+        <div class="step" id="s3"><span class="ok">●</span> ForwardChainer over <b>60</b> triples / <b>5</b> POs</div>
+        <div class="step" id="s4"><span class="ok">●</span> Emits violations + PROV-O sources</div>
+        <div class="step" id="s5"><span class="ok">●</span> LLM narrates the result with citations</div>
+      </div>
+      <div class="footer">
+        Engine: <b>veritas-reason</b> · Rules: <b>rules/sod_policy.yaml</b><br/>
+        Triple store: <b>60 facts</b> · Sources: <b>ERP + Policy PDF</b>
+      </div>
+    </div>
+
+    <!-- Middle: rule console -->
+    <div class="panel">
+      <h3>3 · Rule firing console</h3>
+      <pre id="console"></pre>
+    </div>
+
+    <!-- Right: result table -->
+    <div class="panel">
+      <h3>4 · Audit-ready answer</h3>
+      <table>
+        <thead>
+          <tr><th>PO</th><th>Rule</th><th>Evidence</th></tr>
+        </thead>
+        <tbody id="rows"></tbody>
+      </table>
+      <div id="summary" class="footer" style="display:none">
+        <b id="count">0</b> violation(s) detected · every cell links to ERP row
+        <code>erp://po/&lt;id&gt;</code> and policy clause
+        <code>Procurement_Policy_2026.pdf</code>.
+      </div>
+    </div>
+  </div>
+
+<script>
+  const violations = [
+    { po: 'PO-2204', rule: 'SOD-01',
+      evidence: 'Approved &amp; paid by emp:E118 (Sarah Chen)',
+      cite: 'Procurement_Policy_2026.pdf#section-3.1' },
+    { po: 'PO-2301', rule: 'SOD-02',
+      evidence: 'Requested &amp; approved by emp:E091 (Alice Khan)',
+      cite: 'Procurement_Policy_2026.pdf#section-3.2' },
+    { po: 'PO-2317', rule: 'SOD-03',
+      evidence: '$48,750 approved by emp:E091 (role:Manager, not Director-level)',
+      cite: 'Procurement_Policy_2026.pdf#section-4.5' },
+    { po: 'PO-2402', rule: 'SOD-04',
+      evidence: 'Vendor V77 (Mehta Holdings) related to approver emp:E140',
+      cite: 'Procurement_Policy_2026.pdf#section-7.2' },
+  ];
+
+  const consoleEl = document.getElementById('console');
+  const rowsEl    = document.getElementById('rows');
+
+  function log(line) {
+    consoleEl.innerHTML += line + '\n';
+  }
+
+  function activate(id) {
+    document.querySelectorAll('.step').forEach(el => el.classList.remove('active'));
+    const el = document.getElementById(id);
+    if (el) { el.classList.add('active'); }
+  }
+  function done(id) {
+    const el = document.getElementById(id);
+    if (el) { el.classList.add('done'); el.classList.remove('active'); }
+  }
+  function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+  async function run() {
+    activate('s1');
+    log('<span class="k">[RAG]</span>      query → policy:SoD identified');
+    log('<span class="k">[RAG]</span>      pulled clause from Procurement_Policy_2026.pdf §3.1, §3.2, §4.5, §7.2');
+    await sleep(900); done('s1'); activate('s2');
+    log('');
+    log('<span class="k">[rules]</span>    loaded <b>4 rules</b> from rules/sod_policy.yaml');
+    log('             SOD-01  approver ≠ payer');
+    log('             SOD-02  requester ≠ approver');
+    log('             SOD-03  amount > $25,000 → Director-level approval');
+    log('             SOD-04  no related-party vendor');
+    await sleep(1100); done('s2'); activate('s3');
+    log('');
+    log('<span class="k">[chain]</span>    ForwardChainer.run(filter_tag="policy:SoD")');
+    log('             ↳ 60 triples · 5 PurchaseOrder subjects');
+    await sleep(700);
+
+    for (let i = 0; i < violations.length; i++) {
+      const v = violations[i];
+      log(`<span class="k">[fire]</span>     ✗ <b>${v.rule}</b> on po:${v.po} — ${v.evidence.replace(/&amp;/g,'&')}`);
+      const tr = document.createElement('tr');
+      tr.className = 'violation fade-in';
+      tr.innerHTML = `
+        <td class="po">${v.po}</td>
+        <td class="rule">${v.rule}</td>
+        <td class="evidence">${v.evidence}<div class="citation">cite: ${v.cite}</div></td>`;
+      rowsEl.appendChild(tr);
+      await sleep(700);
+    }
+
+    done('s3'); activate('s4');
+    log('');
+    log('<span class="k">[prov]</span>     attached PROV-O sources:');
+    log('             • erp://po/PO-2204 · erp://po/PO-2301 · erp://po/PO-2317 · erp://po/PO-2402');
+    log('             • Procurement_Policy_2026.pdf §3.1 / §3.2 / §4.5 / §7.2');
+    await sleep(900); done('s4'); activate('s5');
+    log('');
+    log('<span class="k">[llm]</span>      narrating answer with citations…');
+    await sleep(700);
+    log('             "4 purchase orders violated SoD in Q1 2026: PO-2204 (SOD-01),"');
+    log('             "PO-2301 (SOD-02), PO-2317 (SOD-03), PO-2402 (SOD-04)…"');
+    done('s5');
+    document.getElementById('summary').style.display = 'block';
+    document.getElementById('count').innerText = violations.length;
+    document.getElementById('status').innerText = 'complete';
+    document.getElementById('status').style.background = 'rgba(52, 211, 153, 0.25)';
+    window.__demoDone = true;
+  }
+  run();
+</script>
+</body>
+</html>
