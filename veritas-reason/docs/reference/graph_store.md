@@ -430,7 +430,7 @@ subgraph = graph_store.execute_query(query, parameters={"ids": node_ids})
 
 Interactive tutorials to learn graph storage:
 
-- **[Graph Store](https://github.com/Hawksight-AI/veritas-reason/blob/main/cookbook/introduction/09_Graph_Store.ipynb)**: Persist knowledge graphs in Neo4j or FalkorDB
+- **[Graph Store](https://github.com/bibinprathap/VeritasGraph/blob/main/cookbook/introduction/09_Graph_Store.ipynb)**: Persist knowledge graphs in Neo4j or FalkorDB
   - **Topics**: Neo4j, FalkorDB, Cypher, persistence, graph databases
   - **Difficulty**: Intermediate
   - **Use Cases**: Persistent storage, production deployments, graph database integration

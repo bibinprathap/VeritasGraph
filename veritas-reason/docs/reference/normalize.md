@@ -595,7 +595,7 @@ normalized_docs = normalizer.process_batch(documents)
 
 Interactive tutorials to learn data normalization:
 
-- **[Data Normalization](https://github.com/Hawksight-AI/veritas-reason/blob/main/cookbook/introduction/04_Data_Normalization.ipynb)**: Pipelines for cleaning, normalizing, and preparing text
+- **[Data Normalization](https://github.com/bibinprathap/VeritasGraph/blob/main/cookbook/introduction/04_Data_Normalization.ipynb)**: Pipelines for cleaning, normalizing, and preparing text
   - **Topics**: Text cleaning, Unicode, formatting, language detection, entity normalization
   - **Difficulty**: Beginner
   - **Use Cases**: Data preprocessing, text cleaning, standardization

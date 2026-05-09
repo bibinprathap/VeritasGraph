@@ -1323,7 +1323,7 @@ When breaking changes are introduced, migration guides will be provided in the r
 
 ---
 
-For detailed release notes, see [GitHub Releases](https://github.com/Hawksight-AI/veritas-reason/releases).
+For detailed release notes, see [GitHub Releases](https://github.com/bibinprathap/VeritasGraph/releases).
 
 ## Legacy Changelog Snapshot A (Preserved Merge Artifact)
 
@@ -1876,7 +1876,7 @@ When breaking changes are introduced, migration guides will be provided in the r
 
 ---
 
-For detailed release notes, see [GitHub Releases](https://github.com/Hawksight-AI/veritas-reason/releases).
+For detailed release notes, see [GitHub Releases](https://github.com/bibinprathap/VeritasGraph/releases).
 
 ## Legacy Changelog Snapshot B (Preserved Merge Artifact)
 
@@ -2429,7 +2429,7 @@ When breaking changes are introduced, migration guides will be provided in the r
 
 ---
 
-For detailed release notes, see [GitHub Releases](https://github.com/Hawksight-AI/veritas-reason/releases).
+For detailed release notes, see [GitHub Releases](https://github.com/bibinprathap/VeritasGraph/releases).
 
 
 

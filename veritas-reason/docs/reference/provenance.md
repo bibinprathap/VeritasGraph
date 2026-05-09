@@ -721,7 +721,7 @@ manager_2026 = ProvenanceManager(storage_path="provenance_2026.db")
 
 ## See Also
 
-- [Provenance Usage Guide](https://github.com/Hawksight-AI/veritas-reason/blob/main/veritasreason/provenance/provenance_usage.md) — Comprehensive usage documentation
+- [Provenance Usage Guide](https://github.com/bibinprathap/VeritasGraph/blob/main/veritasreason/provenance/provenance_usage.md) — Comprehensive usage documentation
 - [Change Management](change_management.md) — Version control and audit trails
 - [Conflicts Module](conflicts.md) — Source tracking and conflict resolution
 - [Knowledge Graph](kg.md) — Entity and relationship tracking

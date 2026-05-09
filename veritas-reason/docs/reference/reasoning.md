@@ -229,7 +229,7 @@ for fact_str in inferred:
 
 Interactive tutorials to learn reasoning and inference:
 
-- **[Reasoning and Inference](https://github.com/Hawksight-AI/veritas-reason/blob/main/cookbook/advanced/08_Reasoning_and_Inference.ipynb)**: Use logical reasoning to infer new knowledge from existing facts
+- **[Reasoning and Inference](https://github.com/bibinprathap/VeritasGraph/blob/main/cookbook/advanced/08_Reasoning_and_Inference.ipynb)**: Use logical reasoning to infer new knowledge from existing facts
   - **Topics**: Logic rules, inference engines, forward chaining, SPARQL reasoning, Rete algorithm
   - **Difficulty**: Advanced
   - **Use Cases**: Deriving new facts, query expansion, logical validation

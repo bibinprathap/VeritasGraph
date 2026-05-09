@@ -462,12 +462,12 @@ nm.build_concept_scheme_uri("ISO 3166 Countries")
 
 Interactive tutorials to learn ontology generation and management:
 
-- **[Ontology](https://github.com/Hawksight-AI/veritas-reason/blob/main/cookbook/introduction/14_Ontology.ipynb)**: Define domain schemas and ontologies to structure your data
+- **[Ontology](https://github.com/bibinprathap/VeritasGraph/blob/main/cookbook/introduction/14_Ontology.ipynb)**: Define domain schemas and ontologies to structure your data
   - **Topics**: OWL, RDF, schema design, ontology generation
   - **Difficulty**: Intermediate
   - **Use Cases**: Structuring domain knowledge, schema definition
 
-- **[Unstructured to Ontology](https://github.com/Hawksight-AI/veritas-reason/blob/main/cookbook/advanced/12_Unstructured_to_Ontology.ipynb)**: Generate ontologies automatically from unstructured data
+- **[Unstructured to Ontology](https://github.com/bibinprathap/VeritasGraph/blob/main/cookbook/advanced/12_Unstructured_to_Ontology.ipynb)**: Generate ontologies automatically from unstructured data
   - **Topics**: Automatic ontology generation, 6-stage pipeline, OWL validation
   - **Difficulty**: Advanced
   - **Use Cases**: Domain modeling, automatic schema generation

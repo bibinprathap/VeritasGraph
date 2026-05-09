@@ -469,7 +469,7 @@ result = engine.execute_pipeline(
 
 Interactive tutorials to learn pipeline orchestration:
 
-- **[Pipeline Orchestration](https://github.com/Hawksight-AI/veritas-reason/blob/main/cookbook/advanced/07_Pipeline_Orchestration.ipynb)**: Build robust, automated data processing pipelines
+- **[Pipeline Orchestration](https://github.com/bibinprathap/VeritasGraph/blob/main/cookbook/advanced/07_Pipeline_Orchestration.ipynb)**: Build robust, automated data processing pipelines
   - **Topics**: Workflows, automation, error handling, pipeline orchestration, DAG construction
   - **Difficulty**: Advanced
   - **Use Cases**: Complex multi-step workflows, production pipelines, ETL processes

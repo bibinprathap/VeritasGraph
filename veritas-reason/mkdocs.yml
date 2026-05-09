@@ -2,7 +2,7 @@
 site_name: VeritasReason
 site_description: Open Source Framework for Semantic Intelligence & Knowledge Engineering
 site_url: https://hawksight-ai.github.io/veritasreason/
-repo_url: https://github.com/Hawksight-AI/veritas-reason
+repo_url: https://github.com/bibinprathap/VeritasGraph
 repo_name: Hawksight-AI/veritasreason
 edit_uri: edit/main/docs/
 
@@ -152,7 +152,7 @@ nav:
 extra:
   social:
     - icon: fontawesome/brands/github
-      link: https://github.com/Hawksight-AI/veritas-reason
+      link: https://github.com/bibinprathap/VeritasGraph
     - icon: fontawesome/brands/python
       link: https://pypi.org/project/veritasreason/
   version:

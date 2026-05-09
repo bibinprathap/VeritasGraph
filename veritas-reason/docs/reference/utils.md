@@ -216,7 +216,7 @@ export VERITASREASON_PROGRESS_BAR=true
 
 The Utils module is used throughout all VeritasReason modules. See any cookbook tutorial for examples of logging, validation, and error handling in practice.
 
-- **[Welcome to VeritasReason](https://github.com/Hawksight-AI/veritas-reason/blob/main/cookbook/introduction/01_Welcome_to_VeritasReason.ipynb)**: See utils in action across all modules
+- **[Welcome to VeritasReason](https://github.com/bibinprathap/VeritasGraph/blob/main/cookbook/introduction/01_Welcome_to_VeritasReason.ipynb)**: See utils in action across all modules
   - **Topics**: Framework overview, all modules, utilities
   - **Difficulty**: Beginner
   - **Use Cases**: Understanding utility functions used throughout VeritasReason

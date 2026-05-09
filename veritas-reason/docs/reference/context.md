@@ -634,17 +634,17 @@ node_importance = agent.graph_builder.get_node_importance("key_concept")
 
 Interactive tutorials to learn context management, GraphRAG, and decision tracking:
 
-- **[Context Module](https://github.com/Hawksight-AI/veritas-reason/blob/main/cookbook/introduction/19_Context_Module.ipynb)**: Practical guide to the context module for AI agents
+- **[Context Module](https://github.com/bibinprathap/VeritasGraph/blob/main/cookbook/introduction/19_Context_Module.ipynb)**: Practical guide to the context module for AI agents
   - **Topics**: Agent memory, context graph, hybrid retrieval, entity linking, decision tracking
   - **Difficulty**: Intermediate
   - **Use Cases**: Building stateful AI agents, persistent memory systems, decision management
 
-- **[Advanced Context Engineering](https://github.com/Hawksight-AI/veritas-reason/blob/main/cookbook/advanced/11_Advanced_Context_Engineering.ipynb)**: Build a production-grade memory system for AI agents
+- **[Advanced Context Engineering](https://github.com/bibinprathap/VeritasGraph/blob/main/cookbook/advanced/11_Advanced_Context_Engineering.ipynb)**: Build a production-grade memory system for AI agents
   - **Topics**: Agent memory, GraphRAG, entity injection, lifecycle management, persistent stores, decision analytics
   - **Difficulty**: Advanced
   - **Use Cases**: Production agent systems, advanced memory management, decision analysis
 
-- **[Decision Tracking with KG Algorithms](https://github.com/Hawksight-AI/veritas-reason/blob/main/cookbook/advanced/12_Decision_Tracking_KG.ipynb)**: Advanced decision tracking and analytics
+- **[Decision Tracking with KG Algorithms](https://github.com/bibinprathap/VeritasGraph/blob/main/cookbook/advanced/12_Decision_Tracking_KG.ipynb)**: Advanced decision tracking and analytics
   - **Topics**: Decision lifecycle, precedent search, causal analysis, KG algorithms, policy compliance
   - **Difficulty**: Advanced
   - **Use Cases**: Banking decisions, healthcare decisions, legal precedent analysis

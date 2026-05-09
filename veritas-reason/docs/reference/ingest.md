@@ -348,12 +348,12 @@ for name, conn in connections.items():
 
 Interactive tutorials to learn data ingestion:
 
-- **[Data Ingestion](https://github.com/Hawksight-AI/veritas-reason/blob/main/cookbook/introduction/02_Data_Ingestion.ipynb)**: Comprehensive guide to data ingestion from multiple sources
+- **[Data Ingestion](https://github.com/bibinprathap/VeritasGraph/blob/main/cookbook/introduction/02_Data_Ingestion.ipynb)**: Comprehensive guide to data ingestion from multiple sources
   - **Topics**: File ingestion, web scraping, database integration, streams, feeds, repositories, email, MCP
   - **Difficulty**: Beginner
   - **Use Cases**: Loading data from various sources, understanding ingestion capabilities
 
-- **[Multi-Source Data Integration](https://github.com/Hawksight-AI/veritas-reason/blob/main/cookbook/advanced/06_Multi_Source_Data_Integration.ipynb)**: Merge data from disparate sources into a unified graph
+- **[Multi-Source Data Integration](https://github.com/bibinprathap/VeritasGraph/blob/main/cookbook/advanced/06_Multi_Source_Data_Integration.ipynb)**: Merge data from disparate sources into a unified graph
   - **Topics**: Entity resolution, merging, fusion, multi-source integration
   - **Difficulty**: Advanced
   - **Use Cases**: Combining data from multiple sources, data fusion

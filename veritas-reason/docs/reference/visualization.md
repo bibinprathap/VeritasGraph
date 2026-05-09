@@ -291,12 +291,12 @@ analytics_viz.visualize_degree_distribution(kg, output="degree_dist.png")
 
 Interactive tutorials to learn graph visualization:
 
-- **[Visualization](https://github.com/Hawksight-AI/veritas-reason/blob/main/cookbook/introduction/16_Visualization.ipynb)**: Basic graph visualization techniques
+- **[Visualization](https://github.com/bibinprathap/VeritasGraph/blob/main/cookbook/introduction/16_Visualization.ipynb)**: Basic graph visualization techniques
   - **Topics**: Graph visualization, network diagrams, basic plotting
   - **Difficulty**: Beginner
   - **Use Cases**: Visualizing knowledge graphs, understanding graph structure
 
-- **[Complete Visualization Suite](https://github.com/Hawksight-AI/veritas-reason/blob/main/cookbook/advanced/03_Complete_Visualization_Suite.ipynb)**: Creating interactive, publication-ready visualizations
+- **[Complete Visualization Suite](https://github.com/bibinprathap/VeritasGraph/blob/main/cookbook/advanced/03_Complete_Visualization_Suite.ipynb)**: Creating interactive, publication-ready visualizations
   - **Topics**: PyVis, NetworkX, D3.js, interactive visualizations, publication-ready graphics
   - **Difficulty**: Intermediate
   - **Use Cases**: Advanced visualizations, presentations, publications

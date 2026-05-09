@@ -632,12 +632,12 @@ export:
 
 Interactive tutorials to learn export capabilities:
 
-- **[Export](https://github.com/Hawksight-AI/veritas-reason/blob/main/cookbook/introduction/15_Export.ipynb)**: Export knowledge graphs to various formats
+- **[Export](https://github.com/bibinprathap/VeritasGraph/blob/main/cookbook/introduction/15_Export.ipynb)**: Export knowledge graphs to various formats
   - **Topics**: RDF, JSON, CSV, OWL export, format conversion
   - **Difficulty**: Intermediate
   - **Use Cases**: Data export, format conversion, interoperability
 
-- **[Multi-Format Export](https://github.com/Hawksight-AI/veritas-reason/blob/main/cookbook/advanced/05_Multi_Format_Export.ipynb)**: Exporting to RDF, OWL, JSON-LD, and NetworkX formats
+- **[Multi-Format Export](https://github.com/bibinprathap/VeritasGraph/blob/main/cookbook/advanced/05_Multi_Format_Export.ipynb)**: Exporting to RDF, OWL, JSON-LD, and NetworkX formats
   - **Topics**: Serialization, interoperability, multiple formats, batch export
   - **Difficulty**: Intermediate
   - **Use Cases**: Multi-format export, data interoperability

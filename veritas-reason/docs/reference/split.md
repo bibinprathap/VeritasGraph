@@ -957,7 +957,7 @@ splitter = TextSplitter(
 
 Interactive tutorials to learn text chunking and splitting:
 
-- **[Chunking and Splitting](https://github.com/Hawksight-AI/veritas-reason/blob/main/cookbook/introduction/11_Chunking_and_Splitting.ipynb)**: Split documents for RAG and processing
+- **[Chunking and Splitting](https://github.com/bibinprathap/VeritasGraph/blob/main/cookbook/introduction/11_Chunking_and_Splitting.ipynb)**: Split documents for RAG and processing
   - **Topics**: Recursive character splitting, semantic splitting, token-based splitting, chunking strategies
   - **Difficulty**: Beginner
   - **Use Cases**: Preparing text for RAG, document chunking

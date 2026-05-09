@@ -7,7 +7,7 @@ VeritasReason features a native integration with **Docling**, the powerful docum
 Docling is integrated into VeritasReason's `parse` module via the `DoclingParser`. This allows you to seamlessly convert unstructured documents into semantic structures that can be indexed, searched, and analyzed within the VeritasReason framework.
 
 - 📖 **VeritasReason Docling Integration Docs**: [Reference Guide](../reference/parse.md)
-- 💻 **VeritasReason Docling Integration GitHub**: [Source Code](https://github.com/Hawksight-AI/veritas-reason/blob/main/veritasreason/parse/docling_parser.py)
+- 💻 **VeritasReason Docling Integration GitHub**: [Source Code](https://github.com/bibinprathap/VeritasGraph/blob/main/veritasreason/parse/docling_parser.py)
 - 🧑🏽‍🍳 **VeritasReason Docling Integration Example**: [Docling Clear Code Example](../CodeExamples.md#docling-clear-code-example)
 - 📦 **VeritasReason Docling Integration PyPI**: [Installation Guide](../installation.md)
 
@@ -85,7 +85,7 @@ See more in our [Code Examples](../CodeExamples.md).
 
 The integration is open-source and available on GitHub. You can explore the implementation, contribute improvements, or report issues.
 
-- [docling_parser.py](https://github.com/Hawksight-AI/veritas-reason/blob/main/veritasreason/parse/docling_parser.py) - The core implementation of the Docling integration.
+- [docling_parser.py](https://github.com/bibinprathap/VeritasGraph/blob/main/veritasreason/parse/docling_parser.py) - The core implementation of the Docling integration.
 
 ---
 

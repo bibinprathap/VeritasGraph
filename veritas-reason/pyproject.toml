@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "veritas-reason"
-version = "0.4.2"
+version = "0.4.6"
 description = "🧠 VeritasReason - An Open Source Framework for building Semantic Layers and Knowledge Engineering"
 readme = "README.md"
 license = { text = "MIT" }
@@ -60,11 +60,12 @@ dependencies = [
 ]
 
 [project.urls]
-Homepage      = "https://github.com/Hawksight-AI/veritas-reason"
-Documentation = "https://veritas-reason.readthedocs.io/"
-Repository    = "https://github.com/Hawksight-AI/veritas-reason"
-Issues        = "https://github.com/Hawksight-AI/veritas-reason/issues"
-Changelog     = "https://github.com/Hawksight-AI/veritas-reason/blob/main/CHANGELOG.md"
+Homepage      = "https://github.com/bibinprathap/VeritasGraph"
+Documentation = "https://github.com/bibinprathap/VeritasGraph/tree/main/veritas-reason/docs"
+Repository    = "https://github.com/bibinprathap/VeritasGraph"
+Issues        = "https://github.com/bibinprathap/VeritasGraph/issues"
+Discussions   = "https://github.com/bibinprathap/VeritasGraph/discussions"
+Changelog     = "https://github.com/bibinprathap/VeritasGraph/blob/main/veritas-reason/CHANGELOG.md"
 VeritasGraph  = "https://github.com/bibinprathap/VeritasGraph"
 
 # Heavy ML / parsing stack — opt-in via veritas-reason[full]

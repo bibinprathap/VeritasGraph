@@ -10,7 +10,7 @@ Main exports:
     - Config: Configuration management
 """
 
-__version__ = "0.4.0"
+__version__ = "0.4.6"
 __author__ = "VeritasReason Contributors"
 __license__ = "MIT"
 

@@ -222,12 +222,12 @@ final_kg = seed_manager.integrate_seed_extracted(
 
 Interactive tutorials that use seed data:
 
-- **[Financial Data Integration MCP](https://github.com/Hawksight-AI/veritas-reason/blob/main/cookbook/use_cases/finance/01_Financial_Data_Integration_MCP.ipynb)**: Merging financial data with seed data integration
+- **[Financial Data Integration MCP](https://github.com/bibinprathap/VeritasGraph/blob/main/cookbook/use_cases/finance/01_Financial_Data_Integration_MCP.ipynb)**: Merging financial data with seed data integration
   - **Topics**: Finance, data fusion, MCP integration, seed data
   - **Difficulty**: Intermediate
   - **Use Cases**: Integrating structured seed data with extracted data
 
-- **[Energy Market Analysis](https://github.com/Hawksight-AI/veritas-reason/blob/main/cookbook/use_cases/renewable_energy/01_Energy_Market_Analysis.ipynb)**: Analyzing trends with seed data integration
+- **[Energy Market Analysis](https://github.com/bibinprathap/VeritasGraph/blob/main/cookbook/use_cases/renewable_energy/01_Energy_Market_Analysis.ipynb)**: Analyzing trends with seed data integration
   - **Topics**: Energy, time series, temporal analysis, seed data
   - **Difficulty**: Intermediate
   - **Use Cases**: Bootstrapping knowledge graphs with verified data

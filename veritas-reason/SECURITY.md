@@ -24,7 +24,7 @@ Security vulnerabilities should be reported privately to prevent potential explo
 
 ### 2. Report Security Issue
 
-Create a [GitHub Security Advisory](https://github.com/Hawksight-AI/veritas-reason/security/advisories/new) or contact us through [GitHub Issues](https://github.com/Hawksight-AI/veritas-reason/issues) with "[SECURITY]" prefix.
+Create a [GitHub Security Advisory](https://github.com/bibinprathap/VeritasGraph/security/advisories/new) or contact us through [GitHub Issues](https://github.com/bibinprathap/VeritasGraph/issues) with "[SECURITY]" prefix.
 
 Include the following information:
 
@@ -156,8 +156,8 @@ We appreciate responsible disclosure. Security researchers who help us improve t
 
 For security-related questions or concerns:
 
-- **GitHub Issues**: [Create an issue](https://github.com/Hawksight-AI/veritas-reason/issues) with "[SECURITY]" prefix
-- **GitHub Security Advisories**: [Report vulnerability](https://github.com/Hawksight-AI/veritas-reason/security/advisories/new)
+- **GitHub Issues**: [Create an issue](https://github.com/bibinprathap/VeritasGraph/issues) with "[SECURITY]" prefix
+- **GitHub Security Advisories**: [Report vulnerability](https://github.com/bibinprathap/VeritasGraph/security/advisories/new)
 
 ## Additional Resources
 

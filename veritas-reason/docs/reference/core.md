@@ -655,12 +655,12 @@ result = build_knowledge_base(sources=["doc.pdf"], method="fast")
 
 Interactive tutorials to learn orchestration and lifecycle management:
 
-- **[Welcome to VeritasReason](https://github.com/Hawksight-AI/veritas-reason/blob/main/cookbook/introduction/01_Welcome_to_VeritasReason.ipynb)**: Comprehensive introduction to all VeritasReason modules and architecture
+- **[Welcome to VeritasReason](https://github.com/bibinprathap/VeritasGraph/blob/main/cookbook/introduction/01_Welcome_to_VeritasReason.ipynb)**: Comprehensive introduction to all VeritasReason modules and architecture
   - **Topics**: Framework overview, all modules, architecture, configuration, lifecycle
   - **Difficulty**: Beginner
   - **Use Cases**: Understanding the framework structure, first-time users
 
-- **[Pipeline Orchestration](https://github.com/Hawksight-AI/veritas-reason/blob/main/cookbook/advanced/07_Pipeline_Orchestration.ipynb)**: Build robust, automated data processing pipelines
+- **[Pipeline Orchestration](https://github.com/bibinprathap/VeritasGraph/blob/main/cookbook/advanced/07_Pipeline_Orchestration.ipynb)**: Build robust, automated data processing pipelines
   - **Topics**: Workflows, automation, error handling, pipeline orchestration
   - **Difficulty**: Advanced
   - **Use Cases**: Complex multi-step workflows, production pipelines

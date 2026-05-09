@@ -95,5 +95,5 @@ VeritasReason uses a modular, layered architecture — import only what you need
 ## Help
 
 - [Discord Community](https://discord.gg/sV34vps5hH) — ask questions, share projects
-- [GitHub Issues](https://github.com/Hawksight-AI/veritas-reason/issues) — report bugs or request features
+- [GitHub Issues](https://github.com/bibinprathap/VeritasGraph/issues) — report bugs or request features
 - [FAQ](faq.md) — common questions answered

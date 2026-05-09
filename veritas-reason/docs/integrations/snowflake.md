@@ -7,7 +7,7 @@ VeritasReason features a native integration with **Snowflake**, the powerful clo
 Snowflake is integrated into VeritasReason's `ingest` module via the `SnowflakeIngestor`. This allows you to seamlessly extract structured data from Snowflake tables and queries into semantic structures that can be indexed, searched, and analyzed within the VeritasReason framework.
 
 - 📖 **VeritasReason Snowflake Integration Docs**: [Reference Guide](../reference/ingest.md)
-- 💻 **VeritasReason Snowflake Integration GitHub**: [Source Code](https://github.com/Hawksight-AI/veritas-reason/blob/main/veritasreason/ingest/snowflake_ingestor.py)
+- 💻 **VeritasReason Snowflake Integration GitHub**: [Source Code](https://github.com/bibinprathap/VeritasGraph/blob/main/veritasreason/ingest/snowflake_ingestor.py)
 - 🧑🏽‍🍳 **VeritasReason Snowflake Integration Example**: [Snowflake Clear Code Example](../CodeExamples.md#snowflake-clear-code-example)
 - 📦 **VeritasReason Snowflake Integration PyPI**: [Installation Guide](../installation.md)
 
@@ -101,7 +101,7 @@ See more in our [Code Examples](../CodeExamples.md).
 
 The integration is open-source and available on GitHub. You can explore the implementation, contribute improvements, or report issues.
 
-- [snowflake_ingestor.py](https://github.com/Hawksight-AI/veritas-reason/blob/main/veritasreason/ingest/snowflake_ingestor.py) - The core implementation of the Snowflake integration.
+- [snowflake_ingestor.py](https://github.com/bibinprathap/VeritasGraph/blob/main/veritasreason/ingest/snowflake_ingestor.py) - The core implementation of the Snowflake integration.
 
 ---
 

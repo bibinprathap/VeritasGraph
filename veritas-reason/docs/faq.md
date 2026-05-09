@@ -136,12 +136,12 @@ Install GPU support (`pip install veritas-reason[gpu]`) and ensure CUDA is avail
 ### Where can I get help?
 
 - [Discord](https://discord.gg/sV34vps5hH) — community chat and support
-- [GitHub Issues](https://github.com/Hawksight-AI/veritas-reason/issues) — bug reports and feature requests
-- [GitHub Discussions](https://github.com/Hawksight-AI/veritas-reason/discussions) — questions and ideas
+- [GitHub Issues](https://github.com/bibinprathap/VeritasGraph/issues) — bug reports and feature requests
+- [GitHub Discussions](https://github.com/bibinprathap/VeritasGraph/discussions) — questions and ideas
 
 ### How do I report a bug?
 
-1. Search [existing issues](https://github.com/Hawksight-AI/veritas-reason/issues) first
+1. Search [existing issues](https://github.com/bibinprathap/VeritasGraph/issues) first
 2. Open a new issue with: description, reproduction steps, expected vs actual behavior, and your environment (Python version, OS, VeritasReason version)
 
 ### How do I contribute?

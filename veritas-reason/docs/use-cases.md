@@ -34,8 +34,8 @@ Real-world applications of VeritasReason across domains, with linked cookbook no
 Connect genes, proteins, drugs, and diseases from scientific literature and databases to accelerate drug discovery and understand disease pathways.
 
 **Cookbooks**:
-- [Drug Discovery Pipeline](https://github.com/Hawksight-AI/veritas-reason/blob/main/cookbook/use_cases/biomedical/01_Drug_Discovery_Pipeline.ipynb) — PubMed RSS ingestion, entity-aware chunking, GraphRAG, vector similarity search
-- [Genomic Variant Analysis](https://github.com/Hawksight-AI/veritas-reason/blob/main/cookbook/use_cases/biomedical/02_Genomic_Variant_Analysis.ipynb) — bioRxiv RSS, temporal KGs, deduplication, pathway analysis
+- [Drug Discovery Pipeline](https://github.com/bibinprathap/VeritasGraph/blob/main/cookbook/use_cases/biomedical/01_Drug_Discovery_Pipeline.ipynb) — PubMed RSS ingestion, entity-aware chunking, GraphRAG, vector similarity search
+- [Genomic Variant Analysis](https://github.com/bibinprathap/VeritasGraph/blob/main/cookbook/use_cases/biomedical/02_Genomic_Variant_Analysis.ipynb) — bioRxiv RSS, temporal KGs, deduplication, pathway analysis
 
 ---
 
@@ -45,21 +45,21 @@ Connect genes, proteins, drugs, and diseases from scientific literature and data
 
 Unify financial data from APIs, MCP servers, and real-time streams into a single queryable knowledge graph.
 
-**Cookbook**: [Financial Data Integration (MCP)](https://github.com/Hawksight-AI/veritas-reason/blob/main/cookbook/use_cases/finance/01_Financial_Data_Integration_MCP.ipynb) — Alpha Vantage API, MCP servers, seed data, real-time ingestion
+**Cookbook**: [Financial Data Integration (MCP)](https://github.com/bibinprathap/VeritasGraph/blob/main/cookbook/use_cases/finance/01_Financial_Data_Integration_MCP.ipynb) — Alpha Vantage API, MCP servers, seed data, real-time ingestion
 
 ### Fraud Detection
 
 Detect complex fraud rings using temporal graphs and pattern detection over transaction, device, and user data.
 
-**Cookbook**: [Fraud Detection](https://github.com/Hawksight-AI/veritas-reason/blob/main/cookbook/use_cases/finance/02_Fraud_Detection.ipynb) — temporal KGs, cycle detection, fraud pattern analysis
+**Cookbook**: [Fraud Detection](https://github.com/bibinprathap/VeritasGraph/blob/main/cookbook/use_cases/finance/02_Fraud_Detection.ipynb) — temporal KGs, cycle detection, fraud pattern analysis
 
 ### Blockchain Analytics
 
 Map transaction flows, analyze DeFi protocols, and detect illicit activity across wallet and exchange networks.
 
 **Cookbooks**:
-- [DeFi Protocol Intelligence](https://github.com/Hawksight-AI/veritas-reason/blob/main/cookbook/use_cases/blockchain/01_DeFi_Protocol_Intelligence.ipynb)
-- [Transaction Network Analysis](https://github.com/Hawksight-AI/veritas-reason/blob/main/cookbook/use_cases/blockchain/02_Transaction_Network_Analysis.ipynb)
+- [DeFi Protocol Intelligence](https://github.com/bibinprathap/VeritasGraph/blob/main/cookbook/use_cases/blockchain/01_DeFi_Protocol_Intelligence.ipynb)
+- [Transaction Network Analysis](https://github.com/bibinprathap/VeritasGraph/blob/main/cookbook/use_cases/blockchain/02_Transaction_Network_Analysis.ipynb)
 
 ---
 
@@ -70,20 +70,20 @@ Map transaction flows, analyze DeFi protocols, and detect illicit activity acros
 Ingest threat feeds (CVE databases, security RSS), detect anomalies in streaming data, and build threat intelligence knowledge graphs for proactive defense.
 
 **Cookbooks**:
-- [Real-Time Anomaly Detection](https://github.com/Hawksight-AI/veritas-reason/blob/main/cookbook/use_cases/cybersecurity/01_Real_Time_Anomaly_Detection.ipynb)
-- [Threat Intelligence Hybrid RAG](https://github.com/Hawksight-AI/veritas-reason/blob/main/cookbook/use_cases/cybersecurity/02_Threat_Intelligence_Hybrid_RAG.ipynb)
+- [Real-Time Anomaly Detection](https://github.com/bibinprathap/VeritasGraph/blob/main/cookbook/use_cases/cybersecurity/01_Real_Time_Anomaly_Detection.ipynb)
+- [Threat Intelligence Hybrid RAG](https://github.com/bibinprathap/VeritasGraph/blob/main/cookbook/use_cases/cybersecurity/02_Threat_Intelligence_Hybrid_RAG.ipynb)
 
 ### Criminal Network Analysis
 
 Build knowledge graphs from police reports, court records, and OSINT feeds to identify key players, communities, and suspicious patterns using network centrality analysis.
 
-**Cookbook**: [Criminal Network Analysis](https://github.com/Hawksight-AI/veritas-reason/blob/main/cookbook/use_cases/intelligence/01_Criminal_Network_Analysis.ipynb)
+**Cookbook**: [Criminal Network Analysis](https://github.com/bibinprathap/VeritasGraph/blob/main/cookbook/use_cases/intelligence/01_Criminal_Network_Analysis.ipynb)
 
 ### Intelligence Analysis Orchestrator
 
 Process multiple intelligence sources in parallel using an orchestrator-worker pipeline pattern with multi-source conflict detection and integration.
 
-**Cookbook**: [Intelligence Analysis Orchestrator-Worker](https://github.com/Hawksight-AI/veritas-reason/blob/main/cookbook/use_cases/intelligence/02_Intelligence_Analysis_Orchestrator_Worker.ipynb)
+**Cookbook**: [Intelligence Analysis Orchestrator-Worker](https://github.com/bibinprathap/VeritasGraph/blob/main/cookbook/use_cases/intelligence/02_Intelligence_Analysis_Orchestrator_Worker.ipynb)
 
 ---
 
@@ -93,13 +93,13 @@ Process multiple intelligence sources in parallel using an orchestrator-worker p
 
 Map suppliers, logistics routes, and inventory levels to identify bottlenecks and optimize global supply chains.
 
-**Cookbook**: [Supply Chain Data Integration](https://github.com/Hawksight-AI/veritas-reason/blob/main/cookbook/use_cases/supply_chain/01_Supply_Chain_Data_Integration.ipynb)
+**Cookbook**: [Supply Chain Data Integration](https://github.com/bibinprathap/VeritasGraph/blob/main/cookbook/use_cases/supply_chain/01_Supply_Chain_Data_Integration.ipynb)
 
 ### Renewable Energy Management
 
 Connect sensor data, weather forecasts, and maintenance logs to predict equipment failures and optimize grid operations.
 
-**Cookbook**: [Energy Market Analysis](https://github.com/Hawksight-AI/veritas-reason/blob/main/cookbook/use_cases/renewable_energy/01_Energy_Market_Analysis.ipynb)
+**Cookbook**: [Energy Market Analysis](https://github.com/bibinprathap/VeritasGraph/blob/main/cookbook/use_cases/renewable_energy/01_Energy_Market_Analysis.ipynb)
 
 ---
 
@@ -110,8 +110,8 @@ Connect sensor data, weather forecasts, and maintenance logs to predict equipmen
 Use knowledge graphs to retrieve precise, structured context for LLM responses — with hybrid retrieval, logical inference, and source attribution.
 
 **Cookbooks**:
-- [GraphRAG Complete](https://github.com/Hawksight-AI/veritas-reason/blob/main/cookbook/use_cases/advanced_rag/01_GraphRAG_Complete.ipynb) — production-ready implementation
-- [RAG vs. GraphRAG Comparison](https://github.com/Hawksight-AI/veritas-reason/blob/main/cookbook/use_cases/advanced_rag/02_RAG_vs_GraphRAG_Comparison.ipynb) — side-by-side comparison
+- [GraphRAG Complete](https://github.com/bibinprathap/VeritasGraph/blob/main/cookbook/use_cases/advanced_rag/01_GraphRAG_Complete.ipynb) — production-ready implementation
+- [RAG vs. GraphRAG Comparison](https://github.com/bibinprathap/VeritasGraph/blob/main/cookbook/use_cases/advanced_rag/02_RAG_vs_GraphRAG_Comparison.ipynb) — side-by-side comparison
 
 ---
 
@@ -122,4 +122,4 @@ Use knowledge graphs to retrieve precise, structured context for LLM responses �
 - [API Reference](reference/core.md) — complete technical documentation
 
 !!! info "Have a use case to add?"
-    [Open a PR](https://github.com/Hawksight-AI/veritas-reason) or start a discussion on GitHub.
+    [Open a PR](https://github.com/bibinprathap/VeritasGraph) or start a discussion on GitHub.

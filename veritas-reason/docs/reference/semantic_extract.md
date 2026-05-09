@@ -586,17 +586,17 @@ kg = builder.build(sources)
 
 Interactive tutorials to learn semantic extraction:
 
-- **[Entity Extraction](https://github.com/Hawksight-AI/veritas-reason/blob/main/cookbook/introduction/05_Entity_Extraction.ipynb)**: Extract named entities from text using NER
+- **[Entity Extraction](https://github.com/bibinprathap/VeritasGraph/blob/main/cookbook/introduction/05_Entity_Extraction.ipynb)**: Extract named entities from text using NER
   - **Topics**: NER, Spacy, LLM extraction, entity types, confidence scores
   - **Difficulty**: Beginner
   - **Use Cases**: Identifying entities in text, building entity lists
 
-- **[Relation Extraction](https://github.com/Hawksight-AI/veritas-reason/blob/main/cookbook/introduction/06_Relation_Extraction.ipynb)**: Discover and classify relationships between entities
+- **[Relation Extraction](https://github.com/bibinprathap/VeritasGraph/blob/main/cookbook/introduction/06_Relation_Extraction.ipynb)**: Discover and classify relationships between entities
   - **Topics**: Relation classification, dependency parsing, relationship types
   - **Difficulty**: Beginner
   - **Use Cases**: Finding relationships, building knowledge graphs
 
-- **[Advanced Extraction](https://github.com/Hawksight-AI/veritas-reason/blob/main/cookbook/advanced/01_Advanced_Extraction.ipynb)**: Custom extractors, LLM-based extraction, and complex pattern matching
+- **[Advanced Extraction](https://github.com/bibinprathap/VeritasGraph/blob/main/cookbook/advanced/01_Advanced_Extraction.ipynb)**: Custom extractors, LLM-based extraction, and complex pattern matching
   - **Topics**: Custom models, regex, LLMs, ensemble methods, domain-specific extraction
   - **Difficulty**: Advanced
   - **Use Cases**: Custom extraction schemas, domain-specific entities

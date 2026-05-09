@@ -35,18 +35,18 @@ Structured learning paths, quick references, and performance guidance for going 
 1. **Installation & Setup** — [Installation Guide](installation.md)
 2. **Core Concepts** — [Core Concepts](concepts.md) + [Getting Started](getting-started.md)
 3. **First Knowledge Graph** — [Quickstart Tutorial](quickstart.md)
-4. **Interactive Introduction** — [Welcome to VeritasReason notebook](https://github.com/Hawksight-AI/veritas-reason/blob/main/cookbook/introduction/01_Welcome_to_VeritasReason.ipynb)
-5. **Hands-On Practice** — [Your First Knowledge Graph notebook](https://github.com/Hawksight-AI/veritas-reason/blob/main/cookbook/introduction/08_Your_First_Knowledge_Graph.ipynb)
+4. **Interactive Introduction** — [Welcome to VeritasReason notebook](https://github.com/bibinprathap/VeritasGraph/blob/main/cookbook/introduction/01_Welcome_to_VeritasReason.ipynb)
+5. **Hands-On Practice** — [Your First Knowledge Graph notebook](https://github.com/bibinprathap/VeritasGraph/blob/main/cookbook/introduction/08_Your_First_Knowledge_Graph.ipynb)
 
 ---
 
 ### Intermediate Path
 
 1. **All Modules** — [Modules Guide](modules.md)
-2. **Advanced Graph Construction** — [Building Knowledge Graphs notebook](https://github.com/Hawksight-AI/veritas-reason/blob/main/cookbook/introduction/07_Building_Knowledge_Graphs.ipynb)
-3. **Embeddings & Search** — [Embeddings notebook](https://github.com/Hawksight-AI/veritas-reason/blob/main/cookbook/introduction/09_Embeddings.ipynb)
-4. **GraphRAG** — [GraphRAG Complete notebook](https://github.com/Hawksight-AI/veritas-reason/blob/main/cookbook/use_cases/advanced_rag/01_GraphRAG_Complete.ipynb)
-5. **Multi-Source Integration** — [Multi-Source Data Integration notebook](https://github.com/Hawksight-AI/veritas-reason/blob/main/cookbook/advanced/06_Multi_Source_Data_Integration.ipynb)
+2. **Advanced Graph Construction** — [Building Knowledge Graphs notebook](https://github.com/bibinprathap/VeritasGraph/blob/main/cookbook/introduction/07_Building_Knowledge_Graphs.ipynb)
+3. **Embeddings & Search** — [Embeddings notebook](https://github.com/bibinprathap/VeritasGraph/blob/main/cookbook/introduction/09_Embeddings.ipynb)
+4. **GraphRAG** — [GraphRAG Complete notebook](https://github.com/bibinprathap/VeritasGraph/blob/main/cookbook/use_cases/advanced_rag/01_GraphRAG_Complete.ipynb)
+5. **Multi-Source Integration** — [Multi-Source Data Integration notebook](https://github.com/bibinprathap/VeritasGraph/blob/main/cookbook/advanced/06_Multi_Source_Data_Integration.ipynb)
 6. **Use Case Examples** — [Use Cases](use-cases.md)
 
 ---
@@ -54,11 +54,11 @@ Structured learning paths, quick references, and performance guidance for going 
 ### Advanced Path
 
 1. **Architecture Deep Dive** — [Architecture Guide](architecture.md)
-2. **Temporal Graphs** — [Temporal Graphs notebook](https://github.com/Hawksight-AI/veritas-reason/blob/main/cookbook/advanced/04_Temporal_Graphs.ipynb)
-3. **Ontologies** — [Ontology notebook](https://github.com/Hawksight-AI/veritas-reason/blob/main/cookbook/introduction/14_Ontology.ipynb)
-4. **Visualization** — [Complete Visualization Suite notebook](https://github.com/Hawksight-AI/veritas-reason/blob/main/cookbook/advanced/03_Complete_Visualization_Suite.ipynb)
-5. **Export Pipelines** — [Multi-Format Export notebook](https://github.com/Hawksight-AI/veritas-reason/blob/main/cookbook/advanced/05_Multi_Format_Export.ipynb)
-6. **Production GraphRAG** — [GraphRAG Complete notebook](https://github.com/Hawksight-AI/veritas-reason/blob/main/cookbook/use_cases/advanced_rag/01_GraphRAG_Complete.ipynb)
+2. **Temporal Graphs** — [Temporal Graphs notebook](https://github.com/bibinprathap/VeritasGraph/blob/main/cookbook/advanced/04_Temporal_Graphs.ipynb)
+3. **Ontologies** — [Ontology notebook](https://github.com/bibinprathap/VeritasGraph/blob/main/cookbook/introduction/14_Ontology.ipynb)
+4. **Visualization** — [Complete Visualization Suite notebook](https://github.com/bibinprathap/VeritasGraph/blob/main/cookbook/advanced/03_Complete_Visualization_Suite.ipynb)
+5. **Export Pipelines** — [Multi-Format Export notebook](https://github.com/bibinprathap/VeritasGraph/blob/main/cookbook/advanced/05_Multi_Format_Export.ipynb)
+6. **Production GraphRAG** — [GraphRAG Complete notebook](https://github.com/bibinprathap/VeritasGraph/blob/main/cookbook/use_cases/advanced_rag/01_GraphRAG_Complete.ipynb)
 
 ---
 
@@ -148,4 +148,4 @@ Use NetworkX for development and smaller graphs; switch to a persistent backend 
 - [FAQ](faq.md) — common questions
 
 !!! info "Questions or feedback?"
-    [Open an issue](https://github.com/Hawksight-AI/veritas-reason/issues) or [start a discussion](https://github.com/Hawksight-AI/veritas-reason/discussions).
+    [Open an issue](https://github.com/bibinprathap/VeritasGraph/issues) or [start a discussion](https://github.com/bibinprathap/VeritasGraph/discussions).

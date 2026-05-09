@@ -312,12 +312,12 @@ pip install litellm
 
 Interactive tutorials that use LLM providers:
 
-- **[Advanced Extraction](https://github.com/Hawksight-AI/veritas-reason/blob/main/cookbook/advanced/01_Advanced_Extraction.ipynb)**: Custom extractors and LLM-based extraction
+- **[Advanced Extraction](https://github.com/bibinprathap/VeritasGraph/blob/main/cookbook/advanced/01_Advanced_Extraction.ipynb)**: Custom extractors and LLM-based extraction
   - **Topics**: LLM extraction, custom models, complex pattern matching
   - **Difficulty**: Advanced
   - **Use Cases**: Domain-specific extraction, complex schemas
 
-- **[GraphRAG Complete](https://github.com/Hawksight-AI/veritas-reason/blob/main/cookbook/use_cases/advanced_rag/01_GraphRAG_Complete.ipynb)**: Production-ready GraphRAG system using LLMs
+- **[GraphRAG Complete](https://github.com/bibinprathap/VeritasGraph/blob/main/cookbook/use_cases/advanced_rag/01_GraphRAG_Complete.ipynb)**: Production-ready GraphRAG system using LLMs
   - **Topics**: GraphRAG, LLM integration, hybrid retrieval
   - **Difficulty**: Advanced
   - **Use Cases**: Building AI applications with knowledge graphs
@@ -326,5 +326,5 @@ Interactive tutorials that use LLM providers:
 
 - [Context Module](context.md) - GraphRAG with multi-hop reasoning
 - [Semantic Extract Module](semantic_extract.md) - Entity and relationship extraction
-- [GraphRAG Cookbook](https://github.com/Hawksight-AI/veritas-reason/blob/main/cookbook/use_cases/advanced_rag/01_GraphRAG_Complete.ipynb) - Complete GraphRAG example
+- [GraphRAG Cookbook](https://github.com/bibinprathap/VeritasGraph/blob/main/cookbook/use_cases/advanced_rag/01_GraphRAG_Complete.ipynb) - Complete GraphRAG example
 

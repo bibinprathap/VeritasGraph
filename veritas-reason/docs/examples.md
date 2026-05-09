@@ -173,7 +173,7 @@ for fact in inferred:
 results = context.retrieve("What technologies are used in this project?")
 ```
 
-[Full GraphRAG tutorial](https://github.com/Hawksight-AI/veritas-reason/blob/main/cookbook/use_cases/advanced_rag/01_GraphRAG_Complete.ipynb) · [RAG vs. GraphRAG comparison](https://github.com/Hawksight-AI/veritas-reason/blob/main/cookbook/use_cases/advanced_rag/02_RAG_vs_GraphRAG_Comparison.ipynb)
+[Full GraphRAG tutorial](https://github.com/bibinprathap/VeritasGraph/blob/main/cookbook/use_cases/advanced_rag/01_GraphRAG_Complete.ipynb) · [RAG vs. GraphRAG comparison](https://github.com/bibinprathap/VeritasGraph/blob/main/cookbook/use_cases/advanced_rag/02_RAG_vs_GraphRAG_Comparison.ipynb)
 
 ---
 
@@ -241,4 +241,4 @@ for batch in stream.stream(batch_size=100):
 - [API Reference](reference/core.md) — complete API documentation
 
 !!! info "Have an example to share?"
-    [Contribute on GitHub](https://github.com/Hawksight-AI/veritas-reason)
+    [Contribute on GitHub](https://github.com/bibinprathap/VeritasGraph)

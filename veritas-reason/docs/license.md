@@ -76,7 +76,7 @@ By contributing to VeritasReason, you agree that your contributions will be lice
 
 ## Questions?
 
-- **[GitHub Issues](https://github.com/Hawksight-AI/veritas-reason/issues)** - License questions
+- **[GitHub Issues](https://github.com/bibinprathap/VeritasGraph/issues)** - License questions
 - **[Contributing Guide](contributing.md)** - How to contribute
 - **[Community](community.md)** - Get in touch
 

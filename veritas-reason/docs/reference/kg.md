@@ -505,27 +505,27 @@ print(f"New nodes since 2020: {len(diff.nodes)}")
 
 Interactive tutorials to learn knowledge graph construction and analysis:
 
-- **[Building Knowledge Graphs](https://github.com/Hawksight-AI/veritas-reason/blob/main/cookbook/introduction/07_Building_Knowledge_Graphs.ipynb)**: Learn the fundamentals of building knowledge graphs
+- **[Building Knowledge Graphs](https://github.com/bibinprathap/VeritasGraph/blob/main/cookbook/introduction/07_Building_Knowledge_Graphs.ipynb)**: Learn the fundamentals of building knowledge graphs
   - **Topics**: Graph construction, entity resolution, relationship mapping
   - **Difficulty**: Beginner
   - **Use Cases**: Understanding graph construction basics
 
-- **[Your First Knowledge Graph](https://github.com/Hawksight-AI/veritas-reason/blob/main/cookbook/introduction/08_Your_First_Knowledge_Graph.ipynb)**: Build your first knowledge graph from scratch
+- **[Your First Knowledge Graph](https://github.com/bibinprathap/VeritasGraph/blob/main/cookbook/introduction/08_Your_First_Knowledge_Graph.ipynb)**: Build your first knowledge graph from scratch
   - **Topics**: Entity extraction, relationship extraction, graph construction, visualization
   - **Difficulty**: Beginner
   - **Use Cases**: First-time users, quick start
 
-- **[Graph Analytics](https://github.com/Hawksight-AI/veritas-reason/blob/main/cookbook/introduction/10_Graph_Analytics.ipynb)**: Analyze knowledge graphs with centrality and community detection
+- **[Graph Analytics](https://github.com/bibinprathap/VeritasGraph/blob/main/cookbook/introduction/10_Graph_Analytics.ipynb)**: Analyze knowledge graphs with centrality and community detection
   - **Topics**: Centrality measures, community detection, graph metrics
   - **Difficulty**: Intermediate
   - **Use Cases**: Understanding graph structure, finding important nodes
 
-- **[Advanced Graph Analytics](https://github.com/Hawksight-AI/veritas-reason/blob/main/cookbook/advanced/02_Advanced_Graph_Analytics.ipynb)**: Advanced graph analysis techniques
+- **[Advanced Graph Analytics](https://github.com/bibinprathap/VeritasGraph/blob/main/cookbook/advanced/02_Advanced_Graph_Analytics.ipynb)**: Advanced graph analysis techniques
   - **Topics**: PageRank, Louvain algorithm, shortest path, graph mining
   - **Difficulty**: Advanced
   - **Use Cases**: Complex graph analysis, research applications
 
-- **[Temporal Knowledge Graphs](https://github.com/Hawksight-AI/veritas-reason/blob/main/cookbook/advanced/10_Temporal_Knowledge_Graphs.ipynb)**: Model and query data that changes over time
+- **[Temporal Knowledge Graphs](https://github.com/bibinprathap/VeritasGraph/blob/main/cookbook/advanced/10_Temporal_Knowledge_Graphs.ipynb)**: Model and query data that changes over time
   - **Topics**: Time series, temporal logic, temporal queries, graph evolution
   - **Difficulty**: Advanced
   - **Use Cases**: Tracking changes over time, temporal reasoning

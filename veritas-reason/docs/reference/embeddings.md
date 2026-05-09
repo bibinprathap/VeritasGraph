@@ -240,17 +240,17 @@ This is useful for checking which embedding providers are available before initi
 
 Interactive tutorials to learn embeddings in practice:
 
-- **[Embedding Generation](https://github.com/Hawksight-AI/veritas-reason/blob/main/cookbook/introduction/12_Embedding_Generation.ipynb)**: Learn how to generate embeddings using different providers
+- **[Embedding Generation](https://github.com/bibinprathap/VeritasGraph/blob/main/cookbook/introduction/12_Embedding_Generation.ipynb)**: Learn how to generate embeddings using different providers
   - **Topics**: FastEmbed, OpenAI, Sentence Transformers, batch processing, normalization
   - **Difficulty**: Intermediate
   - **Use Cases**: Understanding embedding generation, choosing the right provider
 
-- **[Vector Store](https://github.com/Hawksight-AI/veritas-reason/blob/main/cookbook/introduction/13_Vector_Store.ipynb)**: Set up and use vector stores for similarity search
+- **[Vector Store](https://github.com/bibinprathap/VeritasGraph/blob/main/cookbook/introduction/13_Vector_Store.ipynb)**: Set up and use vector stores for similarity search
   - **Topics**: FAISS, Weaviate, Qdrant, hybrid search, metadata filtering
   - **Difficulty**: Intermediate
   - **Use Cases**: Storing and searching embeddings, building RAG systems
 
-- **[Advanced Vector Store and Search](https://github.com/Hawksight-AI/veritas-reason/blob/main/cookbook/advanced/Advanced_Vector_Store_and_Search.ipynb)**: Advanced vector store operations and optimization
+- **[Advanced Vector Store and Search](https://github.com/bibinprathap/VeritasGraph/blob/main/cookbook/advanced/Advanced_Vector_Store_and_Search.ipynb)**: Advanced vector store operations and optimization
   - **Topics**: Index optimization, hybrid search, performance tuning, namespace management
   - **Difficulty**: Advanced
   - **Use Cases**: Production deployments, performance optimization

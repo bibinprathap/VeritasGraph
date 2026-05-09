@@ -342,7 +342,7 @@ tracker.set_source_credibility("bad_source", 0.1)
 
 Interactive tutorials to learn conflict detection and resolution:
 
-- **[Conflict Detection & Resolution](https://github.com/Hawksight-AI/veritas-reason/blob/main/cookbook/introduction/17_Conflict_Detection_and_Resolution.ipynb)**: Strategies for handling contradictory information from multiple sources
+- **[Conflict Detection & Resolution](https://github.com/bibinprathap/VeritasGraph/blob/main/cookbook/introduction/17_Conflict_Detection_and_Resolution.ipynb)**: Strategies for handling contradictory information from multiple sources
   - **Topics**: Truth discovery, voting, confidence scoring, conflict resolution strategies
   - **Difficulty**: Advanced
   - **Use Cases**: Multi-source data integration, quality assurance

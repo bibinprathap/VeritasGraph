@@ -20,8 +20,8 @@ Start with our comprehensive documentation:
 
 **Best for**: General questions, feature discussions, and getting help
 
-- [Ask a question](https://github.com/Hawksight-AI/veritas-reason/discussions/new?category=q-a)
-- [Browse discussions](https://github.com/Hawksight-AI/veritas-reason/discussions)
+- [Ask a question](https://github.com/bibinprathap/VeritasGraph/discussions/new?category=q-a)
+- [Browse discussions](https://github.com/bibinprathap/VeritasGraph/discussions)
 
 #### Discord
 
@@ -33,8 +33,8 @@ Start with our comprehensive documentation:
 
 **Best for**: Bug reports and feature requests
 
-- [Report a bug](https://github.com/Hawksight-AI/veritas-reason/issues/new?template=bug_report.md)
-- [Request a feature](https://github.com/Hawksight-AI/veritas-reason/issues/new?template=feature_request.md)
+- [Report a bug](https://github.com/bibinprathap/VeritasGraph/issues/new?template=bug_report.md)
+- [Request a feature](https://github.com/bibinprathap/VeritasGraph/issues/new?template=feature_request.md)
 
 ### Before Asking
 
@@ -47,7 +47,7 @@ Start with our comprehensive documentation:
 
 ### Bug Reports
 
-Use our [bug report template](https://github.com/Hawksight-AI/veritas-reason/issues/new?template=bug_report.md) to report bugs.
+Use our [bug report template](https://github.com/bibinprathap/VeritasGraph/issues/new?template=bug_report.md) to report bugs.
 
 Include:
 - Clear description of the bug
@@ -58,7 +58,7 @@ Include:
 
 ### Feature Requests
 
-Use our [feature request template](https://github.com/Hawksight-AI/veritas-reason/issues/new?template=feature_request.md) to suggest features.
+Use our [feature request template](https://github.com/bibinprathap/VeritasGraph/issues/new?template=feature_request.md) to suggest features.
 
 Include:
 - Problem statement

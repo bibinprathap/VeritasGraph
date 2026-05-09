@@ -791,12 +791,12 @@ print(f"Context: {context}")
 
 Interactive tutorials to learn vector stores:
 
-- **[Vector Store](https://github.com/Hawksight-AI/veritas-reason/blob/main/cookbook/introduction/13_Vector_Store.ipynb)**: Set up and use vector stores for similarity search
+- **[Vector Store](https://github.com/bibinprathap/VeritasGraph/blob/main/cookbook/introduction/13_Vector_Store.ipynb)**: Set up and use vector stores for similarity search
   - **Topics**: FAISS, Weaviate, Qdrant, hybrid search, metadata filtering
   - **Difficulty**: Intermediate
   - **Use Cases**: Storing and searching embeddings, building RAG systems
 
-- **[Advanced Vector Store and Search](https://github.com/Hawksight-AI/veritas-reason/blob/main/cookbook/advanced/Advanced_Vector_Store_and_Search.ipynb)**: Advanced vector store operations and optimization
+- **[Advanced Vector Store and Search](https://github.com/bibinprathap/VeritasGraph/blob/main/cookbook/advanced/Advanced_Vector_Store_and_Search.ipynb)**: Advanced vector store operations and optimization
   - **Topics**: Index optimization, hybrid search, performance tuning, namespace management
   - **Difficulty**: Advanced
   - **Use Cases**: Production deployments, performance optimization

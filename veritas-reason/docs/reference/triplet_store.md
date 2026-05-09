@@ -161,7 +161,7 @@ SPARQL query execution and optimization engine.
 
 Interactive tutorials that use triplet stores:
 
-- **[Reasoning and Inference](https://github.com/Hawksight-AI/veritas-reason/blob/main/cookbook/advanced/08_Reasoning_and_Inference.ipynb)**: Use logical reasoning with SPARQL and triplet stores
+- **[Reasoning and Inference](https://github.com/bibinprathap/VeritasGraph/blob/main/cookbook/advanced/08_Reasoning_and_Inference.ipynb)**: Use logical reasoning with SPARQL and triplet stores
   - **Topics**: SPARQL reasoning, RDF stores, inference engines
   - **Difficulty**: Advanced
   - **Use Cases**: Semantic reasoning, SPARQL queries, RDF-based knowledge graphs

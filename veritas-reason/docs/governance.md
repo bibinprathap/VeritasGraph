@@ -17,7 +17,7 @@ Project governance model for VeritasReason.
 **Contributors**
 - Submit code, documentation, and bug reports
 - Help with issues and reviews
-- Recognized in [CONTRIBUTORS.md](https://github.com/Hawksight-AI/veritas-reason/blob/main/CONTRIBUTORS.md)
+- Recognized in [CONTRIBUTORS.md](https://github.com/bibinprathap/VeritasGraph/blob/main/CONTRIBUTORS.md)
 
 **Community Members**
 - Use VeritasReason and provide feedback
@@ -72,7 +72,7 @@ Project governance model for VeritasReason.
 
 - **GitHub Issues**: Bug reports, features, questions
 - **GitHub PRs**: Code contributions
-- **GitHub Security Advisories**: [Report security issues](https://github.com/Hawksight-AI/veritas-reason/security/advisories/new)
+- **GitHub Security Advisories**: [Report security issues](https://github.com/bibinprathap/VeritasGraph/security/advisories/new)
 
 ---
 
@@ -88,8 +88,8 @@ Project governance model for VeritasReason.
 
 ## 📄 License
 
-MIT License - See [LICENSE](https://github.com/Hawksight-AI/veritas-reason/blob/main/LICENSE)
+MIT License - See [LICENSE](https://github.com/bibinprathap/VeritasGraph/blob/main/LICENSE)
 
 ---
 
-**Contact**: [GitHub Issues](https://github.com/Hawksight-AI/veritas-reason/issues)
+**Contact**: [GitHub Issues](https://github.com/bibinprathap/VeritasGraph/issues)

@@ -14,7 +14,7 @@ pip install -e ".[dev]"
 pytest
 ```
 
-First time? Look for [`good-first-issue`](https://github.com/Hawksight-AI/veritas-reason/labels/good-first-issue) labels for beginner-friendly tasks.
+First time? Look for [`good-first-issue`](https://github.com/bibinprathap/VeritasGraph/labels/good-first-issue) labels for beginner-friendly tasks.
 
 ---
 
@@ -86,7 +86,7 @@ pytest
 
 ## Community
 
-Please follow the [Code of Conduct](https://github.com/Hawksight-AI/veritas-reason/blob/main/CODE_OF_CONDUCT.md). Be respectful, patient, and constructive.
+Please follow the [Code of Conduct](https://github.com/bibinprathap/VeritasGraph/blob/main/CODE_OF_CONDUCT.md). Be respectful, patient, and constructive.
 
 All contributors are recognized in release notes and the GitHub contributors list.
 
@@ -94,6 +94,6 @@ All contributors are recognized in release notes and the GitHub contributors lis
 
 ## Help
 
-- [GitHub Issues](https://github.com/Hawksight-AI/veritas-reason/issues)
-- [GitHub Discussions](https://github.com/Hawksight-AI/veritas-reason/discussions)
+- [GitHub Issues](https://github.com/bibinprathap/VeritasGraph/issues)
+- [GitHub Discussions](https://github.com/bibinprathap/VeritasGraph/discussions)
 - [Discord](https://discord.gg/sV34vps5hH)

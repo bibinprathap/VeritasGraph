@@ -1039,6 +1039,6 @@ manager = TemporalVersionManager(storage_path="large_data.db")
 ## Support
 
 For questions or issues:
-- GitHub Issues: https://github.com/Hawksight-AI/veritas-reason/issues
+- GitHub Issues: https://github.com/bibinprathap/VeritasGraph/issues
 - Documentation: https://veritas-reason.readthedocs.io
 - Community: https://discord.gg/sV34vps5hH

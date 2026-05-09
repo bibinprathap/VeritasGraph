@@ -6,9 +6,9 @@
   <a href="https://www.python.org/downloads/"><img src="https://img.shields.io/badge/python-3.8+-blue.svg" alt="Python 3.8+"></a>
   <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License: MIT"></a>
   <a href="https://pypi.org/project/veritasreason/"><img src="https://img.shields.io/pypi/v/veritasreason.svg" alt="PyPI"></a>
-  <a href="https://github.com/Hawksight-AI/veritas-reason/releases/tag/v0.4.0"><img src="https://img.shields.io/badge/version-0.4.0-brightgreen.svg" alt="Version"></a>
+  <a href="https://github.com/bibinprathap/VeritasGraph/releases/tag/v0.4.0"><img src="https://img.shields.io/badge/version-0.4.0-brightgreen.svg" alt="Version"></a>
   <a href="https://pepy.tech/project/veritasreason"><img src="https://static.pepy.tech/badge/veritasreason" alt="Total Downloads"></a>
-  <a href="https://github.com/Hawksight-AI/veritas-reason/actions"><img src="https://github.com/Hawksight-AI/veritas-reason/workflows/CI/badge.svg" alt="CI"></a>
+  <a href="https://github.com/bibinprathap/VeritasGraph/actions"><img src="https://github.com/bibinprathap/VeritasGraph/workflows/CI/badge.svg" alt="CI"></a>
   <a href="https://discord.gg/sV34vps5hH"><img src="https://img.shields.io/badge/Discord-Join-5865F2?logo=discord&logoColor=white" alt="Discord"></a>
   <a href="https://x.com/BuildVeritasReason"><img src="https://img.shields.io/badge/X-Follow-black?logo=x&logoColor=white" alt="X"></a>
 
@@ -20,7 +20,7 @@
 
   <p>
     <a href="getting-started/" class="md-button md-button--primary">Get Started</a>
-    <a href="https://github.com/Hawksight-AI/veritas-reason" class="md-button">View on GitHub</a>
+    <a href="https://github.com/bibinprathap/VeritasGraph" class="md-button">View on GitHub</a>
   </p>
 </div>
 
@@ -270,7 +270,7 @@ Where **every decision must be accountable** and **mistakes have real consequenc
 === "From Source"
 
     ```bash
-    git clone https://github.com/Hawksight-AI/veritas-reason.git
+    git clone https://github.com/bibinprathap/VeritasGraph.git
     cd veritasreason
     pip install -e .          # core
     pip install -e ".[all]"   # all extras
@@ -279,7 +279,7 @@ Where **every decision must be accountable** and **mistakes have real consequenc
 === "Development"
 
     ```bash
-    git clone https://github.com/Hawksight-AI/veritas-reason.git
+    git clone https://github.com/bibinprathap/VeritasGraph.git
     cd veritasreason
     pip install -e ".[dev]"
     ```

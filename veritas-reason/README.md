@@ -8,15 +8,15 @@
 
 [![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![PyPI](https://img.shields.io/pypi/v/veritasreason.svg)](https://pypi.org/project/veritasreason/)
-[![Version](https://img.shields.io/badge/version-0.4.0-brightgreen.svg)](https://github.com/Hawksight-AI/veritas-reason/releases/tag/v0.4.0)
-[![Total Downloads](https://static.pepy.tech/badge/veritasreason)](https://pepy.tech/project/veritasreason)
-[![CI](https://github.com/Hawksight-AI/veritas-reason/workflows/CI/badge.svg)](https://github.com/Hawksight-AI/veritas-reason/actions)
-[![Discord](https://img.shields.io/badge/Discord-Join%20Community-5865F2?logo=discord&logoColor=white)](https://discord.gg/sV34vps5hH)
-[![X](https://img.shields.io/badge/X-Follow%20VeritasReason-black?logo=x&logoColor=white)](https://x.com/BuildVeritasReason)
-[![OpenClaw](https://img.shields.io/badge/OpenClaw-Plugin-FF3B30?logo=github&logoColor=white)](https://openclaw.ai)
+[![PyPI](https://img.shields.io/pypi/v/veritas-reason.svg)](https://pypi.org/project/veritas-reason/)
+[![Version](https://img.shields.io/badge/version-0.4.0-brightgreen.svg)](https://github.com/bibinprathap/VeritasGraph/releases)
+[![Total Downloads](https://static.pepy.tech/badge/veritas-reason)](https://pepy.tech/project/veritas-reason)
+[![CI](https://github.com/bibinprathap/VeritasGraph/actions/workflows/ci.yml/badge.svg)](https://github.com/bibinprathap/VeritasGraph/actions)
+[![GitHub Discussions](https://img.shields.io/badge/GitHub-Discussions-181717?logo=github&logoColor=white)](https://github.com/bibinprathap/VeritasGraph/discussions)
+[![GitHub Issues](https://img.shields.io/github/issues/bibinprathap/VeritasGraph)](https://github.com/bibinprathap/VeritasGraph/issues)
+[![GitHub Stars](https://img.shields.io/github/stars/bibinprathap/VeritasGraph?style=social)](https://github.com/bibinprathap/VeritasGraph)
 
-### ⭐ Give us a Star · 🍴 Fork us · 💬 Join our Discord · 🐦 Follow on X
+### ⭐ Give us a Star · 🍴 Fork us · 💬 Join the Discussion · 🐛 Report an Issue
 
 > **Transform Chaos into Intelligence. Build AI systems with context graphs, decision tracking, and advanced knowledge engineering that are explainable, traceable, and trustworthy — not black boxes.**
 
@@ -42,7 +42,7 @@ pip install veritas-reason
 veritasreason-policy-demo
 ```
 
-Full source + walkthrough: [github.com/bibinprathap/VeritasGraph](https://github.com/bibinprathap/VeritasGraph/tree/restored-main#-enterprise-compliance-veritasgraph--veritasreason).
+Full source + walkthrough: [github.com/bibinprathap/VeritasGraph](https://github.com/bibinprathap/VeritasGraph).
 
 ---
 
@@ -519,7 +519,7 @@ Turn ontologies into executable data contracts — no hand-authoring.
 - **Ollama remote support** — `OllamaProvider` now correctly connects to remote Ollama servers instead of silently falling back to `localhost`.
 - **Security** — API key logging removed from extractors; CI workflows locked to least-privilege `contents: read`.
 
-→ [Full changelog](CHANGELOG.md) · [Release notes](RELEASE_NOTES.md)
+→ [Full changelog](https://github.com/bibinprathap/VeritasGraph/blob/main/veritas-reason/CHANGELOG.md) · [Release notes](https://github.com/bibinprathap/VeritasGraph/releases)
 
 ---
 
@@ -1017,7 +1017,7 @@ pip install veritas-reason[db-snowflake]   # Snowflake ingestion
 pip install veritas-reason[agno]           # Agno integration
 
 # From source
-git clone https://github.com/Hawksight-AI/veritas-reason.git
+git clone https://github.com/bibinprathap/VeritasGraph.git
 cd veritasreason
 pip install -e ".[dev]"
 pytest tests/
@@ -1041,13 +1041,13 @@ pytest tests/
 
 ## 🤝 Community & Support
 
-- 💬 **[Discord](https://discord.gg/sV34vps5hH)** — real-time help and showcases
-- 💡 **[GitHub Discussions](https://github.com/Hawksight-AI/veritas-reason/discussions)** — Q&A and feature requests
-- 🐛 **[GitHub Issues](https://github.com/Hawksight-AI/veritas-reason/issues)** — bug reports
-- 📄 **[Documentation](https://github.com/Hawksight-AI/veritas-reason/tree/main/docs)** — full reference docs
-- 🍳 **[Cookbook](https://github.com/Hawksight-AI/veritas-reason/tree/main/cookbook)** — runnable notebooks and recipes
-- 📋 **[Changelog](CHANGELOG.md)** — what changed and why
-- 📝 **[Release Notes](RELEASE_NOTES.md)** — per-contributor breakdown
+- 💬 **[GitHub Discussions](https://github.com/bibinprathap/VeritasGraph/discussions)** — real-time help and showcases
+- 💡 **[GitHub Discussions](https://github.com/bibinprathap/VeritasGraph/discussions)** — Q&A and feature requests
+- 🐛 **[GitHub Issues](https://github.com/bibinprathap/VeritasGraph/issues)** — bug reports
+- 📄 **[Documentation](https://github.com/bibinprathap/VeritasGraph/tree/main/veritas-reason/docs)** — full reference docs
+- 🍳 **[Cookbook](https://github.com/bibinprathap/VeritasGraph/tree/main/veritas-reason/cookbook)** — runnable notebooks and recipes
+- 📋 **[Changelog](https://github.com/bibinprathap/VeritasGraph/blob/main/veritas-reason/CHANGELOG.md)** — what changed and why
+- 📝 **[Release Notes](https://github.com/bibinprathap/VeritasGraph/releases)** — per-contributor breakdown
 
 ---
 
@@ -1060,14 +1060,14 @@ All contributions welcome — bug fixes, features, tests, and docs.
 3. Write tests alongside your changes
 4. Open a PR and tag `@KaifAhmad1` for review
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) for full guidelines.
+See [CONTRIBUTING.md](https://github.com/bibinprathap/VeritasGraph/blob/main/veritas-reason/CONTRIBUTING.md) for full guidelines.
 
 ---
 
 <div align="center">
 
-MIT License · Built by [Hawksight AI](https://github.com/Hawksight-AI) · [⭐ Star on GitHub](https://github.com/Hawksight-AI/veritas-reason)
+MIT License · Built by [Hawksight AI](https://github.com/bibinprathap/VeritasGraph) · [⭐ Star on GitHub](https://github.com/bibinprathap/VeritasGraph)
 
-[GitHub](https://github.com/Hawksight-AI/veritas-reason) · [Discord](https://discord.gg/sV34vps5hH) · [X / Twitter](https://x.com/BuildVeritasReason)
+[GitHub](https://github.com/bibinprathap/VeritasGraph) · [Discussions](https://github.com/bibinprathap/VeritasGraph/discussions) · [Issues](https://github.com/bibinprathap/VeritasGraph/issues)
 
 </div>

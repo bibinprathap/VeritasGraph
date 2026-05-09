@@ -46,8 +46,8 @@ If applicable, paste any error messages or describe unexpected behavior:
 
 ## Checklist
 
-- [ ] I have searched existing [discussions](https://github.com/Hawksight-AI/veritas-reason/discussions) and [issues](https://github.com/Hawksight-AI/veritas-reason/issues)
-- [ ] I have checked the [documentation](https://github.com/Hawksight-AI/veritas-reason/tree/main/docs) and [FAQ](https://github.com/Hawksight-AI/veritas-reason/blob/main/docs/faq.md)
+- [ ] I have searched existing [discussions](https://github.com/bibinprathap/VeritasGraph/discussions) and [issues](https://github.com/bibinprathap/VeritasGraph/issues)
+- [ ] I have checked the [documentation](https://github.com/bibinprathap/VeritasGraph/tree/main/docs) and [FAQ](https://github.com/bibinprathap/VeritasGraph/blob/main/docs/faq.md)
 - [ ] I have provided a minimal code example (if applicable)
 - [ ] I have included error messages (if applicable)
 - [ ] I have provided environment details

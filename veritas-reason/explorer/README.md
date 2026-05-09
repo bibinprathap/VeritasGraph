@@ -1,6 +1,6 @@
 # VeritasReason Knowledge Explorer
 
-A real-time visual interface for exploring knowledge graphs, decision intelligence, entity resolution, ontologies, and graph analytics built on top of the [VeritasReason](https://github.com/Hawksight-AI/veritas-reason) library.
+A real-time visual interface for exploring knowledge graphs, decision intelligence, entity resolution, ontologies, and graph analytics built on top of the [VeritasReason](https://github.com/bibinprathap/VeritasGraph) library.
 
 ---
 
@@ -28,7 +28,7 @@ python --version
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/Hawksight-AI/veritas-reason.git
+git clone https://github.com/bibinprathap/VeritasGraph.git
 cd veritasreason
 ```
 
@@ -194,4 +194,4 @@ The compiled assets are written to `../veritasreason/static/`. The VeritasReason
 
 ## Contributing
 
-See the root [CONTRIBUTING.md](../CONTRIBUTING.md) and open issues on the main [VeritasReason repository](https://github.com/Hawksight-AI/veritas-reason).
+See the root [CONTRIBUTING.md](../CONTRIBUTING.md) and open issues on the main [VeritasReason repository](https://github.com/bibinprathap/VeritasGraph).

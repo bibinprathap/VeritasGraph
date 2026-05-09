@@ -120,11 +120,11 @@ That's it. This launches an interactive demo using cloud APIs (OpenAI/Anthropic)
 [![PyPI Version](https://img.shields.io/pypi/v/veritas-reason.svg)](https://pypi.org/project/veritas-reason/)
 [![Total Downloads](https://static.pepy.tech/badge/veritas-reason)](https://pepy.tech/project/veritas-reason)
 [![CI](https://github.com/bibinprathap/VeritasGraph/actions/workflows/ci.yml/badge.svg)](https://github.com/bibinprathap/VeritasGraph/actions)
-[![Discord](https://img.shields.io/badge/Discord-Join-5865F2?logo=discord&logoColor=white)](https://discord.gg/veritasgraph)
-[![X](https://img.shields.io/badge/Follow-%40veritasgraph-1DA1F2?logo=x&logoColor=white)](https://x.com/veritasgraph)
-[![OpenClaw](https://img.shields.io/badge/Powered%20by-OpenClaw-orange)](https://github.com/bibinprathap/VeritasGraph)
+[![GitHub Discussions](https://img.shields.io/badge/GitHub-Discussions-181717?logo=github&logoColor=white)](https://github.com/bibinprathap/VeritasGraph/discussions)
+[![GitHub Issues](https://img.shields.io/github/issues/bibinprathap/VeritasGraph)](https://github.com/bibinprathap/VeritasGraph/issues)
+[![GitHub Stars](https://img.shields.io/github/stars/bibinprathap/VeritasGraph?style=social)](https://github.com/bibinprathap/VeritasGraph)
 
-⭐ [Give us a Star](https://github.com/bibinprathap/VeritasGraph) · 🍴 [Fork us](https://github.com/bibinprathap/VeritasGraph/fork) · 💬 [Join our Discord](https://discord.gg/veritasgraph) · 🐦 [Follow on X](https://x.com/veritasgraph)
+⭐ [Give us a Star](https://github.com/bibinprathap/VeritasGraph) · 🍴 [Fork us](https://github.com/bibinprathap/VeritasGraph/fork) · 💬 [Join the Discussion](https://github.com/bibinprathap/VeritasGraph/discussions/4) · 🐛 [Report an Issue](https://github.com/bibinprathap/VeritasGraph/issues)
 
 **Transform Chaos into Intelligence.** Build AI systems with context graphs, decision tracking, and advanced knowledge engineering that are **explainable, traceable, and trustworthy** — not black boxes.
 

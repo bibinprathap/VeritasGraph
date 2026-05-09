@@ -22,7 +22,7 @@ Interactive Jupyter notebooks covering everything from your first knowledge grap
 
     **Topics**: Extraction, Graph Construction, Visualization · **Difficulty**: Beginner
 
-    [Open Notebook](https://github.com/Hawksight-AI/veritas-reason/blob/main/cookbook/introduction/08_Your_First_Knowledge_Graph.ipynb)
+    [Open Notebook](https://github.com/bibinprathap/VeritasGraph/blob/main/cookbook/introduction/08_Your_First_Knowledge_Graph.ipynb)
 
 -   :material-robot: **GraphRAG Complete**
     ---
@@ -30,7 +30,7 @@ Interactive Jupyter notebooks covering everything from your first knowledge grap
 
     **Topics**: RAG, LLMs, Vector Search, Graph Traversal · **Difficulty**: Advanced
 
-    [Open Notebook](https://github.com/Hawksight-AI/veritas-reason/blob/main/cookbook/use_cases/advanced_rag/01_GraphRAG_Complete.ipynb)
+    [Open Notebook](https://github.com/bibinprathap/VeritasGraph/blob/main/cookbook/use_cases/advanced_rag/01_GraphRAG_Complete.ipynb)
 
 -   :material-scale-balance: **RAG vs. GraphRAG Comparison**
     ---
@@ -38,7 +38,7 @@ Interactive Jupyter notebooks covering everything from your first knowledge grap
 
     **Topics**: RAG, GraphRAG, Benchmarking, Reasoning Gap · **Difficulty**: Intermediate
 
-    [Open Notebook](https://github.com/Hawksight-AI/veritas-reason/blob/main/cookbook/use_cases/advanced_rag/02_RAG_vs_GraphRAG_Comparison.ipynb)
+    [Open Notebook](https://github.com/bibinprathap/VeritasGraph/blob/main/cookbook/use_cases/advanced_rag/02_RAG_vs_GraphRAG_Comparison.ipynb)
 
 -   :material-shield-alert: **Real-Time Anomaly Detection**
     ---
@@ -46,7 +46,7 @@ Interactive Jupyter notebooks covering everything from your first knowledge grap
 
     **Topics**: Streaming, Security, Dynamic Graphs · **Difficulty**: Advanced
 
-    [Open Notebook](https://github.com/Hawksight-AI/veritas-reason/blob/main/cookbook/use_cases/cybersecurity/01_Real_Time_Anomaly_Detection.ipynb)
+    [Open Notebook](https://github.com/bibinprathap/VeritasGraph/blob/main/cookbook/use_cases/cybersecurity/01_Real_Time_Anomaly_Detection.ipynb)
 
 </div>
 
@@ -66,7 +66,7 @@ Essential guides to master the VeritasReason framework.
     
     **Difficulty**: Beginner
     
-    [Open Notebook](https://github.com/Hawksight-AI/veritas-reason/blob/main/cookbook/introduction/01_Welcome_to_VeritasReason.ipynb)
+    [Open Notebook](https://github.com/bibinprathap/VeritasGraph/blob/main/cookbook/introduction/01_Welcome_to_VeritasReason.ipynb)
 
 -   :material-database-import: **Data Ingestion**
     ---
@@ -76,7 +76,7 @@ Essential guides to master the VeritasReason framework.
     
     **Difficulty**: Beginner
     
-    [Open Notebook](https://github.com/Hawksight-AI/veritas-reason/blob/main/cookbook/introduction/02_Data_Ingestion.ipynb)
+    [Open Notebook](https://github.com/bibinprathap/VeritasGraph/blob/main/cookbook/introduction/02_Data_Ingestion.ipynb)
 
 -   :material-file-document-outline: **Document Parsing**
     ---
@@ -86,7 +86,7 @@ Essential guides to master the VeritasReason framework.
     
     **Difficulty**: Beginner
     
-    [Open Notebook](https://github.com/Hawksight-AI/veritas-reason/blob/main/cookbook/introduction/03_Document_Parsing.ipynb)
+    [Open Notebook](https://github.com/bibinprathap/VeritasGraph/blob/main/cookbook/introduction/03_Document_Parsing.ipynb)
 
 -   :material-broom: **Data Normalization**
     ---
@@ -96,7 +96,7 @@ Essential guides to master the VeritasReason framework.
     
     **Difficulty**: Beginner
     
-    [Open Notebook](https://github.com/Hawksight-AI/veritas-reason/blob/main/cookbook/introduction/04_Data_Normalization.ipynb)
+    [Open Notebook](https://github.com/bibinprathap/VeritasGraph/blob/main/cookbook/introduction/04_Data_Normalization.ipynb)
 
 -   :material-account-search: **Entity Extraction**
     ---
@@ -106,7 +106,7 @@ Essential guides to master the VeritasReason framework.
     
     **Difficulty**: Beginner
     
-    [Open Notebook](https://github.com/Hawksight-AI/veritas-reason/blob/main/cookbook/introduction/05_Entity_Extraction.ipynb)
+    [Open Notebook](https://github.com/bibinprathap/VeritasGraph/blob/main/cookbook/introduction/05_Entity_Extraction.ipynb)
 
 -   :material-relation-many-to-many: **Relation Extraction**
     ---
@@ -116,7 +116,7 @@ Essential guides to master the VeritasReason framework.
     
     **Difficulty**: Beginner
     
-    [Open Notebook](https://github.com/Hawksight-AI/veritas-reason/blob/main/cookbook/introduction/06_Relation_Extraction.ipynb)
+    [Open Notebook](https://github.com/bibinprathap/VeritasGraph/blob/main/cookbook/introduction/06_Relation_Extraction.ipynb)
 
 -   :material-vector-square: **Embedding Generation**
     ---
@@ -126,7 +126,7 @@ Essential guides to master the VeritasReason framework.
     
     **Difficulty**: Intermediate
     
-    [Open Notebook](https://github.com/Hawksight-AI/veritas-reason/blob/main/cookbook/introduction/12_Embedding_Generation.ipynb)
+    [Open Notebook](https://github.com/bibinprathap/VeritasGraph/blob/main/cookbook/introduction/12_Embedding_Generation.ipynb)
 
 -   :material-database-search: **Vector Store**
     ---
@@ -134,7 +134,7 @@ Essential guides to master the VeritasReason framework.
     
     **Difficulty**: Intermediate
     
-    [Open Notebook](https://github.com/Hawksight-AI/veritas-reason/blob/main/cookbook/introduction/13_Vector_Store.ipynb)
+    [Open Notebook](https://github.com/bibinprathap/VeritasGraph/blob/main/cookbook/introduction/13_Vector_Store.ipynb)
 
 -   :material-database-settings: **Graph Store**
     ---
@@ -144,7 +144,7 @@ Essential guides to master the VeritasReason framework.
     
     **Difficulty**: Intermediate
     
-    [Open Notebook](https://github.com/Hawksight-AI/veritas-reason/blob/main/cookbook/introduction/09_Graph_Store.ipynb)
+    [Open Notebook](https://github.com/bibinprathap/VeritasGraph/blob/main/cookbook/introduction/09_Graph_Store.ipynb)
 
 -   :material-sitemap: **Ontology**
     ---
@@ -154,7 +154,7 @@ Essential guides to master the VeritasReason framework.
     
     **Difficulty**: Intermediate
     
-    [Open Notebook](https://github.com/Hawksight-AI/veritas-reason/blob/main/cookbook/introduction/14_Ontology.ipynb)
+    [Open Notebook](https://github.com/bibinprathap/VeritasGraph/blob/main/cookbook/introduction/14_Ontology.ipynb)
 
 </div>
 
@@ -174,7 +174,7 @@ Deep dive into advanced features, customization, and complex workflows.
     
     **Difficulty**: Advanced
     
-    [Open Notebook](https://github.com/Hawksight-AI/veritas-reason/blob/main/cookbook/advanced/01_Advanced_Extraction.ipynb)
+    [Open Notebook](https://github.com/bibinprathap/VeritasGraph/blob/main/cookbook/advanced/01_Advanced_Extraction.ipynb)
 
 -   :material-chart-network: **Advanced Graph Analytics**
     ---
@@ -184,7 +184,7 @@ Deep dive into advanced features, customization, and complex workflows.
     
     **Difficulty**: Advanced
     
-    [Open Notebook](https://github.com/Hawksight-AI/veritas-reason/blob/main/cookbook/advanced/02_Advanced_Graph_Analytics.ipynb)
+    [Open Notebook](https://github.com/bibinprathap/VeritasGraph/blob/main/cookbook/advanced/02_Advanced_Graph_Analytics.ipynb)
 
 -   :material-brain: **Advanced Context Engineering**
     ---
@@ -194,7 +194,7 @@ Deep dive into advanced features, customization, and complex workflows.
     
     **Difficulty**: Advanced
     
-    [Open Notebook](https://github.com/Hawksight-AI/veritas-reason/blob/main/cookbook/advanced/11_Advanced_Context_Engineering.ipynb)
+    [Open Notebook](https://github.com/bibinprathap/VeritasGraph/blob/main/cookbook/advanced/11_Advanced_Context_Engineering.ipynb)
 
 -   :material-monitor-dashboard: **Complete Visualization Suite**
     ---
@@ -204,7 +204,7 @@ Deep dive into advanced features, customization, and complex workflows.
     
     **Difficulty**: Intermediate
     
-    [Open Notebook](https://github.com/Hawksight-AI/veritas-reason/blob/main/cookbook/advanced/03_Complete_Visualization_Suite.ipynb)
+    [Open Notebook](https://github.com/bibinprathap/VeritasGraph/blob/main/cookbook/advanced/03_Complete_Visualization_Suite.ipynb)
 
 -   :material-scale-balance: **Conflict Resolution**
     ---
@@ -214,7 +214,7 @@ Deep dive into advanced features, customization, and complex workflows.
     
     **Difficulty**: Advanced
     
-    [Open Notebook](https://github.com/Hawksight-AI/veritas-reason/blob/main/cookbook/introduction/17_Conflict_Detection_and_Resolution.ipynb)
+    [Open Notebook](https://github.com/bibinprathap/VeritasGraph/blob/main/cookbook/introduction/17_Conflict_Detection_and_Resolution.ipynb)
 
 -   :material-export: **Multi-Format Export**
     ---
@@ -224,7 +224,7 @@ Deep dive into advanced features, customization, and complex workflows.
     
     **Difficulty**: Intermediate
     
-    [Open Notebook](https://github.com/Hawksight-AI/veritas-reason/blob/main/cookbook/advanced/05_Multi_Format_Export.ipynb)
+    [Open Notebook](https://github.com/bibinprathap/VeritasGraph/blob/main/cookbook/advanced/05_Multi_Format_Export.ipynb)
 
 -   :material-source-merge: **Multi-Source Integration**
     ---
@@ -234,7 +234,7 @@ Deep dive into advanced features, customization, and complex workflows.
     
     **Difficulty**: Advanced
     
-    [Open Notebook](https://github.com/Hawksight-AI/veritas-reason/blob/main/cookbook/advanced/06_Multi_Source_Data_Integration.ipynb)
+    [Open Notebook](https://github.com/bibinprathap/VeritasGraph/blob/main/cookbook/advanced/06_Multi_Source_Data_Integration.ipynb)
 
 -   :material-pipe: **Pipeline Orchestration**
     ---
@@ -244,7 +244,7 @@ Deep dive into advanced features, customization, and complex workflows.
     
     **Difficulty**: Advanced
     
-    [Open Notebook](https://github.com/Hawksight-AI/veritas-reason/blob/main/cookbook/advanced/07_Pipeline_Orchestration.ipynb)
+    [Open Notebook](https://github.com/bibinprathap/VeritasGraph/blob/main/cookbook/advanced/07_Pipeline_Orchestration.ipynb)
 
 -   :material-brain: **Reasoning and Inference**
     ---
@@ -254,7 +254,7 @@ Deep dive into advanced features, customization, and complex workflows.
     
     **Difficulty**: Advanced
     
-    [Open Notebook](https://github.com/Hawksight-AI/veritas-reason/blob/main/cookbook/advanced/08_Reasoning_and_Inference.ipynb)
+    [Open Notebook](https://github.com/bibinprathap/VeritasGraph/blob/main/cookbook/advanced/08_Reasoning_and_Inference.ipynb)
 -   :material-layers: **Semantic Layer Construction**
     ---
     Building a semantic layer over your data warehouse or lake.
@@ -263,7 +263,7 @@ Deep dive into advanced features, customization, and complex workflows.
     
     **Difficulty**: Advanced
     
-    [Open Notebook](https://github.com/Hawksight-AI/veritas-reason/blob/main/cookbook/advanced/09_Semantic_Layer_Construction.ipynb)
+    [Open Notebook](https://github.com/bibinprathap/VeritasGraph/blob/main/cookbook/advanced/09_Semantic_Layer_Construction.ipynb)
 
 -   :material-clock-outline: **Temporal Knowledge Graphs**
     ---
@@ -273,7 +273,7 @@ Deep dive into advanced features, customization, and complex workflows.
     
     **Difficulty**: Advanced
     
-    [Open Notebook](https://github.com/Hawksight-AI/veritas-reason/blob/main/cookbook/advanced/10_Temporal_Knowledge_Graphs.ipynb)
+    [Open Notebook](https://github.com/bibinprathap/VeritasGraph/blob/main/cookbook/advanced/10_Temporal_Knowledge_Graphs.ipynb)
 
 </div>
 
@@ -295,7 +295,7 @@ Real-world examples and end-to-end applications across various industries.
     
     **Difficulty**: Advanced
     
-    [Open Notebook](https://github.com/Hawksight-AI/veritas-reason/blob/main/cookbook/use_cases/biomedical/01_Drug_Discovery_Pipeline.ipynb)
+    [Open Notebook](https://github.com/bibinprathap/VeritasGraph/blob/main/cookbook/use_cases/biomedical/01_Drug_Discovery_Pipeline.ipynb)
 
 -   :material-dna: **Genomic Variant Analysis**
     ---
@@ -305,7 +305,7 @@ Real-world examples and end-to-end applications across various industries.
     
     **Difficulty**: Advanced
     
-    [Open Notebook](https://github.com/Hawksight-AI/veritas-reason/blob/main/cookbook/use_cases/biomedical/02_Genomic_Variant_Analysis.ipynb)
+    [Open Notebook](https://github.com/bibinprathap/VeritasGraph/blob/main/cookbook/use_cases/biomedical/02_Genomic_Variant_Analysis.ipynb)
 
 </div>
 
@@ -321,7 +321,7 @@ Real-world examples and end-to-end applications across various industries.
     
     **Difficulty**: Intermediate
     
-    [Open Notebook](https://github.com/Hawksight-AI/veritas-reason/blob/main/cookbook/use_cases/finance/01_Financial_Data_Integration_MCP.ipynb)
+    [Open Notebook](https://github.com/bibinprathap/VeritasGraph/blob/main/cookbook/use_cases/finance/01_Financial_Data_Integration_MCP.ipynb)
 
 -   :material-incognito: **Fraud Detection**
     ---
@@ -331,7 +331,7 @@ Real-world examples and end-to-end applications across various industries.
     
     **Difficulty**: Advanced
     
-    [Open Notebook](https://github.com/Hawksight-AI/veritas-reason/blob/main/cookbook/use_cases/finance/02_Fraud_Detection.ipynb)
+    [Open Notebook](https://github.com/bibinprathap/VeritasGraph/blob/main/cookbook/use_cases/finance/02_Fraud_Detection.ipynb)
 
 </div>
 
@@ -347,7 +347,7 @@ Real-world examples and end-to-end applications across various industries.
     
     **Difficulty**: Advanced
     
-    [Open Notebook](https://github.com/Hawksight-AI/veritas-reason/blob/main/cookbook/use_cases/blockchain/01_DeFi_Protocol_Intelligence.ipynb)
+    [Open Notebook](https://github.com/bibinprathap/VeritasGraph/blob/main/cookbook/use_cases/blockchain/01_DeFi_Protocol_Intelligence.ipynb)
 
 -   :material-network: **Transaction Network Analysis**
     ---
@@ -357,7 +357,7 @@ Real-world examples and end-to-end applications across various industries.
     
     **Difficulty**: Advanced
     
-    [Open Notebook](https://github.com/Hawksight-AI/veritas-reason/blob/main/cookbook/use_cases/blockchain/02_Transaction_Network_Analysis.ipynb)
+    [Open Notebook](https://github.com/bibinprathap/VeritasGraph/blob/main/cookbook/use_cases/blockchain/02_Transaction_Network_Analysis.ipynb)
 
 </div>
 
@@ -373,7 +373,7 @@ Real-world examples and end-to-end applications across various industries.
     
     **Difficulty**: Advanced
     
-    [Open Notebook](https://github.com/Hawksight-AI/veritas-reason/blob/main/cookbook/use_cases/cybersecurity/01_Real_Time_Anomaly_Detection.ipynb)
+    [Open Notebook](https://github.com/bibinprathap/VeritasGraph/blob/main/cookbook/use_cases/cybersecurity/01_Real_Time_Anomaly_Detection.ipynb)
 
 -   :material-robot-angry: **Threat Intelligence Hybrid RAG**
     ---
@@ -383,7 +383,7 @@ Real-world examples and end-to-end applications across various industries.
     
     **Difficulty**: Advanced
     
-    [Open Notebook](https://github.com/Hawksight-AI/veritas-reason/blob/main/cookbook/use_cases/cybersecurity/02_Threat_Intelligence_Hybrid_RAG.ipynb)
+    [Open Notebook](https://github.com/bibinprathap/VeritasGraph/blob/main/cookbook/use_cases/cybersecurity/02_Threat_Intelligence_Hybrid_RAG.ipynb)
 
 </div>
 
@@ -399,7 +399,7 @@ Real-world examples and end-to-end applications across various industries.
     
     **Difficulty**: Advanced
     
-    [Open Notebook](https://github.com/Hawksight-AI/veritas-reason/blob/main/cookbook/use_cases/intelligence/01_Criminal_Network_Analysis.ipynb)
+    [Open Notebook](https://github.com/bibinprathap/VeritasGraph/blob/main/cookbook/use_cases/intelligence/01_Criminal_Network_Analysis.ipynb)
 
 -   :material-file-search: **Intelligence Analysis Orchestrator Worker**
     ---
@@ -409,7 +409,7 @@ Real-world examples and end-to-end applications across various industries.
     
     **Difficulty**: Advanced
     
-    [Open Notebook](https://github.com/Hawksight-AI/veritas-reason/blob/main/cookbook/use_cases/intelligence/02_Intelligence_Analysis_Orchestrator_Worker.ipynb)
+    [Open Notebook](https://github.com/bibinprathap/VeritasGraph/blob/main/cookbook/use_cases/intelligence/02_Intelligence_Analysis_Orchestrator_Worker.ipynb)
 
 </div>
 
@@ -425,7 +425,7 @@ Real-world examples and end-to-end applications across various industries.
     
     **Difficulty**: Intermediate
     
-    [Open Notebook](https://github.com/Hawksight-AI/veritas-reason/blob/main/cookbook/use_cases/renewable_energy/01_Energy_Market_Analysis.ipynb)
+    [Open Notebook](https://github.com/bibinprathap/VeritasGraph/blob/main/cookbook/use_cases/renewable_energy/01_Energy_Market_Analysis.ipynb)
 
 </div>
 
@@ -441,7 +441,7 @@ Real-world examples and end-to-end applications across various industries.
     
     **Difficulty**: Advanced
     
-    [Open Notebook](https://github.com/Hawksight-AI/veritas-reason/blob/main/cookbook/use_cases/supply_chain/01_Supply_Chain_Data_Integration.ipynb)
+    [Open Notebook](https://github.com/bibinprathap/VeritasGraph/blob/main/cookbook/use_cases/supply_chain/01_Supply_Chain_Data_Integration.ipynb)
 
 </div>
 
@@ -459,7 +459,7 @@ To run these notebooks locally:
 
 2.  **Or install from source** (for development):
     ```bash
-    git clone https://github.com/Hawksight-AI/veritas-reason.git
+    git clone https://github.com/bibinprathap/VeritasGraph.git
     cd veritasreason
     pip install -e .[all]
     pip install jupyter

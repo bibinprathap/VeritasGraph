@@ -44,7 +44,7 @@ We recognize all types of contributions:
 All contributors are recognized in:
 
 - This contributors list
-- [GitHub contributors page](https://github.com/Hawksight-AI/veritas-reason/graphs/contributors)
+- [GitHub contributors page](https://github.com/bibinprathap/VeritasGraph/graphs/contributors)
 - Release notes for significant contributions
 - Community appreciation
 
@@ -54,7 +54,7 @@ All contributors are recognized in:
 
 ### Automatic Recognition
 
-If you've made a commit, you'll automatically appear in [GitHub's contributors graph](https://github.com/Hawksight-AI/veritas-reason/graphs/contributors).
+If you've made a commit, you'll automatically appear in [GitHub's contributors graph](https://github.com/bibinprathap/VeritasGraph/graphs/contributors).
 
 ### Using All-Contributors Bot
 
@@ -111,4 +111,4 @@ Every contribution, no matter how small, helps make VeritasReason better. Thank 
 
 **Want to contribute?** 
 
-⭐ Give us a Star • 🍴 [Fork us](https://github.com/Hawksight-AI/veritas-reason/fork) • Check out our [Contributing Guide](CONTRIBUTING.md) to get started!
+⭐ Give us a Star • 🍴 [Fork us](https://github.com/bibinprathap/VeritasGraph/fork) • Check out our [Contributing Guide](CONTRIBUTING.md) to get started!

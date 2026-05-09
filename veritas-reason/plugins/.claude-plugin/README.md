@@ -53,7 +53,7 @@ plugins/
 ## Prerequisites
 
 ```bash
-git clone https://github.com/Hawksight-AI/veritas-reason.git
+git clone https://github.com/bibinprathap/VeritasGraph.git
 cd veritasreason
 pip install veritas-reason        # Python 3.10+
 ```

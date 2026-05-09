@@ -768,7 +768,7 @@ detector = DuplicateDetector(
 
 Interactive tutorials to learn deduplication:
 
-- **[Deduplication](https://github.com/Hawksight-AI/veritas-reason/blob/main/cookbook/introduction/18_Deduplication.ipynb)**: Advanced deduplication techniques for entity resolution
+- **[Deduplication](https://github.com/bibinprathap/VeritasGraph/blob/main/cookbook/introduction/18_Deduplication.ipynb)**: Advanced deduplication techniques for entity resolution
   - **Topics**: Entity deduplication, fuzzy matching, similarity thresholds, merge strategies
   - **Difficulty**: Intermediate
   - **Use Cases**: Entity resolution, data cleaning, multi-source integration

@@ -21,6 +21,6 @@ Expected output (abridged):
   po:PO-2402 SOD-04   Vendor V77 related to approver emp:E140
 ```
 
-See the parent project's [README](https://github.com/Hawksight-AI/veritas-reason)
+See the parent project's [README](https://github.com/bibinprathap/VeritasGraph)
 for the production wiring (live SQL ingester, GraphRAG policy retrieval, and
 LLM narration with PROV-O citations).

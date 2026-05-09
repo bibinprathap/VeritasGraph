@@ -380,7 +380,7 @@ Use parser classes directly in pipelines and services. Avoid convenience functio
 
 Interactive tutorials to learn document parsing:
 
-- **[Document Parsing](https://github.com/Hawksight-AI/veritas-reason/blob/main/cookbook/introduction/03_Document_Parsing.ipynb)**: Extract clean text from complex formats
+- **[Document Parsing](https://github.com/bibinprathap/VeritasGraph/blob/main/cookbook/introduction/03_Document_Parsing.ipynb)**: Extract clean text from complex formats
   - **Topics**: OCR, PDF parsing, text extraction, format detection
   - **Difficulty**: Beginner
   - **Use Cases**: Processing documents, extracting text from various formats

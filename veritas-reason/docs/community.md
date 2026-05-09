@@ -7,12 +7,12 @@
 ## Get Help & Support
 
 ### GitHub Issues
-- **[Report Issues](https://github.com/Hawksight-AI/veritas-reason/issues)** - Bug reports and feature requests
-- **[Pull Requests](https://github.com/Hawksight-AI/veritas-reason/pulls)** - Code contributions
-- **[Discussions](https://github.com/Hawksight-AI/veritas-reason/discussions)** - Questions and ideas
+- **[Report Issues](https://github.com/bibinprathap/VeritasGraph/issues)** - Bug reports and feature requests
+- **[Pull Requests](https://github.com/bibinprathap/VeritasGraph/pulls)** - Code contributions
+- **[Discussions](https://github.com/bibinprathap/VeritasGraph/discussions)** - Questions and ideas
 
 ### Security Issues
-- **[Report Security](https://github.com/Hawksight-AI/veritas-reason/security/advisories/new)** - Security vulnerabilities
+- **[Report Security](https://github.com/bibinprathap/VeritasGraph/security/advisories/new)** - Security vulnerabilities
 
 ---
 
@@ -25,7 +25,7 @@
 - **Learning** - Share knowledge and help others grow
 
 ### Code of Conduct
-We follow the [Contributor Covenant Code of Conduct](https://github.com/Hawksight-AI/veritas-reason/blob/main/CODE_OF_CONDUCT.md).
+We follow the [Contributor Covenant Code of Conduct](https://github.com/bibinprathap/VeritasGraph/blob/main/CODE_OF_CONDUCT.md).
 
 ### Reporting Issues
 If you experience unacceptable behavior, please:
@@ -55,7 +55,7 @@ If you experience unacceptable behavior, please:
 ## Stay Connected
 
 ### Follow the Project
-- **[GitHub](https://github.com/Hawksight-AI/veritas-reason)** - Source code and releases
+- **[GitHub](https://github.com/bibinprathap/VeritasGraph)** - Source code and releases
 - **[PyPI](https://pypi.org/project/veritasreason/)** - Package information and downloads
 
 ### Share Your Work
@@ -70,4 +70,4 @@ If you experience unacceptable behavior, please:
 - **[Getting Started](getting-started.md)** - Quick start guide
 - **[FAQ](faq.md)** - Frequently asked questions
 - **[Contributing Guide](contributing.md)** - How to contribute
-- **[GitHub Issues](https://github.com/Hawksight-AI/veritas-reason/issues)** - Ask questions
+- **[GitHub Issues](https://github.com/bibinprathap/VeritasGraph/issues)** - Ask questions

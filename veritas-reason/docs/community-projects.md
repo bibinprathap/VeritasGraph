@@ -3,7 +3,7 @@
 Projects and integrations from the VeritasReason community.
 
 !!! tip "Showcase Your Project"
-    Have a project using VeritasReason? [Submit it here](https://github.com/Hawksight-AI/veritas-reason/issues/new)
+    Have a project using VeritasReason? [Submit it here](https://github.com/bibinprathap/VeritasGraph/issues/new)
 
 ---
 
@@ -65,12 +65,12 @@ Projects and integrations from the VeritasReason community.
 3. **Community**: Answer questions, share experiences
 4. **Testing**: Write tests, report bugs
 
-See our [Contributing Guide](https://github.com/Hawksight-AI/veritas-reason/blob/main/CONTRIBUTING.md)
+See our [Contributing Guide](https://github.com/bibinprathap/VeritasGraph/blob/main/CONTRIBUTING.md)
 
 ---
 
 ## 📞 Resources
 
-- [GitHub Repository](https://github.com/Hawksight-AI/veritas-reason)
-- [GitHub Issues](https://github.com/Hawksight-AI/veritas-reason/issues)
-- [Contributing Guide](https://github.com/Hawksight-AI/veritas-reason/blob/main/CONTRIBUTING.md)
+- [GitHub Repository](https://github.com/bibinprathap/VeritasGraph)
+- [GitHub Issues](https://github.com/bibinprathap/VeritasGraph/issues)
+- [Contributing Guide](https://github.com/bibinprathap/VeritasGraph/blob/main/CONTRIBUTING.md)

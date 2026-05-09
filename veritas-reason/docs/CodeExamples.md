@@ -1034,7 +1034,7 @@ knowledge_graph.apply_resolutions(resolved_data)
 
 ## 📄 License
 
-This project is licensed under the MIT License - see the [LICENSE](https://github.com/Hawksight-AI/veritas-reason/blob/main/LICENSE) file for details.
+This project is licensed under the MIT License - see the [LICENSE](https://github.com/bibinprathap/VeritasGraph/blob/main/LICENSE) file for details.
 
 ---
 

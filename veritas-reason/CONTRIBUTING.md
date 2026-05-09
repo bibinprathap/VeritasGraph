@@ -2,20 +2,20 @@
 
 Thank you for your interest in contributing! Every contribution, no matter how small, is valuable. 🎉
 
-⭐ **Give us a Star** • 🍴 **[Fork VeritasReason](https://github.com/Hawksight-AI/veritas-reason/fork)** • 💬 **Join our [Discord](https://discord.gg/sV34vps5hH)**
+⭐ **Give us a Star** • 🍴 **[Fork VeritasReason](https://github.com/bibinprathap/VeritasGraph/fork)** • 💬 **Join our [Discord](https://discord.gg/sV34vps5hH)**
 
-> **New to contributing?** Start with a [`good first issue`](https://github.com/Hawksight-AI/veritas-reason/labels/good%20first%20issue) or join our [Discord](https://discord.gg/sV34vps5hH) community.
+> **New to contributing?** Start with a [`good first issue`](https://github.com/bibinprathap/VeritasGraph/labels/good%20first%20issue) or join our [Discord](https://discord.gg/sV34vps5hH) community.
 
 ---
 
 ## 🚀 Quick Start
 
-1. Find a [`good first issue`](https://github.com/Hawksight-AI/veritas-reason/labels/good%20first%20issue)
-2. [Fork VeritasReason](https://github.com/Hawksight-AI/veritas-reason/fork) & clone the repository
+1. Find a [`good first issue`](https://github.com/bibinprathap/VeritasGraph/labels/good%20first%20issue)
+2. [Fork VeritasReason](https://github.com/bibinprathap/VeritasGraph/fork) & clone the repository
 3. Make your changes
 4. Submit a pull request!
 
-**Need help?** Join [Discord](https://discord.gg/sV34vps5hH) or [GitHub Discussions](https://github.com/Hawksight-AI/veritas-reason/discussions)
+**Need help?** Join [Discord](https://discord.gg/sV34vps5hH) or [GitHub Discussions](https://github.com/bibinprathap/VeritasGraph/discussions)
 
 ---
 
@@ -78,7 +78,7 @@ Thank you for your interest in contributing! Every contribution, no matter how s
 
 **What:** Report bugs you find
 
-**How:** Use the [bug report template](https://github.com/Hawksight-AI/veritas-reason/issues/new?template=bug_report.md)
+**How:** Use the [bug report template](https://github.com/bibinprathap/VeritasGraph/issues/new?template=bug_report.md)
 
 **Include:** Description, steps to reproduce, expected vs actual behavior, environment details
 
@@ -88,7 +88,7 @@ Thank you for your interest in contributing! Every contribution, no matter how s
 
 **What:** Suggest new features or improvements
 
-**How:** Use the [feature request template](https://github.com/Hawksight-AI/veritas-reason/issues/new?template=feature_request.md)
+**How:** Use the [feature request template](https://github.com/bibinprathap/VeritasGraph/issues/new?template=feature_request.md)
 
 **Include:** Problem statement, proposed solution, use cases
 
@@ -108,7 +108,7 @@ Thank you for your interest in contributing! Every contribution, no matter how s
 
 **What:** Help others in the community
 
-**Where:** [Discord](https://discord.gg/sV34vps5hH), [GitHub Discussions](https://github.com/Hawksight-AI/veritas-reason/discussions)
+**Where:** [Discord](https://discord.gg/sV34vps5hH), [GitHub Discussions](https://github.com/bibinprathap/VeritasGraph/discussions)
 
 **Examples:** Answer questions, review PRs, share your projects
 
@@ -135,12 +135,12 @@ Thank you for your interest in contributing! Every contribution, no matter how s
 
 ### 1. Fork & Clone
 
-First, [fork VeritasReason](https://github.com/Hawksight-AI/veritas-reason/fork) on GitHub, then:
+First, [fork VeritasReason](https://github.com/bibinprathap/VeritasGraph/fork) on GitHub, then:
 
 ```bash
 git clone https://github.com/your-username/veritasreason.git
 cd veritasreason
-git remote add upstream https://github.com/Hawksight-AI/veritas-reason.git
+git remote add upstream https://github.com/bibinprathap/VeritasGraph.git
 ```
 
 ### 2. Set Up Environment
@@ -327,8 +327,8 @@ result = instance.method()
 ## 🆘 Getting Help
 
 - 💬 [Discord](https://discord.gg/sV34vps5hH) - Real-time chat
-- 💭 [GitHub Discussions](https://github.com/Hawksight-AI/veritas-reason/discussions) - Q&A
-- 🐛 [GitHub Issues](https://github.com/Hawksight-AI/veritas-reason/issues) - Bug reports
+- 💭 [GitHub Discussions](https://github.com/bibinprathap/VeritasGraph/discussions) - Q&A
+- 🐛 [GitHub Issues](https://github.com/bibinprathap/VeritasGraph/issues) - Bug reports
 
 **Before asking:** Check existing documentation, search issues/discussions, review cookbook examples
 
@@ -363,4 +363,4 @@ This project follows a [Code of Conduct](CODE_OF_CONDUCT.md). Be respectful and 
 
 Every contribution matters - whether it's a single line of code, a typo fix, a helpful answer, or a bug report. We appreciate you! 🙏
 
-⭐ **Give us a Star** • 🍴 **[Fork VeritasReason](https://github.com/Hawksight-AI/veritas-reason/fork)** • 💬 **Join our [Discord](https://discord.gg/sV34vps5hH)**
+⭐ **Give us a Star** • 🍴 **[Fork VeritasReason](https://github.com/bibinprathap/VeritasGraph/fork)** • 💬 **Join our [Discord](https://discord.gg/sV34vps5hH)**
