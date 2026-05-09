@@ -111,6 +111,42 @@ That's it. This launches an interactive demo using cloud APIs (OpenAI/Anthropic)
 
 ---
 
+## 🧠 VeritasReason
+
+**A Framework for Building Context Graphs and Decision Intelligence Layers for AI**
+
+[![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![PyPI Version](https://img.shields.io/pypi/v/veritas-reason.svg)](https://pypi.org/project/veritas-reason/)
+[![Total Downloads](https://static.pepy.tech/badge/veritas-reason)](https://pepy.tech/project/veritas-reason)
+[![CI](https://github.com/bibinprathap/VeritasGraph/actions/workflows/ci.yml/badge.svg)](https://github.com/bibinprathap/VeritasGraph/actions)
+[![Discord](https://img.shields.io/badge/Discord-Join-5865F2?logo=discord&logoColor=white)](https://discord.gg/veritasgraph)
+[![X](https://img.shields.io/badge/Follow-%40veritasgraph-1DA1F2?logo=x&logoColor=white)](https://x.com/veritasgraph)
+[![OpenClaw](https://img.shields.io/badge/Powered%20by-OpenClaw-orange)](https://github.com/bibinprathap/VeritasGraph)
+
+⭐ [Give us a Star](https://github.com/bibinprathap/VeritasGraph) · 🍴 [Fork us](https://github.com/bibinprathap/VeritasGraph/fork) · 💬 [Join our Discord](https://discord.gg/veritasgraph) · 🐦 [Follow on X](https://x.com/veritasgraph)
+
+**Transform Chaos into Intelligence.** Build AI systems with context graphs, decision tracking, and advanced knowledge engineering that are **explainable, traceable, and trustworthy** — not black boxes.
+
+### 🎬 See it in action — 30-second policy-compliance demo
+
+<p align="center">
+  <img src="https://github.com/bibinprathap/VeritasGraph/blob/restored-main/demos/policy-compliance/demo.gif?raw=true" alt="VeritasGraph + VeritasReason policy-compliance demo" width="80%">
+  <br>
+  <em>VeritasGraph + VeritasReason policy-compliance demo</em>
+</p>
+
+Ask **"Which purchase orders violated our Segregation-of-Duties policy in Q1?"** — the engine pulls the policy clause via GraphRAG, runs the YAML rules over your ERP triples, and returns the violators with the **rule ID** and the **exact policy citation**.
+
+Try it yourself:
+
+```bash
+pip install veritas-reason
+veritasreason-policy-demo
+```
+
+---
+
 ### Choose Your Path
 
 | Mode | Best For | Requirements |
