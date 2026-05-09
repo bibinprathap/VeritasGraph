@@ -1,0 +1,35 @@
+{
+  "name": "veritasreason-codex",
+  "description": "VeritasReason plugin for Codex: knowledge graph commands, export capabilities, and reasoning workflows.",
+  "version": "0.1.0",
+  "author": {
+    "name": "VeritasReason Contributors"
+  },
+  "homepage": "https://github.com/Hawksight-AI/veritas-reason",
+  "repository": "https://github.com/Hawksight-AI/veritas-reason",
+  "license": "MIT",
+  "keywords": [
+    "veritasreason",
+    "knowledge graph",
+    "codex",
+    "context graphs",
+    "decision intelligence",
+    "explainability",
+    "causal analysis",
+    "provenance",
+    "ontology",
+    "graph analytics",
+    "semantic extraction",
+    "visualization",
+    "reasoning",
+    "extraction",
+    "mcp"
+  ],
+  "skills": "./skills",
+  "interface": {
+    "displayName": "VeritasReason Codex Plugin",
+    "shortDescription": "Knowledge graph skills for VeritasReason workflows",
+    "category": "Productivity",
+    "developerName": "VeritasReason Contributors"
+  }
+}

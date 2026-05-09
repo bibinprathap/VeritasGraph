@@ -319,6 +319,268 @@ Explore your knowledge graph with an **interactive 2D graph explorer** powered b
 ### ✅ Open-Source & Sovereign
 Build a **sovereign knowledge asset**, free from vendor lock-in, with full ownership and customization.
 
+---
+
+## 🏛️ Enterprise Compliance: VeritasGraph + VeritasReason
+
+GraphRAG is brilliant at *describing* what your documents say. But enterprise
+questions like **"Which purchase orders violated our Segregation-of-Duties
+policy last quarter?"** are not similarity-search problems — they are
+**rule-evaluation problems** over structured records (purchase orders,
+attendance logs, ledger entries).
+
+For those, VeritasGraph ships with a sister module: **[VeritasReason](veritas-reason/README_VERITASREASON.md)**
+— a deterministic reasoning engine (forward-chaining + Rete + SPARQL, built on
+the [VeritasReason](veritas-reason/README.md) core) that fires policy rules over a
+triplet store and returns auditable answers with W3C PROV-O provenance.
+
+```
+┌────────────────┐     ┌────────────────────┐     ┌────────────────────┐
+│ Policy PDFs    │     │ ERP / HRIS / DB    │     │ User question      │
+│ (handbooks,    │     │ (PO, attendance,   │     │ "Which POs violate │
+│  contracts)    │     │  ledger, vendors)  │     │  SoD this quarter?"│
+└───────┬────────┘     └─────────┬──────────┘     └─────────┬──────────┘
+        │                        │                          │
+        ▼                        ▼                          ▼
+ ┌─────────────────┐    ┌──────────────────────┐   ┌────────────────────┐
+ │ VeritasGraph    │    │ ingest_structured.py │   │ policy_search.py   │
+ │ GraphRAG index  │    │  SQL → triples +     │   │ 1. RAG → policy id │
+ │ (text, RAG)     │    │  narrative .txt      │   │ 2. Reasoner → facts│
+ └────────┬────────┘    └──────────┬───────────┘   │ 3. LLM narration   │
+          │                        │               └─────────┬──────────┘
+          └────────┬───────────────┘                         │
+                   ▼                                         ▼
+        ┌──────────────────────────┐              ┌────────────────────┐
+        │ VeritasReason            │              │ Compliance answer  │
+        │ TripletStore + RuleSet   │ ───────────▶ │ + violators table  │
+        │ ForwardChainer + PROV-O  │              │ + clause citations │
+        └──────────────────────────┘              └────────────────────┘
+```
+
+### 💼 Worked example — Procurement / SOX Segregation-of-Duties
+
+> **Question:** *"Which purchase orders violated our Segregation-of-Duties
+> policy in Q1 2026, and which employees were involved?"*
+
+A vector RAG would happily *quote* the policy. VeritasGraph + VeritasReason
+**enumerate the offenders deterministically.**
+
+**1. Ingest the policy (unstructured) — already supported**
+
+Drop `Procurement_Policy_2026.pdf` into [graphrag-ollama-config/input/](graphrag-ollama-config/input)
+and run `graphrag index`. The clauses are now retrievable text units.
+
+**2. Ingest the ERP records (structured) — new module**
+
+```bash
+export ERP_DB_URL="postgresql://readonly:***@erp-db:5432/erp"
+python -m graphrag-ollama-config.ingest_structured
+```
+
+[ingest_structured.py](graphrag-ollama-config/ingest_structured.py) reads
+`employees`, `purchase_orders`, and `vendors`, and emits:
+
+- **Narrative text** into `input/structured_*.txt` so GraphRAG can quote rows.
+- **RDF triples** into the VeritasReason store, e.g.
+
+  ```
+  po:PO-2204  proc:approvedBy  emp:E118
+  po:PO-2204  proc:paidBy      emp:E118
+  po:PO-2204  proc:amount      48750.00
+  ```
+
+  Each triple is tagged with `source=erp://purchase_orders/PO-2204` for PROV-O.
+
+**3. Encode the policy as rules — [rules/sod_policy.yaml](rules/sod_policy.yaml)**
+
+```yaml
+- id: SOD-01
+  description: Same employee must not both APPROVE and PAY a purchase order.
+  when:
+    - (?po proc:approvedBy ?e)
+    - (?po proc:paidBy     ?e)
+  then:
+    - (?po proc:violates policy:SoD#SOD-01)
+  cite:
+    - policy_doc: "Procurement_Policy_2026.pdf#section-3.1"
+```
+
+Rules `SOD-02` (request ≠ approve), `SOD-03` ($25k+ needs Director),
+`SOD-04` (related-party vendor) ship with the repo.
+
+**4. Ask in natural language — new query type**
+
+In the Gradio UI, pick `policy_compliance` from the **Query type** dropdown:
+
+```
+Which purchase orders violated our Segregation-of-Duties policy in Q1 2026?
+```
+
+Under the hood, [policy_search.py](graphrag-ollama-config/policy_search.py):
+
+1. Calls VeritasGraph RAG to identify the policy (`policy:SoD`) and pull the
+   clause text for citation.
+2. Runs the VeritasReason `ForwardChainer` over the triple store, firing only
+   rules tagged with that policy.
+3. Hands the structured result + RAG context to the LLM for narration.
+
+**5. Get an auditable answer**
+
+| PO        | Rule    | Evidence                                          |
+|-----------|---------|---------------------------------------------------|
+| PO-2204   | SOD-01  | Approved & paid by `emp:E118` (Sarah Chen)        |
+| PO-2317   | SOD-03  | $48,750 approved by `emp:E091` (role: Manager)    |
+| PO-2402   | SOD-04  | Vendor `V-77` is related party of approver `E140` |
+
+> *3 purchase orders violated the Segregation-of-Duties policy in Q1 2026:
+> PO-2204 (rule **SOD-01**, §3.1 of the Procurement Policy)…*
+> Every cell links to the source ERP row **and** the policy clause.
+
+### Why split the work?
+
+| Concern | Lives in |
+|---|---|
+| Quoting unstructured policy text | **VeritasGraph** (GraphRAG) |
+| Counting / joining structured records | **VeritasReason** (rule engine) |
+| Provenance for every claim | Both — unified PROV-O |
+| Natural-language interface | LLM narrator on top |
+
+The same pattern applies to **leave-policy violations** (HRIS attendance),
+**expense-report fraud** (ledger + receipts), **clinical protocol breaches**
+(EHR + guidelines), or **KYC/AML** (transactions + watchlists). Define the
+SQL → triple mapping in `ingest_structured.py`, write the rules in
+`rules/*.yaml`, and ask in plain English. See
+[veritas-reason/plan.md](veritas-reason/plan.md) for the original design notes
+and a leave-policy walk-through.
+
+### ✅ Try it in 30 seconds (no install required)
+
+A self-contained smoke test ships with the repo. It seeds a fake ERP into a
+tiny in-memory triple store, evaluates the four rules in
+[rules/sod_policy.yaml](rules/sod_policy.yaml), and prints the violators with
+citations:
+
+```bash
+python tests/test_policy_compliance_demo.py
+```
+
+### 🎬 See it in motion
+
+<p align="center">
+  <img src="demos/policy-compliance/demo.gif"
+       alt="Animated demo: question → RAG identifies policy → ForwardChainer fires four SoD rules → audit-ready answer with citations"
+       width="100%">
+</p>
+
+> Headless Chromium drives a self-contained HTML stage that mirrors the actual
+> rule firing in [rules/sod_policy.yaml](rules/sod_policy.yaml). Re-record at
+> any time with [demos/policy-compliance/record.py](demos/policy-compliance/record.py)
+> (Playwright + Pillow, ~12 s, no `ffmpeg`). Source files in
+> [demos/policy-compliance/](demos/policy-compliance/).
+
+Expected output:
+
+```
+✓ Found rule file:  rules/sod_policy.yaml
+  (4 rules declared)
+✓ Seeded MiniStore: 60 triples (5 purchase orders, 5 employees)
+✓ Reasoner fired. Detected 4 violation(s):
+
+  PO         Rule     Evidence
+  ---------- -------- ----------------------------------------
+  po:PO-2204 SOD-01   Approved & paid by emp:E118
+  po:PO-2301 SOD-02   Requested & approved by emp:E091
+  po:PO-2317 SOD-03   $48,750.00 approved by emp:E091 (role:Manager, not Director-level)
+  po:PO-2402 SOD-04   Vendor vendor:V77 related to approver emp:E140
+✓ All four SoD rules fired exactly as expected.
+```
+
+This proves the rule definitions are correct **before** you wire up the heavy
+upstream `veritas-reason` runtime.
+
+### 🧪 Testing your own business questions — step by step
+
+1. **Pick a business question** that mixes a *policy* with *records*, e.g.
+   - *"Which employees violated the leave policy this month?"*
+   - *"Which expense reports breach the per-diem cap?"*
+   - *"Which trades violated the personal-account-dealing policy?"*
+
+2. **Drop the policy document into GraphRAG** so the answer can cite it:
+   ```bash
+   cp HR_Handbook_2026.pdf graphrag-ollama-config/input/
+   cd graphrag-ollama-config && python -m graphrag.index --root .
+   ```
+
+3. **Map the structured tables** by editing
+   [graphrag-ollama-config/ingest_structured.py](graphrag-ollama-config/ingest_structured.py).
+   Add a `TableMapping` for each SQL table — give every triple a `source=` URI:
+   ```python
+   TableMapping(
+       name="attendance",
+       sql="SELECT emp_id, work_date, status, approved FROM attendance",
+       subject=lambda r: f"emp:{r.emp_id}",
+       triples=lambda r: [
+           (f"emp:{r.emp_id}",
+            "hr:absentOn" if r.status == "ABSENT" else "hr:presentOn",
+            f"date:{r.work_date}",
+            {"approved": bool(r.approved)})
+       ],
+       narrative=lambda r: f"Employee {r.emp_id} was {r.status} on {r.work_date}.",
+       source_uri=lambda r: f"hris://attendance/{r.emp_id}/{r.work_date}",
+   )
+   ```
+
+4. **Encode the policy as YAML rules** in `rules/<your_policy>.yaml`. Keep the
+   `cite:` block — that's what makes the answer auditable:
+   ```yaml
+   - id: LEAVE-01
+     description: More than 3 unapproved absences in a month is a violation.
+     when:
+       - (?e rdf:type hr:Employee)
+       - count((?e hr:absentOn ?d) where month(?d)==?m and approved==false) > 3
+     then:
+       - (?e hr:violates policy:LeavePolicy#LEAVE-01)
+     cite:
+       - policy_doc: "HR_Handbook_2026.pdf#section-4.2"
+   ```
+
+5. **Smoke-test the rules** with the demo harness pattern. Copy
+   [tests/test_policy_compliance_demo.py](tests/test_policy_compliance_demo.py),
+   replace the fake-ERP seed function with a fake-HRIS one, and run:
+   ```bash
+   python tests/test_leave_policy_demo.py
+   ```
+   You should see your `LEAVE-01` fire on exactly the rows you expect — **before**
+   running against production.
+
+6. **Wire the live database** — set the env var and run the structured
+   ingester:
+   ```bash
+   export ERP_DB_URL="postgresql://readonly:***@db:5432/hris"
+   python graphrag-ollama-config/ingest_structured.py
+   ```
+
+7. **Ask the question in the UI** — start the Gradio app and pick
+   `policy_compliance` from the **Query type** dropdown:
+   ```bash
+   cd graphrag-ollama-config && python app.py
+   ```
+   Type your question. The handler in
+   [graphrag-ollama-config/policy_search.py](graphrag-ollama-config/policy_search.py)
+   identifies the policy via RAG, fires only the matching rules, and returns a
+   table of violators with two-sided citations (policy clause + source row).
+
+8. **Audit the answer.** Every violation row links back to the exact ERP/HRIS
+   record (`source=` URI) and the exact paragraph of the policy PDF
+   (`text_unit_id`). If a regulator asks *"why did you flag this person?"* the
+   trail is reproducible.
+
+> 💡 The demo harness in step 5 runs in <1 s and needs **only Python's stdlib**,
+> so it's perfect for CI. Keep one demo per policy and you have a regression
+> test suite for your compliance rules.
+
+---
+
 ## 🚀 Demo  
 
 ### Video Walkthrough  

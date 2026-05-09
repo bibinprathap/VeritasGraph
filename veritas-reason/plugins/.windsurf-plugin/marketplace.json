@@ -1,0 +1,17 @@
+{
+  "name": "veritasreason-windsurf",
+  "plugins": [
+    {
+      "name": "veritasreason",
+      "description": "VeritasReason plugin for Windsurf: knowledge graph skills, reasoning, extraction, and visualization.",
+      "source": "./",
+      "category": "Productivity",
+      "tags": [
+        "knowledge-graph",
+        "reasoning",
+        "veritasreason",
+        "windsurf"
+      ]
+    }
+  ]
+}

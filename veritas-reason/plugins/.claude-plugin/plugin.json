@@ -1,0 +1,29 @@
+{
+  "name": "veritasreason",
+  "description": "Full-stack knowledge graph skills: semantic extraction, decision intelligence, context graphs, reasoning, explainability, ontology, provenance, deduplication, visualization, and multi-format export.",
+  "version": "0.1.0",
+  "author": {
+    "name": "VeritasReason Contributors"
+  },
+  "homepage": "https://github.com/Hawksight-AI/veritas-reason",
+  "repository": "https://github.com/Hawksight-AI/veritas-reason",
+  "license": "MIT",
+  "keywords": [
+    "veritasreason",
+    "knowledge graph",
+    "context graphs",
+    "decision intelligence",
+    "explainability",
+    "causal analysis",
+    "provenance",
+    "ontology",
+    "graph analytics",
+    "semantic extraction",
+    "visualization",
+    "reasoning",
+    "extraction",
+    "mcp"
+  ],
+  "skills": "./skills",
+  "agents": "./agents"
+}

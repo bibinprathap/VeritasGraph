@@ -1,0 +1,130 @@
+version: 2
+
+updates:
+  # Core Python dependencies
+  - package-ecosystem: "pip"
+    directory: "/"
+    schedule:
+      interval: "weekly"  # Weekly for security
+      day: "monday"
+      time: "03:30"  # 3:30 AM UTC (9:00 AM IST)
+    open-pull-requests-limit: 10  # Higher limit for security updates
+    reviewers:
+      - "KaifAhmad1"
+    assignees:
+      - "KaifAhmad1"
+    commit-message:
+      prefix: "security"
+      include: "scope"
+    labels:
+      - "dependencies"
+      - "python"
+      - "security"
+    allow:
+      - dependency-type: "production"
+      - dependency-type: "development"
+    ignore:
+      # Only ignore major version updates for stability-critical packages
+      - dependency-name: "torch"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "transformers"
+        update-types: ["version-update:semver-major"]
+    # Group new feature dependencies
+    groups:
+      security-critical:
+        patterns:
+          - "cryptography"
+          - "requests"
+          - "urllib3"
+          - "certifi"
+          - "pyopenssl"
+        dependency-type: "production"
+      snowflake-features:
+        patterns:
+          - "snowflake-connector-python"
+          - "cryptography"
+      arrow-features:
+        patterns:
+          - "pyarrow"
+      benchmark-tools:
+        patterns:
+          - "pytest-benchmark"
+          - "pytest-cov"
+
+  # GitHub Actions
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+    open-pull-requests-limit: 3
+    reviewers:
+      - "KaifAhmad1"
+    assignees:
+      - "KaifAhmad1"
+    commit-message:
+      prefix: "ci"
+      include: "scope"
+    labels:
+      - "dependencies"
+      - "github-actions"
+      - "ci"
+
+  # Optional dependencies (separate schedule for stability)
+  - package-ecosystem: "pip"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "friday"
+      time: "09:00"
+    target-branch: "main"
+    open-pull-requests-limit: 3
+    reviewers:
+      - "KaifAhmad1"
+    assignees:
+      - "KaifAhmad1"
+    commit-message:
+      prefix: "deps"
+      include: "scope"
+    labels:
+      - "dependencies"
+      - "python"
+      - "optional"
+    allow:
+      - dependency-type: "production"
+
+  # Docker dependencies (if you use Docker)
+  - package-ecosystem: "docker"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "wednesday"
+      time: "09:00"
+    open-pull-requests-limit: 2
+    reviewers:
+      - "KaifAhmad1"
+    assignees:
+      - "KaifAhmad1"
+    commit-message:
+      prefix: "docker"
+      include: "scope"
+    labels:
+      - "dependencies"
+      - "docker"
+
+  # Documentation dependencies
+  - package-ecosystem: "pip"
+    directory: "docs"
+    schedule:
+      interval: "monthly"
+    open-pull-requests-limit: 2
+    reviewers:
+      - "KaifAhmad1"
+    commit-message:
+      prefix: "docs"
+      include: "scope"
+    labels:
+      - "dependencies"
+      - "documentation"
+

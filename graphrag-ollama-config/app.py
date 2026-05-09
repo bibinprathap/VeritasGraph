@@ -106,11 +106,21 @@ PRESET_MAPPING = {
 
 # Query type options with reasoning-based search
 QUERY_TYPE_OPTIONS = [
-    "global",           # Standard community-based search
-    "local",            # Standard entity-based search
-    "reasoning",        # PageIndex-inspired reasoning search (highest accuracy)
-    "hybrid",           # Combined local + global with reasoning
+    "global",             # Standard community-based search
+    "local",              # Standard entity-based search
+    "reasoning",          # PageIndex-inspired reasoning search (highest accuracy)
+    "hybrid",             # Combined local + global with reasoning
+    "policy_compliance",  # VeritasReason rule engine over structured facts
 ]
+
+# VeritasReason — deterministic policy compliance ----------------------------
+try:
+    from policy_search import policy_compliance_search  # noqa: E402
+    POLICY_COMPLIANCE_AVAILABLE = True
+except Exception as _e:  # pragma: no cover
+    POLICY_COMPLIANCE_AVAILABLE = False
+    print(f"Warning: policy_search module not available ({_e}). "
+          "'policy_compliance' query type will be disabled.")
 
 async def global_search(query, input_dir, community_level=2, temperature=0.5, response_type="Multiple Paragraphs"):
         llm_config = get_llm_config()

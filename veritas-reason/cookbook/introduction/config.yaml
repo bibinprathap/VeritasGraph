@@ -1,0 +1,10 @@
+api_keys:
+  openai: your_key_here
+  anthropic: your_key_here
+embedding:
+  provider: openai
+  model: text-embedding-3-large
+  dimensions: 3072
+knowledge_graph:
+  backend: networkx
+  temporal: true

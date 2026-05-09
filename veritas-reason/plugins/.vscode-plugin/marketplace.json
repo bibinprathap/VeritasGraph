@@ -1,0 +1,17 @@
+{
+  "name": "veritasreason-vscode",
+  "plugins": [
+    {
+      "name": "veritasreason",
+      "description": "VeritasReason plugin for VS Code: knowledge graph skills, reasoning, extraction, and visualization.",
+      "source": "./",
+      "category": "Productivity",
+      "tags": [
+        "knowledge-graph",
+        "reasoning",
+        "veritasreason",
+        "vscode"
+      ]
+    }
+  ]
+}

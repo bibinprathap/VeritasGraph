@@ -1,0 +1,18 @@
+{
+  "name": "veritasreason-local",
+  "owner": {
+    "name": "VeritasReason Contributors"
+  },
+  "metadata": {
+    "description": "VeritasReason plugin marketplace for Cursor.",
+    "version": "0.1.0",
+    "pluginRoot": "."
+  },
+  "plugins": [
+    {
+      "name": "veritasreason-cursor",
+      "description": "VeritasReason plugin for Cursor: knowledge graph skills and analytics.",
+      "source": "."
+    }
+  ]
+}

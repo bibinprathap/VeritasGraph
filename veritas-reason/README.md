@@ -27,7 +27,7 @@
 ## 🎬 See it in action — 30-second policy-compliance demo
 
 <p align="center">
-  <img src="https://github.com/bibinprathap/VeritasGraph/raw/main/demos/policy-compliance/demo.gif"
+  <img src="https://github.com/bibinprathap/VeritasGraph/raw/restored-main/demos/policy-compliance/demo.gif"
        alt="VeritasGraph + VeritasReason policy-compliance demo"
        width="820"/>
 </p>
@@ -42,7 +42,7 @@ pip install veritas-reason
 veritasreason-policy-demo
 ```
 
-Full source + walkthrough: [github.com/bibinprathap/VeritasGraph](https://github.com/bibinprathap/VeritasGraph#-enterprise-compliance-veritasgraph--veritasreason).
+Full source + walkthrough: [github.com/bibinprathap/VeritasGraph](https://github.com/bibinprathap/VeritasGraph/tree/restored-main#-enterprise-compliance-veritasgraph--veritasreason).
 
 ---
 

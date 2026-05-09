@@ -1,0 +1,43 @@
+# Benchmark Tools
+
+pytest>=7.0.0
+pytest-benchmark>=5.2.3
+
+# Core Utils
+
+pydantic
+loguru
+chardet
+requests
+greenlet
+typing-extensions
+tqdm
+click
+rich
+
+numpy
+pandas
+networkx
+scikit-learn
+
+# Graph & Storage
+
+sqlalchemy
+rdflib
+neo4j
+redis
+
+# AI proc
+
+torch
+transformers
+sentence-transformers
+spacy
+beautifulsoup4
+lxml
+pypdf2
+python-docx
+openpyxl
+pillow
+feedparser
+GitPython

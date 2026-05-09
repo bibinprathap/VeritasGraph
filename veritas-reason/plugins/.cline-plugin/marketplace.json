@@ -1,0 +1,17 @@
+{
+  "name": "veritasreason-cline",
+  "plugins": [
+    {
+      "name": "veritasreason",
+      "description": "VeritasReason plugin for Cline: knowledge graph skills, reasoning, extraction, and visualization.",
+      "source": "./",
+      "category": "Productivity",
+      "tags": [
+        "knowledge-graph",
+        "reasoning",
+        "veritasreason",
+        "cline"
+      ]
+    }
+  ]
+}

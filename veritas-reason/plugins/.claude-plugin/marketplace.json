@@ -1,0 +1,20 @@
+{
+  "name": "veritasreason-local",
+  "owner": {
+    "name": "Hawksight AI",
+    "url": "https://github.com/Hawksight-AI/veritas-reason"
+  },
+  "plugins": [
+    {
+      "name": "veritasreason",
+      "description": "VeritasReason plugin for Claude: knowledge graph skills, reasoning, extraction, and visualization.",
+      "source": "./",
+      "category": "Productivity",
+      "tags": [
+        "knowledge-graph",
+        "reasoning",
+        "veritasreason"
+      ]
+    }
+  ]
+}

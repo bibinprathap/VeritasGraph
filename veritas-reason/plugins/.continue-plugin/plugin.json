@@ -1,0 +1,33 @@
+{
+  "name": "veritasreason-continue",
+  "displayName": "VeritasReason Continue Plugin",
+  "description": "VeritasReason plugin for Continue.dev: knowledge graph context provider, decision intelligence, reasoning, and semantic extraction.",
+  "version": "0.1.0",
+  "author": {
+    "name": "VeritasReason Contributors"
+  },
+  "homepage": "https://github.com/Hawksight-AI/veritas-reason",
+  "repository": "https://github.com/Hawksight-AI/veritas-reason",
+  "license": "MIT",
+  "keywords": [
+    "veritasreason",
+    "knowledge graph",
+    "continue",
+    "context provider",
+    "decision intelligence",
+    "explainability",
+    "causal analysis",
+    "provenance",
+    "ontology",
+    "semantic extraction",
+    "reasoning",
+    "mcp"
+  ],
+  "skills": "../skills",
+  "agents": "../agents",
+  "hooks": "../hooks/hooks.json",
+  "mcp": {
+    "server": "python -m veritasreason.mcp_server",
+    "transport": "stdio"
+  }
+}

@@ -1,0 +1,1 @@
+Applications of Sombor topological indices and entropy measures for QSPR modeling of anticancer drugs: a Python-based methodology

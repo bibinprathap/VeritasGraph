@@ -1,0 +1,20 @@
+<e1> a <Person> ;
+    veritasreason:text "" ;
+    veritasreason:confidence 1.0 .
+
+<e2> a <Person> ;
+    veritasreason:text "" ;
+    veritasreason:confidence 1.0 .
+
+<e3> a <Organization> ;
+    veritasreason:text "" ;
+    veritasreason:confidence 1.0 .
+
+<e4> a <Project> ;
+    veritasreason:text "" ;
+    veritasreason:confidence 1.0 .
+
+<e1> <reports_to> <e2> .
+<e1> <works_for> <e3> .
+<e2> <works_for> <e3> .
+<e1> <works_on> <e4> .

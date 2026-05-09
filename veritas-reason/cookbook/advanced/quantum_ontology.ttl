@@ -1,0 +1,21 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix ont: <https://veritasreason.dev/ontology/> .
+
+<https://veritasreason.dev/ontology/> a owl:Ontology ;
+    rdfs:label "QuantumOntologyNLP" ;
+    owl:versionInfo "1.0" .
+
+<> a owl:Class ;
+    rdfs:label "Org" .
+    rdfs:comment "Class representing org entities" .
+
+<> a owl:Class ;
+    rdfs:label "Person" .
+    rdfs:comment "Class representing person entities" .
+
+<> a owl:Class ;
+    rdfs:label "Gpe" .
+    rdfs:comment "Class representing gpe entities" .

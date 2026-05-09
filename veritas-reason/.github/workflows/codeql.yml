@@ -1,0 +1,68 @@
+name: CodeQL
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  schedule:
+    - cron: '30 1 * * 1'  # Every Monday 7 AM IST
+
+permissions:
+  contents: read
+  security-events: write
+  actions: read
+
+jobs:
+  analyze:
+    name: Analyze Python
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v4
+        with:
+          languages: python
+          queries: security-and-quality
+          config-file: .github/codeql/codeql-config.yml
+
+      - name: Autobuild
+        uses: github/codeql-action/autobuild@v4
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v4
+        with:
+          category: "/language:python"
+          upload: false
+        id: codeql
+
+      - name: Upload SARIF (Advanced Setup only)
+        # Uploads results only when Default Setup is not active.
+        # If Default Setup is still enabled, this step skips gracefully
+        # instead of failing the workflow with HTTP 409.
+        uses: github/codeql-action/upload-sarif@v4
+        with:
+          sarif_file: ${{ steps.codeql.outputs.sarif-output }}
+          category: "/language:python"
+          wait-for-processing: true
+        continue-on-error: true
+
+  # NOTE: Auto-dismissal by rule-id is intentionally removed.
+  # Dismissing every alert that matches a rule ID would silently suppress
+  # future real vulnerabilities of the same type. The alerts below were
+  # individually triaged and dismissed manually in the security-enhancement
+  # PR (alerts #12–#18). New alerts must be reviewed and dismissed by hand,
+  # or will auto-close when the underlying code no longer triggers them.
+  #
+  # If you need to dismiss a specific known-safe alert, pin its alert NUMBER
+  # here and remove it once CodeQL stops reporting it naturally. Example:
+  #
+  #   PINNED_ALERT_NUMBERS=(12 13 14 15 16 17 18)
+  #   for NUM in "${PINNED_ALERT_NUMBERS[@]}"; do
+  #     gh api repos/$REPO/code-scanning/alerts/$NUM \
+  #       -X PATCH -f state=dismissed -f dismissed_reason="false positive" \
+  #       -f dismissed_comment="<reason>"
+  #   done

@@ -1,0 +1,20 @@
+# Linguist documentation and generated files
+# This ensures GitHub language statistics reflect the core Python code
+
+# Mark the entire docs directory as documentation
+docs/* linguist-documentation
+
+# Mark the cookbook directory as documentation/examples
+cookbook/* linguist-documentation
+
+# Specifically ignore large generated HTML/JSON files in cookbook
+cookbook/**/*.html linguist-documentation
+cookbook/**/*.json linguist-documentation
+cookbook/**/*.graphml linguist-documentation
+cookbook/**/*.ttl linguist-documentation
+
+# Ensure .ipynb files are treated as documentation/examples
+cookbook/**/*.ipynb linguist-documentation
+
+# Mark data directories as documentation or vendored
+**/data/* linguist-vendored

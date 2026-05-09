@@ -1,0 +1,63 @@
+@prefix : <https://docs.veritasreason.dev/ontology/v1.0> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<https://docs.veritasreason.dev/ontology/founded> a owl:DatatypeProperty ;
+    rdfs:label "founded" ;
+    rdfs:domain <https://docs.veritasreason.dev/ontology/Company> ;
+    rdfs:range xsd:string .
+
+<https://docs.veritasreason.dev/ontology/leads> a owl:ObjectProperty ;
+    rdfs:label "leads" ;
+    rdfs:domain <https://docs.veritasreason.dev/ontology/OwlThing> ;
+    rdfs:range <https://docs.veritasreason.dev/ontology/OwlThing> .
+
+<https://docs.veritasreason.dev/ontology/manages> a owl:ObjectProperty ;
+    rdfs:label "manages" ;
+    rdfs:domain <https://docs.veritasreason.dev/ontology/OwlThing> ;
+    rdfs:range <https://docs.veritasreason.dev/ontology/OwlThing> .
+
+<https://docs.veritasreason.dev/ontology/name> a owl:DatatypeProperty ;
+    rdfs:label "name" ;
+    rdfs:domain <https://docs.veritasreason.dev/ontology/Company>,
+        <https://docs.veritasreason.dev/ontology/Department>,
+        <https://docs.veritasreason.dev/ontology/Person>,
+        <https://docs.veritasreason.dev/ontology/Project> ;
+    rdfs:range xsd:string .
+
+<https://docs.veritasreason.dev/ontology/partOf> a owl:ObjectProperty ;
+    rdfs:label "partOf" ;
+    rdfs:domain <https://docs.veritasreason.dev/ontology/OwlThing> ;
+    rdfs:range <https://docs.veritasreason.dev/ontology/OwlThing> .
+
+<https://docs.veritasreason.dev/ontology/role> a owl:DatatypeProperty ;
+    rdfs:label "role" ;
+    rdfs:domain <https://docs.veritasreason.dev/ontology/Person> ;
+    rdfs:range xsd:string .
+
+: a owl:Ontology ;
+    rdfs:label "CorporateOntology" ;
+    owl:versionInfo "1.0" .
+
+<https://docs.veritasreason.dev/ontology/worksOn> a owl:ObjectProperty ;
+    rdfs:label "worksOn" ;
+    rdfs:domain <https://docs.veritasreason.dev/ontology/OwlThing> ;
+    rdfs:range <https://docs.veritasreason.dev/ontology/OwlThing> .
+
+<https://docs.veritasreason.dev/ontology/Department> a owl:Class ;
+    rdfs:label "Department" ;
+    rdfs:comment "Class representing department entities" .
+
+<https://docs.veritasreason.dev/ontology/Project> a owl:Class ;
+    rdfs:label "Project" ;
+    rdfs:comment "Class representing project entities" .
+
+<https://docs.veritasreason.dev/ontology/Company> a owl:Class ;
+    rdfs:label "Company" ;
+    rdfs:comment "Class representing company entities" .
+
+<https://docs.veritasreason.dev/ontology/Person> a owl:Class ;
+    rdfs:label "Person" ;
+    rdfs:comment "Class representing person entities" .
+

@@ -1,0 +1,317 @@
+"""
+Language Detection Module
+
+This module provides comprehensive language detection capabilities for the
+VeritasReason framework, enabling identification of text language using the
+langdetect library.
+
+Key Features:
+    - Multi-language detection (50+ languages)
+    - Confidence scoring
+    - Batch processing
+    - Top N language detection
+    - Language code to name mapping
+
+Main Classes:
+    - LanguageDetector: Language detection coordinator
+
+Example Usage:
+    >>> from veritasreason.normalize import LanguageDetector
+    >>> detector = LanguageDetector()
+    >>> language = detector.detect("Hello world")
+    >>> lang, confidence = detector.detect_with_confidence("Bonjour le monde")
+    >>> languages = detector.detect_multiple(text, top_n=3)
+
+Author: VeritasReason Contributors
+License: MIT
+"""
+
+from typing import Any, Dict, List, Optional, Tuple, Union
+
+try:
+    from langdetect import detect, detect_langs
+    from langdetect.lang_detect_exception import LangDetectException
+
+    LANGDETECT_AVAILABLE = True
+except (ImportError, OSError):
+    LANGDETECT_AVAILABLE = False
+    LangDetectException = Exception
+
+from ..utils.exceptions import ProcessingError
+from ..utils.logging import get_logger
+from ..utils.progress_tracker import get_progress_tracker
+
+
+class LanguageDetector:
+    """
+    Language detection coordinator.
+
+    This class provides language detection capabilities using the langdetect
+    library, supporting detection with confidence scores and batch processing.
+
+    Features:
+        - Multi-language detection (50+ languages)
+        - Confidence scoring
+        - Batch processing
+        - Top N language detection
+        - Language code to name mapping
+
+    Example Usage:
+        >>> detector = LanguageDetector()
+        >>> language = detector.detect("Hello world")
+        >>> lang, confidence = detector.detect_with_confidence("Bonjour")
+        >>> is_english = detector.is_language(text, "en")
+    """
+
+    def __init__(self, **config):
+        """
+        Initialize language detector.
+
+        Sets up the detector with default language and minimum confidence threshold.
+
+        Args:
+            **config: Configuration options:
+                - default_language: Default language code (default: "en")
+                - min_confidence: Minimum confidence threshold (default: 0.5)
+        """
+        self.logger = get_logger("language_detector")
+        self.config = config
+        self.default_language = config.get("default_language", "en")
+        self.min_confidence = config.get("min_confidence", 0.5)
+
+        if not LANGDETECT_AVAILABLE:
+            self.logger.warning(
+                "langdetect library not available, language detection will be limited"
+            )
+
+        # Initialize progress tracker
+        self.progress_tracker = get_progress_tracker()
+        # Ensure progress tracker is enabled
+        if not self.progress_tracker.enabled:
+            self.progress_tracker.enabled = True
+
+        self.logger.debug(
+            f"Language detector initialized (default={self.default_language})"
+        )
+
+    def detect(self, text: str, **options) -> str:
+        """
+        Detect language of text.
+
+        This method detects the language of input text using langdetect.
+        Returns the default language if detection fails or text is too short.
+
+        Args:
+            text: Input text to analyze
+            **options: Detection options (unused)
+
+        Returns:
+            str: Detected language code (e.g., "en", "fr", "de")
+
+        Note:
+            Requires minimum text length of 10 characters for reliable detection.
+            Returns default_language if text is too short or detection fails.
+        """
+        if not text or len(text.strip()) < 10:
+            return self.default_language
+
+        if not LANGDETECT_AVAILABLE:
+            return self.default_language
+
+        try:
+            language = detect(text)
+            return language
+        except LangDetectException:
+            self.logger.warning(
+                f"Failed to detect language, using default: {self.default_language}"
+            )
+            return self.default_language
+        except Exception as e:
+            self.logger.error(f"Language detection error: {e}")
+            return self.default_language
+
+    def detect_with_confidence(self, text: str, **options) -> Tuple[str, float]:
+        """
+        Detect language with confidence score.
+
+        This method detects the language of text and returns both the language
+        code and confidence score. Only returns detected language if confidence
+        meets the minimum threshold.
+
+        Args:
+            text: Input text to analyze
+            **options: Detection options (unused)
+
+        Returns:
+            tuple: (language_code, confidence_score) where:
+                - language_code: Detected language code
+                - confidence_score: Confidence score between 0.0 and 1.0
+        """
+        if not text or len(text.strip()) < 10:
+            return (self.default_language, 0.0)
+
+        if not LANGDETECT_AVAILABLE:
+            return (self.default_language, 0.0)
+
+        try:
+            languages = detect_langs(text)
+            if languages:
+                top_language = languages[0]
+                if top_language.prob >= self.min_confidence:
+                    return (top_language.lang, top_language.prob)
+                else:
+                    return (self.default_language, top_language.prob)
+            else:
+                return (self.default_language, 0.0)
+        except LangDetectException:
+            self.logger.warning(
+                f"Failed to detect language, using default: {self.default_language}"
+            )
+            return (self.default_language, 0.0)
+        except Exception as e:
+            self.logger.error(f"Language detection error: {e}")
+            return (self.default_language, 0.0)
+
+    def detect_multiple(
+        self, text: str, top_n: int = 3, **options
+    ) -> List[Tuple[str, float]]:
+        """
+        Detect top N languages with confidence scores.
+
+        This method detects multiple candidate languages for text, returning
+        the top N languages sorted by confidence.
+
+        Args:
+            text: Input text to analyze
+            top_n: Number of top languages to return (default: 3)
+            **options: Detection options (unused)
+
+        Returns:
+            list: List of (language_code, confidence_score) tuples, sorted by
+                  confidence (highest first)
+        """
+        if not text or len(text.strip()) < 10:
+            return [(self.default_language, 0.0)]
+
+        if not LANGDETECT_AVAILABLE:
+            return [(self.default_language, 0.0)]
+
+        try:
+            languages = detect_langs(text)
+            if languages:
+                return [(lang.lang, lang.prob) for lang in languages[:top_n]]
+            else:
+                return [(self.default_language, 0.0)]
+        except LangDetectException:
+            self.logger.warning(
+                f"Failed to detect languages, using default: {self.default_language}"
+            )
+            return [(self.default_language, 0.0)]
+        except Exception as e:
+            self.logger.error(f"Language detection error: {e}")
+            return [(self.default_language, 0.0)]
+
+    def detect_batch(self, texts: List[str], **options) -> List[str]:
+        """
+        Detect languages for multiple texts in batch.
+
+        This method processes multiple texts in batch, detecting the language
+        for each text.
+
+        Args:
+            texts: List of texts to analyze
+            **options: Detection options (passed to detect method)
+
+        Returns:
+            list: List of detected language codes (one per input text)
+        """
+        return [self.detect(text, **options) for text in texts]
+
+    def detect_batch_with_confidence(
+        self, texts: List[str], **options
+    ) -> List[Tuple[str, float]]:
+        """
+        Detect languages with confidence for multiple texts.
+
+        This method processes multiple texts in batch, detecting the language
+        and confidence score for each text.
+
+        Args:
+            texts: List of texts to analyze
+            **options: Detection options (passed to detect_with_confidence method)
+
+        Returns:
+            list: List of (language_code, confidence_score) tuples (one per input text)
+        """
+        return [self.detect_with_confidence(text, **options) for text in texts]
+
+    def is_language(
+        self,
+        text: str,
+        target_language: str,
+        min_confidence: Optional[float] = None,
+        **options,
+    ) -> bool:
+        """
+        Check if text is in target language.
+
+        This method checks whether the detected language matches the target
+        language and meets the minimum confidence threshold.
+
+        Args:
+            text: Input text to check
+            target_language: Target language code (e.g., "en", "fr")
+            min_confidence: Minimum confidence threshold (optional, uses
+                          instance min_confidence if not provided)
+            **options: Detection options (unused)
+
+        Returns:
+            bool: True if text is in target language with sufficient confidence,
+                 False otherwise
+        """
+        detected, confidence = self.detect_with_confidence(text, **options)
+        threshold = (
+            min_confidence if min_confidence is not None else self.min_confidence
+        )
+        return detected == target_language and confidence >= threshold
+
+    def get_language_name(self, language_code: str) -> str:
+        """
+        Get language name from code.
+
+        This method converts a language code to its human-readable name.
+
+        Args:
+            language_code: Language code (e.g., "en", "fr", "de")
+
+        Returns:
+            str: Language name (e.g., "English", "French", "German").
+                 Returns uppercase code if name not found.
+        """
+        language_names = {
+            "en": "English",
+            "fr": "French",
+            "de": "German",
+            "es": "Spanish",
+            "it": "Italian",
+            "pt": "Portuguese",
+            "ru": "Russian",
+            "zh": "Chinese",
+            "ja": "Japanese",
+            "ko": "Korean",
+            "ar": "Arabic",
+            "hi": "Hindi",
+            "nl": "Dutch",
+            "sv": "Swedish",
+            "da": "Danish",
+            "no": "Norwegian",
+            "fi": "Finnish",
+            "pl": "Polish",
+            "tr": "Turkish",
+            "cs": "Czech",
+            "hu": "Hungarian",
+            "ro": "Romanian",
+            "th": "Thai",
+            "vi": "Vietnamese",
+        }
+        return language_names.get(language_code, language_code.upper())

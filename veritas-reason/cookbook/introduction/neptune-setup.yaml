@@ -1,0 +1,228 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: >
+  Amazon Neptune cluster with public endpoint, IAM authentication, and least-privilege
+  IAM user for VeritasReason cookbook. Uses db.t3.medium (most cost-effective Neptune instance type).
+
+Parameters:
+  EnvironmentName:
+    Type: String
+    Default: veritasreason-neptune
+    Description: Environment name prefix for resource naming
+
+Resources:
+  # =============================================================================
+  # VPC & NETWORKING
+  # =============================================================================
+
+  VPC:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: 10.0.0.0/16
+      EnableDnsHostnames: true
+      EnableDnsSupport: true
+      Tags:
+        - Key: Name
+          Value: !Sub ${EnvironmentName}-vpc
+
+  InternetGateway:
+    Type: AWS::EC2::InternetGateway
+    Properties:
+      Tags:
+        - Key: Name
+          Value: !Sub ${EnvironmentName}-igw
+
+  InternetGatewayAttachment:
+    Type: AWS::EC2::VPCGatewayAttachment
+    Properties:
+      InternetGatewayId: !Ref InternetGateway
+      VpcId: !Ref VPC
+
+  PublicSubnet1:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref VPC
+      AvailabilityZone: !Select [0, !GetAZs '']
+      CidrBlock: 10.0.1.0/24
+      MapPublicIpOnLaunch: true
+      Tags:
+        - Key: Name
+          Value: !Sub ${EnvironmentName}-public-subnet-1
+
+  PublicSubnet2:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref VPC
+      AvailabilityZone: !Select [1, !GetAZs '']
+      CidrBlock: 10.0.2.0/24
+      MapPublicIpOnLaunch: true
+      Tags:
+        - Key: Name
+          Value: !Sub ${EnvironmentName}-public-subnet-2
+
+  PublicRouteTable:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !Ref VPC
+      Tags:
+        - Key: Name
+          Value: !Sub ${EnvironmentName}-public-rt
+
+  DefaultPublicRoute:
+    Type: AWS::EC2::Route
+    DependsOn: InternetGatewayAttachment
+    Properties:
+      RouteTableId: !Ref PublicRouteTable
+      DestinationCidrBlock: 0.0.0.0/0
+      GatewayId: !Ref InternetGateway
+
+  PublicSubnet1RouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      RouteTableId: !Ref PublicRouteTable
+      SubnetId: !Ref PublicSubnet1
+
+  PublicSubnet2RouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      RouteTableId: !Ref PublicRouteTable
+      SubnetId: !Ref PublicSubnet2
+
+  # =============================================================================
+  # SECURITY GROUP
+  # =============================================================================
+
+  NeptuneSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupName: !Sub ${EnvironmentName}-neptune-sg
+      GroupDescription: Security group for Neptune cluster - allows Bolt protocol access
+      VpcId: !Ref VPC
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 8182
+          ToPort: 8182
+          CidrIp: 0.0.0.0/0
+          Description: Allow Bolt protocol access from anywhere
+      SecurityGroupEgress:
+        - IpProtocol: -1
+          CidrIp: 0.0.0.0/0
+          Description: Allow all outbound traffic
+      Tags:
+        - Key: Name
+          Value: !Sub ${EnvironmentName}-neptune-sg
+
+  # =============================================================================
+  # NEPTUNE CLUSTER
+  # =============================================================================
+
+  NeptuneSubnetGroup:
+    Type: AWS::Neptune::DBSubnetGroup
+    Properties:
+      DBSubnetGroupDescription: Subnet group for Neptune cluster
+      DBSubnetGroupName: !Sub ${EnvironmentName}-subnet-group
+      SubnetIds:
+        - !Ref PublicSubnet1
+        - !Ref PublicSubnet2
+      Tags:
+        - Key: Name
+          Value: !Sub ${EnvironmentName}-subnet-group
+
+  NeptuneCluster:
+    Type: AWS::Neptune::DBCluster
+    Properties:
+      DBClusterIdentifier: !Sub ${EnvironmentName}-cluster
+      DBSubnetGroupName: !Ref NeptuneSubnetGroup
+      VpcSecurityGroupIds:
+        - !Ref NeptuneSecurityGroup
+      EngineVersion: '1.4.6.3'
+      IamAuthEnabled: true
+      StorageEncrypted: true
+      DeletionProtection: false
+      Tags:
+        - Key: Name
+          Value: !Sub ${EnvironmentName}-cluster
+
+  NeptuneInstance:
+    Type: AWS::Neptune::DBInstance
+    Properties:
+      DBInstanceIdentifier: !Sub ${EnvironmentName}-instance
+      DBInstanceClass: db.t3.medium
+      DBClusterIdentifier: !Ref NeptuneCluster
+      PubliclyAccessible: true
+      Tags:
+        - Key: Name
+          Value: !Sub ${EnvironmentName}-instance
+
+  # =============================================================================
+  # IAM USER WITH LEAST PRIVILEGES
+  # =============================================================================
+
+  NeptuneUser:
+    Type: AWS::IAM::User
+    Properties:
+      UserName: !Sub ${EnvironmentName}-user
+      Tags:
+        - Key: Name
+          Value: !Sub ${EnvironmentName}-user
+
+  NeptuneUserPolicy:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: !Sub ${EnvironmentName}-neptune-access
+      Users:
+        - !Ref NeptuneUser
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Sid: NeptuneDataAccess
+            Effect: Allow
+            Action:
+              - neptune-db:connect
+              - neptune-db:ReadDataViaQuery
+              - neptune-db:WriteDataViaQuery
+              - neptune-db:DeleteDataViaQuery
+            Resource: !Sub
+              - arn:aws:neptune-db:${AWS::Region}:${AWS::AccountId}:${ClusterResourceId}/*
+              - ClusterResourceId: !GetAtt NeptuneCluster.ClusterResourceId
+
+  NeptuneUserAccessKey:
+    Type: AWS::IAM::AccessKey
+    Properties:
+      UserName: !Ref NeptuneUser
+
+# =============================================================================
+# OUTPUTS
+# =============================================================================
+
+Outputs:
+  NeptuneEndpoint:
+    Description: Neptune cluster endpoint (hostname only) - use as NEPTUNE_ENDPOINT
+    Value: !GetAtt NeptuneCluster.Endpoint
+
+  NeptunePort:
+    Description: Neptune cluster port - use as NEPTUNE_PORT
+    Value: !GetAtt NeptuneCluster.Port
+
+  AwsAccessKeyId:
+    Description: Access key ID for the Neptune IAM user - use as AWS_ACCESS_KEY_ID
+    Value: !Ref NeptuneUserAccessKey
+
+  AwsSecretAccessKey:
+    Description: Secret access key for the Neptune IAM user - use as AWS_SECRET_ACCESS_KEY
+    Value: !GetAtt NeptuneUserAccessKey.SecretAccessKey
+
+  AwsRegion:
+    Description: AWS region where Neptune is deployed - use as AWS_REGION
+    Value: !Ref AWS::Region
+
+  NeptuneClusterResourceId:
+    Description: Neptune cluster resource ID (for IAM policy reference)
+    Value: !GetAtt NeptuneCluster.ClusterResourceId
+
+  VpcId:
+    Description: VPC ID
+    Value: !Ref VPC
+
+  SecurityGroupId:
+    Description: Neptune security group ID
+    Value: !Ref NeptuneSecurityGroup

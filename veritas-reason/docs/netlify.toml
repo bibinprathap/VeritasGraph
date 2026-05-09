@@ -1,0 +1,12 @@
+[build]
+  command = "pip install -r requirements-docs.txt && mkdocs build"
+  publish = "site"
+
+[build.environment]
+  PYTHON_VERSION = "3.11"
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+

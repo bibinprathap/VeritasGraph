@@ -1,0 +1,32 @@
+{
+  "name": "veritasreason-cursor",
+  "displayName": "VeritasReason Cursor Plugin",
+  "description": "VeritasReason plugin for Cursor: knowledge graph skills, reasoning, extraction, and visualization.",
+  "version": "0.1.0",
+  "author": {
+    "name": "VeritasReason Contributors"
+  },
+  "homepage": "https://github.com/Hawksight-AI/veritas-reason",
+  "repository": "https://github.com/Hawksight-AI/veritas-reason",
+  "license": "MIT",
+  "keywords": [
+    "veritasreason",
+    "knowledge graph",
+    "cursor",
+    "context graphs",
+    "decision intelligence",
+    "explainability",
+    "causal analysis",
+    "provenance",
+    "ontology",
+    "graph analytics",
+    "semantic extraction",
+    "visualization",
+    "reasoning",
+    "extraction",
+    "mcp"
+  ],
+  "skills": "./skills",
+  "agents": "./agents",
+  "hooks": "./hooks/hooks.json"
+}

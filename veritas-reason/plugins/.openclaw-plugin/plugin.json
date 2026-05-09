@@ -1,0 +1,46 @@
+{
+  "name": "veritasreason-openclaw",
+  "displayName": "VeritasReason OpenClaw Plugin",
+  "description": "VeritasReason plugin for OpenClaw: knowledge graph skills, decision intelligence, reasoning, extraction, and visualization via MCP and native REST tool.",
+  "version": "0.1.0",
+  "author": {
+    "name": "VeritasReason Contributors"
+  },
+  "homepage": "https://github.com/Hawksight-AI/veritas-reason",
+  "repository": "https://github.com/Hawksight-AI/veritas-reason",
+  "license": "MIT",
+  "keywords": [
+    "veritasreason",
+    "knowledge graph",
+    "openclaw",
+    "context graphs",
+    "decision intelligence",
+    "explainability",
+    "causal analysis",
+    "provenance",
+    "ontology",
+    "graph analytics",
+    "semantic extraction",
+    "visualization",
+    "reasoning",
+    "mcp"
+  ],
+  "skills": "../skills",
+  "agents": "../agents",
+  "hooks": "../hooks/hooks.json",
+  "mcp": {
+    "server": "python -m veritasreason.mcp_server",
+    "transport": "stdio"
+  },
+  "openclaw": {
+    "mcporter": {
+      "mcpServers": {
+        "veritasreason": {
+          "command": "python",
+          "args": ["-m", "veritasreason.mcp_server"],
+          "transport": "stdio"
+        }
+      }
+    }
+  }
+}

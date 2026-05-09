@@ -1,0 +1,17 @@
+{
+  "name": "veritasreason-continue",
+  "plugins": [
+    {
+      "name": "veritasreason",
+      "description": "VeritasReason plugin for Continue.dev: knowledge graph context provider, reasoning, and extraction.",
+      "source": "./",
+      "category": "Productivity",
+      "tags": [
+        "knowledge-graph",
+        "reasoning",
+        "veritasreason",
+        "continue"
+      ]
+    }
+  ]
+}

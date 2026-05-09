@@ -1,0 +1,185 @@
+name: Security Scan
+
+on:
+  schedule:
+    - cron: '30 1 * * 1,4'  # Mon/Thu 7 AM IST
+  push:
+    branches: [main]
+    paths-ignore:
+      - 'docs/**'
+      - 'mkdocs.yml'
+      - 'requirements-docs.txt'
+      - '**/*.md'
+  pull_request:
+    branches: [main]
+    paths-ignore:
+      - 'docs/**'
+      - 'mkdocs.yml'
+      - 'requirements-docs.txt'
+      - '**/*.md'
+
+jobs:
+  security-scan:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write
+      actions: read
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+        
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install safety bandit semgrep jq
+        
+      - name: Run Safety Check (Package Vulnerabilities)
+        run: |
+          safety check --json --output safety-report.json || true
+          echo "Checking for package vulnerabilities..."
+          
+          # Count vulnerabilities safely
+          VULNS=$(safety check --json --output /dev/stdout 2>/dev/null | jq '.vulnerabilities | length' 2>/dev/null || echo "0")
+          
+          if [ "$VULNS" -gt 0 ]; then
+            echo "❌ Security vulnerabilities found: $VULNS"
+            echo "CI will fail to prevent merging of vulnerable dependencies"
+            echo ""
+            echo "Vulnerability details:"
+            safety check || true
+            exit 1
+          else
+            echo "✅ No security vulnerabilities found"
+          fi
+        
+      - name: Run Bandit (Code Security Linter)
+        run: |
+          bandit -r veritasreason/ -f json -o bandit-report.json || true
+          echo "Checking for HIGH severity security issues..."
+          
+          # Count HIGH severity issues
+          HIGH_ISSUES=$(bandit -r veritasreason/ -f json -ll 2>/dev/null | jq -r '.results[]? | select(.issue_severity == "HIGH") | .test_name' 2>/dev/null | wc -l || echo "0")
+          
+          if [ "$HIGH_ISSUES" -gt 0 ]; then
+            echo "❌ HIGH severity security issues found: $HIGH_ISSUES"
+            echo "CI will fail to prevent merging of high-risk code"
+            echo ""
+            echo "High severity issues:"
+            bandit -r veritasreason/ -ll | grep "Severity: High" -A 5 -B 1 || true
+            exit 1
+          else
+            echo "✅ No HIGH severity security issues found"
+          fi
+        
+      - name: Run Semgrep (Static Analysis)
+        run: |
+          echo "Running Semgrep static analysis..."
+          semgrep --config=auto --json --output=semgrep-report.json veritasreason/ || true
+          
+          # Run security-focused rules
+          echo "Checking for security patterns..."
+          SECURITY_ISSUES=$(semgrep --config=p/security --json veritasreason/ 2>/dev/null | jq '.results | length' 2>/dev/null || echo "0")
+          
+          if [ "$SECURITY_ISSUES" -gt 0 ]; then
+            echo "⚠️ Security patterns found: $SECURITY_ISSUES"
+            echo "Review these findings for potential improvements"
+            semgrep --config=p/security veritasreason/ || true
+          else
+            echo "✅ No security patterns found"
+          fi
+        
+      - name: Upload Security Reports
+        uses: actions/upload-artifact@v7
+        with:
+          name: security-reports
+          path: |
+            safety-report.json
+            bandit-report.json
+            semgrep-report.json
+        
+      - name: Comment PR with Security Results
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v9
+        with:
+          script: |
+            const fs = require('fs');
+            
+            // Read safety report
+            let safetyResults = '';
+            try {
+              const safetyData = JSON.parse(fs.readFileSync('safety-report.json', 'utf8'));
+              if (safetyData.vulnerabilities && safetyData.vulnerabilities.length > 0) {
+                safetyResults = `## Safety Vulnerabilities Found\\n`;
+                safetyData.vulnerabilities.forEach(vuln => {
+                  safetyResults += `- **${vuln.package}**: ${vuln.advisory}\\n`;
+                });
+              } else {
+                safetyResults = '## No Safety Vulnerabilities Found\\n';
+              }
+            } catch (e) {
+              safetyResults = '## Safety scan completed\\n';
+            }
+            
+            // Read bandit report
+            let banditResults = '';
+            try {
+              const banditData = JSON.parse(fs.readFileSync('bandit-report.json', 'utf8'));
+              if (banditData.results && banditData.results.length > 0) {
+                const highIssues = banditData.results.filter(issue => issue.issue_severity === 'HIGH');
+                if (highIssues.length > 0) {
+                  banditResults = `## High Severity Security Issues Found\\n`;
+                  highIssues.forEach(issue => {
+                    banditResults += `- **${issue.test_name}**: ${issue.filename}:${issue.line_number}\\n`;
+                  });
+                } else {
+                  banditResults = '## No High Severity Security Issues Found\\n';
+                }
+              } else {
+                banditResults = '## No Bandit Issues Found\\n';
+              }
+            } catch (e) {
+              banditResults = '## Bandit scan completed\\n';
+            }
+            
+            // Read semgrep report
+            let semgrepResults = '';
+            try {
+              const semgrepData = JSON.parse(fs.readFileSync('semgrep-report.json', 'utf8'));
+              if (semgrepData.results && semgrepData.results.length > 0) {
+                semgrepResults = `## Security Patterns Found\\n`;
+                semgrepData.results.slice(0, 10).forEach(issue => {
+                  semgrepResults += `- **${issue.rule_id}**: ${issue.path}\\n`;
+                });
+                if (semgrepData.results.length > 10) {
+                  semgrepResults += `- ... and ${semgrepData.results.length - 10} more\\n`;
+                }
+              } else {
+                semgrepResults = '## No Security Patterns Found\\n';
+              }
+            } catch (e) {
+              semgrepResults = '## Semgrep scan completed\\n';
+            }
+            
+            // Create summary comment
+            const comment = `# 🔒 Security Scan Results\\n\\n${safetyResults}\\n\\n${banditResults}\\n\\n${semgrepResults}\\n\\n---\\n\\n*This security scan runs automatically on source-code PRs and bi-weekly (skipped for doc/markdown-only changes).*\\n\\n📊 **Security Policy**: CI fails on vulnerabilities and HIGH severity issues.`;
+            
+            // Post comment with error handling
+            try {
+              await github.rest.issues.createComment({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: comment
+              });
+              console.log('✅ Security comment posted successfully');
+            } catch (error) {
+              console.log('⚠️ Could not post security comment:', error.message);
+              console.log('📋 Security scan results saved to artifacts');
+            }
