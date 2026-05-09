@@ -180,7 +180,7 @@ def get_youtube_metadata(video_id: str) -> dict:
                 "upload_date": data.get("upload_date", ""),
                 "view_count": data.get("view_count", 0)
             }
-    except:
+    except Exception:
         pass
     
     return {"title": f"YouTube Video {video_id}", "channel": "Unknown"}
@@ -233,7 +233,7 @@ def extract_web_article(url: str) -> Tuple[bool, str, Optional[dict]]:
                     "date": meta_json.get("date", ""),
                     "sitename": meta_json.get("sitename", urlparse(url).netloc)
                 })
-            except:
+            except Exception:
                 metadata["title"] = urlparse(url).netloc
         
         metadata["character_count"] = len(content)
@@ -558,7 +558,7 @@ def get_indexing_status() -> Tuple[str, bool]:
                 if os.path.exists(entities_path):
                     df = pd.read_parquet(entities_path)
                     entity_count = len(df)
-            except:
+            except Exception:
                 pass
             
             return f"""✅ **Indexing completed successfully!**
@@ -639,7 +639,7 @@ def trigger_graphrag_index_with_progress(update_mode: bool = False):
         if os.path.exists(log_path):
             try:
                 os.remove(log_path)
-            except:
+            except Exception:
                 pass
         yield f"🚀 **Starting Full GraphRAG Index**\n\n📁 Found **{file_count}** text files in input folder\n\n⏳ Initializing..."
     
@@ -693,7 +693,7 @@ def trigger_graphrag_index_with_progress(update_mode: bool = False):
                             elapsed_min = elapsed / 60
                             yield f"🔄 **{index_type} Indexing in progress** ({elapsed_min:.1f} min)\n\n{current_stage}\n\n📁 Processing {file_count} files..."
                     
-                except:
+                except Exception:
                     pass
             
             time.sleep(3)
@@ -717,7 +717,7 @@ def trigger_graphrag_index_with_progress(update_mode: bool = False):
                 if os.path.exists(entities_path):
                     df = pd.read_parquet(entities_path)
                     entity_count = len(df)
-            except:
+            except Exception:
                 pass
             
             elapsed_total = (time.time() - start_time) / 60
@@ -759,7 +759,7 @@ def get_last_run_id() -> Optional[str]:
                     match = re.search(r'run for:\s*(\d{8}-\d{6})', line)
                     if match:
                         return match.group(1)
-    except:
+    except Exception:
         pass
     
     return None
@@ -835,7 +835,7 @@ def trigger_graphrag_index(update_mode: bool = False) -> Tuple[bool, str]:
                         doc_count = len(df)
                         df = pd.read_parquet(entities_path)
                         entity_count = len(df)
-                    except:
+                    except Exception:
                         pass
                     
                     index_type = "🔄 Update" if update_mode else "📊 Full"
