@@ -25,3 +25,4 @@ scripts/*
 marketing/*
 submission/SUBMIT.md
 submission/PR_BODY.md
+submission/veritasgraph_rag/scripts/capture_screenshots.py
