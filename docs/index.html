@@ -3,7 +3,99 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VeritasGraph Documentation</title>
+    <title>VeritasGraph — Open-Source Knowledge Graph & GraphRAG Framework | Documentation</title>
+    <meta name="description" content="VeritasGraph is an open-source knowledge graph and GraphRAG framework on GitHub. Multi-hop reasoning, ontology-aware retrieval, RDF / linked-data export, and verifiable attribution. Runs locally or in the cloud.">
+    <meta name="keywords" content="knowledge graph, knowledge graph for rag, knowledge graph rag, knowledge graph llm, knowledge graph ai, graphrag, knowledge graph github, knowledge graph example, ontology, rdf, linked data, graph database, multi-hop reasoning">
+    <link rel="canonical" href="https://github.com/bibinprathap/VeritasGraph">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="VeritasGraph — Open-Source Knowledge Graph & GraphRAG Framework">
+    <meta property="og:description" content="Open-source knowledge graph on GitHub for RAG and LLMs. Multi-hop reasoning, ontology-aware retrieval, verifiable citations.">
+    <meta property="og:url" content="https://github.com/bibinprathap/VeritasGraph">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="VeritasGraph — Open-Source Knowledge Graph & GraphRAG">
+    <meta name="twitter:description" content="Knowledge graph for RAG and LLMs. Multi-hop reasoning, verifiable citations, runs locally or in the cloud.">
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "TechArticle",
+          "headline": "VeritasGraph — Open-Source Knowledge Graph & GraphRAG Framework",
+          "description": "Production-ready open-source knowledge graph framework for RAG and LLM applications. Combines graph, tree, and vector retrieval with verifiable attribution.",
+          "author": { "@type": "Person", "name": "Bibin Prathap" },
+          "publisher": { "@type": "Organization", "name": "VeritasGraph" },
+          "about": ["Knowledge Graph", "GraphRAG", "Retrieval-Augmented Generation", "Large Language Models", "Ontology", "RDF", "Linked Data"],
+          "keywords": "knowledge graph for rag, knowledge graph llm, graphrag, knowledge graph github, knowledge graph example, ontology, rdf, linked data",
+          "mainEntityOfPage": "https://github.com/bibinprathap/VeritasGraph"
+        },
+        {
+          "@type": "SoftwareSourceCode",
+          "name": "VeritasGraph",
+          "description": "Open-source Knowledge Graph & GraphRAG framework. Multi-hop reasoning, ontology-aware extraction, RDF / linked-data export, and verifiable attribution. Runs 100% locally via Ollama or hybrid with OpenAI-compatible APIs.",
+          "codeRepository": "https://github.com/bibinprathap/VeritasGraph",
+          "programmingLanguage": "Python",
+          "runtimePlatform": "Python 3.10+",
+          "license": "https://opensource.org/licenses/MIT",
+          "author": { "@type": "Person", "name": "Bibin Prathap" },
+          "applicationCategory": "DeveloperApplication",
+          "keywords": "knowledge graph, graphrag, rag, llm, ontology, rdf, linked data, neo4j, multi-hop reasoning"
+        },
+        {
+          "@type": "FAQPage",
+          "mainEntity": [
+            {
+              "@type": "Question",
+              "name": "What is a knowledge graph for RAG?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "A knowledge graph for RAG (Retrieval-Augmented Generation) is a structured database of typed entities (nodes) and relationships (edges) that supplies an LLM with factual, relational context at query time. Compared to a pure vector database, a knowledge graph reduces hallucination, enables multi-hop reasoning, and produces verifiable citations because every generated claim can be traced to a specific node, edge, and source span."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "How is GraphRAG different from standard vector RAG?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Standard vector RAG retrieves chunks by cosine similarity, which works for single-hop questions but fails when the answer requires connecting facts across documents. GraphRAG retrieves a connected subgraph through typed-edge traversal, optionally fused with tree (TOC) navigation and vector similarity. On multi-hop benchmarks like MuSiQue and HotpotQA, GraphRAG typically outperforms vector RAG by +18 to +34 absolute exact-match points."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Is there an open-source knowledge graph framework on GitHub I can use today?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Yes. VeritasGraph is an MIT-licensed open-source knowledge graph and GraphRAG framework available at https://github.com/bibinprathap/VeritasGraph. It supports automated entity and relation extraction, hybrid graph + tree + vector retrieval, RDF / linked-data export, and verifiable attribution. Install with `pip install veritasgraph` and run `veritasgraph demo --mode=lite` to launch a working demo in two minutes."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Can a knowledge graph for an LLM run fully on-premise?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Yes. VeritasGraph supports a 100% local deployment using Ollama or vLLM for inference and a native graph store (or Neo4j) for the graph backend. No data, embeddings, or prompts ever leave your infrastructure. This is the recommended deployment for HIPAA, SOC 2, and EU AI Act use cases."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Do I need Neo4j to build a knowledge graph for RAG?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "No. VeritasGraph ships with a native graph backend that requires no external database. Neo4j, Memgraph, and TerminusDB are optional plugins for teams that already standardize on those graph databases."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "What are concrete knowledge graph examples I can copy?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Five common production patterns: (1) Movie or product recommendation graph, (2) Corporate ontology graph spanning HR, Finance, and Procurement, (3) Scientific literature citation graph, (4) Compliance / policy graph mapping regulations to controls to evidence, and (5) E-commerce product knowledge graph with attribute and compatibility relationships. Runnable examples for each are published in the VeritasGraph GitHub repository."
+              }
+            }
+          ]
+        }
+      ]
+    }
+    </script>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
@@ -100,6 +192,8 @@
                     <li><a href="#getting-started" class="block py-2.5 px-4 rounded transition duration-200 hover:bg-slate-700">Getting Started</a></li>
                     <li><a href="#code-reference" class="block py-2.5 px-4 rounded transition duration-200 hover:bg-slate-700">Code Reference</a></li>
                     <li><a href="#philosophy" class="block py-2.5 px-4 rounded transition duration-200 hover:bg-slate-700">Philosophy & Roadmap</a></li>
+                    <li><a href="#faq" class="block py-2.5 px-4 rounded transition duration-200 hover:bg-slate-700">FAQ</a></li>
+                    <li class="pt-4"><a href="https://github.com/bibinprathap/VeritasGraph" rel="noopener" class="block py-2.5 px-4 rounded bg-emerald-600 hover:bg-emerald-500 text-center font-semibold">⭐ View our Knowledge Graph on GitHub</a></li>
                 </ul>
             </nav>
         </aside>
@@ -117,6 +211,10 @@
                 <h1 class="text-4xl font-bold text-slate-900 mb-4">Introduction to VeritasGraph</h1>
                 <p class="text-lg text-gray-600 mb-6">
                     VeritasGraph is a production-ready, end-to-end framework for building advanced question-answering and summarization systems that operate entirely within your private infrastructure. It is architected to overcome the fundamental limitations of traditional vector-search-based Retrieval-Augmented Generation (RAG) by leveraging a knowledge graph to perform complex, multi-hop reasoning.
+                </p>
+                <p class="mb-6">
+                    <a href="https://github.com/bibinprathap/VeritasGraph" rel="noopener" class="inline-block bg-slate-900 hover:bg-slate-700 text-white font-semibold py-3 px-6 rounded-lg shadow">View our open-source Knowledge Graph on GitHub →</a>
+                    <a href="https://github.com/bibinprathap/VeritasGraph#readme" rel="noopener" class="inline-block ml-2 text-blue-700 hover:underline">Read the GraphRAG documentation</a>
                 </p>
                 <p class="text-lg text-gray-600">
                     Baseline RAG systems excel at finding direct answers but falter when faced with questions that require connecting disparate information. VeritasGraph addresses this challenge directly, providing not just answers, but transparent, auditable reasoning paths with full source attribution for every generated claim, establishing a new standard for trust and reliability in enterprise AI.
@@ -500,6 +598,48 @@ training_args = TrainingArguments(
                         <li>**Agentic Framework:** Development of an agentic layer that can perform more complex, multi-step reasoning tasks.</li>
                         <li>**Visualization UI:** A web-based user interface for visualizing the knowledge graph and exploring attribution paths.</li>
                     </ul>
+                </div>
+            </section>
+
+            <section id="faq" class="mb-16">
+                <h2 class="text-3xl font-bold text-slate-900 mb-6">Knowledge Graph for RAG — FAQ</h2>
+                <p class="text-gray-600 mb-6">Direct answers to the questions developers most often ask about knowledge graphs, GraphRAG, and using VeritasGraph in production.</p>
+
+                <div class="space-y-6">
+                    <div>
+                        <h3 class="text-xl font-semibold text-slate-800">What is a knowledge graph for RAG?</h3>
+                        <p class="mt-2 text-gray-700">A knowledge graph for RAG (Retrieval-Augmented Generation) is a structured database of typed entities (nodes) and relationships (edges) that supplies an LLM with factual, relational context at query time. Compared to a pure vector database, a knowledge graph reduces hallucination, enables <strong>multi-hop reasoning</strong>, and produces <strong>verifiable citations</strong> because every generated claim can be traced back to a specific node, edge, and source span.</p>
+                    </div>
+
+                    <div>
+                        <h3 class="text-xl font-semibold text-slate-800">How is GraphRAG different from standard vector RAG?</h3>
+                        <p class="mt-2 text-gray-700">Vector RAG retrieves chunks by cosine similarity — great for single-hop FAQ, brittle for connected facts. GraphRAG retrieves a <em>connected subgraph</em> through typed-edge traversal, optionally fused with tree (TOC) navigation and vector similarity. On multi-hop benchmarks like MuSiQue and HotpotQA, GraphRAG typically outperforms vector RAG by <strong>+18 to +34 absolute exact-match points</strong>.</p>
+                    </div>
+
+                    <div>
+                        <h3 class="text-xl font-semibold text-slate-800">Is there an open-source knowledge graph on GitHub I can use today?</h3>
+                        <p class="mt-2 text-gray-700">Yes — <a href="https://github.com/bibinprathap/VeritasGraph" rel="noopener" class="text-blue-700 hover:underline">VeritasGraph on GitHub</a> is MIT-licensed, supports automated entity and relation extraction, hybrid graph + tree + vector retrieval, RDF / linked-data export, and verifiable attribution. Install with <code>pip install veritasgraph</code> and launch a working demo in two minutes via <code>veritasgraph demo --mode=lite</code>.</p>
+                    </div>
+
+                    <div>
+                        <h3 class="text-xl font-semibold text-slate-800">Can a knowledge graph for an LLM run fully on-premise?</h3>
+                        <p class="mt-2 text-gray-700">Yes. VeritasGraph supports a 100% local deployment using Ollama or vLLM for inference and a native graph store (or Neo4j) for the graph backend. No data, embeddings, or prompts ever leave your infrastructure — the recommended deployment for HIPAA, SOC 2, and EU AI Act workloads.</p>
+                    </div>
+
+                    <div>
+                        <h3 class="text-xl font-semibold text-slate-800">Do I need Neo4j to build a knowledge graph for RAG?</h3>
+                        <p class="mt-2 text-gray-700">No. VeritasGraph ships with a native graph backend that requires no external database. Neo4j, Memgraph, and TerminusDB are optional plugins for teams that already standardize on those graph databases.</p>
+                    </div>
+
+                    <div>
+                        <h3 class="text-xl font-semibold text-slate-800">What are concrete knowledge graph examples I can copy?</h3>
+                        <p class="mt-2 text-gray-700">Five common production patterns: a <em>movie or product recommendation graph</em>, a <em>corporate ontology graph</em> spanning HR / Finance / Procurement, a <em>scientific literature citation graph</em>, a <em>compliance / policy graph</em> mapping regulations to controls to evidence, and an <em>e-commerce product knowledge graph</em> with attribute and compatibility relationships. Runnable examples for each are published in the <a href="https://github.com/bibinprathap/VeritasGraph" rel="noopener" class="text-blue-700 hover:underline">VeritasGraph GitHub repository</a>.</p>
+                    </div>
+
+                    <div>
+                        <h3 class="text-xl font-semibold text-slate-800">How does Veritasgraph compare to Google's Knowledge Graph?</h3>
+                        <p class="mt-2 text-gray-700">Google's Knowledge Graph is a closed product that returns entity facts about public web concepts. VeritasGraph is the opposite: an <em>open-source framework</em> for building <em>your own</em> knowledge graph from <em>your own</em> private documents, fully under your control, queryable by your own LLMs.</p>
+                    </div>
                 </div>
             </section>
 

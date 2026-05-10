@@ -335,6 +335,29 @@ veritasgraph ingest document.pdf --mode=document-centric
 
  
 ---
+## Why choose VeritasGraph for your Knowledge Graph GitHub project?
+
+If you landed here searching for an open-source **knowledge graph on GitHub**, VeritasGraph is built specifically for teams who need a production-grade, self-hostable graph stack — not just a demo notebook.
+
+VeritasGraph turns unstructured documents into a fully traversable **knowledge graph** of **nodes** (entities) and **edges** (typed relationships), then layers Graph + Tree retrieval on top so an LLM can perform **multi-hop reasoning** with verifiable citations.
+
+**What you get out of the box:**
+
+- 🧬 **Knowledge Graph construction** — automated entity & relation extraction, ontology-aware schemas, and incremental updates as new documents arrive.
+- 🔗 **Linked-data & RDF friendly** — export your graph to RDF / Turtle, plug into existing **semantic web** pipelines, or back it with a **graph database** like Neo4j.
+- 🧭 **Graph analytics** — community detection, centrality, and path-finding to surface non-obvious connections across your corpus.
+- 📚 **Ontology & taxonomy support** — define domain ontologies (or let VeritasGraph infer one) so retrieval respects the structure of your knowledge.
+- 🔍 **GraphRAG retrieval** — hybrid Graph + Tree + vector search that beats pure vector RAG on multi-hop and cross-document questions.
+- 🛡️ **Verifiable attribution** — every generated claim is anchored back to specific nodes, edges, and source spans in the graph.
+- 🏠 **100% local or hybrid** — run entirely on-premise with Ollama, or mix in OpenAI-compatible APIs. Your knowledge graph never has to leave your infrastructure.
+
+**Who is it for?** Engineers building enterprise search, compliance assistants, research copilots, scientific literature explorers, agent memory systems, and any application where "the answer" depends on how facts *connect*, not just whether they appear near each other in a vector index.
+
+**Related terminology this project covers:** knowledge graph, graph database, ontology, taxonomy, linked data, RDF, SPARQL-style traversal, nodes, edges, triples, GraphRAG, multi-hop reasoning, semantic web, graph analytics, entity resolution, knowledge engineering.
+
+> 👉 **Star the repo** if you'd like to follow VeritasGraph's roadmap for open-source knowledge graphs on GitHub — it genuinely helps other developers discover the project.
+
+---
 ## Why VeritasGraph?
 
 ### ✅ Fully On-Premise & Secure
