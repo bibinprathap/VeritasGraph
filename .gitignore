@@ -15,8 +15,13 @@ graphrag-ollama-config/input/youtube_EY_CAP_Discover_How_to_Analyze_your_Climate
 *.env
 !*.env.example
 !*.env.template
+
+# Logs
+*.log
 veritasgraph.log
 graphrag-ollama-config/input/youtube_How_Pi_fixed_Claudes_skill_issues_272c8284.txt
 .gitignore
 scripts/*
 marketing/*
+submission/SUBMIT.md
+submission/PR_BODY.md
