@@ -19,11 +19,11 @@ from .llm import chat_json
 
 log = logging.getLogger(__name__)
 
-EXTRACTION_PROMPT = """You are an information-extraction engine.
+EXTRACTION_PROMPT_TEMPLATE = """You are an information-extraction engine.
 
 Given the TEXT below, return a JSON object with two keys:
-  - "entities":      list of {"id": snake_case_id, "name": str, "type": str}
-  - "relationships": list of {"source": id, "target": id, "type": str, "evidence": str}
+  - "entities":      list of {{"id": snake_case_id, "name": str, "type": str}}
+  - "relationships": list of {{"source": id, "target": id, "type": str, "evidence": str}}
 
 Use snake_case ids consistent across chunks for the same real-world entity.
 Return ONLY valid JSON.
@@ -73,7 +73,10 @@ def build_graph(settings: Settings | None = None) -> nx.MultiDiGraph:
     for doc_id, text in _read_documents(settings.input_dir):
         for chunk_idx, chunk in enumerate(_chunk(text)):
             try:
-                payload = chat_json(EXTRACTION_PROMPT.format(chunk=chunk), settings=settings)
+                payload = chat_json(
+                    EXTRACTION_PROMPT_TEMPLATE.format(chunk=chunk),
+                    settings=settings,
+                )
             except Exception:  # noqa: BLE001 - best-effort showcase
                 log.exception("Extraction failed for %s chunk %d", doc_id, chunk_idx)
                 continue
