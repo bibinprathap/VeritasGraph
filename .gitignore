@@ -19,3 +19,4 @@ veritasgraph.log
 graphrag-ollama-config/input/youtube_How_Pi_fixed_Claudes_skill_issues_272c8284.txt
 .gitignore
 scripts/*
+marketing/*

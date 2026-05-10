@@ -537,13 +537,13 @@ upstream `veritas-reason` runtime.
 ### 🧪 Testing your own business questions — step by step
 
 1. **Pick a business question** that mixes a *policy* with *records*, e.g.
-   - *"Which employees violated the leave policy this month?"*
-   - *"Which expense reports breach the per-diem cap?"*
+   - *"Which expense reports exceeded the per-diem cap last quarter?"*
    - *"Which trades violated the personal-account-dealing policy?"*
+   - *"Which contractors were paid without an approved SOW?"*
 
 2. **Drop the policy document into GraphRAG** so the answer can cite it:
    ```bash
-   cp HR_Handbook_2026.pdf graphrag-ollama-config/input/
+   cp Travel_and_Expense_Policy_2026.pdf graphrag-ollama-config/input/
    cd graphrag-ollama-config && python -m graphrag.index --root .
    ```
 
@@ -552,47 +552,53 @@ upstream `veritas-reason` runtime.
    Add a `TableMapping` for each SQL table — give every triple a `source=` URI:
    ```python
    TableMapping(
-       name="attendance",
-       sql="SELECT emp_id, work_date, status, approved FROM attendance",
-       subject=lambda r: f"emp:{r.emp_id}",
+       name="expense_lines",
+       sql="SELECT report_id, emp_id, expense_date, category, amount, currency FROM expense_lines",
+       subject=lambda r: f"exp:{r.report_id}",
        triples=lambda r: [
-           (f"emp:{r.emp_id}",
-            "hr:absentOn" if r.status == "ABSENT" else "hr:presentOn",
-            f"date:{r.work_date}",
-            {"approved": bool(r.approved)})
+           (f"exp:{r.report_id}", "fin:submittedBy",  f"emp:{r.emp_id}"),
+           (f"exp:{r.report_id}", "fin:incurredOn",  f"date:{r.expense_date}"),
+           (f"exp:{r.report_id}", "fin:category",    f"cat:{r.category}"),
+           (f"exp:{r.report_id}", "fin:amount",      float(r.amount),
+            {"currency": r.currency}),
        ],
-       narrative=lambda r: f"Employee {r.emp_id} was {r.status} on {r.work_date}.",
-       source_uri=lambda r: f"hris://attendance/{r.emp_id}/{r.work_date}",
+       narrative=lambda r: (
+           f"Employee {r.emp_id} submitted a {r.category} expense of "
+           f"{r.amount} {r.currency} on {r.expense_date} (report {r.report_id})."
+       ),
+       source_uri=lambda r: f"finance://expense_lines/{r.report_id}",
    )
    ```
 
 4. **Encode the policy as YAML rules** in `rules/<your_policy>.yaml`. Keep the
    `cite:` block — that's what makes the answer auditable:
    ```yaml
-   - id: LEAVE-01
-     description: More than 3 unapproved absences in a month is a violation.
+   - id: EXP-01
+     description: Meal expenses above the $75 / day per-diem cap are a violation.
      when:
-       - (?e rdf:type hr:Employee)
-       - count((?e hr:absentOn ?d) where month(?d)==?m and approved==false) > 3
+       - (?x rdf:type fin:ExpenseLine)
+       - (?x fin:category cat:Meals)
+       - (?x fin:amount   ?amt)  filter(?amt > 75)
      then:
-       - (?e hr:violates policy:LeavePolicy#LEAVE-01)
+       - (?x fin:violates policy:ExpensePolicy#EXP-01)
      cite:
-       - policy_doc: "HR_Handbook_2026.pdf#section-4.2"
+       - policy_doc: "Travel_and_Expense_Policy_2026.pdf#section-2.3"
+       - clause:     "Meal reimbursements may not exceed $75 per traveler per day."
    ```
 
 5. **Smoke-test the rules** with the demo harness pattern. Copy
    [tests/test_policy_compliance_demo.py](tests/test_policy_compliance_demo.py),
-   replace the fake-ERP seed function with a fake-HRIS one, and run:
+   replace the fake-ERP seed function with a fake-finance one, and run:
    ```bash
-   python tests/test_leave_policy_demo.py
+   python tests/test_policy_compliance_demo.py
    ```
-   You should see your `LEAVE-01` fire on exactly the rows you expect — **before**
+   You should see your `EXP-01` fire on exactly the rows you expect — **before**
    running against production.
 
 6. **Wire the live database** — set the env var and run the structured
    ingester:
    ```bash
-   export ERP_DB_URL="postgresql://readonly:***@db:5432/hris"
+   export ERP_DB_URL="postgresql://readonly:***@db:5432/finance"
    python graphrag-ollama-config/ingest_structured.py
    ```
 

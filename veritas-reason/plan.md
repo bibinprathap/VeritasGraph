@@ -17,12 +17,12 @@ An **accountability/intelligence layer** on top of an LLM stack. From [veritasre
 
 ---
 
-## Why VeritasGraph alone can't answer "Who is violating the leave policy?"
+## Why VeritasGraph alone can't answer "Which expense reports breach the per-diem cap?"
 
 That question is a **rule-evaluation problem**, not a similarity-search problem. It needs:
 
-1. The **policy** ("more than 3 unapproved absences per month = violation").
-2. **Structured facts** (each employee × each day × status).
+1. The **policy** ("meal reimbursements may not exceed $75 per traveler per day").
+2. **Structured facts** (each expense line × employee × date × category × amount).
 3. A **reasoner** that joins them and emits violators.
 
 VeritasGraph chunks text and does graph RAG; it will *describe* the policy but won't *enumerate violators* deterministically. You need to combine it with VeritasReason's reasoning engine and a SQL/structured loader.
@@ -33,15 +33,15 @@ VeritasGraph chunks text and does graph RAG; it will *describe* the policy but w
 
 ```
 ┌──────────────────┐   ┌────────────────────┐   ┌───────────────────┐
-│ Policy PDFs/Docs │   │ Attendance DB      │   │ Employee Master   │
-│ (HR handbook)    │   │ (Postgres / MySQL) │   │ (HRIS / CSV)      │
+│ Policy PDFs/Docs │   │ Expense DB         │   │ Employee Master   │
+│ (T&E handbook)   │   │ (Postgres / MySQL) │   │ (HRIS / CSV)      │
 └────────┬─────────┘   └──────────┬─────────┘   └─────────┬─────────┘
          │                        │                       │
          ▼                        ▼                       ▼
  ┌──────────────────┐   ┌────────────────────────────────────────┐
  │ VeritasGraph     │   │ Structured Loader (new module)         │
- │ Indexer (text)   │   │ → emits triples into VeritasReason KG      │
- │  → entities,     │   │   (:Emp123)-[:ABSENT_ON {approved:F}]→ │
+ │ Indexer (text)   │   │ → emits triples into VeritasReason KG  │
+ │  → entities,     │   │   (:Exp-1234)-[:AMOUNT 92.40]→         │
  │    relationships │   │   (:Date 2026-04-12)                   │
  └────────┬─────────┘   └──────────────┬─────────────────────────┘
           │                            │
@@ -59,12 +59,13 @@ VeritasGraph chunks text and does graph RAG; it will *describe* the policy but w
           │  - Provenance per fact       │
           └──────────────┬───────────────┘
                          ▼
-          ┌──────────────────────────────┐
-          │ VeritasGraph Query UI        │
-          │ "Who violates leave policy?" │
-          │ → Violators + citation +     │
-          │   policy clause + evidence   │
-          └──────────────────────────────┘
+          ┌──────────────────────────────────┐
+          │ VeritasGraph Query UI            │
+          │ "Which expense reports breach    │
+          │  the per-diem cap?"              │
+          │ → Violators + citation +         │
+          │   policy clause + evidence       │
+          └──────────────────────────────────┘
 ```
 
 ---
@@ -82,44 +83,48 @@ Create `graphrag-ollama-config/ingest_structured.py` that connects to your DB an
 import sqlalchemy, pandas as pd
 from veritasreason.triplet_store import TripletStore
 
-eng = sqlalchemy.create_engine(os.environ["HRIS_DB_URL"])
+eng = sqlalchemy.create_engine(os.environ["FINANCE_DB_URL"])
 emp   = pd.read_sql("SELECT emp_id, name, dept, manager_id FROM employees", eng)
-att   = pd.read_sql("""SELECT emp_id, work_date, status, approved
-                       FROM attendance WHERE work_date >= :from""", eng,
+lines = pd.read_sql("""SELECT report_id, emp_id, expense_date, category, amount, currency
+                       FROM expense_lines WHERE expense_date >= :from""", eng,
                     params={"from": "2026-04-01"})
 
 ts = TripletStore.connect()
 for _, r in emp.iterrows():
     ts.add(f"emp:{r.emp_id}", "rdf:type", "hr:Employee",
            source=f"hris://employees/{r.emp_id}")
-    ts.add(f"emp:{r.emp_id}", "hr:name", r.name)
+    ts.add(f"emp:{r.emp_id}", "hr:name",       r.name)
     ts.add(f"emp:{r.emp_id}", "hr:department", r.dept)
 
-for _, r in att.iterrows():
-    pred = "hr:absentOn" if r.status == "ABSENT" else "hr:presentOn"
-    ts.add(f"emp:{r.emp_id}", pred, f"date:{r.work_date}",
-           qualifiers={"approved": bool(r.approved)},
-           source=f"hris://attendance/{r.emp_id}/{r.work_date}")
+for _, r in lines.iterrows():
+    src = f"finance://expense_lines/{r.report_id}"
+    ts.add(f"exp:{r.report_id}", "rdf:type",        "fin:ExpenseLine", source=src)
+    ts.add(f"exp:{r.report_id}", "fin:submittedBy", f"emp:{r.emp_id}", source=src)
+    ts.add(f"exp:{r.report_id}", "fin:incurredOn",  f"date:{r.expense_date}", source=src)
+    ts.add(f"exp:{r.report_id}", "fin:category",    f"cat:{r.category}", source=src)
+    ts.add(f"exp:{r.report_id}", "fin:amount",      float(r.amount),
+           qualifiers={"currency": r.currency}, source=src)
 ```
 
 Every triple carries **provenance** (`source=`) — that's how you keep VeritasGraph's "100% verifiable attribution" promise on structured data.
 
 ### 2. Encode the policy as rules
-Have the LLM read the policy doc once and propose rules; a human approves them and stores them in `rules/leave_policy.yaml`:
+Have the LLM read the policy doc once and propose rules; a human approves them and stores them in `rules/expense_policy.yaml`:
 
 ```yaml
-- id: LP-01
-  description: "More than 3 unapproved absences in a calendar month is a violation."
+- id: EXP-01
+  description: "Meal expenses above the $75 / day per-diem cap are a violation."
   when:
-    - (?e rdf:type hr:Employee)
-    - count((?e hr:absentOn ?d) where ?d.month == ?m and approved == false) > 3
+    - (?x rdf:type fin:ExpenseLine)
+    - (?x fin:category cat:Meals)
+    - (?x fin:amount   ?amt)  filter(?amt > 75)
   then:
-    - (?e hr:violates policy:LeavePolicy#LP-01) for_month(?m)
+    - (?x fin:violates policy:ExpensePolicy#EXP-01)
   cite:
-    - policy_doc: "HR_Handbook_2025.pdf#section-4.2"
+    - policy_doc: "Travel_and_Expense_Policy_2026.pdf#section-2.3"
 ```
 
-Load with [veritasreason/reasoning](veritasreason/reasoning) (Rete forward chainer). Each derived violation triple keeps both the **policy clause** and the **attendance rows** as PROV-O sources.
+Load with [veritasreason/reasoning](veritasreason/reasoning) (Rete forward chainer). Each derived violation triple keeps both the **policy clause** and the **expense rows** as PROV-O sources.
 
 ### 3. Add a new query type in the UI
 In [graphrag-ollama-config/app.py](../graphrag-ollama-config/app.py) the `QUERY_TYPE_OPTIONS` list already has `global`, `local`, `reasoning`, `hybrid`. Add:
@@ -130,27 +135,29 @@ QUERY_TYPE_OPTIONS = [..., "policy_compliance"]
 
 and a handler that:
 
-1. Uses VeritasGraph's RAG to **identify which policy** the user is asking about ("leave policy" → `policy:LeavePolicy`).
+1. Uses VeritasGraph's RAG to **identify which policy** the user is asking about ("per-diem" / "expense policy" → `policy:ExpensePolicy`).
 2. Calls VeritasReason's reasoner to fire the rules tagged with that policy.
-3. Returns a table of violators **plus** the rule, the clause text from the PDF, and the offending attendance rows.
+3. Returns a table of offending expense lines **plus** the rule, the clause text from the PDF, and the underlying expense rows.
 
 ```python
 async def policy_compliance_search(question, ...):
     # a) retrieve policy context from GraphRAG
     policy_ctx = await reasoning_local_search(question, ...)
-    policy_id  = llm_pick_policy(policy_ctx, question)   # e.g. "LeavePolicy"
+    policy_id  = llm_pick_policy(policy_ctx, question)   # e.g. "ExpensePolicy"
 
     # b) run VeritasReason reasoner
     from veritasreason.reasoning import ForwardChainer
     fc = ForwardChainer(rules_dir="rules/")
-    derived = fc.run(filter_tag=policy_id)               # adds hr:violates triples
+    derived = fc.run(filter_tag=policy_id)               # adds fin:violates triples
 
     # c) materialise answer
     violators = ts.query("""
-        SELECT ?emp ?name ?month
-        WHERE { ?emp hr:violates policy:LeavePolicy#LP-01 ;
-                     hr:name ?name .
-                FILTER(?month = '2026-04') }""")
+        SELECT ?exp ?emp ?amt ?date
+        WHERE { ?exp fin:violates  policy:ExpensePolicy#EXP-01 ;
+                     fin:submittedBy ?emp ;
+                     fin:amount      ?amt ;
+                     fin:incurredOn  ?date .
+                FILTER(?date >= '2026-04-01' && ?date < '2026-07-01') }""")
 
     return render_with_citations(violators, policy_ctx, derived.provenance)
 ```
@@ -158,18 +165,18 @@ async def policy_compliance_search(question, ...):
 ### 4. Wire provenance into the existing UI
 VeritasGraph already shows source spans for text answers. Extend the response renderer so each violator row links to:
 - the policy paragraph (already a GraphRAG `text_unit_id`),
-- the SQL row (`hris://attendance/<emp_id>/<date>`).
+- the SQL row (`finance://expense_lines/<report_id>`).
 
 Both come from VeritasReason's `provenance/` module — no new plumbing needed.
 
 ### 5. Keep it answerable in natural language
-The user types: *"Who is violating leave policy this month?"*
+The user types: *"Which expense reports breached the per-diem cap last quarter?"*
 
 Pipeline:
 1. **VeritasGraph RAG** finds the policy doc and clause.
 2. **LLM router** decides this is a `policy_compliance` query (vs. an explanatory one).
-3. **VeritasReason** evaluates `LP-01` over the attendance triples.
-4. **LLM** turns the result set into prose: *"3 employees violated LP-01 in April 2026: Anu (5 unapproved absences), Ravi (4)… Rule: §4.2 of the HR Handbook (cited)."*
+3. **VeritasReason** evaluates `EXP-01` over the expense-line triples.
+4. **LLM** turns the result set into prose: *"3 expense reports violated EXP-01 in Q2 2026: EXP-1188 ($92.40 meal, Anu), EXP-1204 ($118.00 meal, Ravi)… Rule: §2.3 of the Travel & Expense Policy (cited)."*
 
 ---
 
@@ -183,7 +190,7 @@ Pipeline:
 | New `graphrag-ollama-config/policy_search.py` | Orchestrates RAG + VeritasReason reasoner |
 | [graphrag-ollama-config/app.py](../graphrag-ollama-config/app.py) | Add `policy_compliance` query type + handler + result table |
 | `requirements.txt` | Add `veritasreason`, `sqlalchemy`, DB driver |
-| `.env` | `HRIS_DB_URL=postgresql://…` |
+| `.env` | `FINANCE_DB_URL=postgresql://…` |
 
 ---
 
