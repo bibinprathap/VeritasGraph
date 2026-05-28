@@ -4,13 +4,13 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "veritas-reason"
-version = "0.4.6"
+version = "0.4.7"
 description = "🧠 VeritasReason - An Open Source Framework for building Semantic Layers and Knowledge Engineering"
 readme = "README.md"
 license = { text = "MIT" }
 
-authors = [{ name = "Hawksight AI", email = "veritas-reason-dev@users.noreply.github.com" }]
-maintainers = [{ name = "Hawksight AI", email = "veritas-reason-dev@users.noreply.github.com" }]
+authors = [{ name = "Bibin Prathap", email = "bibinprathap@gmail.com" }]
+maintainers = [{ name = "Bibin Prathap", email = "bibinprathap@gmail.com" }]
 
 requires-python = ">=3.8"
 
