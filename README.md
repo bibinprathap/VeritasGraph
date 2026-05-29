@@ -5,8 +5,7 @@
 
 [![PyPI version](https://badge.fury.io/py/veritasgraph.svg)](https://badge.fury.io/py/veritasgraph)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![VeritasGraph Master Demo](https://img.youtube.com/vi/oa8ektm7nLY/maxresdefault.jpg)](https://youtu.be/oa8ektm7nLY)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) 
 > **🎯 Traditional RAG guesses based on similarity. VeritasGraph reasons based on structure.**  
 > Don't just find the document—understand the connection.
 
@@ -91,6 +90,9 @@ That's it. This launches an interactive demo using cloud APIs (OpenAI/Anthropic)
 
 ### 🎬 See It In Action
 
+[![VeritasGraph Master Demo](https://img.youtube.com/vi/oa8ektm7nLY/maxresdefault.jpg)](https://youtu.be/oa8ektm7nLY)
+
+💡 What you're seeing: A query triggers multi-hop reasoning across the knowledge graph...
 <p align="center">
   <a href="https://youtu.be/NGVDQbkY1wE?si=wJV08Vp5tfVHoQbc">
     <img src="https://img.youtube.com/vi/NGVDQbkY1wE/maxresdefault.jpg" alt="Watch VeritasGraph build reasoning paths in real-time" width="80%">
