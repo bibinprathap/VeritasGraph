@@ -6,7 +6,7 @@
 [![PyPI version](https://badge.fury.io/py/veritasgraph.svg)](https://badge.fury.io/py/veritasgraph)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-
+[![VeritasGraph Master Demo](https://img.youtube.com/vi/oa8ektm7nLY/maxresdefault.jpg)](https://youtu.be/oa8ektm7nLY)
 > **🎯 Traditional RAG guesses based on similarity. VeritasGraph reasons based on structure.**  
 > Don't just find the document—understand the connection.
 
