@@ -92,7 +92,7 @@ That's it. This launches an interactive demo using cloud APIs (OpenAI/Anthropic)
 
 [![VeritasGraph Master Demo](https://img.youtube.com/vi/oa8ektm7nLY/maxresdefault.jpg)](https://youtu.be/oa8ektm7nLY)
 
-💡 What you're seeing: A query triggers multi-hop reasoning across the knowledge graph...
+▶️ What you're seeing: A query triggers multi-hop reasoning across the knowledge graph...
 <p align="center">
   <a href="https://youtu.be/NGVDQbkY1wE?si=wJV08Vp5tfVHoQbc">
     <img src="https://img.youtube.com/vi/NGVDQbkY1wE/maxresdefault.jpg" alt="Watch VeritasGraph build reasoning paths in real-time" width="80%">
