@@ -1,0 +1,26 @@
+# VeritasGraph Studio — Cloudflare tunnel + GitHub Pages auto-sync
+#
+# Installs to /etc/systemd/system/veritasgraph-studio.service via
+# scripts/install-studio-service.sh. Starts on every boot, opens a
+# Cloudflare quick tunnel to the studio, and pushes the new public URL
+# into docs/studio/index.html on GitHub.
+
+[Unit]
+Description=VeritasGraph Studio (Cloudflare tunnel + GitHub Pages sync)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=sijo
+Group=sijo
+WorkingDirectory=/home/sijo/VeritasGraph
+ExecStart=/bin/bash /home/sijo/VeritasGraph/scripts/start-studio-with-tunnel.sh
+Restart=on-failure
+RestartSec=10
+# Give the network and Ollama a moment after boot before first attempt
+TimeoutStartSec=120
+KillMode=mixed
+
+[Install]
+WantedBy=multi-user.target

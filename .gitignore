@@ -22,6 +22,11 @@ veritasgraph.log
 graphrag-ollama-config/input/youtube_How_Pi_fixed_Claudes_skill_issues_272c8284.txt
 .gitignore
 scripts/*
+!scripts/start-with-pages-sync.sh
+!scripts/start-studio-with-tunnel.sh
+!scripts/install-studio-service.sh
+!scripts/veritasgraph-studio.service
+studio-tunnel.log
 marketing/*
 submission/SUBMIT.md
 submission/PR_BODY.md
