@@ -71,6 +71,39 @@ It will: ingest a company brief → create an agent wired to all sections → as
 multi-hop question (with citations) → ask a follow-up (memory recall) → redact
 PII → block a disallowed request → print the agent's stored memory and data log.
 
+### Public demo link on every restart
+
+A systemd service can publish a public **Cloudflare quick tunnel** link to the
+studio automatically whenever the machine boots, and push the new URL to GitHub
+Pages — so the stable demo link always points at the running studio:
+
+```sh
+# one-time install (needs sudo)
+sudo bash scripts/install-studio-service.sh
+```
+
+What it does:
+
+- [`scripts/start-studio-with-tunnel.sh`](../scripts/start-studio-with-tunnel.sh)
+  starts `studio_api` on `:8200`, waits for `/health`, opens a `cloudflared`
+  quick tunnel, then rewrites [`docs/studio/index.html`](../docs/studio/index.html)
+  with the new tunnel URL and pushes only that file to the `restored-main` branch.
+- [`scripts/veritasgraph-studio.service`](../scripts/veritasgraph-studio.service)
+  runs it on every boot (`Restart=on-failure`).
+- Requires `GITHUB_TOKEN` in the repo-root `.env` (used only for the push) and
+  `cloudflared` on `PATH`.
+
+Stable link: **https://bibinprathap.github.io/VeritasGraph/studio/** → redirects
+to the current tunnel, e.g. `https://<random>.trycloudflare.com/studio`.
+
+Manual run / logs:
+
+```sh
+bash scripts/start-studio-with-tunnel.sh            # run in foreground
+journalctl -u veritasgraph-studio.service -f        # service logs
+tail -f studio-tunnel.log                            # tunnel + push log
+```
+
 ---
 
 ## The orchestration pipeline
