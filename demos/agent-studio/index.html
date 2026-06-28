@@ -1,0 +1,1788 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VeritasGraph Agent Studio</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap');
+
+    :root {
+      --bg: #06080f;
+      --panel: #0d111d;
+      --panel-2: #131a2b;
+      --line: #253150;
+      --text: #e8f0ff;
+      --muted: #92a2cb;
+      --brand: #41ffd3;
+      --brand-2: #42a0ff;
+      --warn: #ffc857;
+      --bad: #ff6b8a;
+      --ok: #4bf8a5;
+      --shadow: 0 18px 44px rgba(0, 0, 0, 0.42);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at 20% -10%, rgba(66, 160, 255, 0.22), transparent 40%),
+        radial-gradient(circle at 90% 10%, rgba(65, 255, 211, 0.18), transparent 45%),
+        linear-gradient(165deg, #04060c 0%, #090f1d 52%, #070913 100%);
+      color: var(--text);
+      font-family: "Space Grotesk", "Avenir Next", "Segoe UI", sans-serif;
+      overflow: hidden;
+    }
+
+    .shell {
+      display: grid;
+      grid-template-columns: 248px 1fr;
+      height: 100vh;
+      width: 100%;
+    }
+
+    .sidebar {
+      border-right: 1px solid var(--line);
+      background: linear-gradient(180deg, rgba(10, 14, 25, 0.95) 0%, rgba(8, 11, 21, 0.95) 100%);
+      padding: 18px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 12px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: rgba(19, 26, 43, 0.78);
+      box-shadow: var(--shadow);
+    }
+
+    .brand-mark {
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, var(--brand), var(--brand-2));
+      color: #021422;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .brand-name {
+      line-height: 1.1;
+    }
+
+    .brand-name strong {
+      font-size: 14px;
+      display: block;
+    }
+
+    .brand-name span {
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .nav {
+      margin-top: 6px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      overflow: auto;
+      padding-right: 2px;
+    }
+
+    .nav button {
+      border: 1px solid transparent;
+      color: var(--muted);
+      background: transparent;
+      text-align: left;
+      width: 100%;
+      border-radius: 10px;
+      padding: 11px 12px;
+      font: inherit;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .nav button:hover {
+      color: var(--text);
+      background: rgba(66, 160, 255, 0.1);
+      border-color: rgba(66, 160, 255, 0.25);
+    }
+
+    .nav button.active {
+      color: var(--text);
+      background: linear-gradient(90deg, rgba(66, 160, 255, 0.16), rgba(65, 255, 211, 0.12));
+      border-color: rgba(65, 255, 211, 0.35);
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: var(--muted);
+    }
+
+    .nav button.active .dot {
+      background: var(--brand);
+      box-shadow: 0 0 10px rgba(65, 255, 211, 0.9);
+    }
+
+    .sidebar-foot {
+      margin-top: auto;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 12px;
+      background: rgba(19, 26, 43, 0.7);
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .sidebar-foot b {
+      color: var(--ok);
+    }
+
+    .main {
+      display: grid;
+      grid-template-rows: auto 1fr;
+      overflow: hidden;
+    }
+
+    .topbar {
+      border-bottom: 1px solid var(--line);
+      padding: 14px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      background: rgba(6, 8, 15, 0.85);
+      backdrop-filter: blur(4px);
+    }
+
+    .title-wrap h1 {
+      margin: 0;
+      font-size: 20px;
+      font-weight: 700;
+    }
+
+    .title-wrap p {
+      margin: 4px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .quick-actions {
+      display: flex;
+      gap: 10px;
+    }
+
+    .quick-actions button,
+    .card button,
+    .form-row button {
+      border: 1px solid var(--line);
+      background: var(--panel-2);
+      color: var(--text);
+      border-radius: 10px;
+      padding: 8px 12px;
+      font: inherit;
+      font-size: 13px;
+      cursor: pointer;
+      transition: transform 0.2s ease, border-color 0.2s ease;
+    }
+
+    .quick-actions button.primary,
+    .card button.primary,
+    .form-row button.primary {
+      border-color: rgba(65, 255, 211, 0.55);
+      background: linear-gradient(90deg, rgba(66, 160, 255, 0.3), rgba(65, 255, 211, 0.2));
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+      border-color: rgba(65, 255, 211, 0.5);
+    }
+
+    .workspace {
+      padding: 18px 20px;
+      overflow: auto;
+    }
+
+    .section {
+      display: none;
+      animation: reveal 0.26s ease;
+    }
+
+    .section.active {
+      display: block;
+    }
+
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(160px, 1fr));
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .kpi {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 12px;
+      background: linear-gradient(170deg, rgba(19, 26, 43, 0.86), rgba(14, 20, 34, 0.8));
+    }
+
+    .kpi span {
+      color: var(--muted);
+      font-size: 12px;
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    .kpi strong {
+      font-size: 24px;
+      color: var(--brand);
+    }
+
+    .grid {
+      display: grid;
+      gap: 12px;
+      grid-template-columns: 1.15fr 1fr;
+    }
+
+    .card {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: linear-gradient(160deg, rgba(15, 20, 35, 0.92), rgba(10, 14, 24, 0.9));
+      padding: 14px;
+      box-shadow: var(--shadow);
+    }
+
+    .card h3 {
+      margin: 0 0 10px;
+      font-size: 14px;
+      letter-spacing: 0.03em;
+    }
+
+    .meta {
+      color: var(--muted);
+      font-size: 12px;
+      margin-bottom: 10px;
+    }
+
+    .list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      max-height: 300px;
+      overflow: auto;
+    }
+
+    .list-item {
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: rgba(20, 27, 46, 0.7);
+      padding: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      font-size: 13px;
+    }
+
+    .list-item .name {
+      font-weight: 600;
+    }
+
+    .chat-log {
+      margin-top: 12px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: rgba(13, 18, 33, 0.7);
+      padding: 12px;
+      min-height: 240px;
+      max-height: 420px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .chat-msg {
+      max-width: 85%;
+      padding: 9px 12px;
+      border-radius: 12px;
+      font-size: 13px;
+      line-height: 1.45;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+    }
+
+    .chat-msg.user {
+      align-self: flex-end;
+      background: rgba(91, 140, 255, 0.16);
+      border: 1px solid rgba(91, 140, 255, 0.4);
+    }
+
+    .chat-msg.assistant {
+      align-self: flex-start;
+      background: rgba(20, 27, 46, 0.9);
+      border: 1px solid var(--line);
+    }
+
+    .chat-msg.error {
+      align-self: flex-start;
+      background: rgba(255, 99, 99, 0.12);
+      border: 1px solid rgba(255, 99, 99, 0.4);
+      color: #ff9a9a;
+    }
+
+    .chat-msg .who {
+      display: block;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--muted);
+      margin-bottom: 4px;
+    }
+
+    .chat-empty {
+      margin: auto;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    /* Agent capability toggles + badges */
+    .capabilities {
+      margin-top: 12px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 12px;
+      background: rgba(13, 18, 33, 0.5);
+    }
+    .cap-title {
+      display: block;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+    .cap-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 16px;
+    }
+    .cap {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      cursor: pointer;
+    }
+    .cap-budget {
+      margin-top: 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+    .cap-budget input {
+      width: 110px;
+    }
+    .caps {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      margin-top: 6px;
+    }
+    .cap-badge {
+      font-size: 10px;
+      padding: 2px 7px;
+      border-radius: 999px;
+      background: rgba(91, 140, 255, 0.16);
+      border: 1px solid rgba(91, 140, 255, 0.4);
+      color: #aac2ff;
+    }
+
+    /* Orchestration pipeline trace */
+    .pipeline {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 10px;
+    }
+    .pipeline-empty {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+    .pstage {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 8px 10px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: rgba(13, 18, 33, 0.6);
+    }
+    .pstage-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 999px;
+      margin-top: 4px;
+      background: var(--muted);
+      flex: none;
+    }
+    .pstage-on .pstage-dot { background: #4bf8a5; }
+    .pstage-off { opacity: 0.55; }
+    .pstage-blocked .pstage-dot { background: #ff6363; }
+    .pstage-blocked { border-color: rgba(255, 99, 99, 0.4); }
+    .pstage-body { display: flex; flex-direction: column; }
+    .pstage-name { font-size: 13px; font-weight: 600; }
+    .pstage-detail { font-size: 12px; color: var(--muted); }
+    .pipeline-path {
+      margin-top: 4px;
+      padding: 8px 10px;
+      border: 1px dashed var(--line);
+      border-radius: 10px;
+    }
+    .pipeline-path .who {
+      display: block;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--muted);
+      margin-bottom: 4px;
+    }
+
+    .pill {
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      padding: 3px 8px;
+      font-size: 11px;
+      color: var(--muted);
+      white-space: nowrap;
+    }
+
+    .pill.ok {
+      color: var(--ok);
+      border-color: rgba(75, 248, 165, 0.4);
+      background: rgba(75, 248, 165, 0.08);
+    }
+
+    .pill.bad {
+      color: var(--bad);
+      border-color: rgba(255, 107, 138, 0.45);
+      background: rgba(255, 107, 138, 0.08);
+    }
+
+    .form-row {
+      display: grid;
+      gap: 8px;
+      grid-template-columns: 1fr auto;
+      margin-top: 12px;
+    }
+
+    input, select, textarea {
+      border-radius: 10px;
+      border: 1px solid var(--line);
+      color: var(--text);
+      background: rgba(13, 18, 32, 0.9);
+      font: inherit;
+      padding: 9px 10px;
+      width: 100%;
+      outline: none;
+    }
+
+    textarea {
+      min-height: 84px;
+      resize: vertical;
+    }
+
+    .split {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .chart {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      height: 220px;
+      background:
+        linear-gradient(180deg, rgba(66, 160, 255, 0.08), transparent),
+        repeating-linear-gradient(
+          to right,
+          rgba(146, 162, 203, 0.08),
+          rgba(146, 162, 203, 0.08) 1px,
+          transparent 1px,
+          transparent 56px
+        );
+      position: relative;
+      overflow: hidden;
+      padding: 12px;
+    }
+
+    .trend {
+      position: absolute;
+      left: 10px;
+      right: 10px;
+      bottom: 16px;
+      height: 130px;
+      border-left: 1px solid rgba(146, 162, 203, 0.22);
+      border-bottom: 1px solid rgba(146, 162, 203, 0.22);
+    }
+
+    .trend svg {
+      width: 100%;
+      height: 100%;
+      overflow: visible;
+    }
+
+    .trend path {
+      fill: none;
+      stroke: var(--brand);
+      stroke-width: 2;
+      filter: drop-shadow(0 0 8px rgba(65, 255, 211, 0.45));
+    }
+
+    .note {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 8px;
+      line-height: 1.45;
+    }
+
+    .mono {
+      font-family: "IBM Plex Mono", "Consolas", monospace;
+    }
+
+    @keyframes reveal {
+      from {
+        opacity: 0;
+        transform: translateY(6px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (max-width: 1040px) {
+      .shell {
+        grid-template-columns: 1fr;
+      }
+
+      .sidebar {
+        border-right: 0;
+        border-bottom: 1px solid var(--line);
+        padding: 12px;
+        max-height: 220px;
+      }
+
+      .nav {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .sidebar-foot {
+        display: none;
+      }
+
+      .kpi-grid {
+        grid-template-columns: repeat(2, minmax(120px, 1fr));
+      }
+
+      .grid,
+      .split {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-mark">VG</div>
+        <div class="brand-name">
+          <strong>VeritasGraph Studio</strong>
+          <span>Agent Build Workspace</span>
+        </div>
+      </div>
+
+      <div class="nav" id="nav"></div>
+
+      <div class="sidebar-foot">
+        Runtime status: <b>Healthy</b><br />
+        Last build: <span class="mono">2026-06-28 22:41</span>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div class="title-wrap">
+          <h1 id="screenTitle">Agent Studio</h1>
+          <p id="screenSubtitle">Build and operate enterprise agents with linked tools and governed knowledge.</p>
+        </div>
+        <div class="quick-actions">
+          <button id="saveBtn">Save draft</button>
+          <button id="deployBtn" class="primary">Deploy workspace</button>
+        </div>
+      </header>
+
+      <section class="workspace">
+        <div class="kpi-grid">
+          <div class="kpi"><span>Active agents</span><strong id="kpiAgents">3</strong></div>
+          <div class="kpi"><span>Connected tools</span><strong id="kpiTools">7</strong></div>
+          <div class="kpi"><span>Eval pass rate</span><strong id="kpiEval">93%</strong></div>
+          <div class="kpi"><span>Guardrail blocks</span><strong id="kpiBlocks">12</strong></div>
+        </div>
+
+        <div id="agents" class="section active">
+          <div class="grid">
+            <article class="card">
+              <h3>Agent builder</h3>
+              <p class="meta">Design role, model, and operating policy for each agent.</p>
+              <div class="list" id="agentList"></div>
+              <div class="split" style="margin-top:12px">
+                <input id="agentName" placeholder="Agent name" />
+                <select id="agentModel">
+                  <option value="" disabled selected>Loading local models...</option>
+                </select>
+              </div>
+              <textarea id="agentPrompt" placeholder="System instructions and behavior profile"></textarea>
+              <div class="capabilities">
+                <span class="cap-title">Wire studio capabilities into this agent</span>
+                <div class="cap-grid">
+                  <label class="cap"><input type="checkbox" id="capGraph" /> Knowledge Graph</label>
+                  <label class="cap"><input type="checkbox" id="capTools" /> Tools</label>
+                  <label class="cap"><input type="checkbox" id="capMemory" /> Memory</label>
+                  <label class="cap"><input type="checkbox" id="capGuardrails" /> Guardrails</label>
+                  <label class="cap"><input type="checkbox" id="capData" /> Data log</label>
+                </div>
+                <div class="cap-budget">
+                  <label for="capBudget">Headroom context budget (tokens)</label>
+                  <input id="capBudget" type="number" min="100" step="50" value="600" />
+                </div>
+              </div>
+              <div class="form-row">
+                <input id="agentTags" placeholder="Tags (comma separated)" />
+                <button class="primary" id="addAgent">Create agent</button>
+              </div>
+            </article>
+
+            <article class="card">
+              <h3>Orchestration map</h3>
+              <p class="meta">Plan handoffs, escalation rules, and confidence gates.</p>
+              <div class="chart">
+                <div class="trend">
+                  <svg viewBox="0 0 420 120" preserveAspectRatio="none">
+                    <path d="M0 98 L58 88 L116 91 L174 74 L232 62 L290 46 L348 35 L420 18" />
+                  </svg>
+                </div>
+              </div>
+              <p class="note">Signal shows successful tool-driven completions over recent sessions. Use this to tune agent routing before release.</p>
+            </article>
+          </div>
+        </div>
+
+        <div id="tools" class="section">
+          <div class="grid">
+            <article class="card">
+              <h3>Tool registry</h3>
+              <p class="meta">Attach APIs and internal actions with schema and auth profile.</p>
+              <div class="list" id="toolList"></div>
+              <div class="form-row">
+                <input id="toolName" placeholder="Tool name" />
+                <select id="toolScope">
+                  <option value="read">read</option>
+                  <option value="write">write</option>
+                  <option value="admin">admin</option>
+                </select>
+              </div>
+              <div class="form-row">
+                <input id="toolEndpoint" placeholder="Endpoint (https://...)" />
+                <button class="primary" id="addTool">Register tool</button>
+              </div>
+            </article>
+
+            <article class="card">
+              <h3>Tool validation</h3>
+              <p class="meta">Run smoke tests before exposing tools to agents.</p>
+              <div class="list" id="toolChecks"></div>
+              <div class="note">Validation checks auth handshake, schema conformity, timeout behavior, and output safety metadata.</div>
+            </article>
+          </div>
+        </div>
+
+        <div id="knowledge" class="section">
+          <div class="grid">
+            <article class="card">
+              <h3>Knowledge indexes</h3>
+              <p class="meta">Manage indexed corpora and retrieval profiles.</p>
+              <div class="list" id="knowledgeList"></div>
+              <div class="form-row">
+                <input id="kbName" placeholder="Knowledge source name" />
+                <button class="primary" id="addKb">Add source</button>
+              </div>
+            </article>
+
+            <article class="card">
+              <h3>Chunking and graph linking</h3>
+              <p class="meta">Tune retrieval shape for high attribution confidence.</p>
+              <div class="split">
+                <label>
+                  <span class="meta">Chunk size</span>
+                  <input id="chunkSize" value="900" />
+                </label>
+                <label>
+                  <span class="meta">Overlap</span>
+                  <input id="chunkOverlap" value="120" />
+                </label>
+              </div>
+              <div class="form-row" style="margin-top:10px">
+                <input id="retrievalTopK" value="12" />
+                <button id="saveKnowledgeTuning">Save tuning</button>
+              </div>
+              <p class="note">Graph-link boost gives priority to evidence connected by explicit entities and relationships.</p>
+            </article>
+          </div>
+        </div>
+
+        <div id="guardrails" class="section">
+          <div class="grid">
+            <article class="card">
+              <h3>Guardrails policy pack</h3>
+              <p class="meta">Define hard-block and review policies.</p>
+              <div class="list" id="guardrailList"></div>
+              <div class="form-row">
+                <input id="guardrailName" placeholder="Guardrail name" />
+                <button class="primary" id="addGuardrail">Add guardrail</button>
+              </div>
+            </article>
+
+            <article class="card">
+              <h3>Live incidents</h3>
+              <p class="meta">Recent blocked or redacted outputs.</p>
+              <div class="list" id="incidentList"></div>
+            </article>
+          </div>
+        </div>
+
+        <div id="memory" class="section">
+          <div class="grid">
+            <article class="card">
+              <h3>Memory scopes</h3>
+              <p class="meta">Session, user, and workspace memories.</p>
+              <div class="list" id="memoryList"></div>
+              <div class="form-row">
+                <input id="memoryKey" placeholder="Memory key" />
+                <select id="memoryScope">
+                  <option value="session">session</option>
+                  <option value="user">user</option>
+                  <option value="workspace">workspace</option>
+                </select>
+              </div>
+              <textarea id="memoryValue" placeholder="Memory content"></textarea>
+              <div class="form-row">
+                <input placeholder="" disabled />
+                <button class="primary" id="addMemory">Store memory</button>
+              </div>
+            </article>
+
+            <article class="card">
+              <h3>Memory hygiene</h3>
+              <p class="meta">Watch stale, duplicated, and conflicting memories.</p>
+              <div class="list" id="memoryHealth"></div>
+            </article>
+          </div>
+        </div>
+
+        <div id="data" class="section">
+          <div class="grid">
+            <article class="card">
+              <h3>Data connectors</h3>
+              <p class="meta">Connect SQL, files, events, and object storage.</p>
+              <div class="list" id="dataList"></div>
+              <div class="form-row">
+                <input id="dataSource" placeholder="Connector name" />
+                <button class="primary" id="addData">Add connector</button>
+              </div>
+            </article>
+
+            <article class="card">
+              <h3>Data quality gates</h3>
+              <p class="meta">Pre-index checks to reduce noisy retrieval.</p>
+              <div class="list" id="dataQuality"></div>
+            </article>
+          </div>
+        </div>
+
+        <div id="evaluation" class="section">
+          <div class="grid">
+            <article class="card">
+              <h3>Evaluation suite</h3>
+              <p class="meta">Track relevance, faithfulness, latency, and policy compliance.</p>
+              <div class="list" id="evalList"></div>
+              <div class="form-row">
+                <select id="evalType">
+                  <option value="faithfulness">faithfulness</option>
+                  <option value="groundedness">groundedness</option>
+                  <option value="latency">latency</option>
+                  <option value="policy">policy compliance</option>
+                </select>
+                <button class="primary" id="runEval">Run eval</button>
+              </div>
+            </article>
+
+            <article class="card">
+              <h3>Performance trend</h3>
+              <p class="meta">Rolling seven-run quality trend.</p>
+              <div class="chart">
+                <div class="trend">
+                  <svg viewBox="0 0 420 120" preserveAspectRatio="none">
+                    <path id="evalTrend" d="M0 88 L70 76 L140 70 L210 64 L280 58 L350 48 L420 44" />
+                  </svg>
+                </div>
+              </div>
+              <div class="note" id="evalNote">Last run: 0.93 composite score with no guardrail regressions.</div>
+            </article>
+          </div>
+        </div>
+
+        <div id="fine-tune" class="section">
+          <div class="grid">
+            <article class="card">
+              <h3>Fine-tune queue</h3>
+              <p class="meta">Prepare domain adaptation jobs with curated data slices.</p>
+              <div class="list" id="tuneList"></div>
+              <div class="split">
+                <input id="tuneName" placeholder="Job name" />
+                <select id="tuneBaseModel">
+                  <option value="" disabled selected>Loading local models...</option>
+                </select>
+              </div>
+              <div class="form-row">
+                <input id="tuneDataset" placeholder="Dataset id" />
+                <button class="primary" id="addTune">Queue job</button>
+              </div>
+            </article>
+
+            <article class="card">
+              <h3>Safety checks before launch</h3>
+              <p class="meta">Enforced gates on all fine-tuned checkpoints.</p>
+              <div class="list" id="tuneChecks"></div>
+            </article>
+          </div>
+        </div>
+
+        <div id="playground" class="section">
+          <div class="grid">
+            <article class="card">
+              <h3>Agent test console</h3>
+              <p class="meta">Pick an agent and chat with it. Runs live on the agent's local model.</p>
+              <div class="split" style="margin-top:4px">
+                <select id="playgroundAgent">
+                  <option value="" disabled selected>Loading agents...</option>
+                </select>
+                <button class="ghost" id="playgroundClear">Clear chat</button>
+              </div>
+              <div id="playgroundMeta" class="meta" style="margin-top:8px"></div>
+              <div id="chatLog" class="chat-log"></div>
+              <div class="form-row" style="margin-top:12px">
+                <input id="chatInput" placeholder="Ask the agent something..." autocomplete="off" />
+                <button class="primary" id="chatSend">Send</button>
+              </div>
+            </article>
+
+            <article class="card">
+              <h3>Orchestration pipeline</h3>
+              <p class="meta">Every message flows through the studio sections wired into the agent.</p>
+              <div id="pipelineTrace" class="pipeline">
+                <div class="pipeline-empty">Send a message to see how guardrails, memory, the knowledge graph, headroom budgeting, tools, and data cooperate on each turn.</div>
+              </div>
+              <div id="pipelineCitations" class="list" style="margin-top:10px"></div>
+            </article>
+          </div>
+        </div>
+
+        <div id="graphrag" class="section">
+          <div class="grid">
+            <article class="card">
+              <h3>Build knowledge graph</h3>
+              <p class="meta">Paste a document. A local model extracts entities and relationships with verifiable source attribution.</p>
+              <div class="split" style="margin-top:4px">
+                <select id="graphModel">
+                  <option value="" disabled selected>Loading local models...</option>
+                </select>
+                <button class="ghost" id="graphClear">Clear graph</button>
+              </div>
+              <input id="graphTitle" placeholder="Document title" style="margin-top:10px" />
+              <textarea id="graphText" placeholder="Paste document text to extract a knowledge graph..." style="min-height:140px"></textarea>
+              <div class="form-row">
+                <span class="meta" id="graphStats">No graph yet.</span>
+                <button class="primary" id="graphIngest">Ingest document</button>
+              </div>
+            </article>
+
+            <article class="card">
+              <h3>Graph explorer</h3>
+              <p class="meta">Entities are nodes, relationships are edges. Hover a node for details.</p>
+              <svg id="graphCanvas" viewBox="0 0 520 320" preserveAspectRatio="xMidYMid meet" style="width:100%;height:320px;border:1px solid var(--line);border-radius:12px;background:rgba(13,18,33,0.7)"></svg>
+              <div id="graphTooltip" class="meta" style="margin-top:8px;min-height:18px"></div>
+            </article>
+          </div>
+
+          <div class="grid" style="margin-top:18px">
+            <article class="card">
+              <h3>Graph-grounded reasoning</h3>
+              <p class="meta">Ask a question. The answer uses multi-hop reasoning over the graph and cites its sources.</p>
+              <div class="form-row" style="margin-top:4px">
+                <input id="graphQuestion" placeholder="Ask about the ingested documents..." autocomplete="off" />
+                <button class="primary" id="graphAsk">Reason</button>
+              </div>
+              <div id="graphAnswer" class="chat-log" style="min-height:120px"></div>
+            </article>
+
+            <article class="card">
+              <h3>Reasoning path &amp; citations</h3>
+              <p class="meta">The multi-hop chain and verifiable sources behind the latest answer.</p>
+              <div class="list" id="graphPath"></div>
+              <div class="list" id="graphCitations" style="margin-top:10px"></div>
+            </article>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    const sections = [
+      { id: "agents", label: "Agents", subtitle: "Create role-focused agents and set orchestration rules." },
+      { id: "tools", label: "Tools", subtitle: "Register and validate callable tools for your agents." },
+      { id: "knowledge", label: "Knowledge", subtitle: "Manage knowledge sources and retrieval behavior." },
+      { id: "guardrails", label: "Guardrails", subtitle: "Control harmful outputs and enforce policy boundaries." },
+      { id: "memory", label: "Memory", subtitle: "Store and tune short-term and long-term memory scopes." },
+      { id: "data", label: "Data", subtitle: "Connect and validate operational data pipelines." },
+      { id: "evaluation", label: "Evaluation", subtitle: "Benchmark quality, reliability, and compliance." },
+      { id: "fine-tune", label: "Fine-tune", subtitle: "Queue and monitor model specialization jobs." },
+      { id: "playground", label: "Playground", subtitle: "Test an agent live against its local model." },
+      { id: "graphrag", label: "Knowledge Graph", subtitle: "Build a VeritasGraph knowledge graph and reason over it with citations." }
+    ];
+
+    // Same-origin when served from the studio_api backend (/studio).
+    // Falls back to the default dev port when the file is opened directly.
+    const API_BASE = location.protocol.startsWith("http") ? "" : "http://127.0.0.1:8200";
+
+    async function api(path, options = {}) {
+      const opts = Object.assign({ headers: { "Content-Type": "application/json" } }, options);
+      const res = await fetch(API_BASE + path, opts);
+      if (!res.ok) {
+        throw new Error(path + " -> " + res.status);
+      }
+      return res.status === 204 ? null : res.json();
+    }
+
+    // Live data mirrored from the backend. Populated by loadAll().
+    const data = {
+      agents: [],
+      tools: [],
+      knowledge: [],
+      guardrails: [],
+      memory: [],
+      data: [],
+      evals: [],
+      tunes: [],
+      models: [],
+      kpis: { active_agents: 0, tools_connected: 0, eval_pass_rate: 0, guardrail_blocks: 0 }
+    };
+
+    function pill(status, good, bad) {
+      const ok = (good || []).includes(status);
+      const isBad = (bad || []).includes(status);
+      const cls = ok ? "ok" : isBad ? "bad" : "";
+      return `<span class="pill ${cls}">${status}</span>`;
+    }
+
+    function cfg(item, key, fallback) {
+      return (item.config && item.config[key] != null && item.config[key] !== "")
+        ? item.config[key]
+        : (fallback != null ? fallback : "");
+    }
+
+    // Capability badges shown on an agent card, reflecting which studio
+    // sections (graph, tools, memory, guardrails, data) are wired into it.
+    const CAP_LABELS = {
+      use_graph: "Graph", use_tools: "Tools", use_memory: "Memory",
+      use_guardrails: "Guardrails", use_data: "Data"
+    };
+    function capBadges(item) {
+      const c = item.config || {};
+      const on = Object.keys(CAP_LABELS).filter((k) => c[k]);
+      if (!on.length) return "";
+      return `<div class="caps">${on.map((k) => `<span class="cap-badge">${CAP_LABELS[k]}</span>`).join("")}</div>`;
+    }
+
+    function createNav() {
+      const nav = document.getElementById("nav");
+      nav.innerHTML = "";
+      sections.forEach((section, idx) => {
+        const button = document.createElement("button");
+        button.dataset.target = section.id;
+        if (idx === 0) {
+          button.classList.add("active");
+        }
+        button.innerHTML = `<span class="dot"></span><span>${section.label}</span>`;
+        button.addEventListener("click", () => setSection(section.id));
+        nav.appendChild(button);
+      });
+    }
+
+    function setSection(targetId) {
+      document.querySelectorAll(".section").forEach((el) => {
+        el.classList.toggle("active", el.id === targetId);
+      });
+      document.querySelectorAll(".nav button").forEach((btn) => {
+        btn.classList.toggle("active", btn.dataset.target === targetId);
+      });
+      const selected = sections.find((s) => s.id === targetId);
+      if (!selected) {
+        return;
+      }
+      document.getElementById("screenTitle").textContent = selected.label;
+      document.getElementById("screenSubtitle").textContent = selected.subtitle;
+    }
+
+    function renderList(targetId, items, mapper) {
+      const root = document.getElementById(targetId);
+      root.innerHTML = "";
+      items.forEach((item) => {
+        const node = document.createElement("div");
+        node.className = "list-item";
+        node.innerHTML = mapper(item);
+        root.appendChild(node);
+      });
+    }
+
+    function trendPath(trend) {
+      if (!trend || !trend.length) {
+        return "M0 88 L420 88";
+      }
+      const w = 420;
+      const n = trend.length;
+      return trend.map((t, i) => {
+        const rate = typeof t === "number" ? t : (t.pass_rate || 0);
+        const x = n === 1 ? w : Math.round(i * (w / (n - 1)));
+        const y = Math.round(96 - rate * 80);
+        return (i === 0 ? "M" : "L") + x + " " + y;
+      }).join(" ");
+    }
+
+    // ----------------------------------------------------------------- //
+    // Playground (agent test console)
+    // ----------------------------------------------------------------- //
+    let chatHistory = [];
+
+    function escapeHtml(text) {
+      const div = document.createElement("div");
+      div.textContent = text == null ? "" : String(text);
+      return div.innerHTML;
+    }
+
+    function fillAgentSelect() {
+      const sel = document.getElementById("playgroundAgent");
+      if (!sel) return;
+      const previous = sel.value;
+      sel.innerHTML = "";
+      if (!data.agents.length) {
+        const opt = document.createElement("option");
+        opt.value = "";
+        opt.disabled = true;
+        opt.selected = true;
+        opt.textContent = "No agents yet — create one first";
+        sel.appendChild(opt);
+        return;
+      }
+      data.agents.forEach((a) => {
+        const opt = document.createElement("option");
+        opt.value = a.id;
+        opt.textContent = `${a.name}  (${a.kind || "no model"})`;
+        sel.appendChild(opt);
+      });
+      if (previous && data.agents.some((a) => a.id === previous)) sel.value = previous;
+      updatePlaygroundMeta();
+    }
+
+    function updatePlaygroundMeta() {
+      const meta = document.getElementById("playgroundMeta");
+      const sel = document.getElementById("playgroundAgent");
+      if (!meta || !sel) return;
+      const agent = data.agents.find((a) => a.id === sel.value);
+      meta.textContent = agent
+        ? `Model: ${agent.kind || "none"} · Status: ${agent.status}`
+        : "";
+    }
+
+    function renderChat() {
+      const log = document.getElementById("chatLog");
+      if (!log) return;
+      if (!chatHistory.length) {
+        log.innerHTML = `<div class="chat-empty">No messages yet. Say hello to test the agent.</div>`;
+        return;
+      }
+      log.innerHTML = chatHistory.map((m) => {
+        const who = m.role === "user" ? "You" : m.role === "error" ? "Error" : "Agent";
+        return `<div class="chat-msg ${m.role}"><span class="who">${who}</span>${escapeHtml(m.content)}</div>`;
+      }).join("");
+      log.scrollTop = log.scrollHeight;
+    }
+
+    async function sendChat() {
+      const sel = document.getElementById("playgroundAgent");
+      const input = document.getElementById("chatInput");
+      const sendBtn = document.getElementById("chatSend");
+      const agentId = sel && sel.value;
+      const message = input.value.trim();
+      if (!agentId || !message) return;
+
+      chatHistory.push({ role: "user", content: message });
+      input.value = "";
+      const thinking = { role: "assistant", content: "..." };
+      chatHistory.push(thinking);
+      renderChat();
+      sendBtn.disabled = true;
+      input.disabled = true;
+
+      try {
+        const history = chatHistory
+          .filter((m) => m !== thinking && (m.role === "user" || m.role === "assistant"))
+          .slice(0, -1)
+          .map((m) => ({ role: m.role, content: m.content }));
+        const res = await api("/playground/chat", {
+          method: "POST",
+          body: JSON.stringify({ agent_id: agentId, message, history })
+        });
+        thinking.content = res.reply || "(empty response)";
+        if (res.blocked) thinking.role = "error";
+        renderPipeline(res);
+      } catch (err) {
+        thinking.role = "error";
+        const m = String(err.message || "");
+        const match = m.match(/-> (\d+)/);
+        thinking.content = match
+          ? `Request failed (HTTP ${match[1]}). Make sure the agent's model is pulled (ollama pull) and Ollama is running.`
+          : (err.message || "Request failed");
+      } finally {
+        renderChat();
+        sendBtn.disabled = false;
+        input.disabled = false;
+        input.focus();
+      }
+    }
+
+    // Render the orchestration pipeline trace returned by /playground/chat.
+    function renderPipeline(res) {
+      const el = document.getElementById("pipelineTrace");
+      const citeEl = document.getElementById("pipelineCitations");
+      if (!el) return;
+      const t = res.trace || {};
+      const stages = [];
+      const gin = t.guardrails_in || {};
+      stages.push(pipelineStage(
+        "Guardrails (in)",
+        gin.blocked ? "blocked" : (gin.applied && gin.applied.length ? "on" : "off"),
+        gin.blocked ? gin.reason
+          : (gin.applied && gin.applied.length
+              ? `${gin.applied.join(", ")} · ${gin.redactions || 0} redaction(s)`
+              : "no active guardrails")
+      ));
+      const mem = t.memory || {};
+      stages.push(pipelineStage("Memory", mem.used ? "on" : "off",
+        mem.used ? `recalled ${mem.recalled_turns} turn(s)` : "not wired"));
+      const g = t.graph || {};
+      stages.push(pipelineStage("Knowledge Graph", g.used ? "on" : "off",
+        g.used ? `${g.nodes} nodes · ${g.edges} edges · seeds: ${(g.seeds || []).join(", ") || "—"}` : "not wired"));
+      const b = t.budget || {};
+      stages.push(pipelineStage("Headroom budget", b.used ? "on" : "off",
+        b.used ? `${b.used_tokens}/${b.budget_tokens} tokens · kept ${b.kept} · dropped ${b.dropped}` : "no graph context"));
+      const tl = t.tools || {};
+      stages.push(pipelineStage("Tools", tl.used ? "on" : "off",
+        tl.used ? ((tl.available || []).join(", ") || "none enabled") : "not wired"));
+      const gout = t.guardrails_out || {};
+      stages.push(pipelineStage("Guardrails (out)", gout.applied && gout.applied.length ? "on" : "off",
+        gout.applied && gout.applied.length ? `${gout.redactions || 0} redaction(s)` : "no output filter"));
+      const d = t.data || {};
+      stages.push(pipelineStage("Data log", d.logged ? "on" : "off",
+        d.logged ? "interaction recorded" : "not wired"));
+
+      let html = stages.join("");
+      if (g.reasoning_path && g.reasoning_path.length) {
+        html += `<div class="pipeline-path"><span class="who">Reasoning path</span>`
+          + g.reasoning_path.map((p) => `<div class="meta mono">${escapeHtml(p)}</div>`).join("")
+          + `</div>`;
+      }
+      el.innerHTML = html;
+
+      const cites = res.citations || [];
+      citeEl.innerHTML = cites.length
+        ? `<div class="meta" style="margin-bottom:6px">Citations</div>` + cites.map((c) =>
+            `<div class="list-item mono">${escapeHtml(c.id)}${c.title ? " — " + escapeHtml(c.title) : ""}</div>`).join("")
+        : "";
+    }
+
+    function pipelineStage(name, state, detail) {
+      return `<div class="pstage pstage-${state}">
+        <span class="pstage-dot"></span>
+        <div class="pstage-body"><span class="pstage-name">${escapeHtml(name)}</span>
+        <span class="pstage-detail">${escapeHtml(detail || "")}</span></div>
+      </div>`;
+    }
+
+    // ----------------------------------------------------------------- //
+    // GraphRAG (VeritasGraph knowledge graph)
+    // ----------------------------------------------------------------- //
+    let graphData = { nodes: [], edges: [], stats: { entities: 0, relationships: 0, sources: 0 } };
+
+    function renderGraphStats() {
+      const el = document.getElementById("graphStats");
+      if (!el) return;
+      const s = graphData.stats || {};
+      el.textContent = s.entities
+        ? `${s.entities} entities · ${s.relationships} relationships · ${s.sources} sources`
+        : "No graph yet.";
+    }
+
+    const TYPE_COLORS = {
+      person: "#5b8cff", organization: "#4bf8a5", concept: "#c08bff",
+      product: "#ffce6b", location: "#ff8b8b", event: "#6bd5ff"
+    };
+
+    function drawGraph() {
+      const svg = document.getElementById("graphCanvas");
+      if (!svg) return;
+      const W = 520, H = 320;
+      const nodes = graphData.nodes || [];
+      const edges = graphData.edges || [];
+      if (!nodes.length) {
+        svg.innerHTML = `<text x="${W / 2}" y="${H / 2}" fill="#7c89a8" font-size="13" text-anchor="middle">Ingest a document to build the graph</text>`;
+        return;
+      }
+      // Deterministic circular layout; node radius scales with degree.
+      const cx = W / 2, cy = H / 2, R = Math.min(W, H) / 2 - 40;
+      const pos = {};
+      const n = nodes.length;
+      nodes.forEach((node, i) => {
+        const angle = (i / n) * Math.PI * 2 - Math.PI / 2;
+        pos[node.id] = { x: cx + R * Math.cos(angle), y: cy + R * Math.sin(angle) };
+      });
+      let svgEls = "";
+      edges.forEach((e) => {
+        const a = pos[e.source], b = pos[e.target];
+        if (!a || !b) return;
+        svgEls += `<line x1="${a.x}" y1="${a.y}" x2="${b.x}" y2="${b.y}" stroke="#2c3656" stroke-width="1.2" />`;
+      });
+      nodes.forEach((node) => {
+        const p = pos[node.id];
+        const r = Math.min(14, 5 + (node.degree || 0) * 1.5);
+        const color = TYPE_COLORS[node.type] || "#9aa7c7";
+        const label = node.name.length > 16 ? node.name.slice(0, 15) + "…" : node.name;
+        svgEls += `<g class="gnode" data-id="${node.id}" style="cursor:pointer">
+          <circle cx="${p.x}" cy="${p.y}" r="${r}" fill="${color}" fill-opacity="0.85" stroke="#0d1221" stroke-width="1.5" />
+          <text x="${p.x}" y="${p.y - r - 4}" fill="#cdd6ea" font-size="9" text-anchor="middle">${escapeHtml(label)}</text>
+        </g>`;
+      });
+      svg.innerHTML = svgEls;
+      svg.querySelectorAll(".gnode").forEach((g) => {
+        g.addEventListener("mouseenter", () => {
+          const node = nodes.find((x) => x.id === g.dataset.id);
+          const tip = document.getElementById("graphTooltip");
+          if (node && tip) tip.textContent = `${node.name} (${node.type}) — degree ${node.degree}: ${node.description || "no description"}`;
+        });
+      });
+    }
+
+    async function loadGraph() {
+      try {
+        graphData = await api("/graphrag/graph");
+      } catch (err) {
+        console.error("Failed to load graph", err);
+        graphData = { nodes: [], edges: [], stats: {} };
+      }
+      renderGraphStats();
+      drawGraph();
+    }
+
+    async function ingestDocument() {
+      const model = document.getElementById("graphModel").value;
+      const title = document.getElementById("graphTitle").value.trim() || "Untitled document";
+      const text = document.getElementById("graphText").value.trim();
+      const btn = document.getElementById("graphIngest");
+      if (!model || !text) return;
+      btn.disabled = true;
+      const prev = btn.textContent;
+      btn.textContent = "Extracting...";
+      try {
+        const res = await api("/graphrag/ingest", { method: "POST", body: JSON.stringify({ title, text, model }) });
+        document.getElementById("graphText").value = "";
+        document.getElementById("graphStats").textContent =
+          `Ingested ${res.result.chunks_processed} chunk(s) · ${res.result.entities_total} entities · ${res.result.relationships_total} relationships`;
+        await loadGraph();
+      } catch (err) {
+        const m = String(err.message || "");
+        const match = m.match(/-> (\d+)/);
+        document.getElementById("graphStats").textContent = match
+          ? `Ingest failed (HTTP ${match[1]}). Check the model is pulled and Ollama is running.`
+          : (err.message || "Ingest failed");
+      } finally {
+        btn.disabled = false;
+        btn.textContent = prev;
+      }
+    }
+
+    async function clearGraph() {
+      if (!confirm("Clear the entire knowledge graph?")) return;
+      try {
+        await api("/graphrag/graph", { method: "DELETE" });
+      } catch (err) {
+        console.error(err);
+      }
+      document.getElementById("graphAnswer").innerHTML = "";
+      document.getElementById("graphPath").innerHTML = "";
+      document.getElementById("graphCitations").innerHTML = "";
+      await loadGraph();
+    }
+
+    async function askGraph() {
+      const model = document.getElementById("graphModel").value;
+      const question = document.getElementById("graphQuestion").value.trim();
+      const btn = document.getElementById("graphAsk");
+      const answerEl = document.getElementById("graphAnswer");
+      if (!model || !question) return;
+      btn.disabled = true;
+      answerEl.innerHTML = `<div class="chat-msg assistant"><span class="who">VeritasGraph</span>Reasoning over the graph...</div>`;
+      document.getElementById("graphPath").innerHTML = "";
+      document.getElementById("graphCitations").innerHTML = "";
+      try {
+        const res = await api("/graphrag/query", { method: "POST", body: JSON.stringify({ question, model }) });
+        answerEl.innerHTML = `<div class="chat-msg user"><span class="who">You</span>${escapeHtml(question)}</div>
+          <div class="chat-msg assistant"><span class="who">VeritasGraph</span>${escapeHtml(res.answer)}</div>`;
+        renderList("graphPath", res.reasoning_path.map((p) => ({ p })), (item) => `<div class="meta mono">${escapeHtml(item.p)}</div>`);
+        if (!res.reasoning_path.length) {
+          document.getElementById("graphPath").innerHTML = `<div class="meta">No multi-hop path (single or disconnected entities).</div>`;
+        }
+        renderList("graphCitations", res.citations, (c) => `
+          <div>
+            <div class="name mono">${escapeHtml(c.id)}</div>
+            <div class="meta">${escapeHtml((c.text || "").slice(0, 160))}${(c.text || "").length > 160 ? "…" : ""}</div>
+          </div>
+          ${pill("source", ["source"], [])}
+        `);
+        if (!res.citations.length) {
+          document.getElementById("graphCitations").innerHTML = `<div class="meta">No citations returned.</div>`;
+        }
+      } catch (err) {
+        const m = String(err.message || "");
+        const match = m.match(/-> (\d+)/);
+        answerEl.innerHTML = `<div class="chat-msg error"><span class="who">Error</span>${match ? `Query failed (HTTP ${match[1]}).` : escapeHtml(err.message || "Query failed")}</div>`;
+      } finally {
+        btn.disabled = false;
+      }
+    }
+
+    function renderAll() {
+      renderList("agentList", data.agents, (item) => `
+        <div>
+          <div class="name">${item.name}</div>
+          <div class="meta">${item.kind || "agent"} | ${cfg(item, "tags", "general")}</div>
+          ${capBadges(item)}
+        </div>
+        ${pill(item.status, ["active"], ["error"])}
+      `);
+
+      fillAgentSelect();
+
+      renderList("toolList", data.tools, (item) => `
+        <div>
+          <div class="name">${item.name}</div>
+          <div class="meta mono">${cfg(item, "endpoint", item.kind || "")}</div>
+        </div>
+        ${pill(item.status, ["connected"], ["disabled"])}
+      `);
+
+      renderList("toolChecks", data.tools, (item) => `
+        <div>
+          <div class="name">${item.name} validation</div>
+          <div class="meta">scope: ${item.kind || "read"} | status: ${item.status}</div>
+        </div>
+        ${pill(item.status, ["connected"], ["disabled"])}
+      `);
+
+      renderList("knowledgeList", data.knowledge, (item) => `
+        <div>
+          <div class="name">${item.name}</div>
+          <div class="meta">Hybrid search + graph-linking</div>
+        </div>
+        ${pill(item.status, ["indexed"], ["failed"])}
+      `);
+
+      renderList("guardrailList", data.guardrails, (item) => `
+        <div>
+          <div class="name">${item.name}</div>
+          <div class="meta">${item.description || ("mode: " + (item.kind || item.status))}</div>
+        </div>
+        ${pill(item.status, ["enforcing"], ["blocked"])}
+      `);
+
+      renderList("incidentList", [
+        { name: "Guardrail blocks (lifetime)", meta: "Aggregated from enforced policies", count: data.kpis.guardrail_blocks },
+        { name: "Active guardrails", meta: "Currently monitoring or enforcing", count: data.guardrails.length }
+      ], (item) => `
+        <div>
+          <div class="name">${item.name}</div>
+          <div class="meta">${item.meta}</div>
+        </div>
+        <span class="pill ${item.count > 0 ? "bad" : "ok"}">${item.count}</span>
+      `);
+
+      renderList("memoryList", data.memory, (item) => `
+        <div>
+          <div class="name">${item.name}</div>
+          <div class="meta">${cfg(item, "value", item.description)}</div>
+        </div>
+        <span class="pill">${item.kind || "scope"}</span>
+      `);
+
+      renderList("memoryHealth", [
+        { name: "Stored scopes", detail: data.memory.length + " memory entries", ok: true },
+        { name: "Active entries", detail: data.memory.filter((m) => m.status === "active").length + " active", ok: true }
+      ], (item) => `
+        <div>
+          <div class="name">${item.name}</div>
+          <div class="meta">${item.detail}</div>
+        </div>
+        <span class="pill ${item.ok ? "ok" : "bad"}">${item.ok ? "ok" : "needs review"}</span>
+      `);
+
+      renderList("dataList", data.data, (item) => `
+        <div>
+          <div class="name">${item.name}</div>
+          <div class="meta">${item.description || "Operational data pipeline"}</div>
+        </div>
+        ${pill(item.status, ["ready"], ["failed"])}
+      `);
+
+      renderList("dataQuality", [
+        { name: "Connected sources", detail: data.data.length + " pipelines registered", ok: data.data.length > 0 },
+        { name: "Ready sources", detail: data.data.filter((d) => d.status === "ready").length + " ready", ok: true }
+      ], (item) => `
+        <div>
+          <div class="name">${item.name}</div>
+          <div class="meta">${item.detail}</div>
+        </div>
+        <span class="pill ${item.ok ? "ok" : "bad"}">${item.ok ? "good" : "warn"}</span>
+      `);
+
+      renderList("evalList", data.evals, (item) => `
+        <div>
+          <div class="name">${item.name}</div>
+          <div class="meta">pass rate: ${Math.round((item.pass_rate || 0) * 100)}% | ${item.passed_cases || 0}/${item.total_cases || 0} cases</div>
+        </div>
+        ${pill(item.status, ["passed"], ["failed"])}
+      `);
+
+      renderList("tuneList", data.tunes, (item) => `
+        <div>
+          <div class="name">${item.name}</div>
+          <div class="meta">base: ${item.base_model} | ${Math.round((item.progress || 0) * 100)}%</div>
+        </div>
+        ${pill(item.status, ["ready"], ["failed"])}
+      `);
+
+      renderList("tuneChecks", data.tunes.length ? data.tunes : [{ name: "No jobs queued", status: "idle", base_model: "-" }], (item) => `
+        <div>
+          <div class="name">${item.name}</div>
+          <div class="meta">base: ${item.base_model}</div>
+        </div>
+        ${pill(item.status, ["ready"], ["failed"])}
+      `);
+
+      const latestEval = data.evals.find((e) => e.trend && e.trend.length) || data.evals[0];
+      if (latestEval) {
+        document.getElementById("evalTrend").setAttribute("d", trendPath(latestEval.trend));
+        document.getElementById("evalNote").textContent =
+          `Last run: ${latestEval.suite} - ${Math.round((latestEval.pass_rate || 0) * 100)}% pass rate (${latestEval.status}).`;
+      }
+
+      document.getElementById("kpiAgents").textContent = String(data.kpis.active_agents);
+      document.getElementById("kpiTools").textContent = String(data.kpis.tools_connected);
+      document.getElementById("kpiEval").textContent = `${Math.round((data.kpis.eval_pass_rate || 0) * 100)}%`;
+      document.getElementById("kpiBlocks").textContent = String(data.kpis.guardrail_blocks);
+    }
+
+    // Populate the model <select> elements with the models installed on this
+    // machine. Falls back to a clear message when no local runtime is found.
+    function fillModelSelect(id, models) {
+      const sel = document.getElementById(id);
+      if (!sel) return;
+      const previous = sel.value;
+      sel.innerHTML = "";
+      if (!models.length) {
+        const opt = document.createElement("option");
+        opt.value = "";
+        opt.disabled = true;
+        opt.selected = true;
+        opt.textContent = "No local models found";
+        sel.appendChild(opt);
+        return;
+      }
+      models.forEach((m) => {
+        const opt = document.createElement("option");
+        opt.value = m.id;
+        opt.textContent = m.name;
+        sel.appendChild(opt);
+      });
+      if (previous && models.some((m) => m.id === previous)) sel.value = previous;
+    }
+
+    async function loadModels() {
+      try {
+        const res = await api("/models/");
+        data.models = (res && res.items) || [];
+      } catch (err) {
+        console.error("Failed to load local models", err);
+        data.models = [];
+      }
+      fillModelSelect("agentModel", data.models);
+      fillModelSelect("tuneBaseModel", data.models);
+      fillModelSelect("graphModel", data.models);
+    }
+
+    async function loadAll() {
+      const collections = ["agents", "tools", "knowledge", "guardrails", "memory", "data"];
+      try {
+        const results = await Promise.all([
+          ...collections.map((s) => api(`/${s}/`)),
+          api("/evaluation/runs"),
+          api("/finetune/jobs"),
+          api("/workspace/kpis")
+        ]);
+        collections.forEach((s, i) => { data[s] = results[i].items || []; });
+        data.evals = results[collections.length].runs || [];
+        data.tunes = results[collections.length + 1].jobs || [];
+        data.kpis = results[collections.length + 2].kpis || data.kpis;
+        renderAll();
+        scheduleRefresh();
+      } catch (err) {
+        console.error("Failed to load studio data", err);
+      }
+    }
+
+    // Poll only while an evaluation or fine-tune job is still progressing, so the
+    // dashboard stays live during simulations but goes quiet when idle.
+    let _refreshTimer = null;
+    function scheduleRefresh() {
+      const evalBusy = data.evals.some((e) => e.status === "queued" || e.status === "running");
+      const tuneBusy = data.tunes.some((t) => t.status === "queued" || t.status === "running");
+      if (_refreshTimer) {
+        clearTimeout(_refreshTimer);
+        _refreshTimer = null;
+      }
+      if (evalBusy || tuneBusy) {
+        _refreshTimer = setTimeout(loadAll, 3000);
+      }
+    }
+
+    function bindActions() {
+      document.getElementById("chatSend").addEventListener("click", sendChat);
+      document.getElementById("chatInput").addEventListener("keydown", (e) => {
+        if (e.key === "Enter") { e.preventDefault(); sendChat(); }
+      });
+      document.getElementById("playgroundClear").addEventListener("click", () => {
+        chatHistory = [];
+        renderChat();
+      });
+      document.getElementById("playgroundAgent").addEventListener("change", () => {
+        chatHistory = [];
+        renderChat();
+        updatePlaygroundMeta();
+      });
+
+      document.getElementById("graphIngest").addEventListener("click", ingestDocument);
+      document.getElementById("graphClear").addEventListener("click", clearGraph);
+      document.getElementById("graphAsk").addEventListener("click", askGraph);
+      document.getElementById("graphQuestion").addEventListener("keydown", (e) => {
+        if (e.key === "Enter") { e.preventDefault(); askGraph(); }
+      });
+
+      document.getElementById("addAgent").addEventListener("click", async () => {
+        const name = document.getElementById("agentName").value.trim();
+        const model = document.getElementById("agentModel").value;
+        const prompt = document.getElementById("agentPrompt").value.trim();
+        const tags = document.getElementById("agentTags").value.trim() || "general";
+        if (!name) return;
+        const config = {
+          tags,
+          prompt,
+          use_graph: document.getElementById("capGraph").checked,
+          use_tools: document.getElementById("capTools").checked,
+          use_memory: document.getElementById("capMemory").checked,
+          use_guardrails: document.getElementById("capGuardrails").checked,
+          use_data: document.getElementById("capData").checked,
+          context_budget: parseInt(document.getElementById("capBudget").value, 10) || 600
+        };
+        await api("/agents/", { method: "POST", body: JSON.stringify({
+          name, kind: model, description: prompt, config
+        }) });
+        document.getElementById("agentName").value = "";
+        document.getElementById("agentPrompt").value = "";
+        document.getElementById("agentTags").value = "";
+        ["capGraph", "capTools", "capMemory", "capGuardrails", "capData"].forEach((id) => {
+          document.getElementById(id).checked = false;
+        });
+        await loadAll();
+      });
+
+      document.getElementById("addTool").addEventListener("click", async () => {
+        const name = document.getElementById("toolName").value.trim();
+        const scope = document.getElementById("toolScope").value;
+        const endpoint = document.getElementById("toolEndpoint").value.trim();
+        if (!name || !endpoint) return;
+        await api("/tools/", { method: "POST", body: JSON.stringify({
+          name, kind: scope, config: { endpoint } }) });
+        document.getElementById("toolName").value = "";
+        document.getElementById("toolEndpoint").value = "";
+        await loadAll();
+      });
+
+      document.getElementById("addKb").addEventListener("click", async () => {
+        const name = document.getElementById("kbName").value.trim();
+        if (!name) return;
+        await api("/knowledge/", { method: "POST", body: JSON.stringify({ name, kind: "corpus" }) });
+        document.getElementById("kbName").value = "";
+        await loadAll();
+      });
+
+      document.getElementById("addGuardrail").addEventListener("click", async () => {
+        const name = document.getElementById("guardrailName").value.trim();
+        if (!name) return;
+        await api("/guardrails/", { method: "POST", body: JSON.stringify({ name, kind: "policy" }) });
+        document.getElementById("guardrailName").value = "";
+        await loadAll();
+      });
+
+      document.getElementById("addMemory").addEventListener("click", async () => {
+        const key = document.getElementById("memoryKey").value.trim();
+        const scope = document.getElementById("memoryScope").value;
+        const value = document.getElementById("memoryValue").value.trim();
+        if (!key || !value) return;
+        await api("/memory/", { method: "POST", body: JSON.stringify({
+          name: key, kind: scope, config: { value }, description: value }) });
+        document.getElementById("memoryKey").value = "";
+        document.getElementById("memoryValue").value = "";
+        await loadAll();
+      });
+
+      document.getElementById("addData").addEventListener("click", async () => {
+        const name = document.getElementById("dataSource").value.trim();
+        if (!name) return;
+        await api("/data/", { method: "POST", body: JSON.stringify({ name, kind: "connector" }) });
+        document.getElementById("dataSource").value = "";
+        await loadAll();
+      });
+
+      document.getElementById("runEval").addEventListener("click", async () => {
+        const type = document.getElementById("evalType").value;
+        const btn = document.getElementById("runEval");
+        btn.disabled = true;
+        try {
+          await api("/evaluation/runs", { method: "POST", body: JSON.stringify({
+            name: type + " run", suite: type, total_cases: 24, threshold: 0.9 }) });
+          document.getElementById("evalNote").textContent = `Started ${type} run...`;
+          await loadAll();
+        } finally {
+          btn.disabled = false;
+        }
+      });
+
+      document.getElementById("addTune").addEventListener("click", async () => {
+        const name = document.getElementById("tuneName").value.trim();
+        const model = document.getElementById("tuneBaseModel").value;
+        const dataset = document.getElementById("tuneDataset").value.trim();
+        if (!name || !dataset) return;
+        await api("/finetune/jobs", { method: "POST", body: JSON.stringify({
+          name, base_model: model, dataset, epochs: 3 }) });
+        document.getElementById("tuneName").value = "";
+        document.getElementById("tuneDataset").value = "";
+        await loadAll();
+      });
+
+      document.getElementById("deployBtn").addEventListener("click", async () => {
+        try {
+          const res = await api("/workspace/deploy", { method: "POST", body: JSON.stringify({
+            workspace: "default", environment: "staging",
+            notes: "Deployed from studio UI" }) });
+          const dep = res.deployment || {};
+          alert(`Deployment ${dep.id || ""} -> ${dep.environment || "staging"} (${dep.status || "started"}).`);
+        } catch (err) {
+          alert("Deployment failed: " + err.message);
+        }
+      });
+
+      document.getElementById("saveBtn").addEventListener("click", async () => {
+        const selected = document.querySelector(".section.active");
+        try {
+          await api("/workspace/draft", { method: "PUT", body: JSON.stringify({
+            name: "VeritasGraph workspace",
+            notes: "Saved from studio UI",
+            selected_section: selected ? selected.id : "agents",
+            data: { kpis: data.kpis }
+          }) });
+          alert("Draft saved to backend.");
+        } catch (err) {
+          alert("Save failed: " + err.message);
+        }
+      });
+
+      document.getElementById("saveKnowledgeTuning").addEventListener("click", async () => {
+        const tuning = {
+          chunk_size: Number(document.getElementById("chunkSize").value),
+          chunk_overlap: Number(document.getElementById("chunkOverlap").value),
+          retrieval_top_k: Number(document.getElementById("retrievalTopK").value)
+        };
+        try {
+          await api("/workspace/draft", { method: "PUT", body: JSON.stringify({
+            name: "VeritasGraph workspace",
+            notes: "Knowledge tuning",
+            selected_section: "knowledge",
+            data: { knowledge_tuning: tuning }
+          }) });
+          alert("Knowledge retrieval tuning saved to backend.");
+        } catch (err) {
+          alert("Save failed: " + err.message);
+        }
+      });
+    }
+
+    createNav();
+    loadModels();
+    loadAll();
+    bindActions();
+    renderChat();
+    loadGraph();
+  </script>
+</body>
+</html>

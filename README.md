@@ -88,6 +88,51 @@ That's it. This launches an interactive demo using cloud APIs (OpenAI/Anthropic)
 
 ---
 
+## 🛠️ VeritasGraph Studio — Build, wire & test agents locally
+
+**Studio** is a local Agent Build Workspace (FastAPI + single-page UI) that lets you
+build a knowledge graph from your own documents and **wire it into agents** alongside
+tools, memory, data logging, guardrails, and headroom-style context budgeting — then
+chat with those agents live and watch every stage of the orchestration pipeline.
+Everything runs **100% locally** against [Ollama](https://ollama.com).
+
+<p align="center">
+  <img src="assets/veritasgraph-studio.png" alt="VeritasGraph Studio — Playground with live orchestration pipeline" width="90%">
+</p>
+
+**Run it:**
+
+```bash
+pip install -r requirements.txt
+ollama serve & ollama pull qwen3:latest          # any local chat model
+STUDIO_DATA_DIR="$PWD/studio_api/data" \
+  uvicorn studio_api.main:app --host 127.0.0.1 --port 8200 --log-level warning
+# Studio UI → http://localhost:8200/studio   ·   API docs → /docs
+```
+
+**One-command end-to-end demo** (builds a graph + drives a fully-wired agent through
+graph reasoning, memory recall, PII redaction, and a guardrail block):
+
+```bash
+python3 demos/agent-studio/sample_pipeline.py --model qwen3:latest
+```
+
+**What's inside:**
+
+- 🧩 **Knowledge Graph builder & explorer** — local-model entity/relationship
+  extraction with verifiable `[doc#chunk]` source attribution and a visual graph.
+- 🔀 **Agent orchestration pipeline** — per-turn flow of
+  Guardrails → Memory → Knowledge Graph → Headroom budget → Tools → Data, each
+  toggleable per agent, with a live trace, reasoning path, and citations in the UI.
+- 🛡️ **Guardrails** that redact PII (in & out) and block disallowed input.
+- 🧠 **Memory** + 🗄️ **Data log** persisted per agent.
+- 🧪 **Playground** to chat with agents live on their assigned local model.
+
+See [`studio_api/README.md`](studio_api/README.md) for the full feature list, API
+reference, configuration, and architecture.
+
+---
+
 ### 🎬 See It In Action
 
 [![VeritasGraph Master Demo](https://img.youtube.com/vi/oa8ektm7nLY/maxresdefault.jpg)](https://youtu.be/oa8ektm7nLY)
