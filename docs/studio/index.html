@@ -3,21 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- DEMO_URL: https://primarily-north-browsing-projector.trycloudflare.com -->
-    <meta http-equiv="refresh" content="0;url=https://primarily-north-browsing-projector.trycloudflare.com/studio">
+    <!-- DEMO_URL: https://oem-tucson-millennium-occurs.trycloudflare.com -->
+    <meta http-equiv="refresh" content="0;url=https://oem-tucson-millennium-occurs.trycloudflare.com/studio">
     <title>VeritasGraph Studio - Live Demo</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; min-height: 100vh; display: flex; justify-content: center; align-items: center; background: linear-gradient(135deg, #1e3a8a 0%, #6d28d9 100%); color: white; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #1e3a8a 0%, #6d28d9 100%);
+            color: white;
+        }
         .container { text-align: center; padding: 40px; max-width: 520px; }
         h1 { font-size: 2.4rem; margin-bottom: 16px; }
         .sub { font-size: 1.05rem; opacity: 0.85; margin-bottom: 24px; }
-        .spinner { border: 4px solid rgba(255,255,255,0.3); border-top: 4px solid white; border-radius: 50%; width: 50px; height: 50px; animation: spin 1s linear infinite; margin: 28px auto; }
+        .spinner {
+            border: 4px solid rgba(255,255,255,0.3);
+            border-top: 4px solid white;
+            border-radius: 50%;
+            width: 50px; height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 28px auto;
+        }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         p { font-size: 1.2rem; margin-bottom: 20px; opacity: 0.9; }
-        a { display: inline-block; color: white; background: rgba(255,255,255,0.2); padding: 15px 30px; border-radius: 8px; text-decoration: none; font-weight: 600; transition: background 0.3s; }
+        a {
+            display: inline-block; color: white;
+            background: rgba(255,255,255,0.2); padding: 15px 30px;
+            border-radius: 8px; text-decoration: none;
+            font-weight: 600; transition: background 0.3s;
+        }
         a:hover { background: rgba(255,255,255,0.32); }
-        .status { margin-top: 30px; padding: 15px; background: rgba(255,255,255,0.1); border-radius: 8px; font-size: 0.9rem; }
+        .status {
+            margin-top: 30px; padding: 15px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 8px; font-size: 0.9rem;
+        }
     </style>
 </head>
 <body>
@@ -26,9 +50,14 @@
         <div class="sub">Build, wire &amp; test GraphRAG agents — live demo</div>
         <div class="spinner"></div>
         <p>Redirecting to the live studio...</p>
-        <a href="https://primarily-north-browsing-projector.trycloudflare.com/studio">Click here if not redirected</a>
-        <div class="status"><strong>Status:</strong> Server is online<br><small>Last updated: 2026-06-29 04:25 UTC</small></div>
+        <a href="https://oem-tucson-millennium-occurs.trycloudflare.com/studio">Click here if not redirected</a>
+        <div class="status">
+            <strong>Status:</strong> Server is online<br>
+            <small>Last updated: 2026-06-29 05:16 UTC</small>
+        </div>
     </div>
-    <script>setTimeout(function(){window.location.href="https://primarily-north-browsing-projector.trycloudflare.com/studio";},2000);</script>
+    <script>
+        setTimeout(function() { window.location.href = "https://oem-tucson-millennium-occurs.trycloudflare.com/studio"; }, 2000);
+    </script>
 </body>
 </html>
