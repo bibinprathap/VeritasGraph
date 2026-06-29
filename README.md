@@ -1,7 +1,7 @@
 ﻿# VeritasGraph: The All-in-One GraphRAG Framework
 **Stop chunking blindly. Combine the structure of Tree-Search with the reasoning of Knowledge Graphs. Runs locally or in the cloud.**
  
-<img src="https://github.com/bibinprathap/VeritasGraph/blob/master/VeritasGraph.jpeg" alt="Project Logo" style="max-width:140px; height:150px;">
+<img src="https://github.com/bibinprathap/VeritasGraph/blob/restored-main/VeritasGraph.jpeg" alt="Project Logo" style="max-width:140px; height:150px;">
 
 [![PyPI version](https://badge.fury.io/py/veritasgraph.svg)](https://badge.fury.io/py/veritasgraph)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
@@ -73,15 +73,15 @@ veritasgraph demo --mode=lite
 That's it. This launches an interactive demo using cloud APIs (OpenAI/Anthropic)—no local models required.
 
 <p align="center">
-  <a href="https://colab.research.google.com/github/bibinprathap/VeritasGraph/blob/master/graphrag-ollama-config/cookbook/veritasgraph_demo.ipynb">
+  <a href="https://colab.research.google.com/github/bibinprathap/VeritasGraph/blob/restored-main/graphrag-ollama-config/cookbook/veritasgraph_demo.ipynb">
     <img src="https://img.shields.io/badge/Open%20in%20Colab-Vectorless%20RAG-blue?logo=googlecolab" alt="Open in Colab: Vectorless RAG"/>
   </a>
   &nbsp;&nbsp;
-  <a href="https://colab.research.google.com/github/bibinprathap/VeritasGraph/blob/master/graphrag-ollama-config/cookbook/vision_native_rag.ipynb">
+  <a href="https://colab.research.google.com/github/bibinprathap/VeritasGraph/blob/restored-main/graphrag-ollama-config/cookbook/vision_native_rag.ipynb">
     <img src="https://img.shields.io/badge/Open%20in%20Colab-Vision%20RAG-blue?logo=googlecolab" alt="Open in Colab: Vision RAG"/>
   </a>
   &nbsp;&nbsp;
-  <a href="https://colab.research.google.com/github/bibinprathap/VeritasGraph/blob/master/cookbook/test_hierarchical_tree_accuracy.ipynb">
+  <a href="https://colab.research.google.com/github/bibinprathap/VeritasGraph/blob/restored-main/cookbook/test_hierarchical_tree_accuracy.ipynb">
     <img src="https://img.shields.io/badge/Open%20in%20Colab-Tree%20Accuracy-blue?logo=googlecolab" alt="Open in Colab: Tree Accuracy"/>
   </a>
 </p>
@@ -706,7 +706,7 @@ A brief video demonstrating the core functionality of VeritasGraph, from data in
 
  
 ## Linux
-[![Video Walkthrough](https://github.com/bibinprathap/VeritasGraph/blob/master/assets/VertasGraph-Linux.png)](https://drive.google.com/file/d/1OmeCj9-HKTCDoznPDE8u7Bbb3qxYBs9n/view?usp=sharing)
+[![Video Walkthrough](https://github.com/bibinprathap/VeritasGraph/blob/restored-main/assets/VertasGraph-Linux.png)](https://drive.google.com/file/d/1OmeCj9-HKTCDoznPDE8u7Bbb3qxYBs9n/view?usp=sharing)
 
 ---
 
@@ -1236,6 +1236,5 @@ If you use VeritasGraph in your research, please cite:
 
 
   
-
 
 
