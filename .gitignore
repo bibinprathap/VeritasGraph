@@ -33,3 +33,4 @@ submission/PR_BODY.md
 submission/veritasgraph_rag/scripts/capture_screenshots.py
 share-with-microsoft/*
 *.zip
+.studio-publish-wt/
