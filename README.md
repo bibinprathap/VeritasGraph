@@ -96,6 +96,8 @@ tools, memory, data logging, guardrails, and headroom-style context budgeting �
 chat with those agents live and watch every stage of the orchestration pipeline.
 Everything runs **100% locally** against [Ollama](https://ollama.com).
 
+> **[🎮 Try the Studio Live](https://bibinprathap.github.io/VeritasGraph/studio/)** — *stable URL that always redirects to the current Cloudflare tunnel of the running studio (auto-published on every restart).*
+
 <p align="center">
   <img src="assets/veritasgraph-studio.png" alt="VeritasGraph Studio — Playground with live orchestration pipeline" width="90%">
 </p>

@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>VeritasGraph Studio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg-0: #060b12;
+      --bg-1: #0b1322;
+      --bg-2: #0f1c33;
+      --panel: rgba(12, 20, 36, 0.86);
+      --panel-soft: rgba(20, 31, 54, 0.78);
+      --line: #22304b;
+      --text: #dbe7ff;
+      --text-dim: #8ea0c5;
+      --brand: #2dd4bf;
+      --brand-2: #22d3ee;
+      --ok: #34d399;
+      --warn: #fbbf24;
+      --bad: #fb7185;
+      --shadow: 0 22px 40px rgba(0, 0, 0, 0.35);
+      --radius: 14px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Space Grotesk", "Segoe UI", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(1200px 700px at 8% -10%, rgba(34, 211, 238, 0.22), transparent 55%),
+        radial-gradient(900px 520px at 115% 0%, rgba(45, 212, 191, 0.16), transparent 58%),
+        linear-gradient(165deg, var(--bg-0), var(--bg-1) 45%, var(--bg-2));
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background-image: linear-gradient(rgba(125, 151, 200, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(125, 151, 200, 0.05) 1px, transparent 1px);
+      background-size: 54px 54px;
+      mask-image: radial-gradient(circle at 40% 0%, black, transparent 70%);
+    }
+
+    .app {
+      display: grid;
+      grid-template-columns: 250px 1fr;
+      min-height: 100vh;
+      gap: 20px;
+      padding: 20px;
+    }
+
+    .sidebar {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      backdrop-filter: blur(8px);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+
+    .brand-badge {
+      width: 30px;
+      height: 30px;
+      border-radius: 9px;
+      background: linear-gradient(130deg, var(--brand), var(--brand-2));
+      color: #022329;
+      font-weight: 700;
+      display: grid;
+      place-items: center;
+    }
+
+    .brand h1 {
+      margin: 0;
+      font-size: 16px;
+      letter-spacing: 0.04em;
+    }
+
+    .brand p {
+      margin: 2px 0 0;
+      color: var(--text-dim);
+      font-size: 11px;
+    }
+
+    .nav-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .nav-label {
+      color: var(--text-dim);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin: 8px 0 4px;
+    }
+
+    .nav-btn {
+      border: 1px solid transparent;
+      background: transparent;
+      color: var(--text);
+      text-align: left;
+      padding: 10px 12px;
+      border-radius: 10px;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .nav-btn:hover { background: rgba(43, 57, 92, 0.45); }
+
+    .nav-btn.active {
+      background: linear-gradient(120deg, rgba(45, 212, 191, 0.18), rgba(34, 211, 238, 0.12));
+      border-color: rgba(45, 212, 191, 0.3);
+      color: #dffff7;
+    }
+
+    .count {
+      color: var(--text-dim);
+      font-size: 11px;
+      font-family: "JetBrains Mono", monospace;
+    }
+
+    .main {
+      display: grid;
+      grid-template-rows: auto auto 1fr;
+      gap: 14px;
+      min-width: 0;
+    }
+
+    .topbar,
+    .metrics,
+    .workspace {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(8px);
+    }
+
+    .topbar {
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .title-block h2 {
+      margin: 0;
+      font-size: 20px;
+      font-weight: 700;
+    }
+
+    .title-block p {
+      margin: 4px 0 0;
+      font-size: 13px;
+      color: var(--text-dim);
+    }
+
+    .status-pill {
+      border: 1px solid rgba(45, 212, 191, 0.35);
+      background: rgba(45, 212, 191, 0.14);
+      color: #9af8ea;
+      border-radius: 999px;
+      padding: 7px 12px;
+      font-size: 12px;
+    }
+
+    .metrics {
+      padding: 12px;
+      display: grid;
+      grid-template-columns: repeat(4, minmax(140px, 1fr));
+      gap: 10px;
+    }
+
+    .metric {
+      background: var(--panel-soft);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 10px 12px;
+    }
+
+    .metric .label {
+      color: var(--text-dim);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .metric .value {
+      margin-top: 6px;
+      font-family: "JetBrains Mono", monospace;
+      font-size: 22px;
+      color: #e9f8ff;
+    }
+
+    .workspace {
+      padding: 16px;
+      display: grid;
+      grid-template-columns: 1.1fr 1fr;
+      gap: 14px;
+      min-height: 0;
+    }
+
+    .card {
+      background: rgba(13, 22, 39, 0.9);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      min-height: 0;
+    }
+
+    .card h3 {
+      margin: 0;
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--brand-2);
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    label {
+      font-size: 12px;
+      color: var(--text-dim);
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    input, textarea, select {
+      width: 100%;
+      border: 1px solid #2a3a5f;
+      background: #0d172b;
+      color: var(--text);
+      border-radius: 9px;
+      padding: 9px 10px;
+      font-family: inherit;
+      font-size: 13px;
+      outline: none;
+      transition: border-color 0.2s ease;
+    }
+
+    textarea { min-height: 74px; resize: vertical; }
+    input:focus, textarea:focus, select:focus { border-color: var(--brand-2); }
+
+    .actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    button.action {
+      border: 1px solid rgba(45, 212, 191, 0.35);
+      background: linear-gradient(120deg, rgba(45, 212, 191, 0.25), rgba(34, 211, 238, 0.2));
+      color: #dffff7;
+      border-radius: 9px;
+      padding: 8px 12px;
+      font-size: 12px;
+      cursor: pointer;
+      transition: transform 0.18s ease;
+    }
+
+    button.action:hover { transform: translateY(-1px); }
+
+    button.ghost {
+      border: 1px solid #334665;
+      background: rgba(23, 35, 59, 0.65);
+      color: #c4d6fa;
+      border-radius: 9px;
+      padding: 8px 12px;
+      font-size: 12px;
+      cursor: pointer;
+    }
+
+    .list {
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: rgba(10, 17, 31, 0.7);
+      overflow: auto;
+      min-height: 160px;
+      max-height: 390px;
+    }
+
+    .row {
+      border-bottom: 1px solid rgba(44, 60, 95, 0.62);
+      padding: 10px 12px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 8px;
+      align-items: center;
+      animation: fadeIn 0.24s ease;
+    }
+
+    .row:last-child { border-bottom: 0; }
+    .row .meta { font-size: 11px; color: var(--text-dim); margin-top: 3px; }
+
+    .chip {
+      font-family: "JetBrains Mono", monospace;
+      font-size: 11px;
+      padding: 4px 7px;
+      border-radius: 999px;
+      border: 1px solid #35507f;
+      background: rgba(53, 80, 127, 0.26);
+      color: #a9c8ff;
+      white-space: nowrap;
+    }
+
+    .chip.ok {
+      border-color: rgba(52, 211, 153, 0.4);
+      background: rgba(52, 211, 153, 0.15);
+      color: #95f2cb;
+    }
+
+    .chip.warn {
+      border-color: rgba(251, 191, 36, 0.45);
+      background: rgba(251, 191, 36, 0.14);
+      color: #fcd97a;
+    }
+
+    .chip.bad {
+      border-color: rgba(251, 113, 133, 0.45);
+      background: rgba(251, 113, 133, 0.14);
+      color: #ffb3c3;
+    }
+
+    .hint {
+      font-size: 12px;
+      color: var(--text-dim);
+      line-height: 1.5;
+    }
+
+    .mono { font-family: "JetBrains Mono", monospace; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 1120px) {
+      .app { grid-template-columns: 1fr; }
+      .metrics { grid-template-columns: repeat(2, minmax(130px, 1fr)); }
+      .workspace { grid-template-columns: 1fr; }
+      .sidebar { order: 2; }
+      .main { order: 1; }
+    }
+
+    @media (max-width: 640px) {
+      .app { padding: 10px; gap: 10px; }
+      .metrics { grid-template-columns: 1fr 1fr; }
+      .form-grid { grid-template-columns: 1fr; }
+      .topbar { padding: 12px; }
+      .workspace { padding: 12px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-badge">V</div>
+        <div>
+          <h1>VeritasGraph Studio</h1>
+          <p>Agent Build Workspace</p>
+        </div>
+      </div>
+
+      <div class="nav-group">
+        <div class="nav-label">Create</div>
+        <button class="nav-btn active" data-section="agents">Agents <span class="count" id="count-agents">0</span></button>
+        <button class="nav-btn" data-section="tools">Tools <span class="count" id="count-tools">0</span></button>
+        <button class="nav-btn" data-section="knowledge">Knowledge <span class="count" id="count-knowledge">0</span></button>
+        <button class="nav-btn" data-section="guardrails">Guardrails <span class="count" id="count-guardrails">0</span></button>
+        <button class="nav-btn" data-section="memory">Memory <span class="count" id="count-memory">0</span></button>
+        <button class="nav-btn" data-section="data">Data <span class="count" id="count-data">0</span></button>
+      </div>
+
+      <div class="nav-group">
+        <div class="nav-label">Optimize</div>
+        <button class="nav-btn" data-section="evaluation">Evaluation <span class="count" id="count-evaluation">0</span></button>
+        <button class="nav-btn" data-section="finetune">Fine-tune <span class="count" id="count-finetune">0</span></button>
+      </div>
+    </aside>
+
+    <main class="main">
+      <div class="topbar">
+        <div class="title-block">
+          <h2 id="section-title">Agents</h2>
+          <p id="section-subtitle">Create and orchestrate graph-native AI agents with explicit goals and runtime policies.</p>
+        </div>
+        <div class="status-pill" id="runtime-status">Workspace Healthy</div>
+      </div>
+
+      <section class="metrics">
+        <div class="metric">
+          <div class="label">Active Agents</div>
+          <div class="value" id="metric-agents">0</div>
+        </div>
+        <div class="metric">
+          <div class="label">Connected Tools</div>
+          <div class="value" id="metric-tools">0</div>
+        </div>
+        <div class="metric">
+          <div class="label">Knowledge Indexes</div>
+          <div class="value" id="metric-knowledge">0</div>
+        </div>
+        <div class="metric">
+          <div class="label">Evaluation Runs</div>
+          <div class="value" id="metric-evals">0</div>
+        </div>
+      </section>
+
+      <section class="workspace">
+        <div class="card" id="builder-card"></div>
+        <div class="card">
+          <h3>Live Inventory</h3>
+          <div class="list" id="inventory"></div>
+          <div class="hint" id="inventory-hint">No records yet. Build your first component from the left panel.</div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    const state = {
+      section: "agents",
+      agents: [],
+      tools: [],
+      knowledge: [],
+      guardrails: [],
+      memory: [],
+      data: [],
+      evaluation: [],
+      finetune: []
+    };
+
+    const sectionMeta = {
+      agents: {
+        title: "Agents",
+        subtitle: "Create and orchestrate graph-native AI agents with explicit goals and runtime policies."
+      },
+      tools: {
+        title: "Tools",
+        subtitle: "Attach APIs, query engines, and internal actions your agent can safely execute."
+      },
+      knowledge: {
+        title: "Knowledge",
+        subtitle: "Configure retrieval indexes, freshness schedules, and citation-enforced grounding."
+      },
+      guardrails: {
+        title: "Guardrails",
+        subtitle: "Define policy boundaries, risk controls, and response constraints before deployment."
+      },
+      memory: {
+        title: "Memory",
+        subtitle: "Set retention scopes and summarize conversational traces into durable context."
+      },
+      data: {
+        title: "Data",
+        subtitle: "Register datasets, classify sensitivity, and route data into retrieval pipelines."
+      },
+      evaluation: {
+        title: "Evaluation",
+        subtitle: "Run quality, latency, and safety benchmarks with traceable experiment outputs."
+      },
+      finetune: {
+        title: "Fine-tune",
+        subtitle: "Create training jobs, monitor progress, and publish tuned model snapshots."
+      }
+    };
+
+    function el(id) { return document.getElementById(id); }
+
+    function updateCounts() {
+      el("count-agents").textContent = state.agents.length;
+      el("count-tools").textContent = state.tools.length;
+      el("count-knowledge").textContent = state.knowledge.length;
+      el("count-guardrails").textContent = state.guardrails.length;
+      el("count-memory").textContent = state.memory.length;
+      el("count-data").textContent = state.data.length;
+      el("count-evaluation").textContent = state.evaluation.length;
+      el("count-finetune").textContent = state.finetune.length;
+
+      el("metric-agents").textContent = state.agents.length;
+      el("metric-tools").textContent = state.tools.length;
+      el("metric-knowledge").textContent = state.knowledge.length;
+      el("metric-evals").textContent = state.evaluation.length;
+    }
+
+    function setSection(section) {
+      state.section = section;
+      document.querySelectorAll(".nav-btn").forEach((btn) => {
+        btn.classList.toggle("active", btn.dataset.section === section);
+      });
+      el("section-title").textContent = sectionMeta[section].title;
+      el("section-subtitle").textContent = sectionMeta[section].subtitle;
+      renderBuilder();
+      renderInventory();
+    }
+
+    function renderBuilder() {
+      const container = el("builder-card");
+      const section = state.section;
+
+      if (section === "agents") {
+        container.innerHTML = `
+          <h3>Build Agent</h3>
+          <div class="form-grid">
+            <div><label>Agent Name</label><input id="agent-name" placeholder="Policy Analyst" /></div>
+            <div><label>Model</label><select id="agent-model"><option>gpt-4.1</option><option>gpt-4o</option><option>kimi-k2.6</option><option>llama-3.3-70b</option></select></div>
+          </div>
+          <div><label>Instruction</label><textarea id="agent-instruction" placeholder="Analyze contracts for risk and return verifiable citations."></textarea></div>
+          <div class="actions"><button class="action" id="create-agent">Create Agent</button><button class="ghost" id="seed-agent">Create Sample</button></div>
+          <div class="hint">Tip: keep role instructions crisp and force citation output for graph-grounded answers.</div>
+        `;
+
+        el("create-agent").onclick = () => {
+          const name = el("agent-name").value.trim();
+          const model = el("agent-model").value;
+          const instruction = el("agent-instruction").value.trim();
+          if (!name || !instruction) return;
+          state.agents.unshift({ name, model, instruction, status: "ready" });
+          pingStatus("Agent created");
+          refresh();
+        };
+
+        el("seed-agent").onclick = () => {
+          state.agents.unshift({
+            name: "Compliance Navigator",
+            model: "kimi-k2.6",
+            instruction: "Answer policy questions with section-level citations and risk score.",
+            status: "ready"
+          });
+          pingStatus("Sample agent loaded");
+          refresh();
+        };
+      }
+
+      if (section === "tools") {
+        container.innerHTML = `
+          <h3>Register Tool</h3>
+          <div class="form-grid">
+            <div><label>Tool Name</label><input id="tool-name" placeholder="graph_query" /></div>
+            <div><label>Type</label><select id="tool-type"><option>Function</option><option>MCP</option><option>REST API</option><option>SQL</option></select></div>
+          </div>
+          <div><label>Endpoint or Command</label><input id="tool-endpoint" placeholder="POST /api/query/graph" /></div>
+          <div class="actions"><button class="action" id="add-tool">Add Tool</button></div>
+          <div class="hint">Tools are isolated actions exposed to agents. Add only capability-specific operations.</div>
+        `;
+
+        el("add-tool").onclick = () => {
+          const name = el("tool-name").value.trim();
+          const type = el("tool-type").value;
+          const endpoint = el("tool-endpoint").value.trim();
+          if (!name || !endpoint) return;
+          state.tools.unshift({ name, type, endpoint, status: "connected" });
+          pingStatus("Tool connected");
+          refresh();
+        };
+      }
+
+      if (section === "knowledge") {
+        container.innerHTML = `
+          <h3>Knowledge Source</h3>
+          <div class="form-grid">
+            <div><label>Index Name</label><input id="knowledge-name" placeholder="policies-q3" /></div>
+            <div><label>Refresh</label><select id="knowledge-refresh"><option>hourly</option><option>daily</option><option>manual</option></select></div>
+          </div>
+          <div><label>Source Path</label><input id="knowledge-path" placeholder="s3://corp-policies/q3" /></div>
+          <div class="actions"><button class="action" id="add-knowledge">Attach Index</button><button class="ghost" id="run-index">Run Indexing</button></div>
+          <div class="hint">Indexes store normalized documents and graph links so retrieval stays grounded and explainable.</div>
+        `;
+
+        el("add-knowledge").onclick = () => {
+          const name = el("knowledge-name").value.trim();
+          const refreshRate = el("knowledge-refresh").value;
+          const path = el("knowledge-path").value.trim();
+          if (!name || !path) return;
+          state.knowledge.unshift({ name, refreshRate, path, status: "attached" });
+          pingStatus("Knowledge source attached");
+          refresh();
+        };
+
+        el("run-index").onclick = () => {
+          if (!state.knowledge.length) return;
+          state.knowledge[0].status = "indexing";
+          pingStatus("Indexing in progress");
+          refresh();
+          setTimeout(() => {
+            state.knowledge[0].status = "ready";
+            pingStatus("Index complete");
+            refresh();
+          }, 1100);
+        };
+      }
+
+      if (section === "guardrails") {
+        container.innerHTML = `
+          <h3>Guardrail Rule</h3>
+          <div class="form-grid">
+            <div><label>Rule ID</label><input id="guardrail-id" placeholder="GR-PII-01" /></div>
+            <div><label>Severity</label><select id="guardrail-severity"><option>high</option><option>medium</option><option>low</option></select></div>
+          </div>
+          <div><label>Constraint</label><textarea id="guardrail-rule" placeholder="Block outputs containing account numbers unless masked."></textarea></div>
+          <div class="actions"><button class="action" id="add-guardrail">Enable Guardrail</button></div>
+          <div class="hint">Guardrails execute before response delivery and log policy decisions for audits.</div>
+        `;
+
+        el("add-guardrail").onclick = () => {
+          const id = el("guardrail-id").value.trim();
+          const severity = el("guardrail-severity").value;
+          const rule = el("guardrail-rule").value.trim();
+          if (!id || !rule) return;
+          state.guardrails.unshift({ id, severity, rule, status: "active" });
+          pingStatus("Guardrail enabled");
+          refresh();
+        };
+      }
+
+      if (section === "memory") {
+        container.innerHTML = `
+          <h3>Memory Policy</h3>
+          <div class="form-grid">
+            <div><label>Scope</label><select id="memory-scope"><option>session</option><option>agent</option><option>workspace</option></select></div>
+            <div><label>Retention (days)</label><input id="memory-days" type="number" min="1" value="7" /></div>
+          </div>
+          <div><label>Summary Instruction</label><textarea id="memory-summary" placeholder="Persist key decisions, assumptions, and unresolved questions."></textarea></div>
+          <div class="actions"><button class="action" id="save-memory">Save Policy</button></div>
+          <div class="hint">Use short memory summaries to preserve reasoning context without noisy transcripts.</div>
+        `;
+
+        el("save-memory").onclick = () => {
+          const scope = el("memory-scope").value;
+          const days = Number(el("memory-days").value || 0);
+          const summary = el("memory-summary").value.trim();
+          if (!days || !summary) return;
+          state.memory.unshift({ scope, days, summary, status: "active" });
+          pingStatus("Memory policy saved");
+          refresh();
+        };
+      }
+
+      if (section === "data") {
+        container.innerHTML = `
+          <h3>Data Registry</h3>
+          <div class="form-grid">
+            <div><label>Dataset Name</label><input id="data-name" placeholder="q2-transactions" /></div>
+            <div><label>Sensitivity</label><select id="data-class"><option>internal</option><option>confidential</option><option>restricted</option></select></div>
+          </div>
+          <div><label>Source URI</label><input id="data-uri" placeholder="abfs://lake/finance/q2.parquet" /></div>
+          <div class="actions"><button class="action" id="register-data">Register Data</button></div>
+          <div class="hint">Registered data can be routed to retrieval and evaluation pipelines with policy-aware filtering.</div>
+        `;
+
+        el("register-data").onclick = () => {
+          const name = el("data-name").value.trim();
+          const classification = el("data-class").value;
+          const uri = el("data-uri").value.trim();
+          if (!name || !uri) return;
+          state.data.unshift({ name, classification, uri, status: "ready" });
+          pingStatus("Dataset registered");
+          refresh();
+        };
+      }
+
+      if (section === "evaluation") {
+        container.innerHTML = `
+          <h3>Run Evaluation</h3>
+          <div class="form-grid">
+            <div><label>Suite Name</label><input id="eval-name" placeholder="agent-reliability-v1" /></div>
+            <div><label>Target Agent</label><input id="eval-agent" placeholder="Compliance Navigator" /></div>
+          </div>
+          <div><label>Metrics</label><input id="eval-metrics" placeholder="groundedness, latency, safety, task_success" /></div>
+          <div class="actions"><button class="action" id="run-eval">Run Benchmark</button></div>
+          <div class="hint">Evaluation logs score deltas by run so you can compare model, prompt, and tool revisions.</div>
+        `;
+
+        el("run-eval").onclick = () => {
+          const name = el("eval-name").value.trim();
+          const agent = el("eval-agent").value.trim();
+          const metrics = el("eval-metrics").value.trim();
+          if (!name || !agent || !metrics) return;
+          const run = {
+            name,
+            agent,
+            score: "pending",
+            status: "running",
+            metrics
+          };
+          state.evaluation.unshift(run);
+          pingStatus("Evaluation started");
+          refresh();
+          setTimeout(() => {
+            run.status = "complete";
+            run.score = `${(85 + Math.floor(Math.random() * 13))}/100`;
+            pingStatus("Evaluation complete");
+            refresh();
+          }, 1250);
+        };
+      }
+
+      if (section === "finetune") {
+        container.innerHTML = `
+          <h3>Fine-tune Job</h3>
+          <div class="form-grid">
+            <div><label>Base Model</label><select id="ft-model"><option>gpt-4.1-mini</option><option>llama-3.3-70b</option><option>mistral-large</option></select></div>
+            <div><label>Epochs</label><input id="ft-epochs" type="number" min="1" max="10" value="3" /></div>
+          </div>
+          <div><label>Training Dataset</label><input id="ft-data" placeholder="datasets/agent-instructions-v2.jsonl" /></div>
+          <div class="actions"><button class="action" id="start-ft">Start Fine-tune</button></div>
+          <div class="hint">Track each tuned snapshot with linked eval runs before promoting to production.</div>
+        `;
+
+        el("start-ft").onclick = () => {
+          const model = el("ft-model").value;
+          const epochs = Number(el("ft-epochs").value || 0);
+          const dataset = el("ft-data").value.trim();
+          if (!epochs || !dataset) return;
+          const job = {
+            model,
+            epochs,
+            dataset,
+            status: "queued"
+          };
+          state.finetune.unshift(job);
+          pingStatus("Fine-tune queued");
+          refresh();
+          setTimeout(() => {
+            job.status = "training";
+            pingStatus("Fine-tune running");
+            refresh();
+          }, 700);
+          setTimeout(() => {
+            job.status = "ready";
+            pingStatus("Model snapshot ready");
+            refresh();
+          }, 1700);
+        };
+      }
+    }
+
+    function statusChip(value) {
+      const v = String(value || "").toLowerCase();
+      if (["ready", "active", "connected", "complete"].includes(v)) return `<span class="chip ok">${value}</span>`;
+      if (["pending", "running", "training", "queued", "indexing"].includes(v)) return `<span class="chip warn">${value}</span>`;
+      if (["blocked", "failed", "error"].includes(v)) return `<span class="chip bad">${value}</span>`;
+      return `<span class="chip">${value}</span>`;
+    }
+
+    function renderInventory() {
+      const list = el("inventory");
+      const hint = el("inventory-hint");
+      const items = state[state.section];
+      if (!items.length) {
+        list.innerHTML = "";
+        hint.style.display = "block";
+        return;
+      }
+
+      hint.style.display = "none";
+      list.innerHTML = items.map((item) => {
+        if (state.section === "agents") {
+          return `<div class="row"><div><div>${item.name}</div><div class="meta">model: <span class="mono">${item.model}</span></div></div>${statusChip(item.status)}</div>`;
+        }
+        if (state.section === "tools") {
+          return `<div class="row"><div><div>${item.name}</div><div class="meta">${item.type} - <span class="mono">${item.endpoint}</span></div></div>${statusChip(item.status)}</div>`;
+        }
+        if (state.section === "knowledge") {
+          return `<div class="row"><div><div>${item.name}</div><div class="meta">${item.refreshRate} refresh - <span class="mono">${item.path}</span></div></div>${statusChip(item.status)}</div>`;
+        }
+        if (state.section === "guardrails") {
+          return `<div class="row"><div><div>${item.id}</div><div class="meta">${item.rule}</div></div>${statusChip(item.severity)}</div>`;
+        }
+        if (state.section === "memory") {
+          return `<div class="row"><div><div>${item.scope} scope</div><div class="meta">retain ${item.days} days - ${item.summary}</div></div>${statusChip(item.status)}</div>`;
+        }
+        if (state.section === "data") {
+          return `<div class="row"><div><div>${item.name}</div><div class="meta"><span class="mono">${item.uri}</span></div></div>${statusChip(item.classification)}</div>`;
+        }
+        if (state.section === "evaluation") {
+          return `<div class="row"><div><div>${item.name}</div><div class="meta">agent: ${item.agent} - score: ${item.score}</div></div>${statusChip(item.status)}</div>`;
+        }
+        return `<div class="row"><div><div>${item.model}</div><div class="meta">epochs ${item.epochs} - <span class="mono">${item.dataset}</span></div></div>${statusChip(item.status)}</div>`;
+      }).join("");
+    }
+
+    function pingStatus(message) {
+      const status = el("runtime-status");
+      status.textContent = message;
+      status.style.transform = "scale(1.02)";
+      setTimeout(() => { status.style.transform = "scale(1)"; }, 140);
+    }
+
+    function refresh() {
+      updateCounts();
+      renderInventory();
+    }
+
+    document.querySelectorAll(".nav-btn").forEach((btn) => {
+      btn.addEventListener("click", () => setSection(btn.dataset.section));
+    });
+
+    setSection("agents");
+    updateCounts();
+  </script>
+</body>
+</html>

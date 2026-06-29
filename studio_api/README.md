@@ -9,6 +9,8 @@ test them live, watching every stage of the orchestration pipeline as it runs.
 Everything runs **100% locally** against [Ollama](https://ollama.com); no cloud
 calls, no API keys.
 
+> **[🎮 Live demo](https://bibinprathap.github.io/VeritasGraph/studio/)** — stable URL that always redirects to the current Cloudflare tunnel of the running studio (auto-published on every restart, see [below](#public-demo-link-on-every-restart)).
+
 ![VeritasGraph Studio — Playground with live orchestration pipeline](../assets/veritasgraph-studio.png)
 
 ---
