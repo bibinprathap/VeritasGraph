@@ -30,7 +30,7 @@ if [ -z "${GITHUB_TOKEN:-}" ]; then
 fi
 
 GITHUB_REPO="bibinprathap/VeritasGraph"
-GITHUB_BRANCH="master"
+GITHUB_BRANCH="restored-main"
 REDIRECT_FILE_PATH="docs/studio/index.html"
 
 STUDIO_HOST="127.0.0.1"
