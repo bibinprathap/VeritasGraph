@@ -3,7 +3,6 @@ name: Deploy Studio Pages
 on:
   push:
     branches:
-      - restore-main
       - restored-main
     paths:
       - docs/**
