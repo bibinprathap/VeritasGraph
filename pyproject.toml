@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "veritasgraph-mcp"
-version = "0.1.0"
+version = "0.1.1"
 description = "The first zero-trust, air-gapped Enterprise GraphRAG server for the Model Context Protocol (MCP)."
 readme = "veritasgraph_mcp/README.md"
 requires-python = ">=3.10"

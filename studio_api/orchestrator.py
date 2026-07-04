@@ -210,6 +210,7 @@ class Orchestrator:
         profile = set(cfg.get("tool_profile") or [])
         names: List[str] = []
         registered: List[Dict[str, str]] = []
+        seen_endpoints: set = set()
         for tool in self.store.list_resources("tools"):
             if tool.status == "disabled":
                 continue
@@ -217,42 +218,118 @@ class Orchestrator:
                 continue
             if profile and tool.name not in profile:
                 continue
+            endpoint = str((tool.config or {}).get("endpoint") or "").strip()
             names.append(tool.name)
             registered.append(
                 {
                     "name": tool.name,
                     "kind": tool.kind or "read",
-                    "endpoint": str((tool.config or {}).get("endpoint") or "").strip(),
+                    "endpoint": endpoint,
                 }
             )
+            if endpoint:
+                seen_endpoints.add(endpoint)
+
+        # Always make the local VeritasGraph MCP tools available when tools are on.
+        # They are reliable, loopback, and citation-grounded, so an agent's tool
+        # profile should never accidentally starve them (fixes existing snapshots
+        # whose profiles predate the MCP bridge).
+        for tool in self.store.list_resources("tools"):
+            if tool.status == "disabled":
+                continue
+            endpoint = str((tool.config or {}).get("endpoint") or "").strip()
+            if not endpoint or endpoint in seen_endpoints:
+                continue
+            if "/mcp/tools/veritasgraph_" not in endpoint:
+                continue
+            if not self._is_loopback(endpoint):
+                continue
+            names.append(tool.name)
+            registered.append(
+                {
+                    "name": tool.name,
+                    "kind": tool.kind or "read",
+                    "endpoint": endpoint,
+                }
+            )
+            seen_endpoints.add(endpoint)
+
         if _truthy(cfg.get("use_graph")) and "Knowledge Graph" not in names:
             names.append("Knowledge Graph")
         return {"used": True, "available": names, "registered": registered}
 
+    @staticmethod
+    def _is_loopback(endpoint: str) -> bool:
+        host = (urlparse.urlparse(endpoint).hostname or "").lower()
+        return host in {"127.0.0.1", "localhost", "::1"}
+
+    @staticmethod
+    def _tool_priority(endpoint: str) -> int:
+        """Lower runs first. Spend the call budget on fast, reliable local tools.
+
+        Fast graph lookups (no LLM) come first, then LLM-backed graph answers,
+        then anything else. This ensures the VeritasGraph MCP tools are actually
+        invoked instead of being starved by slower/example tools.
+        """
+        if "/mcp/tools/veritasgraph_search_entities" in endpoint:
+            return 0
+        if "/mcp/tools/veritasgraph_get_graph" in endpoint:
+            return 1
+        if "/mcp/tools/veritasgraph_query" in endpoint:
+            return 2
+        if endpoint.endswith("/graphrag/query"):
+            return 3
+        if "/mcp/tools/" in endpoint:
+            return 4
+        return 5
+
     def _invoke_tools(self, agent, query: str, tools: Dict[str, Any], graph: Dict[str, Any]) -> Dict[str, Any]:
         cfg = agent.config or {}
+        empty = {
+            "invoked": 0, "succeeded": 0, "failed": 0, "skipped": 0,
+            "results": [], "errors": [], "skipped_tools": [],
+        }
         if not tools.get("used"):
-            return {"invoked": 0, "succeeded": 0, "failed": 0, "results": [], "errors": []}
+            return empty
 
         max_calls = int(cfg.get("max_tool_calls") or 3)
-        timeout_s = float(cfg.get("tool_timeout_seconds") or 4.0)
+        # Local tools may drive the on-device LLM, so give them a generous budget.
+        timeout_s = float(cfg.get("tool_timeout_seconds") or 30.0)
+        external_timeout_s = min(timeout_s, 5.0)
         allow_external = _truthy(cfg.get("allow_external_tools"))
+
+        registered = [
+            t for t in tools.get("registered", []) if (t.get("endpoint") or "").strip()
+        ]
+
+        # Partition reachable (loopback, or external when explicitly allowed) from
+        # skipped external endpoints. Skipped tools are informational, not failures,
+        # and crucially they do NOT consume the call budget.
+        reachable: List[Dict[str, str]] = []
+        skipped_tools: List[Dict[str, Any]] = []
+        for tool in registered:
+            if self._is_loopback(tool["endpoint"]) or allow_external:
+                reachable.append(tool)
+            else:
+                skipped_tools.append(
+                    {
+                        "tool": tool["name"],
+                        "status": "skipped",
+                        "endpoint": tool["endpoint"],
+                        "reason": "external endpoint (enable allow_external_tools to call)",
+                    }
+                )
+
+        reachable.sort(key=lambda t: self._tool_priority(t["endpoint"]))
 
         results: List[Dict[str, Any]] = []
         errors: List[Dict[str, Any]] = []
         invoked = 0
 
-        for tool in tools.get("registered", [])[:max_calls]:
-            endpoint = tool.get("endpoint") or ""
-            if not endpoint:
-                continue
-
-            parsed = urlparse.urlparse(endpoint)
-            host = (parsed.hostname or "").lower()
-            is_loopback = host in {"127.0.0.1", "localhost", "::1"}
-            if not allow_external and not is_loopback:
-                errors.append({"tool": tool["name"], "status": "skipped", "error": "external endpoint blocked"})
-                continue
+        for tool in reachable[:max_calls]:
+            endpoint = tool["endpoint"]
+            is_loopback = self._is_loopback(endpoint)
+            call_timeout = timeout_s if is_loopback else external_timeout_s
 
             payload: Dict[str, Any]
             if endpoint.endswith("/graphrag/query"):
@@ -262,6 +339,10 @@ class Orchestrator:
                     "max_depth": 2,
                     "max_nodes": 20,
                 }
+            elif "/mcp/tools/" in endpoint:
+                # The MCP bridge maps a generic ``query`` onto each tool's primary
+                # argument, so a single shape works for all VeritasGraph MCP tools.
+                payload = {"query": query, "model": agent.kind}
             else:
                 payload = {
                     "query": query,
@@ -275,7 +356,7 @@ class Orchestrator:
             req.add_header("Content-Type", "application/json")
 
             try:
-                with urlrequest.urlopen(req, timeout=timeout_s) as resp:
+                with urlrequest.urlopen(req, timeout=call_timeout) as resp:
                     raw = resp.read().decode("utf-8", errors="replace")
                     content_type = (resp.headers.get("Content-Type") or "").lower()
                     data: Any
@@ -287,13 +368,26 @@ class Orchestrator:
                         except Exception:
                             data = raw
 
+                    # An MCP/graph tool can return a structured error in its body.
+                    if isinstance(data, dict) and data.get("error"):
+                        errors.append(
+                            {
+                                "tool": tool["name"],
+                                "status": "failed",
+                                "endpoint": endpoint,
+                                "error": str(data["error"]),
+                            }
+                        )
+                        invoked += 1
+                        continue
+
                     if isinstance(data, dict):
                         summary = (
                             data.get("answer")
                             or data.get("summary")
                             or data.get("result")
                             or data.get("message")
-                            or str(data)[:240]
+                            or self._summarize_tool_data(data)
                         )
                     else:
                         summary = str(data)[:240]
@@ -321,10 +415,23 @@ class Orchestrator:
         return {
             "invoked": invoked,
             "succeeded": len(results),
-            "failed": len([e for e in errors if e.get("status") == "failed"]),
+            "failed": len(errors),
+            "skipped": len(skipped_tools),
             "results": results,
             "errors": errors,
+            "skipped_tools": skipped_tools,
         }
+
+    @staticmethod
+    def _summarize_tool_data(data: Dict[str, Any]) -> str:
+        """Human-readable one-liner for structured tool payloads (e.g. graph search)."""
+        if "nodes" in data or "edges" in data:
+            nodes = data.get("nodes") or []
+            edges = data.get("edges") or []
+            names = ", ".join(str(n.get("name", "")) for n in nodes[:5] if n.get("name"))
+            detail = f"{len(nodes)} entities, {len(edges)} relationships"
+            return f"{detail}" + (f" — {names}" if names else "")
+        return str(data)[:240]
 
     # ------------------------------------------------------------------ #
     # Public pipeline
@@ -413,8 +520,10 @@ class Orchestrator:
             "invoked": tool_run["invoked"],
             "succeeded": tool_run["succeeded"],
             "failed": tool_run["failed"],
+            "skipped": tool_run["skipped"],
             "results": tool_run["results"],
             "errors": tool_run["errors"],
+            "skipped_tools": tool_run["skipped_tools"],
         }
 
         # Assemble the system prompt ----------------------------------------

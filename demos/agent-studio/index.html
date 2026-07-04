@@ -1224,7 +1224,8 @@
         ? (`available: ${(tl.available || []).join(", ") || "none"}`
             + (typeof tl.invoked === "number"
               ? ` · invoked ${tl.invoked} (ok ${tl.succeeded || 0}, failed ${tl.failed || 0})`
-              : ""))
+              : "")
+            + (tl.skipped ? ` · skipped ${tl.skipped}` : ""))
         : "not wired";
       stages.push(pipelineStage("Tools", tl.used ? "on" : "off",
         toolDetail));
@@ -1249,6 +1250,11 @@
       if (tl.errors && tl.errors.length) {
         html += `<div class="pipeline-path"><span class="who">Tool issues</span>`
           + tl.errors.map((e) => `<div class="meta mono">${escapeHtml(e.tool)}: ${escapeHtml(e.error || e.status || "error")}</div>`).join("")
+          + `</div>`;
+      }
+      if (tl.skipped_tools && tl.skipped_tools.length) {
+        html += `<div class="pipeline-path"><span class="who">Skipped (external)</span>`
+          + tl.skipped_tools.map((e) => `<div class="meta mono">${escapeHtml(e.tool)}: ${escapeHtml(e.reason || "external endpoint")}</div>`).join("")
           + `</div>`;
       }
       el.innerHTML = html;
