@@ -30,7 +30,6 @@ if [ -z "${GITHUB_TOKEN:-}" ]; then
 fi
 
 GITHUB_REPO="bibinprathap/VeritasGraph"
-GITHUB_BRANCH="restored-main"
 REDIRECT_FILE_PATH="docs/studio/index.html"
 
 STUDIO_HOST="127.0.0.1"
@@ -52,6 +51,29 @@ RED='\033[0;31m'; GREEN='\033[0;32m'; YELLOW='\033[1;33m'; CYAN='\033[0;36m'; NC
 log()   { echo -e "${GREEN}[$(date '+%Y-%m-%d %H:%M:%S')]${NC} $1"        | tee -a "$LOG_FILE"; }
 warn()  { echo -e "${YELLOW}[$(date '+%Y-%m-%d %H:%M:%S')] WARN:${NC} $1" | tee -a "$LOG_FILE"; }
 error() { echo -e "${RED}[$(date '+%Y-%m-%d %H:%M:%S')] ERROR:${NC} $1"   | tee -a "$LOG_FILE"; }
+
+# Prefer explicit override, then origin default branch, then restored-main.
+resolve_publish_branch() {
+    if [ -n "${STUDIO_PUBLISH_BRANCH:-}" ]; then
+        echo "$STUDIO_PUBLISH_BRANCH"
+        return 0
+    fi
+
+    local origin_head
+    origin_head=$(git -C "$REPO_DIR" symbolic-ref --quiet --short refs/remotes/origin/HEAD 2>/dev/null || true)
+    if [ -n "$origin_head" ]; then
+        echo "${origin_head#origin/}"
+        return 0
+    fi
+
+    if git -C "$REPO_DIR" show-ref --verify --quiet refs/heads/restored-main || git -C "$REPO_DIR" show-ref --verify --quiet refs/remotes/origin/restored-main; then
+        echo "restored-main"
+    else
+        echo "master"
+    fi
+}
+
+GITHUB_BRANCH="$(resolve_publish_branch)"
 
 APP_PID=""
 TUNNEL_PID=""
@@ -155,6 +177,11 @@ HTMLEOF
     if [ "$CURRENT_BRANCH" != "$GITHUB_BRANCH" ]; then
         git checkout "$GITHUB_BRANCH" 2>/dev/null || git checkout -B "$GITHUB_BRANCH" "origin/$GITHUB_BRANCH"
     fi
+    CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
+    if [ "$CURRENT_BRANCH" != "$GITHUB_BRANCH" ]; then
+        error "Failed to switch to publish branch '$GITHUB_BRANCH' (current: '$CURRENT_BRANCH')."
+        return 1
+    fi
     git pull origin "$GITHUB_BRANCH" --rebase 2>/dev/null || true
 
     git add "$REDIRECT_FILE_PATH"
@@ -164,8 +191,10 @@ HTMLEOF
     fi
 
     git commit -m "🔄 Update studio demo redirect: ${DEMO_URL}/studio"
-    if git push "$REMOTE_URL" "$GITHUB_BRANCH" 2>/dev/null; then
+    # Push exactly the commit we just created, regardless of local branch name.
+    if git push "$REMOTE_URL" "HEAD:${GITHUB_BRANCH}" 2>/dev/null; then
         log "${GREEN}✅ Studio redirect updated!${NC}"
+        log "${CYAN}📍 Publish branch: ${GITHUB_BRANCH}${NC}"
         log "${CYAN}📍 Stable URL: https://bibinprathap.github.io/VeritasGraph/studio/${NC}"
         log "${CYAN}📍 Current tunnel: ${DEMO_URL}/studio${NC}"
         return 0
@@ -218,7 +247,7 @@ main() {
 
         if [ "$URL_FOUND" = false ] && echo "$clean_line" | grep -q "trycloudflare.com"; then
             local TUNNEL_URL
-            TUNNEL_URL=$(echo "$clean_line" | grep -oP 'https://[a-zA-Z0-9-]+\.trycloudflare\.com' | head -1)
+            TUNNEL_URL=$(echo "$clean_line" | grep -oP 'https://[a-zA-Z0-9-]+\.trycloudflare\.com' | head -1 || true)
             if [ -n "$TUNNEL_URL" ]; then
                 URL_FOUND=true
                 log "✅ Tunnel URL: $TUNNEL_URL"

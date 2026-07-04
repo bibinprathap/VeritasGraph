@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - restored-main
+      - master
     paths:
       - docs/**
       - .github/workflows/pages-studio.yml
