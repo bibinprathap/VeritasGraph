@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: veritasgraph-mcp
-Version: 0.1.0
+Version: 0.1.1
 Summary: The first zero-trust, air-gapped Enterprise GraphRAG server for the Model Context Protocol (MCP).
 Author: Bibin Prathap
 License: MIT
@@ -23,6 +23,8 @@ Description-Content-Type: text/markdown
 Requires-Dist: httpx>=0.27
 
 # VeritasGraph MCP Server
+
+mcp-name: io.github.bibinprathap/veritasgraph
 
 **The first zero-trust, air-gapped Enterprise GraphRAG server for the
 [Model Context Protocol](https://modelcontextprotocol.io/).**
@@ -86,6 +88,40 @@ python -m veritasgraph_mcp --debug    # verbose logging on stderr
 | `VERITASGRAPH_MODEL` | `qwen3:latest` | Default Ollama model for ingest/query. |
 | `OLLAMA_HOST` | `127.0.0.1:11434` | Local Ollama endpoint. |
 | `STUDIO_DATA_DIR` | `studio_api/data` | Where the graph snapshot is persisted. |
+
+---
+
+## Use it through VeritasGraph Studio
+
+The same tools and resources are exposed over HTTP by the Studio backend, so you
+can drive the MCP server without an IDE — and the Studio agent pipeline can call
+its tools directly.
+
+Start the Studio API and the bridge mounts under `/mcp`:
+
+```bash
+uvicorn studio_api.main:app --port 8200
+```
+
+| Method & path | Purpose |
+|---------------|---------|
+| `GET /mcp/` | Server identity, capabilities, tool/resource counts. |
+| `GET /mcp/tools` | List tool definitions (same schema as `tools/list`). |
+| `POST /mcp/tools/{name}` | Invoke one tool; body is the tool arguments. |
+| `GET /mcp/resources` | List `veritasgraph://` resources. |
+| `GET /mcp/resources/read?uri=...` | Read a resource. |
+| `POST /mcp/rpc` | Full JSON-RPC 2.0 bridge (any MCP method over HTTP). |
+
+Two ready-to-use tools are pre-registered in the Studio **Tools** section
+(*VeritasGraph MCP · Query* and *VeritasGraph MCP · Search*), pointing at loopback
+`/mcp/tools/...` endpoints. Enable **Tools** on an agent to have the orchestrator
+invoke them automatically during a run.
+
+```bash
+# Example: call a tool via the bridge
+curl -s http://127.0.0.1:8200/mcp/tools/veritasgraph_search_entities \
+  -H 'Content-Type: application/json' -d '{"query": "acme corp"}'
+```
 
 ---
 

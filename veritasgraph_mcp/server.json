@@ -1,19 +1,19 @@
 {
-  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-07-09/server.schema.json",
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "io.github.bibinprathap/veritasgraph",
-  "description": "The first zero-trust, air-gapped Enterprise GraphRAG server for MCP. Build knowledge graphs from local documents and run multi-hop, citation-grounded queries entirely offline.",
+  "description": "Zero-trust, air-gapped Enterprise GraphRAG MCP server with offline, citation-grounded answers.",
   "repository": {
     "url": "https://github.com/bibinprathap/VeritasGraph",
     "source": "github"
   },
-  "version": "0.1.0",
+  "version": "0.1.1",
   "websiteUrl": "https://bibinprathap.github.io/VeritasGraph/",
   "packages": [
     {
       "registryType": "pypi",
       "registryBaseUrl": "https://pypi.org",
       "identifier": "veritasgraph-mcp",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "transport": {
         "type": "stdio"
       },

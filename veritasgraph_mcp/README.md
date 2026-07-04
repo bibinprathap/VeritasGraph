@@ -1,5 +1,7 @@
 # VeritasGraph MCP Server
 
+mcp-name: io.github.bibinprathap/veritasgraph
+
 **The first zero-trust, air-gapped Enterprise GraphRAG server for the
 [Model Context Protocol](https://modelcontextprotocol.io/).**
 
