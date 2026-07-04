@@ -1,0 +1,2 @@
+[console_scripts]
+veritasgraph-mcp = veritasgraph_mcp.server:main

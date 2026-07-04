@@ -133,6 +133,24 @@ python3 demos/agent-studio/sample_pipeline.py --model qwen3:latest
 See [`studio_api/README.md`](studio_api/README.md) for the full feature list, API
 reference, configuration, and architecture.
 
+### 🔌 MCP Server — connect your IDE agent to VeritasGraph
+
+VeritasGraph ships a dedicated **[Model Context Protocol](https://modelcontextprotocol.io/) server** —
+*the first zero-trust, air-gapped Enterprise GraphRAG server for MCP*. Connect
+Claude Desktop, Cursor, VS Code, Windsurf, Cline, or Continue directly to the
+GraphRAG engine over JSON-RPC 2.0 stdio, with **zero external data egress**.
+
+```bash
+# From the repo root (needs a local Ollama for ingest/query)
+python -m veritasgraph_mcp
+```
+
+Tools: `veritasgraph_ingest_document`, `veritasgraph_query` (multi-hop answers
+with `[doc#chunk]` citations), `veritasgraph_search_entities`,
+`veritasgraph_get_graph`, `veritasgraph_clear_graph`. See
+[`veritasgraph_mcp/README.md`](veritasgraph_mcp/README.md) for IDE registration
+snippets.
+
 ---
 
 ### 🎬 See It In Action

@@ -667,6 +667,20 @@ class StudioStore:
                     "description": "Route requests to approved assistant providers.",
                     "config": {"endpoint": "https://api.example.local/ai-bridge"},
                 },
+                {
+                    "name": "VeritasGraph MCP · Query",
+                    "kind": "mcp",
+                    "status": "connected",
+                    "description": "Graph-grounded, multi-hop answer with citations via the local VeritasGraph MCP server.",
+                    "config": {"endpoint": "http://127.0.0.1:8200/mcp/tools/veritasgraph_query"},
+                },
+                {
+                    "name": "VeritasGraph MCP · Search",
+                    "kind": "mcp",
+                    "status": "connected",
+                    "description": "Fast subgraph lookup (entities + relationships) via the local VeritasGraph MCP server.",
+                    "config": {"endpoint": "http://127.0.0.1:8200/mcp/tools/veritasgraph_search_entities"},
+                },
             ],
             Section.KNOWLEDGE.value: [
                 {

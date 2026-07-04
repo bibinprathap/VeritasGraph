@@ -1,0 +1,41 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-07-09/server.schema.json",
+  "name": "io.github.bibinprathap/veritasgraph",
+  "description": "The first zero-trust, air-gapped Enterprise GraphRAG server for MCP. Build knowledge graphs from local documents and run multi-hop, citation-grounded queries entirely offline.",
+  "repository": {
+    "url": "https://github.com/bibinprathap/VeritasGraph",
+    "source": "github"
+  },
+  "version": "0.1.0",
+  "websiteUrl": "https://bibinprathap.github.io/VeritasGraph/",
+  "packages": [
+    {
+      "registryType": "pypi",
+      "registryBaseUrl": "https://pypi.org",
+      "identifier": "veritasgraph-mcp",
+      "version": "0.1.0",
+      "transport": {
+        "type": "stdio"
+      },
+      "environmentVariables": [
+        {
+          "name": "VERITASGRAPH_MODEL",
+          "description": "Default local Ollama model for ingest/query (e.g. qwen3:latest).",
+          "isRequired": false,
+          "default": "qwen3:latest"
+        },
+        {
+          "name": "OLLAMA_HOST",
+          "description": "Local Ollama endpoint.",
+          "isRequired": false,
+          "default": "127.0.0.1:11434"
+        },
+        {
+          "name": "STUDIO_DATA_DIR",
+          "description": "Directory where the knowledge-graph snapshot is persisted.",
+          "isRequired": false
+        }
+      ]
+    }
+  ]
+}

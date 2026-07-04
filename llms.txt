@@ -15,6 +15,7 @@ Graph + Tree retrieval, knowledge graph construction, multi-hop reasoning, and v
 ## Canonical Paths
 - Repo root README: [README.md](./README.md)
 - Cookbook: [cookbook/](./cookbook/)
+- MCP server (zero-trust, air-gapped GraphRAG over JSON-RPC stdio): [veritasgraph_mcp/](./veritasgraph_mcp/)
 - Studio backend API: [studio_api/](./studio_api/)
 - Additional API routes: [app/api/](./app/api/)
 - Core package API: [veritasgraph/](./veritasgraph/)

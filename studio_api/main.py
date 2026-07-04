@@ -21,6 +21,7 @@ from studio_api.routes.evaluation import evaluation_router
 from studio_api.routes.finetune import finetune_router
 from studio_api.routes.graphrag import graphrag_router
 from studio_api.routes.knowledge import knowledge_router
+from studio_api.routes.mcp import mcp_router
 from studio_api.routes.models import models_router
 from studio_api.routes.playground import playground_router
 from studio_api.routes.resources import resource_routers
@@ -51,6 +52,7 @@ app.include_router(workspace_router)
 app.include_router(models_router)
 app.include_router(playground_router)
 app.include_router(graphrag_router)
+app.include_router(mcp_router)
 
 
 @app.get("/health", tags=["meta"])

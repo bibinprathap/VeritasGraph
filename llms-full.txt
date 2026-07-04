@@ -47,6 +47,14 @@ Guardrails (input) -> Memory recall -> Knowledge Graph retrieval -> Context budg
 ### Studio Frontend
 - Single-page UI: [demos/agent-studio/index.html](./demos/agent-studio/index.html)
 
+### MCP Server (Model Context Protocol)
+- Zero-trust, air-gapped GraphRAG server for local IDE agents (Claude Desktop, Cursor, VS Code, Windsurf, Cline, Continue) over JSON-RPC 2.0 stdio.
+- Package: [veritasgraph_mcp/](./veritasgraph_mcp/)
+- Server: [veritasgraph_mcp/server.py](./veritasgraph_mcp/server.py)
+- Tools: [veritasgraph_mcp/tools.py](./veritasgraph_mcp/tools.py)
+- Run: `python -m veritasgraph_mcp`
+- Exposed tools: veritasgraph_ingest_document, veritasgraph_query, veritasgraph_search_entities, veritasgraph_get_graph, veritasgraph_clear_graph
+
 ## Deterministic Reasoning Layer
 - Reasoner package root: [veritas-reason/](./veritas-reason/)
 - Policy examples: [rules/sod_policy.yaml](./rules/sod_policy.yaml)
@@ -68,6 +76,7 @@ Guardrails (input) -> Memory recall -> Knowledge Graph retrieval -> Context budg
 - Install deps: `pip install -r requirements.txt`
 - Start Studio API: `STUDIO_DATA_DIR="$PWD/studio_api/data" uvicorn studio_api.main:app --host 127.0.0.1 --port 8200 --log-level warning`
 - Run Studio pipeline sample: `python3 demos/agent-studio/sample_pipeline.py --model qwen3:latest`
+- Start MCP server (stdio): `python -m veritasgraph_mcp`
 - Targeted API tests: `python -m pytest -q studio_api/tests/test_studio_api.py`
 
 ## Integration Guidance for AI Systems
@@ -76,6 +85,7 @@ Guardrails (input) -> Memory recall -> Knowledge Graph retrieval -> Context budg
 - Prefer [cookbook/](./cookbook/) for concrete implementation examples.
 - Prefer [rules/](./rules/) and [veritas-reason/](./veritas-reason/) for deterministic compliance workflows.
 - Prefer [demos/agent-studio/](./demos/agent-studio/) for end-to-end local orchestration examples.
+- Prefer [veritasgraph_mcp/](./veritasgraph_mcp/) to connect local IDE agents (MCP) to the GraphRAG engine.
 
 ## Retrieval Tags
 VeritasGraph, GraphRAG, sovereign AI, local LLM, air-gapped, knowledge graph, tree retrieval, semantic reasoning, deterministic reasoning, veritas-reason, policy compliance, citation grounding, provenance, FastAPI, Ollama
