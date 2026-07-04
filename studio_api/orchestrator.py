@@ -21,7 +21,10 @@ budgeter) so the pipeline is unit-testable without a running model.
 
 from __future__ import annotations
 
+import json
 import re
+from urllib import parse as urlparse
+from urllib import request as urlrequest
 from typing import Any, Dict, List, Optional
 
 from studio_api.compression import ContextBudgeter, budgeter as _default_budgeter
@@ -202,18 +205,126 @@ class Orchestrator:
     def _tool_catalog(self, agent) -> Dict[str, Any]:
         cfg = agent.config or {}
         if not _truthy(cfg.get("use_tools")):
-            return {"used": False, "available": []}
+            return {"used": False, "available": [], "registered": []}
         wanted = set(cfg.get("tool_ids") or [])
+        profile = set(cfg.get("tool_profile") or [])
         names: List[str] = []
+        registered: List[Dict[str, str]] = []
         for tool in self.store.list_resources("tools"):
             if tool.status == "disabled":
                 continue
             if wanted and tool.id not in wanted:
                 continue
+            if profile and tool.name not in profile:
+                continue
             names.append(tool.name)
+            registered.append(
+                {
+                    "name": tool.name,
+                    "kind": tool.kind or "read",
+                    "endpoint": str((tool.config or {}).get("endpoint") or "").strip(),
+                }
+            )
         if _truthy(cfg.get("use_graph")) and "Knowledge Graph" not in names:
             names.append("Knowledge Graph")
-        return {"used": True, "available": names}
+        return {"used": True, "available": names, "registered": registered}
+
+    def _invoke_tools(self, agent, query: str, tools: Dict[str, Any], graph: Dict[str, Any]) -> Dict[str, Any]:
+        cfg = agent.config or {}
+        if not tools.get("used"):
+            return {"invoked": 0, "succeeded": 0, "failed": 0, "results": [], "errors": []}
+
+        max_calls = int(cfg.get("max_tool_calls") or 3)
+        timeout_s = float(cfg.get("tool_timeout_seconds") or 4.0)
+        allow_external = _truthy(cfg.get("allow_external_tools"))
+
+        results: List[Dict[str, Any]] = []
+        errors: List[Dict[str, Any]] = []
+        invoked = 0
+
+        for tool in tools.get("registered", [])[:max_calls]:
+            endpoint = tool.get("endpoint") or ""
+            if not endpoint:
+                continue
+
+            parsed = urlparse.urlparse(endpoint)
+            host = (parsed.hostname or "").lower()
+            is_loopback = host in {"127.0.0.1", "localhost", "::1"}
+            if not allow_external and not is_loopback:
+                errors.append({"tool": tool["name"], "status": "skipped", "error": "external endpoint blocked"})
+                continue
+
+            payload: Dict[str, Any]
+            if endpoint.endswith("/graphrag/query"):
+                payload = {
+                    "question": query,
+                    "model": agent.kind,
+                    "max_depth": 2,
+                    "max_nodes": 20,
+                }
+            else:
+                payload = {
+                    "query": query,
+                    "agent_id": agent.id,
+                    "agent_name": agent.name,
+                    "citations": [c.get("id") for c in graph.get("citations", [])],
+                }
+
+            body = json.dumps(payload).encode("utf-8")
+            req = urlrequest.Request(endpoint, data=body, method="POST")
+            req.add_header("Content-Type", "application/json")
+
+            try:
+                with urlrequest.urlopen(req, timeout=timeout_s) as resp:
+                    raw = resp.read().decode("utf-8", errors="replace")
+                    content_type = (resp.headers.get("Content-Type") or "").lower()
+                    data: Any
+                    if "application/json" in content_type:
+                        data = json.loads(raw) if raw else {}
+                    else:
+                        try:
+                            data = json.loads(raw)
+                        except Exception:
+                            data = raw
+
+                    if isinstance(data, dict):
+                        summary = (
+                            data.get("answer")
+                            or data.get("summary")
+                            or data.get("result")
+                            or data.get("message")
+                            or str(data)[:240]
+                        )
+                    else:
+                        summary = str(data)[:240]
+
+                    results.append(
+                        {
+                            "tool": tool["name"],
+                            "status": "ok",
+                            "endpoint": endpoint,
+                            "summary": str(summary),
+                        }
+                    )
+                    invoked += 1
+            except Exception as exc:
+                errors.append(
+                    {
+                        "tool": tool["name"],
+                        "status": "failed",
+                        "endpoint": endpoint,
+                        "error": str(exc),
+                    }
+                )
+                invoked += 1
+
+        return {
+            "invoked": invoked,
+            "succeeded": len(results),
+            "failed": len([e for e in errors if e.get("status") == "failed"]),
+            "results": results,
+            "errors": errors,
+        }
 
     # ------------------------------------------------------------------ #
     # Public pipeline
@@ -296,13 +407,28 @@ class Orchestrator:
 
         # 5. Tools ------------------------------------------------------------
         tools = self._tool_catalog(agent)
-        trace["tools"] = tools
+        tool_run = self._invoke_tools(agent, user_text, tools, graph)
+        trace["tools"] = {
+            **tools,
+            "invoked": tool_run["invoked"],
+            "succeeded": tool_run["succeeded"],
+            "failed": tool_run["failed"],
+            "results": tool_run["results"],
+            "errors": tool_run["errors"],
+        }
 
         # Assemble the system prompt ----------------------------------------
         base_prompt = cfg.get("prompt") or agent.description or "You are a helpful assistant."
         system_parts = [base_prompt]
         if tools["used"] and tools["available"]:
             system_parts.append("Available tools: " + ", ".join(tools["available"]) + ".")
+        if tool_run["results"]:
+            system_parts.append(
+                "Tool results:\n"
+                + "\n".join(
+                    f"- {r['tool']}: {r['summary']}" for r in tool_run["results"]
+                )
+            )
         if kept_chunks:
             system_parts.append(
                 "Use ONLY the following knowledge-graph context to answer. Cite the "

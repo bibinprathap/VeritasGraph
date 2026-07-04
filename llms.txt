@@ -1,0 +1,41 @@
+# VeritasGraph LLM Index
+
+## Project Identity
+VeritasGraph is a sovereign, local GraphRAG framework designed for air-gapped enterprise environments requiring zero external data egress and deterministic semantic reasoning via veritas-reason.
+
+## One-line Summary
+Graph + Tree retrieval, knowledge graph construction, multi-hop reasoning, and verifiable source attribution for enterprise AI workloads.
+
+## Primary Language and Stack
+- Python 3.10+
+- FastAPI (Studio API)
+- Ollama and OpenAI-compatible model endpoints
+- GraphRAG pipeline components
+
+## Canonical Paths
+- Repo root README: [README.md](./README.md)
+- Cookbook: [cookbook/](./cookbook/)
+- Studio backend API: [studio_api/](./studio_api/)
+- Additional API routes: [app/api/](./app/api/)
+- Core package API: [veritasgraph/](./veritasgraph/)
+- GraphRAG app/config: [graphrag-ollama-config/](./graphrag-ollama-config/)
+- Policy rules: [rules/](./rules/)
+- Deterministic reasoner: [veritas-reason/](./veritas-reason/)
+
+## Architecture (High-level)
+1. Ingest documents and structured records.
+2. Build entities, relationships, and graph structure.
+3. Retrieve with hybrid Graph + Tree reasoning.
+4. Enforce guardrails, memory, and tool orchestration in Studio.
+5. Return grounded answers with citations and reasoning path.
+
+## Studio Pipeline Order
+Guardrails (in) -> Memory -> Knowledge Graph -> Headroom budget -> Tools -> Guardrails (out) -> Data log
+
+## Primary Entry Points
+- Local Studio server: `uvicorn studio_api.main:app --host 127.0.0.1 --port 8200`
+- Studio UI: `/studio` on the same host
+- Demo pipeline: `python3 demos/agent-studio/sample_pipeline.py --model <model>`
+
+## Keywords for AI Retrieval
+GraphRAG, knowledge graph, tree navigation, multi-hop reasoning, source attribution, local AI, sovereign AI, air-gapped deployment, deterministic policy reasoning, veritas-reason

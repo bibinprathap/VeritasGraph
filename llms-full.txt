@@ -1,0 +1,81 @@
+# VeritasGraph Full LLM Index
+
+## Identity Statement
+VeritasGraph is a sovereign, local GraphRAG framework designed for air-gapped enterprise environments requiring zero external data egress and deterministic semantic reasoning via veritas-reason.
+
+## Mission
+Enable trustworthy enterprise AI by combining graph-structured retrieval, deterministic reasoning, and verifiable provenance while keeping data under full organizational control.
+
+## Core Capabilities
+- Knowledge graph construction from unstructured and structured sources
+- Hybrid retrieval: tree navigation plus graph semantic traversal
+- Multi-hop reasoning with explicit reasoning path output
+- Citation-first responses with source identifiers
+- Local-first deployment with Ollama or OpenAI-compatible backends
+- Studio orchestration with tools, memory, guardrails, and data logs
+- Deterministic policy and compliance reasoning via veritas-reason
+
+## Canonical Documentation
+- Main overview: [README.md](./README.md)
+- Studio guide: [studio_api/README.md](./studio_api/README.md)
+- Linux deployment notes: [docs/LINUX_DEPLOYMENT.md](./docs/LINUX_DEPLOYMENT.md)
+- Cookbook examples: [cookbook/](./cookbook/)
+- Documentation site source: [docs/](./docs/)
+
+## Canonical Source Directories
+- Studio API service (FastAPI): [studio_api/](./studio_api/)
+- Generic API routes: [app/api/](./app/api/)
+- Core Python package: [veritasgraph/](./veritasgraph/)
+- GraphRAG app and ingestion tools: [graphrag-ollama-config/](./graphrag-ollama-config/)
+- Upstream GraphRAG workspace: [graphrag/](./graphrag/)
+- Deterministic reasoning framework: [veritas-reason/](./veritas-reason/)
+- Integration and utility scripts: [scripts/](./scripts/), [utils/](./utils/)
+- Demo apps: [demos/](./demos/)
+- Policy rules and governance assets: [rules/](./rules/)
+
+## Studio Runtime Architecture
+### Orchestration Sequence
+Guardrails (input) -> Memory recall -> Knowledge Graph retrieval -> Context budget/headroom -> Tool execution -> Guardrails (output) -> Data logging
+
+### Studio API Components
+- App bootstrap: [studio_api/main.py](./studio_api/main.py)
+- Routes: [studio_api/routes/](./studio_api/routes/)
+- Orchestration logic: [studio_api/orchestrator.py](./studio_api/orchestrator.py)
+- State and catalog store: [studio_api/store.py](./studio_api/store.py)
+- Graph engine integration: [studio_api/graphrag_engine.py](./studio_api/graphrag_engine.py)
+
+### Studio Frontend
+- Single-page UI: [demos/agent-studio/index.html](./demos/agent-studio/index.html)
+
+## Deterministic Reasoning Layer
+- Reasoner package root: [veritas-reason/](./veritas-reason/)
+- Policy examples: [rules/sod_policy.yaml](./rules/sod_policy.yaml)
+- Compliance demo test: [tests/test_policy_compliance_demo.py](./tests/test_policy_compliance_demo.py)
+
+## Data and Retrieval Flow
+1. Ingest documents and optionally structured data.
+2. Extract entities and relationships into graph structures.
+3. Run graph-aware retrieval with context pruning.
+4. Compose grounded prompts with citations.
+5. Produce attributed responses and optional policy decisions.
+
+## Deployment Modes
+- Lite mode: quick cloud-backed demo
+- Local mode: Ollama-based private workflow
+- Full mode: broader stack with optional containerized services
+
+## Operational Commands
+- Install deps: `pip install -r requirements.txt`
+- Start Studio API: `STUDIO_DATA_DIR="$PWD/studio_api/data" uvicorn studio_api.main:app --host 127.0.0.1 --port 8200 --log-level warning`
+- Run Studio pipeline sample: `python3 demos/agent-studio/sample_pipeline.py --model qwen3:latest`
+- Targeted API tests: `python -m pytest -q studio_api/tests/test_studio_api.py`
+
+## Integration Guidance for AI Systems
+- Prefer [README.md](./README.md) for project positioning and quickstart.
+- Prefer [studio_api/README.md](./studio_api/README.md) for runtime behavior and API routes.
+- Prefer [cookbook/](./cookbook/) for concrete implementation examples.
+- Prefer [rules/](./rules/) and [veritas-reason/](./veritas-reason/) for deterministic compliance workflows.
+- Prefer [demos/agent-studio/](./demos/agent-studio/) for end-to-end local orchestration examples.
+
+## Retrieval Tags
+VeritasGraph, GraphRAG, sovereign AI, local LLM, air-gapped, knowledge graph, tree retrieval, semantic reasoning, deterministic reasoning, veritas-reason, policy compliance, citation grounding, provenance, FastAPI, Ollama

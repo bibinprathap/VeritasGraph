@@ -1220,8 +1220,14 @@
       stages.push(pipelineStage("Headroom budget", b.used ? "on" : "off",
         b.used ? `${b.used_tokens}/${b.budget_tokens} tokens · kept ${b.kept} · dropped ${b.dropped}` : "no graph context"));
       const tl = t.tools || {};
+      const toolDetail = tl.used
+        ? (`available: ${(tl.available || []).join(", ") || "none"}`
+            + (typeof tl.invoked === "number"
+              ? ` · invoked ${tl.invoked} (ok ${tl.succeeded || 0}, failed ${tl.failed || 0})`
+              : ""))
+        : "not wired";
       stages.push(pipelineStage("Tools", tl.used ? "on" : "off",
-        tl.used ? ((tl.available || []).join(", ") || "none enabled") : "not wired"));
+        toolDetail));
       const gout = t.guardrails_out || {};
       stages.push(pipelineStage("Guardrails (out)", gout.applied && gout.applied.length ? "on" : "off",
         gout.applied && gout.applied.length ? `${gout.redactions || 0} redaction(s)` : "no output filter"));
@@ -1233,6 +1239,16 @@
       if (g.reasoning_path && g.reasoning_path.length) {
         html += `<div class="pipeline-path"><span class="who">Reasoning path</span>`
           + g.reasoning_path.map((p) => `<div class="meta mono">${escapeHtml(p)}</div>`).join("")
+          + `</div>`;
+      }
+      if (tl.results && tl.results.length) {
+        html += `<div class="pipeline-path"><span class="who">Tool outputs</span>`
+          + tl.results.map((r) => `<div class="meta mono">${escapeHtml(r.tool)}: ${escapeHtml(r.summary || "")}</div>`).join("")
+          + `</div>`;
+      }
+      if (tl.errors && tl.errors.length) {
+        html += `<div class="pipeline-path"><span class="who">Tool issues</span>`
+          + tl.errors.map((e) => `<div class="meta mono">${escapeHtml(e.tool)}: ${escapeHtml(e.error || e.status || "error")}</div>`).join("")
           + `</div>`;
       }
       el.innerHTML = html;

@@ -39,6 +39,33 @@ def test_seed_data_present(client):
     assert body["count"] >= 1
 
 
+def test_seed_tools_catalog_and_sample_explorers(client):
+    tools = client.get("/tools/").json()["items"]
+    tool_names = {t["name"] for t in tools}
+    for expected in {
+        "Graph Retriever",
+        "Web Search",
+        "Email Assistant",
+        "Docs Workspace",
+        "Sheets Analyst",
+        "GitHub Repo",
+        "Power BI Connector",
+    }:
+        assert expected in tool_names
+
+    agents = client.get("/agents/").json()["items"]
+    by_name = {a["name"]: a for a in agents}
+    assert "General Tools Explorer" in by_name
+    assert "Data & BI Explorer" in by_name
+
+    general = by_name["General Tools Explorer"]
+    cfg = general.get("config") or {}
+    assert cfg.get("use_tools") is True
+    assert cfg.get("use_graph") is True
+    assert isinstance(cfg.get("tool_profile"), list)
+    assert "Graph Retriever" in cfg.get("tool_profile")
+
+
 def test_resource_crud_lifecycle(client):
     create = client.post("/tools/", json={"name": "Vector Search", "kind": "retrieval"})
     assert create.status_code == 201
@@ -343,6 +370,84 @@ def test_pipeline_redacts_pii_input(client, monkeypatch):
     assert "john@example.com" not in user_msg
     assert "[redacted:email]" in user_msg
     assert resp.json()["trace"]["guardrails_in"]["redactions"] >= 1
+
+
+def test_pipeline_invokes_loopback_tool_and_traces_results(client, monkeypatch):
+    _patch_graph_chat(monkeypatch)
+    client.post(
+        "/graphrag/ingest",
+        json={
+            "title": "Acme Brief",
+            "model": "stub-model",
+            "text": "Acme Corp was founded by Jane Doe, who used to work at Globex.",
+        },
+    )
+
+    captured = _fake_ollama(monkeypatch)
+    agent = _make_agent(
+        client,
+        {
+            "prompt": "Use tools.",
+            "use_graph": True,
+            "use_tools": True,
+            "use_memory": False,
+            "use_guardrails": False,
+            "use_data": False,
+            "tool_profile": ["Graph Retriever"],
+            "max_tool_calls": 1,
+        },
+    )
+
+    resp = client.post(
+        "/playground/chat",
+        json={"agent_id": agent["id"], "message": "Who founded Acme Corp?"},
+    )
+    assert resp.status_code == 200
+    t = resp.json()["trace"]["tools"]
+    assert t["used"] is True
+    assert t["invoked"] >= 1
+    assert t["succeeded"] >= 1
+    assert t["results"]
+    assert any(r["tool"] == "Graph Retriever" for r in t["results"])
+
+    # Ensure tool output was fed into the system prompt.
+    system_msg = captured["body"]["messages"][0]["content"]
+    assert "Tool results:" in system_msg
+
+
+def test_pipeline_blocks_external_tools_by_default(client, monkeypatch):
+    captured = _fake_ollama(monkeypatch)
+    agent = _make_agent(
+        client,
+        {
+            "prompt": "Use tools.",
+            "use_graph": False,
+            "use_tools": True,
+            "use_memory": False,
+            "use_guardrails": False,
+            "use_data": False,
+            "tool_profile": ["Web Search"],
+            "max_tool_calls": 1,
+            # default allow_external_tools=False should block https endpoints.
+        },
+    )
+
+    resp = client.post(
+        "/playground/chat",
+        json={"agent_id": agent["id"], "message": "Latest news?"},
+    )
+    assert resp.status_code == 200
+    t = resp.json()["trace"]["tools"]
+    assert t["used"] is True
+    assert t["invoked"] == 0
+    assert t["succeeded"] == 0
+    assert t["failed"] == 0
+    assert t["errors"]
+    assert any(e.get("status") == "skipped" for e in t["errors"])
+
+    # Model call still proceeds with available-tool context.
+    system_msg = captured["body"]["messages"][0]["content"]
+    assert "Available tools:" in system_msg
 
 
 def test_pipeline_blocks_disallowed_input(client, monkeypatch):

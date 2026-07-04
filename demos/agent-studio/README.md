@@ -31,3 +31,18 @@ This folder contains a workspace UI for building and operating AI components.
 An additional variant is available at:
 
 - `demos/foundry-studio/index.html`
+
+## Sample explorer seed script
+
+Populate the Tools section with a broad general-purpose tool catalog and create
+sample explorer agents wired to those tools:
+
+```bash
+python3 demos/agent-studio/sample_tools_explorer.py
+```
+
+Optional base URL:
+
+```bash
+python3 demos/agent-studio/sample_tools_explorer.py --base http://127.0.0.1:8200
+```

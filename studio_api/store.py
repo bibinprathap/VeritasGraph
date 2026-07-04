@@ -72,6 +72,8 @@ class StudioStore:
         self._loaded = self._load()
         if not self._loaded:
             self._seed()
+        # Keep the default catalog in sync for existing persisted snapshots.
+        self._ensure_default_catalog()
 
     # ------------------------------------------------------------------ #
     # Collection CRUD
@@ -446,44 +448,344 @@ class StudioStore:
     # ------------------------------------------------------------------ #
     # Seed data (first run only)
     # ------------------------------------------------------------------ #
-    def _seed(self) -> None:
-        seeds = {
+    def _default_catalog(self) -> Dict[str, List[Dict[str, Any]]]:
+        return {
             Section.AGENTS.value: [
-                ("Research Orchestrator", "orchestrator", "active"),
-                ("Compliance Reviewer", "reviewer", "active"),
-                ("Draft Assistant", "assistant", "draft"),
+                {
+                    "name": "Research Orchestrator",
+                    "kind": "orchestrator",
+                    "status": "active",
+                    "description": "Routes research questions across graph, web, and document tools.",
+                    "config": {
+                        "tags": "research, orchestration",
+                        "prompt": "Plan, retrieve evidence, then synthesize with citations.",
+                        "use_graph": True,
+                        "use_tools": True,
+                        "use_memory": True,
+                        "use_guardrails": True,
+                        "use_data": True,
+                        "context_budget": 700,
+                    },
+                },
+                {
+                    "name": "Compliance Reviewer",
+                    "kind": "reviewer",
+                    "status": "active",
+                    "description": "Evaluates policy and risk with guardrails enabled.",
+                    "config": {
+                        "tags": "compliance, risk",
+                        "prompt": "Use policy sources first and explain any violations clearly.",
+                        "use_graph": True,
+                        "use_tools": True,
+                        "use_memory": True,
+                        "use_guardrails": True,
+                        "use_data": True,
+                        "context_budget": 650,
+                    },
+                },
+                {
+                    "name": "Draft Assistant",
+                    "kind": "assistant",
+                    "status": "draft",
+                    "description": "General drafting assistant for iterative editing workflows.",
+                    "config": {
+                        "tags": "drafting",
+                        "prompt": "Draft concise, structured responses and ask clarifying questions.",
+                        "use_graph": False,
+                        "use_tools": True,
+                        "use_memory": True,
+                        "use_guardrails": True,
+                        "use_data": False,
+                        "context_budget": 500,
+                    },
+                },
+                {
+                    "name": "General Tools Explorer",
+                    "kind": "explorer",
+                    "status": "active",
+                    "description": "Sample explorer agent wired to the full general-purpose toolset.",
+                    "config": {
+                        "tags": "sample, explorer, tools",
+                        "prompt": "Select the best tool for each task and explain tool choice briefly.",
+                        "use_graph": True,
+                        "use_tools": True,
+                        "use_memory": True,
+                        "use_guardrails": True,
+                        "use_data": True,
+                        "context_budget": 800,
+                        "tool_profile": [
+                            "Graph Retriever",
+                            "Web Search",
+                            "Email Assistant",
+                            "Docs Workspace",
+                            "Sheets Analyst",
+                            "Task Planner",
+                            "GitHub Repo",
+                        ],
+                    },
+                },
+                {
+                    "name": "Data & BI Explorer",
+                    "kind": "explorer",
+                    "status": "active",
+                    "description": "Sample explorer agent focused on data, dashboarding, and reporting.",
+                    "config": {
+                        "tags": "sample, explorer, data",
+                        "prompt": "Use tabular tools first, then produce concise KPI summaries.",
+                        "use_graph": True,
+                        "use_tools": True,
+                        "use_memory": True,
+                        "use_guardrails": True,
+                        "use_data": True,
+                        "context_budget": 750,
+                        "tool_profile": [
+                            "Sheets Analyst",
+                            "Power BI Connector",
+                            "Tableau Connector",
+                            "Cloud Drive",
+                        ],
+                    },
+                },
             ],
             Section.TOOLS.value: [
-                ("Graph Retriever", "retrieval", "connected"),
-                ("Web Search", "search", "connected"),
-                ("Code Runner", "execution", "disabled"),
+                {
+                    "name": "Graph Retriever",
+                    "kind": "retrieval",
+                    "status": "connected",
+                    "description": "Graph-aware retrieval over indexed knowledge.",
+                    "config": {"endpoint": "http://127.0.0.1:8200/graphrag/query"},
+                },
+                {
+                    "name": "Web Search",
+                    "kind": "search",
+                    "status": "connected",
+                    "description": "External web lookup for fresh context.",
+                    "config": {"endpoint": "https://api.example.local/web-search"},
+                },
+                {
+                    "name": "Code Runner",
+                    "kind": "execution",
+                    "status": "disabled",
+                    "description": "Sandboxed code execution for deterministic snippets.",
+                    "config": {"endpoint": "https://api.example.local/code-runner"},
+                },
+                {
+                    "name": "Slack Connector",
+                    "kind": "communication",
+                    "status": "connected",
+                    "description": "Post updates and fetch channel context.",
+                    "config": {"endpoint": "https://api.example.local/slack"},
+                },
+                {
+                    "name": "Teams Connector",
+                    "kind": "communication",
+                    "status": "connected",
+                    "description": "Send and read Microsoft Teams messages.",
+                    "config": {"endpoint": "https://api.example.local/teams"},
+                },
+                {
+                    "name": "Email Assistant",
+                    "kind": "email",
+                    "status": "connected",
+                    "description": "Compose, classify, and route email actions.",
+                    "config": {"endpoint": "https://api.example.local/email"},
+                },
+                {
+                    "name": "Docs Workspace",
+                    "kind": "document",
+                    "status": "connected",
+                    "description": "Create and edit long-form docs.",
+                    "config": {"endpoint": "https://api.example.local/docs"},
+                },
+                {
+                    "name": "Sheets Analyst",
+                    "kind": "spreadsheet",
+                    "status": "connected",
+                    "description": "Tabular analysis and formula generation.",
+                    "config": {"endpoint": "https://api.example.local/sheets"},
+                },
+                {
+                    "name": "Slides Builder",
+                    "kind": "presentation",
+                    "status": "connected",
+                    "description": "Generate decks from structured outlines.",
+                    "config": {"endpoint": "https://api.example.local/slides"},
+                },
+                {
+                    "name": "Cloud Drive",
+                    "kind": "storage",
+                    "status": "connected",
+                    "description": "Search, upload, and share workspace files.",
+                    "config": {"endpoint": "https://api.example.local/drive"},
+                },
+                {
+                    "name": "Task Planner",
+                    "kind": "project",
+                    "status": "connected",
+                    "description": "Track tasks across boards and sprints.",
+                    "config": {"endpoint": "https://api.example.local/tasks"},
+                },
+                {
+                    "name": "Design Board",
+                    "kind": "design",
+                    "status": "connected",
+                    "description": "Draft UI/artwork concepts and review states.",
+                    "config": {"endpoint": "https://api.example.local/design"},
+                },
+                {
+                    "name": "GitHub Repo",
+                    "kind": "development",
+                    "status": "connected",
+                    "description": "Read issues, PRs, and repository metadata.",
+                    "config": {"endpoint": "https://api.example.local/github"},
+                },
+                {
+                    "name": "Postman API Runner",
+                    "kind": "development",
+                    "status": "connected",
+                    "description": "Execute and validate API collections.",
+                    "config": {"endpoint": "https://api.example.local/postman"},
+                },
+                {
+                    "name": "Power BI Connector",
+                    "kind": "bi",
+                    "status": "connected",
+                    "description": "Publish metrics to Power BI dashboards.",
+                    "config": {"endpoint": "https://api.example.local/powerbi"},
+                },
+                {
+                    "name": "Tableau Connector",
+                    "kind": "bi",
+                    "status": "connected",
+                    "description": "Sync curated datasets into Tableau workbooks.",
+                    "config": {"endpoint": "https://api.example.local/tableau"},
+                },
+                {
+                    "name": "AI Assistant Bridge",
+                    "kind": "ai",
+                    "status": "connected",
+                    "description": "Route requests to approved assistant providers.",
+                    "config": {"endpoint": "https://api.example.local/ai-bridge"},
+                },
             ],
             Section.KNOWLEDGE.value: [
-                ("Policy Corpus", "documents", "indexed"),
-                ("Product Wiki", "documents", "indexing"),
+                {
+                    "name": "Policy Corpus",
+                    "kind": "documents",
+                    "status": "indexed",
+                    "description": "Policy and compliance source corpus.",
+                    "config": {},
+                },
+                {
+                    "name": "Product Wiki",
+                    "kind": "documents",
+                    "status": "indexing",
+                    "description": "Technical and product knowledge wiki.",
+                    "config": {},
+                },
             ],
             Section.GUARDRAILS.value: [
-                ("PII Filter", "pii", "enforcing"),
-                ("Toxicity Monitor", "safety", "monitoring"),
+                {
+                    "name": "PII Filter",
+                    "kind": "pii",
+                    "status": "enforcing",
+                    "description": "Redacts emails, phones, and sensitive IDs.",
+                    "config": {},
+                },
+                {
+                    "name": "Toxicity Monitor",
+                    "kind": "safety",
+                    "status": "monitoring",
+                    "description": "Flags harmful or unsafe output patterns.",
+                    "config": {},
+                },
             ],
             Section.MEMORY.value: [
-                ("Session Memory", "short_term", "active"),
-                ("Knowledge Notes", "long_term", "active"),
+                {
+                    "name": "Session Memory",
+                    "kind": "short_term",
+                    "status": "active",
+                    "description": "Conversation-level short-term context.",
+                    "config": {},
+                },
+                {
+                    "name": "Knowledge Notes",
+                    "kind": "long_term",
+                    "status": "active",
+                    "description": "Persisted long-term notes and summaries.",
+                    "config": {},
+                },
             ],
             Section.DATA.value: [
-                ("Support Tickets", "table", "ready"),
-                ("Telemetry Stream", "stream", "syncing"),
+                {
+                    "name": "Support Tickets",
+                    "kind": "table",
+                    "status": "ready",
+                    "description": "Operational support history and tags.",
+                    "config": {},
+                },
+                {
+                    "name": "Telemetry Stream",
+                    "kind": "stream",
+                    "status": "syncing",
+                    "description": "Near-real-time events and metrics stream.",
+                    "config": {},
+                },
             ],
         }
+
+    def _ensure_default_catalog(self) -> None:
+        changed = False
+        catalog = self._default_catalog()
+        with self._lock:
+            for section, rows in catalog.items():
+                by_name = {r.name: r for r in self._collections[section].values()}
+                for row in rows:
+                    existing = by_name.get(row["name"])
+                    if existing is None:
+                        record = ResourceRecord(
+                            id=_new_id(section[:3]),
+                            section=section,
+                            name=row["name"],
+                            kind=row.get("kind"),
+                            status=row.get("status") or DEFAULT_STATUS[section],
+                            description=row.get("description", ""),
+                            config=row.get("config", {}),
+                        )
+                        self._collections[section][record.id] = record
+                        changed = True
+                        continue
+
+                    # Backfill descriptive defaults without overriding user edits.
+                    if not existing.description and row.get("description"):
+                        existing.description = row["description"]
+                        existing.updated_at = time.time()
+                        changed = True
+                    if not existing.config and row.get("config"):
+                        existing.config = row["config"]
+                        existing.updated_at = time.time()
+                        changed = True
+
+            if self._guardrail_blocks <= 0:
+                self._guardrail_blocks = 12
+                changed = True
+
+        if changed:
+            self._persist()
+
+    def _seed(self) -> None:
+        seeds = self._default_catalog()
         with self._lock:
             for section, rows in seeds.items():
-                for name, kind, status in rows:
+                for row in rows:
                     record = ResourceRecord(
                         id=_new_id(section[:3]),
                         section=section,
-                        name=name,
-                        kind=kind,
-                        status=status,
+                        name=row["name"],
+                        kind=row.get("kind"),
+                        status=row.get("status") or DEFAULT_STATUS[section],
+                        description=row.get("description", ""),
+                        config=row.get("config", {}),
                     )
                     self._collections[section][record.id] = record
             self._guardrail_blocks = 12
