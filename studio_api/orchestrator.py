@@ -161,9 +161,9 @@ class Orchestrator:
             self.store.record_guardrail_block(redactions)
         return {"applied": applied, "redactions": redactions, "text": cleaned}
 
-    def _graph_context(self, agent, query: str) -> Dict[str, Any]:
+    def _graph_context(self, agent, query: str, force: bool = False) -> Dict[str, Any]:
         cfg = agent.config or {}
-        if not _truthy(cfg.get("use_graph")):
+        if not force and not _truthy(cfg.get("use_graph")):
             return {"used": False}
         depth = int(cfg.get("graph_depth") or 2)
         nodes = int(cfg.get("graph_nodes") or 20)
@@ -264,6 +264,25 @@ class Orchestrator:
         return host in {"127.0.0.1", "localhost", "::1"}
 
     @staticmethod
+    def _is_llm_graph_answer(endpoint: str) -> bool:
+        """True for tools that run an LLM-backed, graph-grounded answer."""
+        return endpoint.endswith("/graphrag/query") or "/mcp/tools/veritasgraph_query" in endpoint
+
+    @staticmethod
+    def _has_graph_tool(tools: Dict[str, Any]) -> bool:
+        """True when the agent has any VeritasGraph graph/MCP tool wired in.
+
+        Such tools imply the agent wants graph-grounded answers, so the pipeline
+        should ground the reply via the fast no-LLM retrieve path (full chunks +
+        citations) even if the ``use_graph`` toggle happens to be off.
+        """
+        for t in tools.get("registered", []):
+            ep = t.get("endpoint") or ""
+            if ep.endswith("/graphrag/query") or "/mcp/tools/veritasgraph_" in ep:
+                return True
+        return False
+
+    @staticmethod
     def _tool_priority(endpoint: str) -> int:
         """Lower runs first. Spend the call budget on fast, reliable local tools.
 
@@ -331,6 +350,23 @@ class Orchestrator:
             is_loopback = self._is_loopback(endpoint)
             call_timeout = timeout_s if is_loopback else external_timeout_s
 
+            # ``veritasgraph_query`` / ``/graphrag/query`` run a full LLM-backed
+            # graph answer. The playground route ALWAYS makes its own main chat
+            # LLM call afterward (grounded with the same graph context), so
+            # running one here is a redundant second model pass — exactly what
+            # pushes a turn past the Cloudflare 100s edge timeout (HTTP 524).
+            # Skip them; the fast no-LLM search tool still supplies context.
+            if self._is_llm_graph_answer(endpoint):
+                skipped_tools.append(
+                    {
+                        "tool": tool["name"],
+                        "status": "skipped",
+                        "endpoint": endpoint,
+                        "reason": "graph answer produced by main model (no extra LLM pass)",
+                    }
+                )
+                continue
+
             payload: Dict[str, Any]
             if endpoint.endswith("/graphrag/query"):
                 payload = {
@@ -351,56 +387,42 @@ class Orchestrator:
                     "citations": [c.get("id") for c in graph.get("citations", [])],
                 }
 
-            body = json.dumps(payload).encode("utf-8")
-            req = urlrequest.Request(endpoint, data=body, method="POST")
-            req.add_header("Content-Type", "application/json")
-
             try:
-                with urlrequest.urlopen(req, timeout=call_timeout) as resp:
-                    raw = resp.read().decode("utf-8", errors="replace")
-                    content_type = (resp.headers.get("Content-Type") or "").lower()
-                    data: Any
-                    if "application/json" in content_type:
-                        data = json.loads(raw) if raw else {}
-                    else:
-                        try:
-                            data = json.loads(raw)
-                        except Exception:
-                            data = raw
+                data = self._call_endpoint(endpoint, payload, is_loopback, call_timeout)
 
-                    # An MCP/graph tool can return a structured error in its body.
-                    if isinstance(data, dict) and data.get("error"):
-                        errors.append(
-                            {
-                                "tool": tool["name"],
-                                "status": "failed",
-                                "endpoint": endpoint,
-                                "error": str(data["error"]),
-                            }
-                        )
-                        invoked += 1
-                        continue
-
-                    if isinstance(data, dict):
-                        summary = (
-                            data.get("answer")
-                            or data.get("summary")
-                            or data.get("result")
-                            or data.get("message")
-                            or self._summarize_tool_data(data)
-                        )
-                    else:
-                        summary = str(data)[:240]
-
-                    results.append(
+                # An MCP/graph tool can return a structured error in its body.
+                if isinstance(data, dict) and data.get("error"):
+                    errors.append(
                         {
                             "tool": tool["name"],
-                            "status": "ok",
+                            "status": "failed",
                             "endpoint": endpoint,
-                            "summary": str(summary),
+                            "error": str(data["error"]),
                         }
                     )
                     invoked += 1
+                    continue
+
+                if isinstance(data, dict):
+                    summary = (
+                        data.get("answer")
+                        or data.get("summary")
+                        or data.get("result")
+                        or data.get("message")
+                        or self._summarize_tool_data(data)
+                    )
+                else:
+                    summary = str(data)[:240]
+
+                results.append(
+                    {
+                        "tool": tool["name"],
+                        "status": "ok",
+                        "endpoint": endpoint,
+                        "summary": str(summary),
+                    }
+                )
+                invoked += 1
             except Exception as exc:
                 errors.append(
                     {
@@ -421,6 +443,54 @@ class Orchestrator:
             "errors": errors,
             "skipped_tools": skipped_tools,
         }
+
+    def _call_endpoint(
+        self, endpoint: str, payload: Dict[str, Any], is_loopback: bool, call_timeout: float
+    ) -> Any:
+        """Dispatch a tool call, preferring in-process calls for our own endpoints.
+
+        The Studio API is served by a single event loop. Making a blocking HTTP
+        request from inside a request handler back to ``127.0.0.1:8200`` (the same
+        process) deadlocks: the loop is busy waiting on a response it can never
+        produce. So for the VeritasGraph loopback tools we invoke the shared graph
+        engine / MCP handlers directly, in-process. Real HTTP is used only for
+        genuinely external (allowed) endpoints.
+        """
+        if is_loopback:
+            path = urlparse.urlparse(endpoint).path
+            if path.endswith("/graphrag/query"):
+                return self.engine.query(
+                    str(payload.get("question") or payload.get("query") or "").strip(),
+                    model=payload.get("model") or "",
+                    max_depth=int(payload.get("max_depth", 2)),
+                    max_nodes=int(payload.get("max_nodes", 20)),
+                )
+            marker = "/mcp/tools/"
+            if marker in path:
+                tool_name = path.split(marker, 1)[1].strip("/")
+                # Imported lazily to avoid a circular import at module load time.
+                from studio_api.routes.mcp import _coerce_arguments
+                from veritasgraph_mcp.tools import TOOL_HANDLERS
+
+                handler = TOOL_HANDLERS.get(tool_name)
+                if handler is None:
+                    raise RuntimeError(f"Unknown MCP tool: {tool_name}")
+                return handler(_coerce_arguments(tool_name, payload))
+
+        # Fallback: a real outbound HTTP call (only reached for allowed external
+        # endpoints, which never point back at this process).
+        body = json.dumps(payload).encode("utf-8")
+        req = urlrequest.Request(endpoint, data=body, method="POST")
+        req.add_header("Content-Type", "application/json")
+        with urlrequest.urlopen(req, timeout=call_timeout) as resp:
+            raw = resp.read().decode("utf-8", errors="replace")
+            content_type = (resp.headers.get("Content-Type") or "").lower()
+            if "application/json" in content_type:
+                return json.loads(raw) if raw else {}
+            try:
+                return json.loads(raw)
+            except Exception:
+                return raw
 
     @staticmethod
     def _summarize_tool_data(data: Dict[str, Any]) -> str:
@@ -484,7 +554,14 @@ class Orchestrator:
         trace["memory"] = {"used": use_memory, "recalled_turns": len(memory_turns)}
 
         # 3. Knowledge graph retrieval ---------------------------------------
-        graph = self._graph_context(agent, user_text)
+        # Build the tool catalog first: if the agent is wired to any VeritasGraph
+        # graph/MCP tool it clearly wants graph-grounded answers, so ground the
+        # reply via the fast no-LLM retrieve path even when the ``use_graph``
+        # toggle is off. This keeps the whole turn to a single model pass (the
+        # main chat), avoiding the double-LLM latency that caused HTTP 524.
+        tools = self._tool_catalog(agent)
+        force_graph = tools.get("used", False) and self._has_graph_tool(tools)
+        graph = self._graph_context(agent, user_text, force=force_graph)
         graph_chunks = graph.get("chunks", []) if graph.get("used") else []
 
         # 4. Headroom budgeting ----------------------------------------------
@@ -513,7 +590,6 @@ class Orchestrator:
         }
 
         # 5. Tools ------------------------------------------------------------
-        tools = self._tool_catalog(agent)
         tool_run = self._invoke_tools(agent, user_text, tools, graph)
         trace["tools"] = {
             **tools,

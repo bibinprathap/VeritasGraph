@@ -19,9 +19,14 @@ from fastapi import APIRouter, Depends, HTTPException
 from studio_api.dependencies import get_store
 from studio_api.models import PlaygroundChatRequest
 from studio_api.orchestrator import Orchestrator
+from studio_api.routes.models import list_models
 from studio_api.store import StudioStore
 
 playground_router = APIRouter(prefix="/playground", tags=["playground"])
+
+# Preferred fallback model when an agent references a model that is not installed
+# locally. If it isn't present either, the first available model is used.
+_PREFERRED_FALLBACK = "glm-4.7-flash:latest"
 
 
 def _ollama_base() -> str:
@@ -29,6 +34,46 @@ def _ollama_base() -> str:
     if not host.startswith("http"):
         host = f"http://{host}"
     return host.rstrip("/")
+
+
+async def _available_models() -> list[str]:
+    """Model ids installed on the local runtime (empty if unreachable)."""
+    try:
+        res = await list_models()
+        return [m["id"] for m in res.get("items", []) if m.get("id")]
+    except Exception:  # noqa: BLE001 - discovery is best-effort
+        return []
+
+
+def _pick_fallback(available: list[str]) -> str | None:
+    if not available:
+        return None
+    if _PREFERRED_FALLBACK in available:
+        return _PREFERRED_FALLBACK
+    return sorted(available)[0]
+
+
+def _resolve_model(requested: str, available: list[str]) -> tuple[str, str | None]:
+    """Return (model_to_use, note).
+
+    Agents store their model in ``kind``. Seed agents use role names
+    (``orchestrator``) and older drafts may reference models that were never
+    pulled. Rather than 404, transparently fall back to an installed model and
+    report what happened so the UI can surface it.
+    """
+    if requested and requested in available:
+        return requested, None
+    fallback = _pick_fallback(available)
+    if fallback is None:
+        # No local runtime / no models — keep the request so the caller emits a
+        # clear "pull it first" or 503 message.
+        return requested, None
+    if not requested:
+        return fallback, f"Agent has no model set — running on '{fallback}'."
+    return (
+        fallback,
+        f"Model '{requested}' is not installed — running on '{fallback}'.",
+    )
 
 
 @playground_router.post("/chat")
@@ -39,11 +84,13 @@ async def chat(
     if agent is None:
         raise HTTPException(status_code=404, detail="Agent not found")
 
-    model = agent.kind
+    requested_model = agent.kind or ""
+    available = await _available_models()
+    model, model_note = _resolve_model(requested_model, available)
     if not model:
         raise HTTPException(
             status_code=400,
-            detail="Agent has no model assigned (kind is empty).",
+            detail="Agent has no model assigned and no local models are available.",
         )
 
     # Run the studio orchestration pipeline (guardrails -> memory -> graph ->
@@ -58,6 +105,8 @@ async def chat(
             "agent_id": agent.id,
             "agent_name": agent.name,
             "model": model,
+            "model_requested": requested_model,
+            "model_note": model_note,
             "reply": prepared["block_reason"],
             "blocked": True,
             "eval_count": 0,
@@ -103,6 +152,8 @@ async def chat(
         "agent_id": agent.id,
         "agent_name": agent.name,
         "model": model,
+        "model_requested": requested_model,
+        "model_note": model_note,
         "reply": final["reply"],
         "blocked": False,
         "eval_count": result.get("eval_count"),

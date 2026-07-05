@@ -305,6 +305,33 @@
       font-weight: 600;
     }
 
+    .list-item.editing {
+      border-color: rgba(65, 255, 211, 0.7);
+      background: rgba(30, 45, 66, 0.85);
+    }
+
+    .list-item .grow {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .row-actions {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+
+    button.xs {
+      padding: 4px 9px;
+      font-size: 12px;
+    }
+
+    button.danger:hover {
+      border-color: rgba(255, 99, 99, 0.7);
+      color: #ff8a8a;
+    }
+
     .chat-log {
       margin-top: 12px;
       border: 1px solid var(--line);
@@ -628,7 +655,7 @@
 
       <div class="sidebar-foot">
         Runtime status: <b>Healthy</b><br />
-        Last build: <span class="mono">2026-06-28 22:41</span>
+        Last build: <span class="mono" id="lastBuild">—</span>
       </div>
     </aside>
 
@@ -646,10 +673,10 @@
 
       <section class="workspace">
         <div class="kpi-grid">
-          <div class="kpi"><span>Active agents</span><strong id="kpiAgents">3</strong></div>
-          <div class="kpi"><span>Connected tools</span><strong id="kpiTools">7</strong></div>
-          <div class="kpi"><span>Eval pass rate</span><strong id="kpiEval">93%</strong></div>
-          <div class="kpi"><span>Guardrail blocks</span><strong id="kpiBlocks">12</strong></div>
+          <div class="kpi"><span>Active agents</span><strong id="kpiAgents">—</strong></div>
+          <div class="kpi"><span>Connected tools</span><strong id="kpiTools">—</strong></div>
+          <div class="kpi"><span>Eval pass rate</span><strong id="kpiEval">—</strong></div>
+          <div class="kpi"><span>Guardrail blocks</span><strong id="kpiBlocks">—</strong></div>
         </div>
 
         <div id="agents" class="section active">
@@ -675,12 +702,13 @@
                   <label class="cap"><input type="checkbox" id="capData" /> Data log</label>
                 </div>
                 <div class="cap-budget">
-                  <label for="capBudget">Headroom context budget (tokens)</label>
+                  <label for="capBudget">Veritasroom context budget (tokens)</label>
                   <input id="capBudget" type="number" min="100" step="50" value="600" />
                 </div>
               </div>
               <div class="form-row">
                 <input id="agentTags" placeholder="Tags (comma separated)" />
+                <button class="ghost" id="cancelAgentEdit" style="display:none">Cancel</button>
                 <button class="primary" id="addAgent">Create agent</button>
               </div>
             </article>
@@ -913,7 +941,7 @@
               <h3>Orchestration pipeline</h3>
               <p class="meta">Every message flows through the studio sections wired into the agent.</p>
               <div id="pipelineTrace" class="pipeline">
-                <div class="pipeline-empty">Send a message to see how guardrails, memory, the knowledge graph, headroom budgeting, tools, and data cooperate on each turn.</div>
+                <div class="pipeline-empty">Send a message to see how guardrails, memory, the knowledge graph, Veritasroom budgeting, tools, and data cooperate on each turn.</div>
               </div>
               <div id="pipelineCitations" class="list" style="margin-top:10px"></div>
             </article>
@@ -1103,6 +1131,11 @@
       return div.innerHTML;
     }
 
+    function modelInstalled(kind) {
+      if (!kind) return false;
+      return (data.models || []).some((m) => m.id === kind);
+    }
+
     function fillAgentSelect() {
       const sel = document.getElementById("playgroundAgent");
       if (!sel) return;
@@ -1120,7 +1153,10 @@
       data.agents.forEach((a) => {
         const opt = document.createElement("option");
         opt.value = a.id;
-        opt.textContent = `${a.name}  (${a.kind || "no model"})`;
+        const modelLabel = a.kind
+          ? (modelInstalled(a.kind) ? a.kind : `${a.kind} — not installed`)
+          : "no model";
+        opt.textContent = `${a.name}  (${modelLabel})`;
         sel.appendChild(opt);
       });
       if (previous && data.agents.some((a) => a.id === previous)) sel.value = previous;
@@ -1132,9 +1168,12 @@
       const sel = document.getElementById("playgroundAgent");
       if (!meta || !sel) return;
       const agent = data.agents.find((a) => a.id === sel.value);
-      meta.textContent = agent
-        ? `Model: ${agent.kind || "none"} · Status: ${agent.status}`
-        : "";
+      if (!agent) { meta.textContent = ""; return; }
+      let text = `Model: ${agent.kind || "none"} · Status: ${agent.status}`;
+      if (agent.kind && !modelInstalled(agent.kind) && (data.models || []).length) {
+        text += " · ⚠ not installed (will use an available model)";
+      }
+      meta.textContent = text;
     }
 
     function renderChat() {
@@ -1178,6 +1217,9 @@
         });
         thinking.content = res.reply || "(empty response)";
         if (res.blocked) thinking.role = "error";
+        if (res.model_note) {
+          chatHistory.push({ role: "error", content: `ℹ ${res.model_note}` });
+        }
         renderPipeline(res);
       } catch (err) {
         thinking.role = "error";
@@ -1217,7 +1259,7 @@
       stages.push(pipelineStage("Knowledge Graph", g.used ? "on" : "off",
         g.used ? `${g.nodes} nodes · ${g.edges} edges · seeds: ${(g.seeds || []).join(", ") || "—"}` : "not wired"));
       const b = t.budget || {};
-      stages.push(pipelineStage("Headroom budget", b.used ? "on" : "off",
+      stages.push(pipelineStage("Veritasroom budget", b.used ? "on" : "off",
         b.used ? `${b.used_tokens}/${b.budget_tokens} tokens · kept ${b.kept} · dropped ${b.dropped}` : "no graph context"));
       const tl = t.tools || {};
       const toolDetail = tl.used
@@ -1425,15 +1467,83 @@
       }
     }
 
+    // ----------------------------------------------------------------- //
+    // Agent create / edit
+    // ----------------------------------------------------------------- //
+    let editingAgentId = null;
+
+    function fillAgentForm(agent) {
+      const c = agent.config || {};
+      document.getElementById("agentName").value = agent.name || "";
+      const modelSel = document.getElementById("agentModel");
+      if (modelSel) modelSel.value = agent.kind || modelSel.value;
+      document.getElementById("agentPrompt").value = c.prompt || agent.description || "";
+      document.getElementById("agentTags").value = c.tags || "";
+      document.getElementById("capGraph").checked = !!c.use_graph;
+      document.getElementById("capTools").checked = !!c.use_tools;
+      document.getElementById("capMemory").checked = !!c.use_memory;
+      document.getElementById("capGuardrails").checked = !!c.use_guardrails;
+      document.getElementById("capData").checked = !!c.use_data;
+      document.getElementById("capBudget").value = c.context_budget || 600;
+    }
+
+    function resetAgentForm() {
+      editingAgentId = null;
+      document.getElementById("agentName").value = "";
+      document.getElementById("agentPrompt").value = "";
+      document.getElementById("agentTags").value = "";
+      ["capGraph", "capTools", "capMemory", "capGuardrails", "capData"].forEach((id) => {
+        document.getElementById(id).checked = false;
+      });
+      document.getElementById("capBudget").value = 600;
+      document.getElementById("addAgent").textContent = "Create agent";
+      document.getElementById("cancelAgentEdit").style.display = "none";
+      highlightEditingAgent();
+    }
+
+    function editAgent(id) {
+      const agent = data.agents.find((a) => a.id === id);
+      if (!agent) return;
+      editingAgentId = id;
+      fillAgentForm(agent);
+      document.getElementById("addAgent").textContent = "Update agent";
+      document.getElementById("cancelAgentEdit").style.display = "";
+      highlightEditingAgent();
+      document.getElementById("agentName").scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+
+    async function deleteAgent(id) {
+      const agent = data.agents.find((a) => a.id === id);
+      const label = agent ? agent.name : "this agent";
+      if (!window.confirm(`Delete "${label}"? This cannot be undone.`)) return;
+      await api("/agents/" + id, { method: "DELETE" });
+      if (editingAgentId === id) resetAgentForm();
+      await loadAll();
+    }
+
+    function highlightEditingAgent() {
+      const root = document.getElementById("agentList");
+      if (!root) return;
+      Array.from(root.children).forEach((node, i) => {
+        const item = data.agents[i];
+        node.classList.toggle("editing", !!item && item.id === editingAgentId);
+      });
+    }
+
     function renderAll() {
       renderList("agentList", data.agents, (item) => `
-        <div>
-          <div class="name">${item.name}</div>
-          <div class="meta">${item.kind || "agent"} | ${cfg(item, "tags", "general")}</div>
+        <div class="grow" onclick="editAgent('${item.id}')" style="cursor:pointer">
+          <div class="name">${escapeHtml(item.name)}</div>
+          <div class="meta">${escapeHtml(item.kind || "agent")} | ${escapeHtml(cfg(item, "tags", "general"))}</div>
           ${capBadges(item)}
         </div>
-        ${pill(item.status, ["active"], ["error"])}
+        <div class="row-actions">
+          ${pill(item.status, ["active"], ["error"])}
+          <button class="ghost xs" onclick="event.stopPropagation(); editAgent('${item.id}')">Edit</button>
+          <button class="ghost xs danger" onclick="event.stopPropagation(); deleteAgent('${item.id}')">Delete</button>
+        </div>
       `);
+      highlightEditingAgent();
 
       fillAgentSelect();
 
@@ -1607,9 +1717,29 @@
         data.tunes = results[collections.length + 1].jobs || [];
         data.kpis = results[collections.length + 2].kpis || data.kpis;
         renderAll();
+        updateLastBuild();
         scheduleRefresh();
       } catch (err) {
         console.error("Failed to load studio data", err);
+      }
+    }
+
+    // Set "Last build" in the sidebar from the most recent deploy, if any.
+    async function updateLastBuild() {
+      const el = document.getElementById("lastBuild");
+      if (!el) return;
+      try {
+        const res = await api("/workspace/deploy");
+        const history = (res && res.history) || (Array.isArray(res) ? res : []);
+        const latest = history[0];
+        if (latest && latest.deployed_at) {
+          const d = new Date(latest.deployed_at * 1000);
+          el.textContent = d.toISOString().slice(0, 16).replace("T", " ");
+        } else {
+          el.textContent = "no deploys yet";
+        }
+      } catch (err) {
+        el.textContent = "—";
       }
     }
 
@@ -1666,17 +1796,17 @@
           use_data: document.getElementById("capData").checked,
           context_budget: parseInt(document.getElementById("capBudget").value, 10) || 600
         };
-        await api("/agents/", { method: "POST", body: JSON.stringify({
-          name, kind: model, description: prompt, config
-        }) });
-        document.getElementById("agentName").value = "";
-        document.getElementById("agentPrompt").value = "";
-        document.getElementById("agentTags").value = "";
-        ["capGraph", "capTools", "capMemory", "capGuardrails", "capData"].forEach((id) => {
-          document.getElementById(id).checked = false;
-        });
+        const body = JSON.stringify({ name, kind: model, description: prompt, config });
+        if (editingAgentId) {
+          await api("/agents/" + editingAgentId, { method: "PATCH", body });
+        } else {
+          await api("/agents/", { method: "POST", body });
+        }
+        resetAgentForm();
         await loadAll();
       });
+
+      document.getElementById("cancelAgentEdit").addEventListener("click", resetAgentForm);
 
       document.getElementById("addTool").addEventListener("click", async () => {
         const name = document.getElementById("toolName").value.trim();

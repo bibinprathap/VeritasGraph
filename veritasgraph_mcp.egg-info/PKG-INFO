@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: veritasgraph-mcp
-Version: 0.1.1
+Version: 0.1.2
 Summary: The first zero-trust, air-gapped Enterprise GraphRAG server for the Model Context Protocol (MCP).
 Author: Bibin Prathap
 License: MIT
