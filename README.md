@@ -128,16 +128,13 @@ python3 demos/agent-studio/sample_pipeline.py --model qwen3:latest
 - 🧰 **Editable tools catalog** — add, edit, enable/disable, test, and delete tools directly in Studio.
 - 🌐 **External real tool support** — call real HTTP endpoints with configurable method, auth header, and custom headers.
 - 🔌 **MCP bridge integrations** — local MCP proxy-backed connectors (for example Chrome DevTools MCP and Unity MCP) with health-aware probe behavior.
-- 🧪 **Tool health testing API** — `POST /tools/{id}/test` validates endpoint reachability and updates connection status from real responses.
 - 🛡️ **Guardrails** — PII redaction and policy block controls with visible guardrail-block metrics.
 - 🧠 **Memory + Data logs** — per-agent short-term memory and interaction log persistence.
 - 📈 **Evaluation simulation** — run evaluation suites, track progress/pass rate trends, and advance runs via API.
 - 🧬 **Fine-tune simulation** — queue and monitor fine-tune job states for workflow validation.
 - 💬 **Playground** — run governed agent conversations live, inspect pipeline trace, and verify reasoning/citation behavior.
 - 📊 **KPI dashboard** — active agents, connected tools, eval pass rate, and guardrail block counters.
-- 🔁 **Persistent local state** — workspace snapshots are stored in `studio_api/data/workspace.json` and restored on restart.
-- ⚙️ **Operations-ready local runtime** — systemd user services can auto-start Studio and companion services (including MCP proxies and n8n) after reboot.
-- ✅ **Manual enterprise smoke script** — `scripts/manual_test_tools_and_evaluate.py` validates tool connectivity and runs evaluation end-to-end.
+
 
 See [`studio_api/README.md`](studio_api/README.md) for API details and architecture, and [`docs/STUDIO_ENTERPRISE_TEST.md`](docs/STUDIO_ENTERPRISE_TEST.md) for enterprise test scenarios.
 
