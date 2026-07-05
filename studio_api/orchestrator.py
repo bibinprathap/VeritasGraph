@@ -225,6 +225,7 @@ class Orchestrator:
                     "name": tool.name,
                     "kind": tool.kind or "read",
                     "endpoint": endpoint,
+                    "config": dict(tool.config or {}),
                 }
             )
             if endpoint:
@@ -250,6 +251,7 @@ class Orchestrator:
                     "name": tool.name,
                     "kind": tool.kind or "read",
                     "endpoint": endpoint,
+                    "config": dict(tool.config or {}),
                 }
             )
             seen_endpoints.add(endpoint)
@@ -388,7 +390,9 @@ class Orchestrator:
                 }
 
             try:
-                data = self._call_endpoint(endpoint, payload, is_loopback, call_timeout)
+                data = self._call_endpoint(
+                    endpoint, payload, is_loopback, call_timeout, tool.get("config") or {}
+                )
 
                 # An MCP/graph tool can return a structured error in its body.
                 if isinstance(data, dict) and data.get("error"):
@@ -445,7 +449,12 @@ class Orchestrator:
         }
 
     def _call_endpoint(
-        self, endpoint: str, payload: Dict[str, Any], is_loopback: bool, call_timeout: float
+        self,
+        endpoint: str,
+        payload: Dict[str, Any],
+        is_loopback: bool,
+        call_timeout: float,
+        config: Optional[Dict[str, Any]] = None,
     ) -> Any:
         """Dispatch a tool call, preferring in-process calls for our own endpoints.
 
@@ -478,10 +487,27 @@ class Orchestrator:
                 return handler(_coerce_arguments(tool_name, payload))
 
         # Fallback: a real outbound HTTP call (only reached for allowed external
-        # endpoints, which never point back at this process).
-        body = json.dumps(payload).encode("utf-8")
-        req = urlrequest.Request(endpoint, data=body, method="POST")
-        req.add_header("Content-Type", "application/json")
+        # endpoints, which never point back at this process). Honour a per-tool
+        # HTTP method and auth/custom headers so real enterprise tools can be
+        # driven with their own credentials.
+        config = config or {}
+        method = str(config.get("method") or "POST").upper()
+        if method not in {"GET", "POST", "PUT", "PATCH", "DELETE"}:
+            method = "POST"
+
+        headers: Dict[str, str] = {"Content-Type": "application/json"}
+        extra = config.get("headers")
+        if isinstance(extra, dict):
+            headers.update({str(k): str(v) for k, v in extra.items()})
+        auth_header = str(config.get("auth_header") or "").strip()
+        if auth_header and ":" in auth_header:
+            name, _, value = auth_header.partition(":")
+            headers[name.strip()] = value.strip()
+
+        data = None if method == "GET" else json.dumps(payload).encode("utf-8")
+        req = urlrequest.Request(endpoint, data=data, method=method)
+        for key, value in headers.items():
+            req.add_header(key, value)
         with urlrequest.urlopen(req, timeout=call_timeout) as resp:
             raw = resp.read().decode("utf-8", errors="replace")
             content_type = (resp.headers.get("Content-Type") or "").lower()

@@ -559,10 +559,111 @@ class StudioStore:
                     "name": "Web Search",
                     "kind": "search",
                     "status": "disabled",
-                    "description": "External web lookup for fresh context.",
-                    "config": {"endpoint": "https://api.example.local/web-search"},
+                    "description": "Chrome DevTools MCP integration for live browser navigation, DOM inspection, screenshot capture, and console/network debugging.",
+                    "config": {
+                        "endpoint": "http://127.0.0.1:8765/chrome-devtools-mcp",
+                        "method": "POST",
+                        "mcp_command": "npx",
+                        "mcp_args": ["-y", "chrome-devtools-mcp@latest", "--headless"],
+                        "mcp_server_name": "chrome-devtools",
+                    },
+                },
+               
+                {
+                    "name": "Design Board",
+                    "kind": "design",
+                    "status": "disabled",
+                    "description": "Unity MCP integration for scene/object orchestration, script edits, asset workflows, and test automation from the Studio.",
+                    "config": {
+                        "endpoint": "http://127.0.0.1:8766/unity-mcp",
+                        "method": "POST",
+                        "mcp_command": "uvx",
+                        "mcp_args": ["--from", "mcpforunityserver", "mcp-for-unity"],
+                        "mcp_server_name": "unity-mcp",
+                    },
+                },
+                
+                # ---- Open-source / AI-native tool catalog ------------------
+                # Web search & scraping (token-efficient, LLM-ready output).
+                {
+                    "name": "SearXNG Search",
+                    "kind": "search",
+                    "status": "disabled",
+                    "description": "Privacy-respecting, self-hostable metasearch aggregating 70+ engines. Point at your local SearXNG instance.",
+                    "config": {"endpoint": "http://localhost:8080/search", "method": "GET"},
                 },
                 {
+                    "name": "Firecrawl",
+                    "kind": "search",
+                    "status": "disabled",
+                    "description": "AI-native web search + site crawler returning clean LLM-ready Markdown/JSON. Set auth_header to 'Authorization: Bearer fc-...'.",
+                    "config": {"endpoint": "https://api.firecrawl.dev/v1/search", "method": "POST", "auth_header": "Authorization: Bearer YOUR_FIRECRAWL_KEY"},
+                },
+                {
+                    "name": "Tavily Search",
+                    "kind": "search",
+                    "status": "disabled",
+                    "description": "Search engine built for AI agents with native citation support. Set auth_header to 'Authorization: Bearer tvly-...'.",
+                    "config": {"endpoint": "https://api.tavily.com/search", "method": "POST", "auth_header": "Authorization: Bearer YOUR_TAVILY_KEY"},
+                },
+                {
+                    "name": "Exa.ai Search",
+                    "kind": "search",
+                    "status": "disabled",
+                    "description": "Neural search for deep research with citations. Set auth_header to 'x-api-key: ...'.",
+                    "config": {"endpoint": "https://api.exa.ai/search", "method": "POST", "auth_header": "x-api-key: YOUR_EXA_KEY"},
+                },
+                # Code execution sandboxes (hardened isolation).
+                {
+                    "name": "E2B Sandbox",
+                    "kind": "execution",
+                    "status": "disabled",
+                    "description": "MicroVM runtime for agents to safely run Python/JS, install packages, and return charts. Set auth_header to 'X-API-Key: e2b_...'.",
+                    "config": {"endpoint": "https://api.e2b.dev/sandboxes", "method": "POST", "auth_header": "X-API-Key: YOUR_E2B_KEY"},
+                },
+                {
+                    "name": "Piston Runner",
+                    "kind": "execution",
+                    "status": "disabled",
+                    "description": "Container-isolated multi-language code execution over a simple HTTP API. Self-host or use the public emkc.org endpoint.",
+                    "config": {"endpoint": "https://emkc.org/api/v2/piston/execute", "method": "POST"},
+                },
+                # Productivity & workspaces (unified automation + native connectors).
+                {
+                    "name": "n8n Workflows",
+                    "kind": "automation",
+                    "status": "disabled",
+                    "description": "Self-hosted workflow automation (Zapier alternative). Expose one webhook to orchestrate Slack, Email, Sheets, Teams. Point at your local n8n webhook URL.",
+                    "config": {"endpoint": "http://localhost:5678/webhook/veritasgraph", "method": "POST"},
+                },
+                {
+                    "name": "GitHub MCP Server",
+                    "kind": "development",
+                    "status": "disabled",
+                    "description": "Official GitHub MCP server — read repos, manage issues/PRs, inspect code in natural language. Set auth_header to 'Authorization: Bearer ghp_...'.",
+                    "config": {"endpoint": "https://api.githubcopilot.com/mcp/", "method": "POST", "auth_header": "Authorization: Bearer YOUR_GITHUB_PAT"},
+                },
+                {
+                    "name": "Google Workspace MCP",
+                    "kind": "document",
+                    "status": "disabled",
+                    "description": "Bridge AI clients to Google Drive, Docs, and Sheets. Point at your local Google Workspace MCP server.",
+                    "config": {"endpoint": "http://localhost:8000/mcp", "method": "POST"},
+                },
+                {
+                    "name": "VeritasGraph MCP · Query",
+                    "kind": "mcp",
+                    "status": "connected",
+                    "description": "Graph-grounded, multi-hop answer with citations via the local VeritasGraph MCP server.",
+                    "config": {"endpoint": "http://127.0.0.1:8200/mcp/tools/veritasgraph_query"},
+                },
+                {
+                    "name": "VeritasGraph MCP · Search",
+                    "kind": "mcp",
+                    "status": "connected",
+                    "description": "Fast subgraph lookup (entities + relationships) via the local VeritasGraph MCP server.",
+                    "config": {"endpoint": "http://127.0.0.1:8200/mcp/tools/veritasgraph_search_entities"},
+                }, {
                     "name": "Code Runner",
                     "kind": "execution",
                     "status": "disabled",
@@ -624,15 +725,7 @@ class StudioStore:
                     "status": "disabled",
                     "description": "Track tasks across boards and sprints.",
                     "config": {"endpoint": "https://api.example.local/tasks"},
-                },
-                {
-                    "name": "Design Board",
-                    "kind": "design",
-                    "status": "disabled",
-                    "description": "Draft UI/artwork concepts and review states.",
-                    "config": {"endpoint": "https://api.example.local/design"},
-                },
-                {
+                },{
                     "name": "GitHub Repo",
                     "kind": "development",
                     "status": "disabled",
@@ -666,21 +759,7 @@ class StudioStore:
                     "status": "disabled",
                     "description": "Route requests to approved assistant providers.",
                     "config": {"endpoint": "https://api.example.local/ai-bridge"},
-                },
-                {
-                    "name": "VeritasGraph MCP · Query",
-                    "kind": "mcp",
-                    "status": "connected",
-                    "description": "Graph-grounded, multi-hop answer with citations via the local VeritasGraph MCP server.",
-                    "config": {"endpoint": "http://127.0.0.1:8200/mcp/tools/veritasgraph_query"},
-                },
-                {
-                    "name": "VeritasGraph MCP · Search",
-                    "kind": "mcp",
-                    "status": "connected",
-                    "description": "Fast subgraph lookup (entities + relationships) via the local VeritasGraph MCP server.",
-                    "config": {"endpoint": "http://127.0.0.1:8200/mcp/tools/veritasgraph_search_entities"},
-                },
+                }
             ],
             Section.KNOWLEDGE.value: [
                 {

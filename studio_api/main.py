@@ -25,6 +25,7 @@ from studio_api.routes.mcp import mcp_router
 from studio_api.routes.models import models_router
 from studio_api.routes.playground import playground_router
 from studio_api.routes.resources import resource_routers
+from studio_api.routes.tools import tools_router
 from studio_api.routes.workspace import workspace_router
 
 _REPO_ROOT = Path(__file__).resolve().parent.parent
@@ -43,6 +44,9 @@ app.add_middleware(
 # Collection sections (agents, tools, knowledge, guardrails, memory, data).
 for router in resource_routers:
     app.include_router(router)
+
+# Tool-specific actions (probe/test a real endpoint).
+app.include_router(tools_router)
 
 # Extra section-specific routers.
 app.include_router(knowledge_router)

@@ -741,9 +741,20 @@
                   <option value="write">write</option>
                   <option value="admin">admin</option>
                 </select>
+                <select id="toolMethod" title="HTTP method used when the tool is called">
+                  <option value="POST">POST</option>
+                  <option value="GET">GET</option>
+                  <option value="PUT">PUT</option>
+                  <option value="PATCH">PATCH</option>
+                  <option value="DELETE">DELETE</option>
+                </select>
               </div>
               <div class="form-row">
                 <input id="toolEndpoint" placeholder="Endpoint (https://...)" />
+              </div>
+              <div class="form-row">
+                <input id="toolAuth" placeholder="Auth header (e.g. Authorization: Bearer sk-...)" />
+                <button class="ghost" id="cancelToolEdit" style="display:none">Cancel</button>
                 <button class="primary" id="addTool">Register tool</button>
               </div>
             </article>
@@ -1530,6 +1541,85 @@
       });
     }
 
+    // ----------------------------------------------------------------- //
+    // Tool create / edit / test
+    // ----------------------------------------------------------------- //
+    let editingToolId = null;
+    const toolProbes = {}; // tool id -> last probe result for the validation panel
+
+    function fillToolForm(tool) {
+      const c = tool.config || {};
+      document.getElementById("toolName").value = tool.name || "";
+      document.getElementById("toolScope").value = tool.kind || "read";
+      document.getElementById("toolMethod").value = (c.method || "POST").toUpperCase();
+      document.getElementById("toolEndpoint").value = c.endpoint || "";
+      document.getElementById("toolAuth").value = c.auth_header || "";
+    }
+
+    function resetToolForm() {
+      editingToolId = null;
+      document.getElementById("toolName").value = "";
+      document.getElementById("toolEndpoint").value = "";
+      document.getElementById("toolAuth").value = "";
+      document.getElementById("toolScope").value = "read";
+      document.getElementById("toolMethod").value = "POST";
+      document.getElementById("addTool").textContent = "Register tool";
+      document.getElementById("cancelToolEdit").style.display = "none";
+      highlightEditingTool();
+    }
+
+    function editTool(id) {
+      const tool = data.tools.find((t) => t.id === id);
+      if (!tool) return;
+      editingToolId = id;
+      fillToolForm(tool);
+      document.getElementById("addTool").textContent = "Update tool";
+      document.getElementById("cancelToolEdit").style.display = "";
+      highlightEditingTool();
+      document.getElementById("toolName").scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+
+    async function deleteTool(id) {
+      const tool = data.tools.find((t) => t.id === id);
+      const label = tool ? tool.name : "this tool";
+      if (!window.confirm(`Delete "${label}"? This cannot be undone.`)) return;
+      await api("/tools/" + id, { method: "DELETE" });
+      delete toolProbes[id];
+      if (editingToolId === id) resetToolForm();
+      await loadAll();
+    }
+
+    async function toggleTool(id) {
+      const tool = data.tools.find((t) => t.id === id);
+      if (!tool) return;
+      const next = tool.status === "connected" ? "disabled" : "connected";
+      await api("/tools/" + id, { method: "PATCH", body: JSON.stringify({ status: next }) });
+      await loadAll();
+    }
+
+    async function testTool(id) {
+      const tool = data.tools.find((t) => t.id === id);
+      if (!tool) return;
+      toolProbes[id] = { ok: false, detail: "testing…" };
+      renderAll();
+      try {
+        const res = await api("/tools/" + id + "/test", { method: "POST", body: "{}" });
+        toolProbes[id] = res || { ok: false, detail: "no response" };
+      } catch (err) {
+        toolProbes[id] = { ok: false, detail: String(err) };
+      }
+      await loadAll(); // refresh status pill; loadAll calls renderAll
+    }
+
+    function highlightEditingTool() {
+      const root = document.getElementById("toolList");
+      if (!root) return;
+      Array.from(root.children).forEach((node, i) => {
+        const item = data.tools[i];
+        node.classList.toggle("editing", !!item && item.id === editingToolId);
+      });
+    }
+
     function renderAll() {
       renderList("agentList", data.agents, (item) => `
         <div class="grow" onclick="editAgent('${item.id}')" style="cursor:pointer">
@@ -1548,20 +1638,35 @@
       fillAgentSelect();
 
       renderList("toolList", data.tools, (item) => `
-        <div>
-          <div class="name">${item.name}</div>
-          <div class="meta mono">${cfg(item, "endpoint", item.kind || "")}</div>
+        <div class="grow" onclick="editTool('${item.id}')" style="cursor:pointer">
+          <div class="name">${escapeHtml(item.name)}</div>
+          <div class="meta mono">${escapeHtml(cfg(item, "endpoint", item.kind || ""))}</div>
         </div>
-        ${pill(item.status, ["connected"], ["disabled"])}
+        <div class="row-actions">
+          ${pill(item.status, ["connected"], ["disabled"])}
+          <button class="ghost xs" onclick="event.stopPropagation(); testTool('${item.id}')">Test</button>
+          <button class="ghost xs" onclick="event.stopPropagation(); toggleTool('${item.id}')">${item.status === "connected" ? "Disable" : "Enable"}</button>
+          <button class="ghost xs" onclick="event.stopPropagation(); editTool('${item.id}')">Edit</button>
+          <button class="ghost xs danger" onclick="event.stopPropagation(); deleteTool('${item.id}')">Delete</button>
+        </div>
       `);
+      highlightEditingTool();
 
-      renderList("toolChecks", data.tools, (item) => `
+      renderList("toolChecks", data.tools, (item) => {
+        const probe = toolProbes[item.id];
+        const detail = probe
+          ? (probe.ok
+              ? `HTTP ${probe.status_code} · ${probe.latency_ms}ms · ${probe.method || ""}`
+              : `failed: ${escapeHtml(probe.detail || ("HTTP " + (probe.status_code || "?")))}`)
+          : `scope: ${item.kind || "read"} | status: ${item.status}`;
+        return `
         <div>
-          <div class="name">${item.name} validation</div>
-          <div class="meta">scope: ${item.kind || "read"} | status: ${item.status}</div>
+          <div class="name">${escapeHtml(item.name)} validation</div>
+          <div class="meta">${detail}</div>
         </div>
-        ${pill(item.status, ["connected"], ["disabled"])}
-      `);
+        ${pill(probe ? (probe.ok ? "connected" : "disabled") : item.status, ["connected"], ["disabled"])}
+      `;
+      });
 
       renderList("knowledgeList", data.knowledge, (item) => `
         <div>
@@ -1811,14 +1916,24 @@
       document.getElementById("addTool").addEventListener("click", async () => {
         const name = document.getElementById("toolName").value.trim();
         const scope = document.getElementById("toolScope").value;
+        const method = document.getElementById("toolMethod").value;
         const endpoint = document.getElementById("toolEndpoint").value.trim();
+        const authHeader = document.getElementById("toolAuth").value.trim();
         if (!name || !endpoint) return;
-        await api("/tools/", { method: "POST", body: JSON.stringify({
-          name, kind: scope, config: { endpoint } }) });
-        document.getElementById("toolName").value = "";
-        document.getElementById("toolEndpoint").value = "";
+        const existing = editingToolId ? (data.tools.find((t) => t.id === editingToolId) || {}) : {};
+        const config = Object.assign({}, existing.config || {}, { endpoint, method });
+        if (authHeader) config.auth_header = authHeader; else delete config.auth_header;
+        const body = JSON.stringify({ name, kind: scope, config });
+        if (editingToolId) {
+          await api("/tools/" + editingToolId, { method: "PATCH", body });
+        } else {
+          await api("/tools/", { method: "POST", body });
+        }
+        resetToolForm();
         await loadAll();
       });
+
+      document.getElementById("cancelToolEdit").addEventListener("click", resetToolForm);
 
       document.getElementById("addKb").addEventListener("click", async () => {
         const name = document.getElementById("kbName").value.trim();

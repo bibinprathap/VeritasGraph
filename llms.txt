@@ -33,6 +33,20 @@ Graph + Tree retrieval, knowledge graph construction, multi-hop reasoning, and v
 ## Studio Pipeline Order
 Guardrails (in) -> Memory -> Knowledge Graph -> Headroom budget -> Tools -> Guardrails (out) -> Data log
 
+## Studio Capabilities (Current)
+- Agent CRUD with per-agent capability toggles: graph, tools, memory, guardrails, data.
+- Knowledge Graph ingest, visual exploration, and graph-grounded Q&A with citations.
+- Tool management lifecycle in Studio UI: add/edit/enable-disable/test/delete.
+- External tool invocation with configurable endpoint, HTTP method, auth header, and custom headers.
+- MCP proxy connectors for local enterprise tools (for example Chrome DevTools MCP and Unity MCP).
+- Tool probe endpoint: POST /tools/{id}/test with status updates to connected/disabled based on real endpoint checks.
+- KPI dashboard cards for active agents, connected tools, eval pass rate, and guardrail blocks.
+- Evaluation workflow endpoints: list runs, create run, inspect run, advance simulation.
+- Fine-tune workflow simulation endpoints for queue/progress/readiness validation.
+- Playground chat surface with governed orchestration trace and stage-level visibility.
+- Local persistence in studio_api/data/workspace.json with default-catalog backfill in studio_api/store.py.
+- Enterprise manual validation script: scripts/manual_test_tools_and_evaluate.py.
+
 ## Primary Entry Points
 - Local Studio server: `uvicorn studio_api.main:app --host 127.0.0.1 --port 8200`
 - Studio UI: `/studio` on the same host

@@ -119,19 +119,27 @@ graph reasoning, memory recall, PII redaction, and a guardrail block):
 python3 demos/agent-studio/sample_pipeline.py --model qwen3:latest
 ```
 
-**What's inside:**
+**What's inside (full Studio feature set):**
 
-- 🧩 **Knowledge Graph builder & explorer** — local-model entity/relationship
-  extraction with verifiable `[doc#chunk]` source attribution and a visual graph.
-- 🔀 **Agent orchestration pipeline** — per-turn flow of
-  Guardrails → Memory → Knowledge Graph → Headroom budget → Tools → Data, each
-  toggleable per agent, with a live trace, reasoning path, and citations in the UI.
-- 🛡️ **Guardrails** that redact PII (in & out) and block disallowed input.
-- 🧠 **Memory** + 🗄️ **Data log** persisted per agent.
-- 🧪 **Playground** to chat with agents live on their assigned local model.
+- 🧩 **Knowledge Graph builder & explorer** — ingest source text, extract entities/relationships with local models, and inspect nodes/edges visually with grounded evidence.
+- 🔎 **Graph Q&A with citations** — ask multi-hop questions and get answers backed by `[doc#chunk]` source attribution.
+- 🤖 **Agent workspace** — create/edit agents with model selection, prompt/persona settings, and per-agent capability toggles.
+- 🔀 **Governed orchestration pipeline** — per-turn flow of Guardrails → Memory → Knowledge Graph → Headroom budget → Tools → Data log with trace visibility.
+- 🧰 **Editable tools catalog** — add, edit, enable/disable, test, and delete tools directly in Studio.
+- 🌐 **External real tool support** — call real HTTP endpoints with configurable method, auth header, and custom headers.
+- 🔌 **MCP bridge integrations** — local MCP proxy-backed connectors (for example Chrome DevTools MCP and Unity MCP) with health-aware probe behavior.
+- 🧪 **Tool health testing API** — `POST /tools/{id}/test` validates endpoint reachability and updates connection status from real responses.
+- 🛡️ **Guardrails** — PII redaction and policy block controls with visible guardrail-block metrics.
+- 🧠 **Memory + Data logs** — per-agent short-term memory and interaction log persistence.
+- 📈 **Evaluation simulation** — run evaluation suites, track progress/pass rate trends, and advance runs via API.
+- 🧬 **Fine-tune simulation** — queue and monitor fine-tune job states for workflow validation.
+- 💬 **Playground** — run governed agent conversations live, inspect pipeline trace, and verify reasoning/citation behavior.
+- 📊 **KPI dashboard** — active agents, connected tools, eval pass rate, and guardrail block counters.
+- 🔁 **Persistent local state** — workspace snapshots are stored in `studio_api/data/workspace.json` and restored on restart.
+- ⚙️ **Operations-ready local runtime** — systemd user services can auto-start Studio and companion services (including MCP proxies and n8n) after reboot.
+- ✅ **Manual enterprise smoke script** — `scripts/manual_test_tools_and_evaluate.py` validates tool connectivity and runs evaluation end-to-end.
 
-See [`studio_api/README.md`](studio_api/README.md) for the full feature list, API
-reference, configuration, and architecture.
+See [`studio_api/README.md`](studio_api/README.md) for API details and architecture, and [`docs/STUDIO_ENTERPRISE_TEST.md`](docs/STUDIO_ENTERPRISE_TEST.md) for enterprise test scenarios.
 
 ### 🔌 MCP Server — connect your IDE agent to VeritasGraph
 
