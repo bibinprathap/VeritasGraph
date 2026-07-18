@@ -24,7 +24,7 @@ A complete walkthrough of designing, wiring, and shipping governed AI agents ent
 **[📄 Read the guide: *Build Governed AI Agents On-Prem* (PDF)](https://github.com/bibinprathap/VeritasGraph/blob/restored-main/Build-Governed-AI-Agents-On-Prem.pdf)**
 
 [![Build Governed AI Agents On-Prem — walkthrough](https://img.youtube.com/vi/sA7ReEgdJfg/maxresdefault.jpg)](https://youtu.be/sA7ReEgdJfg)
-
+[![Import Any graph.json into VeritasGraph Studio — Walkthrough](https://img.youtube.com/vi/Po2Z6QtqFks/maxresdefault.jpg)](https://youtu.be/Po2Z6QtqFks)
 > ▶️ **[Watch the walkthrough on YouTube](https://youtu.be/sA7ReEgdJfg)**
 
 ---
