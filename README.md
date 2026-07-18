@@ -68,9 +68,7 @@ veritasgraph start --mode=full                    # full GraphRAG pipeline
 
 **Studio** is a local Agent Build Workspace (FastAPI + single-page UI) that lets you build a knowledge graph from your own documents and **wire it into agents** alongside tools, memory, data logging, guardrails, and headroom-style context budgeting — then chat with those agents live and watch every stage of the orchestration pipeline. Everything runs **100% locally** against [Ollama](https://ollama.com).
 
-<p align="center">
-  <img src="https://github.com/bibinprathap/VeritasGraph/blob/restored-main/studio.png?raw=true" alt="VeritasGraph Studio — playground with live orchestration pipeline" width="90%">
-</p>
+
 
 > **[🎮 Try the Studio Live](https://bibinprathap.github.io/VeritasGraph/studio/)** — *stable URL that always redirects to the current running studio tunnel.*
 
