@@ -182,7 +182,7 @@ HTMLEOF
         error "Failed to switch to publish branch '$GITHUB_BRANCH' (current: '$CURRENT_BRANCH')."
         return 1
     fi
-    git pull origin "$GITHUB_BRANCH" --rebase 2>/dev/null || true
+    git pull origin "$GITHUB_BRANCH" --rebase || warn "Initial rebase onto origin/${GITHUB_BRANCH} reported an issue; will retry on push if needed."
 
     git add "$REDIRECT_FILE_PATH"
     if git diff --cached --quiet; then
@@ -191,15 +191,34 @@ HTMLEOF
     fi
 
     git commit -m "🔄 Update studio demo redirect: ${DEMO_URL}/studio"
+
     # Push exactly the commit we just created, regardless of local branch name.
-    if git push "$REMOTE_URL" "HEAD:${GITHUB_BRANCH}" 2>/dev/null; then
-        log "${GREEN}✅ Studio redirect updated!${NC}"
-        log "${CYAN}📍 Publish branch: ${GITHUB_BRANCH}${NC}"
-        log "${CYAN}📍 Stable URL: https://bibinprathap.github.io/VeritasGraph/studio/${NC}"
-        log "${CYAN}📍 Current tunnel: ${DEMO_URL}/studio${NC}"
-        return 0
-    fi
-    error "Failed to push studio redirect update."
+    # Retry once after a rebase if the remote moved ahead (non-fast-forward),
+    # and surface any real error instead of swallowing it.
+    local attempt push_output
+    for attempt in 1 2; do
+        if push_output=$(git push "$REMOTE_URL" "HEAD:${GITHUB_BRANCH}" 2>&1); then
+            log "${GREEN}✅ Studio redirect updated!${NC}"
+            log "${CYAN}📍 Publish branch: ${GITHUB_BRANCH}${NC}"
+            log "${CYAN}📍 Stable URL: https://bibinprathap.github.io/VeritasGraph/studio/${NC}"
+            log "${CYAN}📍 Current tunnel: ${DEMO_URL}/studio${NC}"
+            return 0
+        fi
+
+        # Only retry on a rejected (non-fast-forward) push; rebase then loop.
+        if [ "$attempt" -eq 1 ] && echo "$push_output" | grep -qiE 'rejected|non-fast-forward|fetch first'; then
+            warn "Push rejected (remote moved ahead); rebasing and retrying..."
+            if ! git pull origin "$GITHUB_BRANCH" --rebase; then
+                error "Rebase onto origin/${GITHUB_BRANCH} failed; resolve manually."
+                return 1
+            fi
+            continue
+        fi
+        break
+    done
+
+    error "Failed to push studio redirect update:"
+    error "$push_output"
     return 1
 }
 
