@@ -961,6 +961,35 @@
 
         <div id="graphrag" class="section">
           <div class="grid">
+            <article class="card" style="grid-column:1 / -1">
+              <h3>Upload a knowledge graph</h3>
+              <p class="meta">Import a pre-built graph from <strong>Graphify</strong>, <strong>Understand-Anything</strong>, an <strong>AI Atlas</strong> taxonomy, or any node/edge JSON. Imported content is tagged with provenance so curated edges stay distinguishable from extracted/inferred ones.</p>
+              <div class="split" style="margin-top:8px;flex-wrap:wrap;gap:10px">
+                <select id="graphImportFormat" title="Source format">
+                  <option value="auto" selected>Auto-detect format</option>
+                  <option value="graphify">Graphify (graph.json)</option>
+                  <option value="understand_anything">Understand-Anything</option>
+                  <option value="ai_atlas">AI Atlas taxonomy</option>
+                  <option value="generic">Generic JSON (nodes/edges)</option>
+                </select>
+                <select id="graphImportProvenance" title="Provenance tag">
+                  <option value="curated" selected>Curated (authoritative)</option>
+                  <option value="extracted">Extracted</option>
+                  <option value="inferred">Inferred (suggested)</option>
+                </select>
+                <select id="graphImportMerge" title="Merge strategy">
+                  <option value="preserve_curated" selected>Preserve curated on conflict</option>
+                  <option value="skip_existing">Skip existing</option>
+                  <option value="overwrite">Overwrite existing</option>
+                </select>
+              </div>
+              <div class="form-row" style="margin-top:10px">
+                <input type="file" id="graphImportFile" accept=".json,application/json" />
+                <button class="primary" id="graphImport">Import graph</button>
+              </div>
+              <span class="meta" id="graphImportStatus"></span>
+            </article>
+
             <article class="card">
               <h3>Build knowledge graph</h3>
               <p class="meta">Paste a document. A local model extracts entities and relationships with verifiable source attribution.</p>
@@ -1365,18 +1394,25 @@
         pos[node.id] = { x: cx + R * Math.cos(angle), y: cy + R * Math.sin(angle) };
       });
       let svgEls = "";
+      // Edge style encodes provenance: curated = solid, extracted = dashed,
+      // inferred = dotted, so reviewed relationships stay visually distinct.
+      const EDGE_DASH = { curated: "", extracted: "5 4", inferred: "2 4" };
       edges.forEach((e) => {
         const a = pos[e.source], b = pos[e.target];
         if (!a || !b) return;
-        svgEls += `<line x1="${a.x}" y1="${a.y}" x2="${b.x}" y2="${b.y}" stroke="#2c3656" stroke-width="1.2" />`;
+        const dash = EDGE_DASH[e.source_type] || "";
+        const dashAttr = dash ? ` stroke-dasharray="${dash}"` : "";
+        const stroke = e.source_type === "curated" ? "#4bf8a5" : "#2c3656";
+        svgEls += `<line x1="${a.x}" y1="${a.y}" x2="${b.x}" y2="${b.y}" stroke="${stroke}" stroke-width="1.2"${dashAttr} />`;
       });
       nodes.forEach((node) => {
         const p = pos[node.id];
         const r = Math.min(14, 5 + (node.degree || 0) * 1.5);
         const color = TYPE_COLORS[node.type] || "#9aa7c7";
+        const stroke = node.source_type === "curated" ? "#4bf8a5" : "#0d1221";
         const label = node.name.length > 16 ? node.name.slice(0, 15) + "…" : node.name;
         svgEls += `<g class="gnode" data-id="${node.id}" style="cursor:pointer">
-          <circle cx="${p.x}" cy="${p.y}" r="${r}" fill="${color}" fill-opacity="0.85" stroke="#0d1221" stroke-width="1.5" />
+          <circle cx="${p.x}" cy="${p.y}" r="${r}" fill="${color}" fill-opacity="0.85" stroke="${stroke}" stroke-width="1.5" />
           <text x="${p.x}" y="${p.y - r - 4}" fill="#cdd6ea" font-size="9" text-anchor="middle">${escapeHtml(label)}</text>
         </g>`;
       });
@@ -1385,7 +1421,7 @@
         g.addEventListener("mouseenter", () => {
           const node = nodes.find((x) => x.id === g.dataset.id);
           const tip = document.getElementById("graphTooltip");
-          if (node && tip) tip.textContent = `${node.name} (${node.type}) — degree ${node.degree}: ${node.description || "no description"}`;
+          if (node && tip) tip.textContent = `${node.name} (${node.type}) · ${node.source_type || "extracted"} — degree ${node.degree}: ${node.description || "no description"}`;
         });
       });
     }
@@ -1439,6 +1475,51 @@
       document.getElementById("graphPath").innerHTML = "";
       document.getElementById("graphCitations").innerHTML = "";
       await loadGraph();
+    }
+
+    async function importGraph() {
+      const fileEl = document.getElementById("graphImportFile");
+      const statusEl = document.getElementById("graphImportStatus");
+      const btn = document.getElementById("graphImport");
+      const file = fileEl.files && fileEl.files[0];
+      if (!file) { statusEl.textContent = "Choose a JSON file to import."; return; }
+      let parsed;
+      try {
+        parsed = JSON.parse(await file.text());
+      } catch (err) {
+        statusEl.textContent = "Could not parse the file as JSON.";
+        return;
+      }
+      const body = {
+        graph: parsed,
+        format: document.getElementById("graphImportFormat").value,
+        source_type: document.getElementById("graphImportProvenance").value,
+        merge_strategy: document.getElementById("graphImportMerge").value,
+        title: file.name.replace(/\.json$/i, ""),
+      };
+      btn.disabled = true;
+      const prev = btn.textContent;
+      btn.textContent = "Importing...";
+      statusEl.textContent = "Importing graph...";
+      try {
+        const res = await api("/graphrag/import", { method: "POST", body: JSON.stringify(body) });
+        const r = res.result || {};
+        statusEl.textContent =
+          `Imported ${r.format} "${r.title}" · +${r.entities_added} entities, ` +
+          `~${r.entities_updated} updated, +${r.relationships_added} relationships ` +
+          `(${r.source_type}). Total: ${r.entities_total} entities.`;
+        fileEl.value = "";
+        await loadGraph();
+      } catch (err) {
+        const m = String(err.message || "");
+        const match = m.match(/-> (\d+)/);
+        statusEl.textContent = match
+          ? `Import failed (HTTP ${match[1]}). Check the file format.`
+          : (err.message || "Import failed");
+      } finally {
+        btn.disabled = false;
+        btn.textContent = prev;
+      }
     }
 
     async function askGraph() {
@@ -1879,6 +1960,7 @@
       });
 
       document.getElementById("graphIngest").addEventListener("click", ingestDocument);
+      document.getElementById("graphImport").addEventListener("click", importGraph);
       document.getElementById("graphClear").addEventListener("click", clearGraph);
       document.getElementById("graphAsk").addEventListener("click", askGraph);
       document.getElementById("graphQuestion").addEventListener("keydown", (e) => {

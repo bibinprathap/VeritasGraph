@@ -1,0 +1,39 @@
+{
+  "version": "1.0",
+  "kind": "codebase",
+  "project": {
+    "name": "microservices-demo",
+    "languages": ["go", "python", "java"],
+    "frameworks": ["gRPC", "Flask", "Docker"],
+    "description": "Online Boutique: a cloud-first microservices demo that communicates over gRPC.",
+    "analyzedAt": "2026-03-15",
+    "gitCommitHash": "9f8e7d6c"
+  },
+  "nodes": [
+    { "id": "frontend", "type": "service", "name": "Frontend Service", "summary": "Go web frontend serving the Online Boutique UI and calling backend services over gRPC.", "tags": ["go", "http", "entry-point"], "complexity": "moderate" },
+    { "id": "cartservice", "type": "service", "name": "Cart Service", "summary": "Stores shopping cart items in Redis.", "tags": ["csharp", "redis"], "complexity": "moderate" },
+    { "id": "productcatalog", "type": "service", "name": "Product Catalog Service", "summary": "Serves product listings from a JSON catalog.", "tags": ["go"], "complexity": "simple" },
+    { "id": "checkout", "type": "service", "name": "Checkout Service", "summary": "Orchestrates cart, shipping, payment, and email to place an order.", "tags": ["go"], "complexity": "complex" },
+    { "id": "payment", "type": "service", "name": "Payment Service", "summary": "Charges a credit card and returns a transaction id.", "tags": ["nodejs"], "complexity": "moderate" },
+    { "id": "shipping", "type": "service", "name": "Shipping Service", "summary": "Quotes shipping cost and ships an order.", "tags": ["go"], "complexity": "simple" },
+    { "id": "redis", "type": "resource", "name": "Redis Cache", "summary": "In-memory store backing the cart service.", "tags": ["cache"], "complexity": "simple" },
+    { "id": "main_go", "type": "file", "name": "main.go", "summary": "Frontend entry point: initializes gRPC clients and starts the HTTP server.", "filePath": "src/frontend/main.go", "lineRange": [1, 120], "tags": ["go", "entry-point"], "complexity": "moderate" }
+  ],
+  "edges": [
+    { "source": "frontend", "target": "cartservice", "type": "calls", "direction": "forward", "description": "Adds and reads cart items via gRPC.", "weight": 0.9 },
+    { "source": "frontend", "target": "productcatalog", "type": "calls", "direction": "forward", "description": "Lists and looks up products via gRPC.", "weight": 0.9 },
+    { "source": "frontend", "target": "checkout", "type": "calls", "direction": "forward", "description": "Places orders via gRPC.", "weight": 0.85 },
+    { "source": "checkout", "target": "cartservice", "type": "calls", "direction": "forward", "description": "Reads and empties the cart during checkout.", "weight": 0.8 },
+    { "source": "checkout", "target": "payment", "type": "calls", "direction": "forward", "description": "Charges the customer.", "weight": 0.8 },
+    { "source": "checkout", "target": "shipping", "type": "calls", "direction": "forward", "description": "Quotes and ships the order.", "weight": 0.75 },
+    { "source": "cartservice", "target": "redis", "type": "reads_from", "direction": "bidirectional", "description": "Persists cart state.", "weight": 0.95 },
+    { "source": "main_go", "target": "frontend", "type": "contains", "direction": "forward", "description": "Bootstraps the frontend service.", "weight": 1.0 }
+  ],
+  "layers": [
+    { "id": "layer-frontend", "name": "Frontend", "description": "User-facing gateway.", "nodeIds": ["frontend", "main_go"] },
+    { "id": "layer-backend", "name": "Backend Microservices", "description": "gRPC business services.", "nodeIds": ["cartservice", "productcatalog", "checkout", "payment", "shipping"] }
+  ],
+  "tour": [
+    { "order": 1, "title": "Frontend Entry Point", "description": "main.go initializes gRPC connections to all backend services and starts the HTTP server.", "nodeIds": ["main_go", "frontend"], "languageLesson": "Go's main() serves as the application entry point." }
+  ]
+}

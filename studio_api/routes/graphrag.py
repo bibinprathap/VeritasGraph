@@ -19,7 +19,7 @@ import httpx
 from fastapi import APIRouter, HTTPException
 
 from studio_api.graphrag_engine import engine
-from studio_api.models import GraphIngestRequest, GraphQueryRequest
+from studio_api.models import GraphImportRequest, GraphIngestRequest, GraphQueryRequest
 
 graphrag_router = APIRouter(prefix="/graphrag", tags=["graphrag"])
 
@@ -54,6 +54,32 @@ async def ingest(payload: GraphIngestRequest) -> dict:
 @graphrag_router.get("/graph")
 async def get_graph() -> dict:
     return await asyncio.to_thread(engine.graph)
+
+
+@graphrag_router.post("/import")
+async def import_graph(payload: GraphImportRequest) -> dict:
+    """Upload a pre-built knowledge graph (Graphify, Understand-Anything, AI Atlas, generic)."""
+    try:
+        result = await asyncio.to_thread(
+            engine.import_graph,
+            payload.graph,
+            fmt=payload.format,
+            source_type=payload.source_type,
+            merge_strategy=payload.merge_strategy,
+            title=payload.title,
+            origin_version=payload.origin_version,
+        )
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    except Exception as exc:  # noqa: BLE001 - translate to a clean HTTP error
+        raise HTTPException(status_code=500, detail=str(exc)) from exc
+    return {"message": "Graph imported", "result": result}
+
+
+@graphrag_router.get("/export")
+async def export_graph() -> dict:
+    """Export the full knowledge graph (sources, entities, relationships) for round-trip."""
+    return await asyncio.to_thread(engine.export_graph)
 
 
 @graphrag_router.delete("/graph")

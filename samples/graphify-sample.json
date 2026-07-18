@@ -1,0 +1,27 @@
+{
+  "directed": true,
+  "multigraph": false,
+  "graph": {},
+  "nodes": [
+    { "id": "APIRouter", "label": "APIRouter", "file_type": "class", "summary": "Registers and dispatches API routes for the FastAPI app.", "community": 0, "community_name": "APIRouter" },
+    { "id": "SecurityBase", "label": "SecurityBase", "file_type": "class", "summary": "Base class for authentication and authorization schemes.", "community": 1, "community_name": "SecurityBase" },
+    { "id": "HTTPException", "label": "HTTPException", "file_type": "class", "summary": "Exception carrying an HTTP status code and detail payload.", "community": 1, "community_name": "SecurityBase" },
+    { "id": "Scope", "label": "Scope", "file_type": "class", "summary": "ASGI request scope holding connection metadata.", "community": 2, "community_name": "Scope" },
+    { "id": "get_typed_signature", "label": "get_typed_signature()", "file_type": "function", "summary": "Resolves a callable's type-annotated signature for dependency injection.", "community": 2, "community_name": "Scope" },
+    { "id": "ModelField", "label": "ModelField", "file_type": "class", "summary": "Pydantic field wrapper used to validate request/response models.", "community": 3, "community_name": "BaseModelWithConfig" },
+    { "id": "BaseModelWithConfig", "label": "BaseModelWithConfig", "file_type": "class", "summary": "Pydantic base model carrying shared config for schema generation.", "community": 3, "community_name": "BaseModelWithConfig" },
+    { "id": "utils", "label": "utils", "file_type": "module", "summary": "Utility helpers shared across the framework.", "community": 4, "community_name": "utils" }
+  ],
+  "links": [
+    { "source": "APIRouter", "target": "HTTPException", "relation": "raises", "confidence": "EXTRACTED" },
+    { "source": "APIRouter", "target": "Scope", "relation": "reads", "confidence": "EXTRACTED" },
+    { "source": "APIRouter", "target": "get_typed_signature", "relation": "calls", "confidence": "EXTRACTED" },
+    { "source": "SecurityBase", "target": "Scope", "relation": "reads", "confidence": "EXTRACTED" },
+    { "source": "get_typed_signature", "target": "ModelField", "relation": "constructs", "confidence": "EXTRACTED" },
+    { "source": "ModelField", "target": "BaseModelWithConfig", "relation": "validates", "confidence": "EXTRACTED" },
+    { "source": "APIRouter", "target": "utils", "relation": "imports", "confidence": "EXTRACTED" },
+    { "source": "SecurityBase", "target": "utils", "relation": "imports", "confidence": "EXTRACTED" }
+  ],
+  "hyperedges": [],
+  "built_at_commit": "a1b2c3d4"
+}

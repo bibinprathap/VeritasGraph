@@ -108,6 +108,28 @@ def handle_get_graph(_args: dict) -> dict:
         return {"error": str(exc)}
 
 
+def handle_import_graph(args: dict) -> dict:
+    """Import a pre-built knowledge graph (Graphify / Understand-Anything / AI Atlas / generic)."""
+    graph = args.get("graph")
+    if not isinstance(graph, dict):
+        return {"error": "graph must be a JSON object with nodes and edges"}
+    try:
+        result = _engine().import_graph(
+            graph,
+            fmt=str(args.get("format", "auto") or "auto"),
+            source_type=str(args.get("source_type", "curated") or "curated"),
+            merge_strategy=str(args.get("merge_strategy", "preserve_curated") or "preserve_curated"),
+            title=args.get("title"),
+            origin_version=args.get("origin_version"),
+        )
+        return {"status": "imported", **result}
+    except ValueError as exc:
+        return {"error": str(exc)}
+    except Exception as exc:  # noqa: BLE001
+        log.exception("import_graph failed")
+        return {"error": str(exc)}
+
+
 def handle_clear_graph(_args: dict) -> dict:
     """Delete every node, edge, and source from the knowledge graph."""
     try:
@@ -186,6 +208,29 @@ TOOL_DEFINITIONS: List[Dict[str, Any]] = [
         "description": "Return the full knowledge graph: all nodes, edges, and stats.",
         "inputSchema": {"type": "object", "properties": {}},
         "_handler": handle_get_graph,
+    },
+    {
+        "name": "veritasgraph_import_graph",
+        "description": (
+            "Import a pre-built knowledge graph produced by another tool "
+            "(Graphify graph.json, Understand-Anything KnowledgeGraph, AI Atlas "
+            "taxonomy JSON, or any node/edge JSON). Imported nodes/edges are "
+            "tagged with source_type provenance (curated/extracted/inferred) and "
+            "their original id/version so curated content stays distinguishable."
+        ),
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "graph": {"type": "object", "description": "Raw uploaded graph JSON (nodes + edges)."},
+                "format": {"type": "string", "description": "auto | graphify | understand_anything | ai_atlas | generic."},
+                "source_type": {"type": "string", "description": "Provenance: curated | extracted | inferred (default curated)."},
+                "merge_strategy": {"type": "string", "description": "preserve_curated | overwrite | skip_existing."},
+                "title": {"type": "string", "description": "Optional display title for the imported graph."},
+                "origin_version": {"type": "string", "description": "Optional source version/commit to preserve."},
+            },
+            "required": ["graph"],
+        },
+        "_handler": handle_import_graph,
     },
     {
         "name": "veritasgraph_clear_graph",

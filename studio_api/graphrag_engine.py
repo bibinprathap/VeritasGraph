@@ -113,6 +113,241 @@ def _extract_json(text: str) -> Dict[str, Any]:
         return {}
 
 
+# --------------------------------------------------------------------------- #
+# Provenance + import adapters
+#
+# Nodes and edges carry a ``source_type`` recording how they entered the graph:
+#   * "curated"   — imported from a human-reviewed graph (authoritative).
+#   * "extracted" — produced by the document-extraction pipeline.
+#   * "inferred"  — suggested/completed by an LLM (lowest confidence).
+# On a merge conflict the higher-ranked provenance wins so that curated content
+# is never silently overwritten by extracted or inferred data.
+# --------------------------------------------------------------------------- #
+_PROVENANCE_RANK: Dict[str, int] = {"curated": 3, "extracted": 2, "inferred": 1}
+_DEFAULT_SOURCE_TYPE = "extracted"
+
+
+def _provenance_rank(source_type: Optional[str]) -> int:
+    return _PROVENANCE_RANK.get((source_type or _DEFAULT_SOURCE_TYPE), 0)
+
+
+def _first(mapping: Dict[str, Any], *keys: str, default: Any = None) -> Any:
+    """Return the first present, non-empty value for any of ``keys``."""
+    for key in keys:
+        if key in mapping and mapping[key] not in (None, "", [], {}):
+            return mapping[key]
+    return default
+
+
+def _detect_format(graph: Dict[str, Any]) -> str:
+    """Best-effort detection of the uploaded graph's source format."""
+    if not isinstance(graph, dict):
+        return "generic"
+    # Understand-Anything: a KnowledgeGraph with project metadata + edges/tour.
+    if isinstance(graph.get("project"), dict) and (
+        "tour" in graph or "layers" in graph or "edges" in graph
+    ):
+        return "understand_anything"
+    # Graphify: networkx node-link export uses "links" and node-link flags.
+    if "links" in graph and ("nodes" in graph):
+        if "directed" in graph or "multigraph" in graph or "hyperedges" in graph:
+            return "graphify"
+        return "graphify"
+    return "generic"
+
+
+def _adapt_graphify(graph: Dict[str, Any]) -> Dict[str, Any]:
+    """Normalise a Graphify ``graph.json`` (networkx node-link) export."""
+    nodes: List[Dict[str, Any]] = []
+    for raw in graph.get("nodes", []) or []:
+        if not isinstance(raw, dict):
+            continue
+        origin_id = raw.get("id")
+        name = _first(raw, "label", "name", "id", default=origin_id)
+        if origin_id is None or name is None:
+            continue
+        meta = {
+            k: v
+            for k, v in raw.items()
+            if k not in ("id", "label", "name", "type", "file_type",
+                         "summary", "description", "norm_label")
+            and not k.startswith("_")
+        }
+        nodes.append({
+            "origin_id": str(origin_id),
+            "name": str(name),
+            "type": _first(raw, "file_type", "type", "community_name", default="concept"),
+            "description": _first(raw, "summary", "description", default=""),
+            "meta": meta,
+        })
+    edges: List[Dict[str, Any]] = []
+    for raw in graph.get("links", []) or graph.get("edges", []) or []:
+        if not isinstance(raw, dict):
+            continue
+        src = raw.get("source")
+        tgt = raw.get("target")
+        if src is None or tgt is None:
+            continue
+        edges.append({
+            "source": str(src),
+            "target": str(tgt),
+            "description": _first(raw, "relation", "label", "type", "description", default=""),
+        })
+    return {
+        "nodes": nodes,
+        "edges": edges,
+        "format": "graphify",
+        "title": None,
+        "version": graph.get("built_at_commit"),
+    }
+
+
+def _adapt_understand_anything(graph: Dict[str, Any]) -> Dict[str, Any]:
+    """Normalise an Understand-Anything ``KnowledgeGraph`` export."""
+    project = graph.get("project") if isinstance(graph.get("project"), dict) else {}
+    nodes: List[Dict[str, Any]] = []
+    for raw in graph.get("nodes", []) or []:
+        if not isinstance(raw, dict):
+            continue
+        origin_id = raw.get("id")
+        name = _first(raw, "name", "id", default=origin_id)
+        if origin_id is None or name is None:
+            continue
+        meta = {
+            k: v
+            for k, v in raw.items()
+            if k in ("filePath", "lineRange", "tags", "complexity",
+                     "languageNotes", "domainMeta", "knowledgeMeta", "figmaMeta")
+            and v not in (None, "", [], {})
+        }
+        nodes.append({
+            "origin_id": str(origin_id),
+            "name": str(name),
+            "type": _first(raw, "type", default="concept"),
+            "description": _first(raw, "summary", "description", default=""),
+            "meta": meta,
+        })
+    edges: List[Dict[str, Any]] = []
+    for raw in graph.get("edges", []) or graph.get("links", []) or []:
+        if not isinstance(raw, dict):
+            continue
+        src = raw.get("source")
+        tgt = raw.get("target")
+        if src is None or tgt is None:
+            continue
+        desc = _first(raw, "description", "type", default="")
+        edges.append({
+            "source": str(src),
+            "target": str(tgt),
+            "description": str(desc),
+        })
+    return {
+        "nodes": nodes,
+        "edges": edges,
+        "format": "understand_anything",
+        "title": project.get("name"),
+        "summary": project.get("description"),
+        "version": _first(project, "gitCommitHash", "analyzedAt") or graph.get("version"),
+    }
+
+
+def _adapt_generic(graph: Dict[str, Any]) -> Dict[str, Any]:
+    """Normalise an arbitrary JSON graph (e.g. AI Atlas taxonomy).
+
+    Accepts nodes under ``nodes``/``entities``/``concepts`` and edges under
+    ``edges``/``links``/``relationships``/``relations``. Endpoint keys are
+    auto-detected (source/target, from/to, subject/object, parent/child).
+    Hierarchical taxonomies that only express ``parent``/``parentId``/``children``
+    on nodes are converted into ``categorized_under`` edges.
+    """
+    raw_nodes = _first(graph, "nodes", "entities", "concepts", "items", default=[])
+    raw_edges = _first(
+        graph, "edges", "links", "relationships", "relations", default=[]
+    )
+    if not isinstance(raw_nodes, list):
+        raw_nodes = []
+    if not isinstance(raw_edges, list):
+        raw_edges = []
+
+    nodes: List[Dict[str, Any]] = []
+    seen_ids: set = set()
+    synthesized_edges: List[Dict[str, Any]] = []
+    for raw in raw_nodes:
+        if not isinstance(raw, dict):
+            continue
+        origin_id = _first(raw, "id", "key", "slug", "name", "title")
+        name = _first(raw, "name", "label", "title", "id", default=origin_id)
+        if origin_id is None or name is None:
+            continue
+        origin_id = str(origin_id)
+        seen_ids.add(origin_id)
+        reserved = {"id", "key", "slug", "name", "label", "title", "type",
+                    "category", "kind", "description", "summary", "definition",
+                    "content", "parent", "parentId", "parent_id", "children"}
+        meta = {k: v for k, v in raw.items()
+                if k not in reserved and v not in (None, "", [], {})}
+        nodes.append({
+            "origin_id": origin_id,
+            "name": str(name),
+            "type": _first(raw, "type", "category", "kind", default="concept"),
+            "description": _first(raw, "description", "summary", "definition", "content", default=""),
+            "meta": meta,
+        })
+        # Hierarchy expressed on the node itself.
+        parent = _first(raw, "parent", "parentId", "parent_id")
+        if parent is not None:
+            synthesized_edges.append({
+                "source": origin_id,
+                "target": str(parent),
+                "description": "categorized_under",
+            })
+        for child in raw.get("children", []) or []:
+            child_id = child.get("id") if isinstance(child, dict) else child
+            if child_id is not None:
+                synthesized_edges.append({
+                    "source": str(child_id),
+                    "target": origin_id,
+                    "description": "categorized_under",
+                })
+
+    edges: List[Dict[str, Any]] = []
+    for raw in raw_edges:
+        if not isinstance(raw, dict):
+            continue
+        src = _first(raw, "source", "from", "subject", "child", "start", "src")
+        tgt = _first(raw, "target", "to", "object", "parent", "end", "dst")
+        if src is None or tgt is None:
+            continue
+        edges.append({
+            "source": str(src),
+            "target": str(tgt),
+            "description": str(_first(
+                raw, "relation", "type", "label", "description", "predicate", default=""
+            )),
+        })
+    edges.extend(synthesized_edges)
+    return {
+        "nodes": nodes,
+        "edges": edges,
+        "format": "generic",
+        "title": _first(graph, "name", "title"),
+        "summary": _first(graph, "description", "summary"),
+        "version": _first(graph, "version", "revision"),
+    }
+
+
+_FORMAT_ADAPTERS = {
+    "graphify": _adapt_graphify,
+    "understand_anything": _adapt_understand_anything,
+    "understand-anything": _adapt_understand_anything,
+    "ua": _adapt_understand_anything,
+    "ai_atlas": _adapt_generic,
+    "ai-atlas": _adapt_generic,
+    "generic": _adapt_generic,
+    "json": _adapt_generic,
+}
+
+
 class GraphRAGEngine:
     """Owns the knowledge graph: sources, entities, relationships."""
 
@@ -169,7 +404,15 @@ class GraphRAGEngine:
     # Ingestion
     # ------------------------------------------------------------------ #
     def _upsert_entity(
-        self, name: str, etype: str, description: str, source_id: str
+        self,
+        name: str,
+        etype: str,
+        description: str,
+        source_id: str,
+        *,
+        source_type: str = _DEFAULT_SOURCE_TYPE,
+        origin: Optional[Dict[str, Any]] = None,
+        overwrite: bool = False,
     ) -> Optional[str]:
         key = _norm(name)
         if not key:
@@ -177,40 +420,89 @@ class GraphRAGEngine:
         eid = self._name_index.get(key)
         if eid is None:
             eid = _new_id("ent")
-            self.entities[eid] = {
+            entity = {
                 "id": eid,
                 "name": name.strip(),
                 "type": (etype or "concept").strip().lower(),
                 "description": (description or "").strip(),
                 "sources": [source_id],
+                "source_type": source_type,
             }
+            if origin:
+                entity["origin"] = origin
+            self.entities[eid] = entity
             self._name_index[key] = eid
         else:
             entity = self.entities[eid]
             if source_id not in entity["sources"]:
                 entity["sources"].append(source_id)
-            if description and len(description) > len(entity.get("description", "")):
-                entity["description"] = description.strip()
+            new_rank = _provenance_rank(source_type)
+            old_rank = _provenance_rank(entity.get("source_type"))
+            incoming_desc = (description or "").strip()
+            if overwrite or new_rank > old_rank:
+                # Authoritative incoming data replaces existing fields.
+                if etype:
+                    entity["type"] = etype.strip().lower()
+                if incoming_desc:
+                    entity["description"] = incoming_desc
+                entity["source_type"] = source_type
+                if origin:
+                    entity["origin"] = origin
+            elif new_rank == old_rank and incoming_desc and len(incoming_desc) > len(
+                entity.get("description", "")
+            ):
+                # Same provenance tier: keep the richer description.
+                entity["description"] = incoming_desc
         return eid
 
-    def _upsert_relationship(
-        self, source_eid: str, target_eid: str, description: str, source_id: str
-    ) -> None:
-        for rel in self.relationships.values():
+    def _find_relationship(self, source_eid: str, target_eid: str) -> Optional[str]:
+        for rid, rel in self.relationships.items():
             if rel["source"] == source_eid and rel["target"] == target_eid:
-                if source_id not in rel["sources"]:
-                    rel["sources"].append(source_id)
-                if description and len(description) > len(rel.get("description", "")):
-                    rel["description"] = description.strip()
-                return
+                return rid
+        return None
+
+    def _upsert_relationship(
+        self,
+        source_eid: str,
+        target_eid: str,
+        description: str,
+        source_id: str,
+        *,
+        source_type: str = _DEFAULT_SOURCE_TYPE,
+        origin: Optional[Dict[str, Any]] = None,
+        overwrite: bool = False,
+    ) -> None:
+        rid = self._find_relationship(source_eid, target_eid)
+        if rid is not None:
+            rel = self.relationships[rid]
+            if source_id not in rel["sources"]:
+                rel["sources"].append(source_id)
+            new_rank = _provenance_rank(source_type)
+            old_rank = _provenance_rank(rel.get("source_type"))
+            incoming_desc = (description or "").strip()
+            if overwrite or new_rank > old_rank:
+                if incoming_desc:
+                    rel["description"] = incoming_desc
+                rel["source_type"] = source_type
+                if origin:
+                    rel["origin"] = origin
+            elif new_rank == old_rank and incoming_desc and len(incoming_desc) > len(
+                rel.get("description", "")
+            ):
+                rel["description"] = incoming_desc
+            return
         rid = _new_id("rel")
-        self.relationships[rid] = {
+        rel = {
             "id": rid,
             "source": source_eid,
             "target": target_eid,
             "description": (description or "").strip(),
             "sources": [source_id],
+            "source_type": source_type,
         }
+        if origin:
+            rel["origin"] = origin
+        self.relationships[rid] = rel
 
     def ingest(self, title: str, text: str, model: str) -> Dict[str, Any]:
         """Chunk a document, extract a graph from each chunk, and merge it in."""
@@ -283,6 +575,163 @@ class GraphRAGEngine:
         }
 
     # ------------------------------------------------------------------ #
+    # Import (upload a pre-built knowledge graph)
+    # ------------------------------------------------------------------ #
+    def import_graph(
+        self,
+        graph: Dict[str, Any],
+        *,
+        fmt: str = "auto",
+        source_type: str = "curated",
+        merge_strategy: str = "preserve_curated",
+        title: Optional[str] = None,
+        origin_version: Optional[str] = None,
+    ) -> Dict[str, Any]:
+        """Import a pre-built knowledge graph produced by another tool.
+
+        Supports Graphify (``graph.json``), Understand-Anything
+        (``KnowledgeGraph``), AI Atlas taxonomy JSON, and arbitrary node/edge
+        JSON. Imported nodes/edges are tagged with ``source_type`` provenance
+        (default ``curated``) and their original id/version so reviewed content
+        stays distinguishable from extracted or inferred additions.
+        """
+        if not isinstance(graph, dict):
+            raise ValueError("Uploaded graph must be a JSON object.")
+        if source_type not in _PROVENANCE_RANK:
+            raise ValueError(
+                f"source_type must be one of {sorted(_PROVENANCE_RANK)}."
+            )
+        if merge_strategy not in ("preserve_curated", "overwrite", "skip_existing"):
+            raise ValueError(
+                "merge_strategy must be preserve_curated, overwrite, or skip_existing."
+            )
+        fmt = (fmt or "auto").strip().lower()
+        if fmt == "auto":
+            fmt = _detect_format(graph)
+        adapter = _FORMAT_ADAPTERS.get(fmt)
+        if adapter is None:
+            raise ValueError(f"Unsupported format '{fmt}'.")
+        norm = adapter(graph)
+        nodes = norm.get("nodes", [])
+        edges = norm.get("edges", [])
+        if not nodes:
+            raise ValueError("No nodes found in the uploaded graph.")
+
+        graph_format = norm.get("format", fmt)
+        graph_title = (title or norm.get("title") or f"Imported {graph_format} graph").strip()
+        version = origin_version or norm.get("version")
+        overwrite = merge_strategy == "overwrite"
+
+        with self._lock:
+            doc_id = _new_id("imp")
+            source_id = f"{doc_id}#0"
+            summary_text = norm.get("summary") or (
+                f"Imported {graph_format} graph '{graph_title}' with "
+                f"{len(nodes)} nodes and {len(edges)} edges."
+            )
+            self.sources[source_id] = {
+                "id": source_id,
+                "doc_id": doc_id,
+                "title": graph_title,
+                "text": summary_text,
+                "created_at": time.time(),
+                "source_type": source_type,
+                "format": graph_format,
+            }
+
+            origin_to_eid: Dict[str, str] = {}
+            added_entities = 0
+            updated_entities = 0
+            skipped_entities = 0
+            for node in nodes:
+                name = node.get("name")
+                origin_id = node.get("origin_id")
+                if not name:
+                    continue
+                key = _norm(name)
+                exists = key in self._name_index
+                if exists and merge_strategy == "skip_existing":
+                    origin_to_eid[origin_id] = self._name_index[key]
+                    skipped_entities += 1
+                    continue
+                origin = {"format": graph_format, "origin_id": origin_id}
+                if version:
+                    origin["origin_version"] = version
+                if node.get("meta"):
+                    origin["meta"] = node["meta"]
+                eid = self._upsert_entity(
+                    name,
+                    node.get("type", "concept"),
+                    node.get("description", ""),
+                    source_id,
+                    source_type=source_type,
+                    origin=origin,
+                    overwrite=overwrite,
+                )
+                if eid:
+                    origin_to_eid[origin_id] = eid
+                    if exists:
+                        updated_entities += 1
+                    else:
+                        added_entities += 1
+
+            added_relationships = 0
+            skipped_relationships = 0
+            for edge in edges:
+                s_eid = origin_to_eid.get(edge.get("source"))
+                t_eid = origin_to_eid.get(edge.get("target"))
+                if not s_eid or not t_eid or s_eid == t_eid:
+                    continue
+                if merge_strategy == "skip_existing" and (
+                    self._find_relationship(s_eid, t_eid) is not None
+                ):
+                    skipped_relationships += 1
+                    continue
+                self._upsert_relationship(
+                    s_eid,
+                    t_eid,
+                    edge.get("description", ""),
+                    source_id,
+                    source_type=source_type,
+                    origin={"format": graph_format},
+                    overwrite=overwrite,
+                )
+                added_relationships += 1
+
+            self._save()
+
+        return {
+            "doc_id": doc_id,
+            "title": graph_title,
+            "format": graph_format,
+            "source_type": source_type,
+            "merge_strategy": merge_strategy,
+            "nodes_in_file": len(nodes),
+            "edges_in_file": len(edges),
+            "entities_added": added_entities,
+            "entities_updated": updated_entities,
+            "entities_skipped": skipped_entities,
+            "relationships_added": added_relationships,
+            "relationships_skipped": skipped_relationships,
+            "entities_total": len(self.entities),
+            "relationships_total": len(self.relationships),
+        }
+
+    def export_graph(self) -> Dict[str, Any]:
+        """Export the full graph (sources, entities, relationships) as JSON."""
+        with self._lock:
+            return {
+                "sources": {k: dict(v) for k, v in self.sources.items()},
+                "entities": {k: dict(v) for k, v in self.entities.items()},
+                "relationships": {k: dict(v) for k, v in self.relationships.items()},
+                "stats": {
+                    "entities": len(self.entities),
+                    "relationships": len(self.relationships),
+                    "sources": len(self.sources),
+                },
+            }
+
+    # ------------------------------------------------------------------ #
     # Graph access / visualisation
     # ------------------------------------------------------------------ #
     def graph(self) -> Dict[str, Any]:
@@ -299,6 +748,8 @@ class GraphRAGEngine:
                     "description": e["description"],
                     "degree": degree.get(e["id"], 0),
                     "sources": e["sources"],
+                    "source_type": e.get("source_type", _DEFAULT_SOURCE_TYPE),
+                    "origin": e.get("origin"),
                 }
                 for e in self.entities.values()
             ]
@@ -309,6 +760,8 @@ class GraphRAGEngine:
                     "target": r["target"],
                     "description": r["description"],
                     "sources": r["sources"],
+                    "source_type": r.get("source_type", _DEFAULT_SOURCE_TYPE),
+                    "origin": r.get("origin"),
                 }
                 for r in self.relationships.values()
             ]

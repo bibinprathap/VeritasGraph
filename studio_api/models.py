@@ -225,3 +225,32 @@ class GraphQueryRequest(BaseModel):
     max_depth: int = Field(default=2, ge=1, le=4)
     max_nodes: int = Field(default=25, ge=1, le=200)
 
+
+class GraphImportRequest(BaseModel):
+    """Import a pre-built knowledge graph produced by another tool.
+
+    ``graph`` is the raw uploaded JSON (Graphify ``graph.json``,
+    Understand-Anything ``KnowledgeGraph``, AI Atlas taxonomy, or any node/edge
+    JSON). Imported nodes/edges are tagged with ``source_type`` provenance so
+    curated content stays distinguishable from extracted or inferred additions.
+    """
+
+    graph: Dict[str, Any] = Field(..., description="Raw uploaded graph JSON.")
+    format: str = Field(
+        default="auto",
+        description="auto | graphify | understand_anything | ai_atlas | generic",
+    )
+    source_type: str = Field(
+        default="curated", description="Provenance: curated | extracted | inferred."
+    )
+    merge_strategy: str = Field(
+        default="preserve_curated",
+        description="preserve_curated | overwrite | skip_existing.",
+    )
+    title: Optional[str] = Field(
+        default=None, description="Optional display title for the imported graph."
+    )
+    origin_version: Optional[str] = Field(
+        default=None, description="Optional source version/commit to preserve."
+    )
+
