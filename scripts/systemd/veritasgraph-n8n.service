@@ -1,0 +1,17 @@
+[Unit]
+Description=VeritasGraph n8n Workflow Engine
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=/home/sijo
+Environment=PATH=/home/sijo/.nvm/versions/node/v25.8.0/bin:/home/sijo/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+ExecStartPre=-/usr/bin/docker rm -f veritasgraph-n8n
+ExecStart=/usr/bin/docker run --rm --name veritasgraph-n8n -p 127.0.0.1:5678:5678 -v /home/sijo/.n8n:/home/node/.n8n -e N8N_HOST=127.0.0.1 -e N8N_PORT=5678 -e N8N_PROTOCOL=http -e N8N_EDITOR_BASE_URL=http://127.0.0.1:5678 -e N8N_ENCRYPTION_KEY=veritasgraph-local-n8n-key docker.n8n.io/n8nio/n8n
+ExecStop=-/usr/bin/docker stop veritasgraph-n8n
+Restart=always
+RestartSec=3
+
+[Install]
+WantedBy=default.target

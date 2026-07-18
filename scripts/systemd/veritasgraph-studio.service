@@ -1,0 +1,15 @@
+[Unit]
+Description=VeritasGraph Studio API
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=/home/sijo/VeritasGraph
+Environment=STUDIO_DATA_DIR=/home/sijo/VeritasGraph/studio_api/data
+ExecStart=/home/sijo/VeritasGraph/.venv/bin/uvicorn studio_api.main:app --host 127.0.0.1 --port 8200 --log-level warning
+Restart=always
+RestartSec=2
+
+[Install]
+WantedBy=default.target

@@ -1,0 +1,15 @@
+[Unit]
+Description=VeritasGraph Chrome DevTools MCP HTTP Proxy
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=/home/sijo/VeritasGraph
+Environment=PATH=/home/sijo/.nvm/versions/node/v25.8.0/bin:/home/sijo/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+ExecStart=/usr/bin/env npx -y mcp-proxy --host 127.0.0.1 --port 8765 --server stream --streamEndpoint /chrome-devtools-mcp --sseEndpoint /chrome-devtools-sse --connectionTimeout 120000 --requestTimeout 300000 -- npx -y chrome-devtools-mcp@latest --headless --isolated --no-usage-statistics
+Restart=always
+RestartSec=3
+
+[Install]
+WantedBy=default.target

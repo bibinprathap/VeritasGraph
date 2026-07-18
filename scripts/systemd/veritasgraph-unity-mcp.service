@@ -1,0 +1,16 @@
+[Unit]
+Description=VeritasGraph Unity MCP HTTP Proxy
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=/home/sijo/VeritasGraph
+Environment=PATH=/home/sijo/.nvm/versions/node/v25.8.0/bin:/home/sijo/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+Environment=UNITY_MCP_SKIP_STARTUP_CONNECT=1
+ExecStart=/usr/bin/env npx -y mcp-proxy --host 127.0.0.1 --port 8766 --server stream --streamEndpoint /unity-mcp --sseEndpoint /unity-sse --connectionTimeout 120000 --requestTimeout 300000 -- uvx --from mcpforunityserver mcp-for-unity
+Restart=always
+RestartSec=3
+
+[Install]
+WantedBy=default.target
