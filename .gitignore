@@ -54,3 +54,9 @@ scripts/start-studio-with-tunnel.sh
 scripts/cleanup_studio_workspace.py
 scripts/start-studio-with-tunnel.sh
 scripts/start-studio-with-tunnel.sh
+maths-cs-ai-compendium-main/*
+submission/veritasgraph_rag/.venv/*
+tests/studio-e2e/node_modules/*
+submission/veritasgraph_rag/input/*
+submission/veritasgraph_rag/veritasgraph_rag/__pycache__/*
+submission/veritasgraph_rag/output/*
