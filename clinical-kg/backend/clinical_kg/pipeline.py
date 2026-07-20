@@ -78,6 +78,18 @@ class Pipeline:
     def query_structured(self, cohort: "_query.CohortQuery") -> list[PatientMatch]:
         return _query.run(self.kg, cohort)
 
+    # -- drug interactions -------------------------------------------------
+    def interactions(self, patient_id: str | None = None) -> list[dict]:
+        """Flag drug-drug interactions for one patient, or across all patients."""
+        self.kg.enrich_drug_interactions()
+        if patient_id is not None:
+            return self.kg.patient_interactions(patient_id)
+        flags: list[dict] = []
+        seen = {r.patient_id for r in self._ingested}
+        for pid in sorted(seen):
+            flags += self.kg.patient_interactions(pid)
+        return flags
+
     # -- introspection -----------------------------------------------------
     def stats(self) -> dict:
         return self.kg.stats()

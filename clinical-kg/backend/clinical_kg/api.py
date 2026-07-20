@@ -7,6 +7,7 @@ POST /ingest                  -> ingest one or more clinical notes
 POST /query                   -> natural-language cohort query
 GET  /patients                -> list ingested patients + facts
 GET  /contradictions          -> reconciliation contradictions
+GET  /interactions            -> drug-drug interaction flags (all or per-patient)
 GET  /graph                   -> cytoscape graph (optionally per-patient)
 POST /risk/k-anonymity        -> k-anonymity of a released cohort
 POST /reset                   -> clear the in-memory graph
@@ -150,6 +151,12 @@ def contradictions() -> dict:
         for a in r.contradictions:
             out.append({"patient_id": r.patient_id, "doc_id": r.doc_id, **_assertion_dict(a)})
     return {"contradictions": out}
+
+
+@app.get("/interactions")
+def interactions(patient_id: str | None = None) -> dict:
+    flags = pipeline.interactions(patient_id)
+    return {"patient_id": patient_id, "count": len(flags), "interactions": flags}
 
 
 @app.get("/graph")

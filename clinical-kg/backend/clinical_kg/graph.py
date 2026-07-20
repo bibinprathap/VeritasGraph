@@ -12,7 +12,8 @@ from __future__ import annotations
 
 import networkx as nx
 
-from .models import Assertion, Span
+from . import interactions as _interactions
+from .models import AFFIRMED, Assertion, Span
 
 
 class KnowledgeGraph:
@@ -132,6 +133,75 @@ class KnowledgeGraph:
                 ]
                 out.append({**fdata, "node_id": fact_id, "citations": sorted(set(citations))})
         return out
+
+    # -- drug-drug interaction enrichment ---------------------------------
+    def enrich_drug_interactions(self) -> int:
+        """Add ``INTERACTS_WITH`` edges between RxNorm ``Concept`` nodes.
+
+        Uses the reference DDI table; only pairs where both concepts already
+        exist in the graph are linked. Returns the number of edges added.
+        """
+        rx_concepts = {
+            data["code"]: n
+            for n, data in self.g.nodes(data=True)
+            if data["ntype"] == "Concept" and data.get("system") == "RxNorm"
+        }
+        added = 0
+        for ddi in _interactions.all_interactions():
+            a, b = rx_concepts.get(ddi.rxnorm_a), rx_concepts.get(ddi.rxnorm_b)
+            if not a or not b:
+                continue
+            if not self.g.has_edge(a, b, key="INTERACTS_WITH"):
+                self.g.add_edge(
+                    a, b, key="INTERACTS_WITH", rel="INTERACTS_WITH",
+                    severity=ddi.severity, description=ddi.description, source=ddi.source,
+                )
+                added += 1
+        return added
+
+    def patient_interactions(self, patient_id: str) -> list[dict]:
+        """Flag drug-drug interactions among a patient's affirmed medications.
+
+        Each flag carries the interaction severity/description plus the source
+        citations of BOTH medication facts, preserving provenance.
+        """
+        pid = f"patient:{patient_id}"
+        if pid not in self.g:
+            return []
+
+        meds: list[dict] = []
+        for _, fact_id, ed in self.g.out_edges(pid, data=True):
+            fdata = self.g.nodes[fact_id]
+            if (
+                fdata["ntype"] == "Medication"
+                and fdata.get("system") == "RxNorm"
+                and fdata.get("negation") == AFFIRMED
+            ):
+                citations = [
+                    self.g.nodes[s]["citation"]
+                    for _, s, e in self.g.out_edges(fact_id, data=True)
+                    if self.g.nodes[s]["ntype"] == "Span" and e["rel"] == "EVIDENCED_BY"
+                ]
+                meds.append({"code": fdata["code"], "display": fdata["display"],
+                             "citations": sorted(set(citations))})
+
+        flags: list[dict] = []
+        for i in range(len(meds)):
+            for j in range(i + 1, len(meds)):
+                ddi = _interactions.interaction_for(meds[i]["code"], meds[j]["code"])
+                if ddi is None:
+                    continue
+                flags.append({
+                    "patient_id": patient_id,
+                    "drug_a": meds[i]["display"],
+                    "drug_b": meds[j]["display"],
+                    "severity": ddi.severity,
+                    "description": ddi.description,
+                    "source": ddi.source,
+                    "citations": sorted(set(meds[i]["citations"] + meds[j]["citations"])),
+                })
+        flags.sort(key=lambda f: _interactions.SEVERITY_RANK.get(f["severity"], 0), reverse=True)
+        return flags
 
     def cytoscape(self, patient_id: str | None = None) -> dict:
         """Export nodes/edges for the UI graph viewer."""

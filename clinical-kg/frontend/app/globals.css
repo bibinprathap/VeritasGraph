@@ -253,6 +253,24 @@ button.ghost {
   border: 1px solid var(--red);
 }
 
+.badge.contraindicated {
+  background: #3a1516;
+  color: var(--red);
+  border: 1px solid var(--red);
+}
+.badge.major {
+  background: #3a1516;
+  color: var(--red);
+}
+.badge.moderate {
+  background: #3a2f10;
+  color: var(--amber);
+}
+.badge.minor {
+  background: #14233d;
+  color: #7fb2ff;
+}
+
 .match {
   border: 1px solid var(--border);
   border-radius: 12px;

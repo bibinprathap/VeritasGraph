@@ -38,6 +38,16 @@ export type GraphData = {
   edges: { data: { source: string; target: string; rel: string } }[];
 };
 
+export type Interaction = {
+  patient_id: string;
+  drug_a: string;
+  drug_b: string;
+  severity: string;
+  description: string;
+  source: string;
+  citations: string[];
+};
+
 async function j<T>(url: string, init?: RequestInit): Promise<T> {
   const res = await fetch(url, {
     headers: { "Content-Type": "application/json" },
@@ -75,6 +85,10 @@ export const api = {
   graph: (patientId?: string) =>
     j<GraphData>(
       "/api/graph" + (patientId ? `?patient_id=${patientId}` : "")
+    ),
+  interactions: (patientId?: string) =>
+    j<{ patient_id: string | null; count: number; interactions: Interaction[] }>(
+      "/api/interactions" + (patientId ? `?patient_id=${patientId}` : "")
     ),
   kAnonymity: (records: any[], quasi: string[], targetK: number) =>
     j<any>("/api/risk/k-anonymity", {

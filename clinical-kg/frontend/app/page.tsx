@@ -1,10 +1,17 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { api, Assertion, Fact, GraphData, Match } from "./lib/api";
+import { api, Assertion, Fact, GraphData, Interaction, Match } from "./lib/api";
 import GraphView from "./components/GraphView";
 
-type Tab = "query" | "ingest" | "patients" | "contradictions" | "graph" | "risk";
+type Tab =
+  | "query"
+  | "ingest"
+  | "patients"
+  | "contradictions"
+  | "interactions"
+  | "graph"
+  | "risk";
 
 const EXAMPLE_QUERIES = [
   "List patients with T2DM taking metformin whose most recent eGFR < 30",
@@ -136,6 +143,7 @@ export default function Page() {
             ["ingest", "Ingest Note"],
             ["patients", "Patients"],
             ["contradictions", "Contradictions"],
+            ["interactions", "Drug Interactions"],
             ["graph", "Graph"],
             ["risk", "Re-ID Risk"],
           ] as [Tab, string][]
@@ -154,6 +162,7 @@ export default function Page() {
       {tab === "ingest" && <IngestTab onDone={refreshHealth} />}
       {tab === "patients" && <PatientsTab />}
       {tab === "contradictions" && <ContradictionsTab />}
+      {tab === "interactions" && <InteractionsTab />}
       {tab === "graph" && <GraphTab />}
       {tab === "risk" && <RiskTab />}
     </div>
@@ -480,6 +489,54 @@ function ContradictionsTab() {
               ))}
             </tbody>
           </table>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function InteractionsTab() {
+  const [data, setData] = useState<Interaction[]>([]);
+  const [err, setErr] = useState<string | null>(null);
+
+  useEffect(() => {
+    api
+      .interactions()
+      .then((r) => setData(r.interactions))
+      .catch((e) => setErr(e.message));
+  }, []);
+
+  if (err) return <div className="card">Error: {err}</div>;
+
+  return (
+    <div className="card">
+      <h2>Drug–drug interactions</h2>
+      <p className="sub">
+        Interactions flagged among each patient&apos;s affirmed medications, keyed
+        on RxNorm and enriched from a DrugBank/SIDER-shaped reference layer. Every
+        flag carries the source citations of both medications for review.
+      </p>
+      {!data.length && (
+        <p className="muted">
+          No interactions found. Load sample notes or ingest data first.
+        </p>
+      )}
+      {data.map((f, i) => (
+        <div className="match" key={i}>
+          <h3>
+            Patient {f.patient_id} · {f.drug_a} + {f.drug_b}{" "}
+            <span className={`badge ${f.severity}`}>{f.severity}</span>
+          </h3>
+          <p className="muted" style={{ margin: "4px 0" }}>
+            {f.description}
+          </p>
+          <div className="row" style={{ marginTop: 6 }}>
+            <span className="muted">Evidence:</span>
+            <Citations items={f.citations} />
+            <span className="muted" style={{ marginLeft: 8 }}>
+              source: {f.source}
+            </span>
+          </div>
         </div>
       ))}
     </div>
