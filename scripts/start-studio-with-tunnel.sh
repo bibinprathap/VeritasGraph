@@ -24,11 +24,6 @@ if [ -f "$ENV_FILE" ]; then
     export $(grep -E '^GITHUB_TOKEN=' "$ENV_FILE" | xargs) || true
 fi
 
-if [ -z "${GITHUB_TOKEN:-}" ]; then
-    echo "ERROR: GITHUB_TOKEN is not set. Add it to .env: GITHUB_TOKEN=your_token"
-    exit 1
-fi
-
 GITHUB_REPO="bibinprathap/VeritasGraph"
 REDIRECT_FILE_PATH="docs/studio/index.html"
 
@@ -43,6 +38,14 @@ export STUDIO_DATA_DIR="${STUDIO_DATA_DIR:-$REPO_DIR/studio_api/data}"
 export STUDIO_EVAL_STEP_SECONDS="${STUDIO_EVAL_STEP_SECONDS:-2}"
 export STUDIO_FT_STEP_SECONDS="${STUDIO_FT_STEP_SECONDS:-3}"
 
+# Keep only one instance active (common on reboot + manual start overlap).
+LOCK_FILE="/tmp/veritasgraph-studio-tunnel.lock"
+exec 9>"$LOCK_FILE"
+if ! flock -n 9; then
+    echo "Another start-studio-with-tunnel instance is already running. Exiting."
+    exit 0
+fi
+
 # =============================================================================
 # DO NOT EDIT BELOW THIS LINE
 # =============================================================================
@@ -51,6 +54,24 @@ RED='\033[0;31m'; GREEN='\033[0;32m'; YELLOW='\033[1;33m'; CYAN='\033[0;36m'; NC
 log()   { echo -e "${GREEN}[$(date '+%Y-%m-%d %H:%M:%S')]${NC} $1"        | tee -a "$LOG_FILE"; }
 warn()  { echo -e "${YELLOW}[$(date '+%Y-%m-%d %H:%M:%S')] WARN:${NC} $1" | tee -a "$LOG_FILE"; }
 error() { echo -e "${RED}[$(date '+%Y-%m-%d %H:%M:%S')] ERROR:${NC} $1"   | tee -a "$LOG_FILE"; }
+
+require_cmd() {
+    local cmd="$1"
+    if ! command -v "$cmd" >/dev/null 2>&1; then
+        error "Missing required command: $cmd"
+        exit 1
+    fi
+}
+
+require_cmd git
+require_cmd curl
+require_cmd cloudflared
+require_cmd flock
+
+if [ ! -x "$UVICORN_BIN" ]; then
+    error "uvicorn not found or not executable: $UVICORN_BIN"
+    exit 1
+fi
 
 # Prefer explicit override, then origin default branch, then restored-main.
 resolve_publish_branch() {
@@ -75,16 +96,37 @@ resolve_publish_branch() {
 
 GITHUB_BRANCH="$(resolve_publish_branch)"
 
+resolve_push_remote() {
+    if [ -n "${GITHUB_TOKEN:-}" ]; then
+        echo "https://${GITHUB_TOKEN}@github.com/${GITHUB_REPO}.git"
+        return 0
+    fi
+
+    local origin_push
+    origin_push=$(git -C "$REPO_DIR" remote get-url --push origin 2>/dev/null || true)
+    if [ -n "$origin_push" ]; then
+        echo "[$(date '+%Y-%m-%d %H:%M:%S')] WARN: GITHUB_TOKEN is not set; using existing origin push credentials." | tee -a "$LOG_FILE" >&2
+        echo "$origin_push"
+        return 0
+    fi
+
+    echo "[$(date '+%Y-%m-%d %H:%M:%S')] WARN: GITHUB_TOKEN is not set and origin push URL is unavailable; redirect updates will be local only." | tee -a "$LOG_FILE" >&2
+    echo ""
+}
+
+PUSH_REMOTE="$(resolve_push_remote)"
+
 APP_PID=""
 TUNNEL_PID=""
 
 cleanup() {
+    local exit_code="${1:-0}"
     log "Shutting down..."
     [ -n "$TUNNEL_PID" ] && kill "$TUNNEL_PID" 2>/dev/null || true
     [ -n "$APP_PID" ]    && kill "$APP_PID"    2>/dev/null || true
-    exit 0
+    exit "$exit_code"
 }
-trap cleanup SIGINT SIGTERM
+trap 'cleanup 0' SIGINT SIGTERM
 
 # -----------------------------------------------------------------------------
 # Rewrite docs/studio/index.html and push it to GitHub
@@ -164,7 +206,10 @@ update_github_redirect() {
 HTMLEOF
 
     cd "$REPO_DIR"
-    local REMOTE_URL="https://${GITHUB_TOKEN}@github.com/${GITHUB_REPO}.git"
+    if [ -z "$PUSH_REMOTE" ]; then
+        warn "No usable push remote/auth configured. Skipping git push for this run."
+        return 0
+    fi
 
     if ! git config user.email > /dev/null 2>&1; then
         git config user.email "veritasgraph@localhost"
@@ -197,7 +242,7 @@ HTMLEOF
     # and surface any real error instead of swallowing it.
     local attempt push_output
     for attempt in 1 2; do
-        if push_output=$(git push "$REMOTE_URL" "HEAD:${GITHUB_BRANCH}" 2>&1); then
+        if push_output=$(git push "$PUSH_REMOTE" "HEAD:${GITHUB_BRANCH}" 2>&1); then
             log "${GREEN}✅ Studio redirect updated!${NC}"
             log "${CYAN}📍 Publish branch: ${GITHUB_BRANCH}${NC}"
             log "${CYAN}📍 Stable URL: https://bibinprathap.github.io/VeritasGraph/studio/${NC}"
@@ -232,11 +277,16 @@ main() {
 
     cd "$REPO_DIR"
 
-    log "Starting studio_api on ${STUDIO_HOST}:${STUDIO_PORT}..."
-    "$UVICORN_BIN" studio_api.main:app \
-        --host "$STUDIO_HOST" --port "$STUDIO_PORT" --log-level warning \
-        >> "$LOG_FILE" 2>&1 &
-    APP_PID=$!
+    if curl -fsS "http://${STUDIO_HOST}:${STUDIO_PORT}/health" >/dev/null 2>&1; then
+        log "studio_api already healthy on ${STUDIO_HOST}:${STUDIO_PORT}; reusing existing instance."
+        APP_PID=""
+    else
+        log "Starting studio_api on ${STUDIO_HOST}:${STUDIO_PORT}..."
+        "$UVICORN_BIN" studio_api.main:app \
+            --host "$STUDIO_HOST" --port "$STUDIO_PORT" --log-level warning \
+            >> "$LOG_FILE" 2>&1 &
+        APP_PID=$!
+    fi
 
     # Wait for the server to answer /health (up to ~30s)
     local ready=false
@@ -244,7 +294,7 @@ main() {
         if curl -fsS "http://${STUDIO_HOST}:${STUDIO_PORT}/health" >/dev/null 2>&1; then
             ready=true; break
         fi
-        if ! kill -0 "$APP_PID" 2>/dev/null; then
+        if [ -n "$APP_PID" ] && ! kill -0 "$APP_PID" 2>/dev/null; then
             error "studio_api exited during startup. See $LOG_FILE"
             exit 1
         fi
@@ -252,7 +302,7 @@ main() {
     done
     if [ "$ready" != true ]; then
         error "studio_api did not become healthy in time."
-        cleanup
+        cleanup 1
     fi
     log "✅ studio_api is healthy."
 
@@ -266,7 +316,8 @@ main() {
 
         if [ "$URL_FOUND" = false ] && echo "$clean_line" | grep -q "trycloudflare.com"; then
             local TUNNEL_URL
-            TUNNEL_URL=$(echo "$clean_line" | grep -oP 'https://[a-zA-Z0-9-]+\.trycloudflare\.com' | head -1 || true)
+            # Ignore API endpoint noise and capture only real quick tunnel hostnames.
+            TUNNEL_URL=$(echo "$clean_line" | grep -oP 'https://[a-zA-Z0-9]+-[a-zA-Z0-9-]+\.trycloudflare\.com' | head -1 || true)
             if [ -n "$TUNNEL_URL" ]; then
                 URL_FOUND=true
                 log "✅ Tunnel URL: $TUNNEL_URL"
@@ -280,7 +331,7 @@ main() {
     done < <(cloudflared tunnel --url "http://${STUDIO_HOST}:${STUDIO_PORT}" 2>&1)
 
     warn "Cloudflare tunnel exited. Stopping studio_api..."
-    cleanup
+    cleanup 1
 }
 
 main "$@"
