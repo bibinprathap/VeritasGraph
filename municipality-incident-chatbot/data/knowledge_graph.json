@@ -17,6 +17,15 @@
       "created_at": 1784607654.4822216,
       "source_type": "curated",
       "format": "generic"
+    },
+    "imp_26395552#0": {
+      "id": "imp_26395552#0",
+      "doc_id": "imp_26395552",
+      "title": "Department of Municipality KG",
+      "text": "Imported generic graph 'Department of Municipality KG' with 14 nodes and 10 edges.",
+      "created_at": 1785322395.7695627,
+      "source_type": "curated",
+      "format": "generic"
     }
   },
   "entities": {
@@ -27,7 +36,8 @@
       "description": "Garbage or waste overflowing from bins or dumped in public areas.",
       "sources": [
         "imp_1a92f554#0",
-        "imp_b6754be8#0"
+        "imp_b6754be8#0",
+        "imp_26395552#0"
       ],
       "source_type": "curated",
       "origin": {
@@ -64,7 +74,8 @@
       "description": "A vehicle left unattended, wrecked, or dumped on public land.",
       "sources": [
         "imp_1a92f554#0",
-        "imp_b6754be8#0"
+        "imp_b6754be8#0",
+        "imp_26395552#0"
       ],
       "source_type": "curated",
       "origin": {
@@ -96,7 +107,8 @@
       "description": "Dangerous overcrowding or unauthorised mass gathering in a public space.",
       "sources": [
         "imp_1a92f554#0",
-        "imp_b6754be8#0"
+        "imp_b6754be8#0",
+        "imp_26395552#0"
       ],
       "source_type": "curated",
       "origin": {
@@ -127,7 +139,8 @@
       "description": "A vehicle parked illegally, blocking access, or in a no-parking zone.",
       "sources": [
         "imp_1a92f554#0",
-        "imp_b6754be8#0"
+        "imp_b6754be8#0",
+        "imp_26395552#0"
       ],
       "source_type": "curated",
       "origin": {
@@ -161,7 +174,8 @@
       "description": "Responsible for waste collection and public cleanliness.",
       "sources": [
         "imp_1a92f554#0",
-        "imp_b6754be8#0"
+        "imp_b6754be8#0",
+        "imp_26395552#0"
       ],
       "source_type": "curated",
       "origin": {
@@ -179,7 +193,8 @@
       "description": "Responsible for vehicle removal and roadworthiness.",
       "sources": [
         "imp_1a92f554#0",
-        "imp_b6754be8#0"
+        "imp_b6754be8#0",
+        "imp_26395552#0"
       ],
       "source_type": "curated",
       "origin": {
@@ -197,7 +212,8 @@
       "description": "Responsible for crowd control and public safety.",
       "sources": [
         "imp_1a92f554#0",
-        "imp_b6754be8#0"
+        "imp_b6754be8#0",
+        "imp_26395552#0"
       ],
       "source_type": "curated",
       "origin": {
@@ -215,7 +231,8 @@
       "description": "Responsible for enforcing parking and traffic rules.",
       "sources": [
         "imp_1a92f554#0",
-        "imp_b6754be8#0"
+        "imp_b6754be8#0",
+        "imp_26395552#0"
       ],
       "source_type": "curated",
       "origin": {
@@ -233,7 +250,8 @@
       "description": "Waste must be cleared within 24 hours.",
       "sources": [
         "imp_1a92f554#0",
-        "imp_b6754be8#0"
+        "imp_b6754be8#0",
+        "imp_26395552#0"
       ],
       "source_type": "curated",
       "origin": {
@@ -252,7 +270,8 @@
       "description": "Vehicle must be assessed and towed within 72 hours.",
       "sources": [
         "imp_1a92f554#0",
-        "imp_b6754be8#0"
+        "imp_b6754be8#0",
+        "imp_26395552#0"
       ],
       "source_type": "curated",
       "origin": {
@@ -271,7 +290,8 @@
       "description": "Crowd situations must be attended within 6 hours.",
       "sources": [
         "imp_1a92f554#0",
-        "imp_b6754be8#0"
+        "imp_b6754be8#0",
+        "imp_26395552#0"
       ],
       "source_type": "curated",
       "origin": {
@@ -290,7 +310,8 @@
       "description": "Illegal parking must be actioned within 12 hours.",
       "sources": [
         "imp_1a92f554#0",
-        "imp_b6754be8#0"
+        "imp_b6754be8#0",
+        "imp_26395552#0"
       ],
       "source_type": "curated",
       "origin": {
@@ -309,7 +330,8 @@
       "description": "Public bins must not overflow; overflow is a sanitation violation.",
       "sources": [
         "imp_1a92f554#0",
-        "imp_b6754be8#0"
+        "imp_b6754be8#0",
+        "imp_26395552#0"
       ],
       "source_type": "curated",
       "origin": {
@@ -324,7 +346,8 @@
       "description": "Parking is prohibited in marked no-parking and emergency zones.",
       "sources": [
         "imp_1a92f554#0",
-        "imp_b6754be8#0"
+        "imp_b6754be8#0",
+        "imp_26395552#0"
       ],
       "source_type": "curated",
       "origin": {
@@ -341,7 +364,8 @@
       "description": "responsible_for",
       "sources": [
         "imp_1a92f554#0",
-        "imp_b6754be8#0"
+        "imp_b6754be8#0",
+        "imp_26395552#0"
       ],
       "source_type": "curated",
       "origin": {
@@ -355,7 +379,8 @@
       "description": "responsible_for",
       "sources": [
         "imp_1a92f554#0",
-        "imp_b6754be8#0"
+        "imp_b6754be8#0",
+        "imp_26395552#0"
       ],
       "source_type": "curated",
       "origin": {
@@ -369,7 +394,8 @@
       "description": "responsible_for",
       "sources": [
         "imp_1a92f554#0",
-        "imp_b6754be8#0"
+        "imp_b6754be8#0",
+        "imp_26395552#0"
       ],
       "source_type": "curated",
       "origin": {
@@ -383,7 +409,8 @@
       "description": "responsible_for",
       "sources": [
         "imp_1a92f554#0",
-        "imp_b6754be8#0"
+        "imp_b6754be8#0",
+        "imp_26395552#0"
       ],
       "source_type": "curated",
       "origin": {
@@ -397,7 +424,8 @@
       "description": "has_sla",
       "sources": [
         "imp_1a92f554#0",
-        "imp_b6754be8#0"
+        "imp_b6754be8#0",
+        "imp_26395552#0"
       ],
       "source_type": "curated",
       "origin": {
@@ -411,7 +439,8 @@
       "description": "has_sla",
       "sources": [
         "imp_1a92f554#0",
-        "imp_b6754be8#0"
+        "imp_b6754be8#0",
+        "imp_26395552#0"
       ],
       "source_type": "curated",
       "origin": {
@@ -425,7 +454,8 @@
       "description": "has_sla",
       "sources": [
         "imp_1a92f554#0",
-        "imp_b6754be8#0"
+        "imp_b6754be8#0",
+        "imp_26395552#0"
       ],
       "source_type": "curated",
       "origin": {
@@ -439,7 +469,8 @@
       "description": "has_sla",
       "sources": [
         "imp_1a92f554#0",
-        "imp_b6754be8#0"
+        "imp_b6754be8#0",
+        "imp_26395552#0"
       ],
       "source_type": "curated",
       "origin": {
@@ -453,7 +484,8 @@
       "description": "governed_by",
       "sources": [
         "imp_1a92f554#0",
-        "imp_b6754be8#0"
+        "imp_b6754be8#0",
+        "imp_26395552#0"
       ],
       "source_type": "curated",
       "origin": {
@@ -467,7 +499,8 @@
       "description": "governed_by",
       "sources": [
         "imp_1a92f554#0",
-        "imp_b6754be8#0"
+        "imp_b6754be8#0",
+        "imp_26395552#0"
       ],
       "source_type": "curated",
       "origin": {
