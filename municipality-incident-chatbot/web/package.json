@@ -1,0 +1,20 @@
+{
+  "name": "municipality-incident-chatbot-web",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Next.js UI for the Municipality Incident Reporting Chatbot (VeritasGraph).",
+  "scripts": {
+    "dev": "next dev -p 3000",
+    "build": "next build",
+    "start": "next start -p 3000",
+    "test:e2e": "playwright test"
+  },
+  "dependencies": {
+    "next": "16.2.10",
+    "react": "19.0.0",
+    "react-dom": "19.0.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.56.1"
+  }
+}

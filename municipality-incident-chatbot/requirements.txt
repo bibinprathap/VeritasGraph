@@ -1,0 +1,27 @@
+# Municipality Incident Reporting Chatbot — runtime dependencies
+#
+# Install everything with:
+#     pip install -r requirements.txt
+#
+# NOTE: the knowledge-graph engine (`studio_api.graphrag_engine`) is BUNDLED
+# with this project in the local `studio_api/` folder, so there is nothing else
+# to install for it — it only needs `httpx` (below). Do NOT `pip install
+# veritasgraph` (a different, unrelated project) — it does not contain
+# `studio_api` and causes: ModuleNotFoundError: No module named 'studio_api'.
+
+# --- Core runtime (also powers the bundled studio_api engine) ----------------
+httpx>=0.27
+pillow>=10.0            # EXIF/GPS extraction from uploaded photos
+
+# --- Web API (api.py) --------------------------------------------------------
+fastapi>=0.110
+uvicorn[standard]>=0.29
+python-multipart>=0.0.9  # required by FastAPI for multipart Form/File uploads
+
+# --- Optional: real computer vision (opt-in with MUNI_CV_BACKEND=yolo) -------
+# The system runs fully offline with the built-in simulated CV backend.
+# Install this only to enable real YOLO object detection:
+# ultralytics>=8.2       # YOLOv8/v11 detector (also pulls torch)
+
+# --- Dev / test --------------------------------------------------------------
+pytest>=8.0
