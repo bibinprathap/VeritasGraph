@@ -108,6 +108,33 @@ See [`studio_api/README.md`](studio_api/README.md) for API and architecture, and
 
 </details>
 
+### 📋 Examples
+
+Ready-to-run scripts that exercise the full Studio pipeline — no extra dependencies beyond stdlib `urllib`.
+
+| Example | What it demonstrates |
+|---------|---------------------|
+| [`sample_pipeline.py`](demos/agent-studio/sample_pipeline.py) | **End-to-end governed agent** — ingests a company brief → builds a knowledge graph → multi-hop Q&A with citations → memory recall → PII redaction → guardrail block → prints audit log. |
+| [`sample_tools_explorer.py`](demos/agent-studio/sample_tools_explorer.py) | **Tool catalog seeder** — registers 17 tools (search, code runner, Slack, Teams, email, docs, etc.) and creates sample explorer agents wired to them. Idempotent. |
+
+**Quick run** (requires a running Studio server + Ollama):
+
+```bash
+# 1. Start Studio
+STUDIO_DATA_DIR="$PWD/studio_api/data" \
+  uvicorn studio_api.main:app --host 127.0.0.1 --port 8200 --log-level warning
+
+# 2. Run the end-to-end pipeline demo
+python3 demos/agent-studio/sample_pipeline.py --model qwen3:latest
+
+# 3. Seed the tools catalog with sample agents
+python3 demos/agent-studio/sample_tools_explorer.py
+```
+
+**Enterprise scenario** — follow the [Northwind Bank compliance test playbook](docs/STUDIO_ENTERPRISE_TEST.md) for a guided walkthrough of every Studio section using realistic financial-services data (SoD policy violations, audit trails, PII handling).
+
+For API-level examples and curl recipes, see [`studio_api/README.md`](studio_api/README.md).
+
 ---
 
 ## 🌳 + 🔗 Graph + Tree: the ultimate retrieval
