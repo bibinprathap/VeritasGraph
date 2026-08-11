@@ -1,0 +1,10 @@
+[project]
+name = "clinical-kg"
+version = "0.1.0"
+description = "HIPAA-Safe Clinical Knowledge Graph (VeritasGraph use case 1)"
+requires-python = ">=3.10"
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]
+addopts = "-q"

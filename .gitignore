@@ -62,4 +62,5 @@ submission/veritasgraph_rag/veritasgraph_rag/__pycache__/*
 submission/veritasgraph_rag/output/*
 docs/MEDICAL_AI_KG_USECASES.md
 clinical-kg/*
+clinical-kg/marketing/*
 municipality-incident-chatbot/*
