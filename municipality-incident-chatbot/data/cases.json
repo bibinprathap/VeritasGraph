@@ -1,0 +1,131 @@
+[
+  {
+    "id": "MUN-2026-000001",
+    "incident_code": "abandoned_vehicle",
+    "department": "Transport Department",
+    "location": {
+      "zone": "downtown"
+    },
+    "location_key": "downtown",
+    "status": "NEEDS_REVIEW",
+    "validation_score": 0.7198,
+    "evidence": {
+      "detections": [
+        {
+          "label": "car",
+          "confidence": 0.9,
+          "bbox": [
+            0,
+            0,
+            100,
+            100
+          ]
+        }
+      ],
+      "vlm_confidence": 0.915,
+      "signals": {
+        "citizen_photo_cv": 0.9,
+        "vlm_verify": 0.915,
+        "cctv_cv": 0.87,
+        "sensor_telemetry": 0.0,
+        "location_match": 0.5
+      },
+      "corroboration": [
+        "CCTV frame near downtown corroborates the report (0.87)."
+      ],
+      "location": {
+        "zone": "downtown"
+      }
+    },
+    "reporter": {
+      "name": "Sara Ali"
+    },
+    "created_at": 1784607666.839667
+  },
+  {
+    "id": "MUN-2026-000002",
+    "incident_code": "trash_overflow",
+    "department": "Sanitation Department",
+    "location": {
+      "zone": "downtown",
+      "lat": 24.460748,
+      "lon": 54.380076
+    },
+    "location_key": "24.461,54.38",
+    "status": "NEEDS_REVIEW",
+    "validation_score": 0.4915,
+    "evidence": {
+      "detections": [],
+      "vlm_confidence": 0.2,
+      "signals": {
+        "citizen_photo_cv": 0.0,
+        "vlm_verify": 0.2,
+        "cctv_cv": 0.87,
+        "sensor_telemetry": 0.96,
+        "location_match": 1.0
+      },
+      "corroboration": [
+        "CCTV frame near downtown corroborates the report (0.87).",
+        "Bin fill-level sensor reads 96%."
+      ],
+      "location": {
+        "zone": "downtown",
+        "lat": 24.460748,
+        "lon": 54.380076
+      }
+    },
+    "reporter": {
+      "name": "sijo",
+      "phone": "04522"
+    },
+    "created_at": 1784607752.8413367
+  },
+  {
+    "id": "MUN-2026-000003",
+    "incident_code": "abandoned_vehicle",
+    "department": "Transport Department",
+    "location": {
+      "zone": "downtown",
+      "lat": 24.460748,
+      "lon": 54.380076
+    },
+    "location_key": "24.461,54.38",
+    "status": "AUTO_VALIDATED",
+    "validation_score": 0.7698,
+    "evidence": {
+      "detections": [
+        {
+          "label": "car",
+          "confidence": 0.9,
+          "bbox": [
+            0,
+            0,
+            100,
+            100
+          ]
+        }
+      ],
+      "vlm_confidence": 0.915,
+      "signals": {
+        "citizen_photo_cv": 0.9,
+        "vlm_verify": 0.915,
+        "cctv_cv": 0.87,
+        "sensor_telemetry": 0.0,
+        "location_match": 1.0
+      },
+      "corroboration": [
+        "CCTV frame near downtown corroborates the report (0.87)."
+      ],
+      "location": {
+        "zone": "downtown",
+        "lat": 24.460748,
+        "lon": 54.380076
+      }
+    },
+    "reporter": {
+      "name": "sijo john",
+      "phone": "045220001122"
+    },
+    "created_at": 1784607821.9492385
+  }
+]

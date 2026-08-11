@@ -1,0 +1,511 @@
+{
+  "sources": {
+    "imp_1a92f554#0": {
+      "id": "imp_1a92f554#0",
+      "doc_id": "imp_1a92f554",
+      "title": "Department of Municipality KG",
+      "text": "Imported generic graph 'Department of Municipality KG' with 14 nodes and 10 edges.",
+      "created_at": 1784604945.2334456,
+      "source_type": "curated",
+      "format": "generic"
+    },
+    "imp_b6754be8#0": {
+      "id": "imp_b6754be8#0",
+      "doc_id": "imp_b6754be8",
+      "title": "Department of Municipality KG",
+      "text": "Imported generic graph 'Department of Municipality KG' with 14 nodes and 10 edges.",
+      "created_at": 1784607654.4822216,
+      "source_type": "curated",
+      "format": "generic"
+    },
+    "imp_26395552#0": {
+      "id": "imp_26395552#0",
+      "doc_id": "imp_26395552",
+      "title": "Department of Municipality KG",
+      "text": "Imported generic graph 'Department of Municipality KG' with 14 nodes and 10 edges.",
+      "created_at": 1785322395.7695627,
+      "source_type": "curated",
+      "format": "generic"
+    }
+  },
+  "entities": {
+    "ent_0cdce6e1": {
+      "id": "ent_0cdce6e1",
+      "name": "Trash Overflow",
+      "type": "incident_type",
+      "description": "Garbage or waste overflowing from bins or dumped in public areas.",
+      "sources": [
+        "imp_1a92f554#0",
+        "imp_b6754be8#0",
+        "imp_26395552#0"
+      ],
+      "source_type": "curated",
+      "origin": {
+        "format": "generic",
+        "origin_id": "trash_overflow",
+        "meta": {
+          "aliases": [
+            "trash",
+            "garbage",
+            "waste",
+            "rubbish",
+            "litter",
+            "overflow",
+            "dump",
+            "dumping",
+            "bin",
+            "dustbin",
+            "smell"
+          ],
+          "cv_labels": [
+            "garbage",
+            "trash_bag",
+            "overflowing_bin",
+            "waste_pile"
+          ],
+          "min_confidence": 0.55
+        }
+      }
+    },
+    "ent_42651f3d": {
+      "id": "ent_42651f3d",
+      "name": "Abandoned Vehicle",
+      "type": "incident_type",
+      "description": "A vehicle left unattended, wrecked, or dumped on public land.",
+      "sources": [
+        "imp_1a92f554#0",
+        "imp_b6754be8#0",
+        "imp_26395552#0"
+      ],
+      "source_type": "curated",
+      "origin": {
+        "format": "generic",
+        "origin_id": "abandoned_vehicle",
+        "meta": {
+          "aliases": [
+            "abandoned",
+            "abandoned vehicle",
+            "dumped car",
+            "scrap car",
+            "wreck",
+            "junk car",
+            "unattended vehicle"
+          ],
+          "cv_labels": [
+            "car",
+            "truck",
+            "bus"
+          ],
+          "min_confidence": 0.6
+        }
+      }
+    },
+    "ent_7d7bad4b": {
+      "id": "ent_7d7bad4b",
+      "name": "Overcrowding",
+      "type": "incident_type",
+      "description": "Dangerous overcrowding or unauthorised mass gathering in a public space.",
+      "sources": [
+        "imp_1a92f554#0",
+        "imp_b6754be8#0",
+        "imp_26395552#0"
+      ],
+      "source_type": "curated",
+      "origin": {
+        "format": "generic",
+        "origin_id": "overcrowding",
+        "meta": {
+          "aliases": [
+            "crowd",
+            "overcrowd",
+            "overcrowding",
+            "gathering",
+            "too many people",
+            "stampede",
+            "mass gathering"
+          ],
+          "cv_labels": [
+            "person",
+            "crowd"
+          ],
+          "min_confidence": 0.5
+        }
+      }
+    },
+    "ent_11d45851": {
+      "id": "ent_11d45851",
+      "name": "Illegal Parking",
+      "type": "incident_type",
+      "description": "A vehicle parked illegally, blocking access, or in a no-parking zone.",
+      "sources": [
+        "imp_1a92f554#0",
+        "imp_b6754be8#0",
+        "imp_26395552#0"
+      ],
+      "source_type": "curated",
+      "origin": {
+        "format": "generic",
+        "origin_id": "illegal_parking",
+        "meta": {
+          "aliases": [
+            "illegal parking",
+            "no parking",
+            "blocking",
+            "double park",
+            "double parking",
+            "parked illegally",
+            "wrong parking",
+            "blocked road",
+            "obstruction"
+          ],
+          "cv_labels": [
+            "car",
+            "truck",
+            "motorcycle"
+          ],
+          "min_confidence": 0.6
+        }
+      }
+    },
+    "ent_cd9e9ee4": {
+      "id": "ent_cd9e9ee4",
+      "name": "Sanitation Department",
+      "type": "department",
+      "description": "Responsible for waste collection and public cleanliness.",
+      "sources": [
+        "imp_1a92f554#0",
+        "imp_b6754be8#0",
+        "imp_26395552#0"
+      ],
+      "source_type": "curated",
+      "origin": {
+        "format": "generic",
+        "origin_id": "dept_sanitation",
+        "meta": {
+          "contact": "sanitation@municipality.gov"
+        }
+      }
+    },
+    "ent_fe39dfa3": {
+      "id": "ent_fe39dfa3",
+      "name": "Transport Department",
+      "type": "department",
+      "description": "Responsible for vehicle removal and roadworthiness.",
+      "sources": [
+        "imp_1a92f554#0",
+        "imp_b6754be8#0",
+        "imp_26395552#0"
+      ],
+      "source_type": "curated",
+      "origin": {
+        "format": "generic",
+        "origin_id": "dept_transport",
+        "meta": {
+          "contact": "transport@municipality.gov"
+        }
+      }
+    },
+    "ent_d89c5c00": {
+      "id": "ent_d89c5c00",
+      "name": "Public Safety Department",
+      "type": "department",
+      "description": "Responsible for crowd control and public safety.",
+      "sources": [
+        "imp_1a92f554#0",
+        "imp_b6754be8#0",
+        "imp_26395552#0"
+      ],
+      "source_type": "curated",
+      "origin": {
+        "format": "generic",
+        "origin_id": "dept_public_safety",
+        "meta": {
+          "contact": "safety@municipality.gov"
+        }
+      }
+    },
+    "ent_79bc8251": {
+      "id": "ent_79bc8251",
+      "name": "Traffic Police",
+      "type": "department",
+      "description": "Responsible for enforcing parking and traffic rules.",
+      "sources": [
+        "imp_1a92f554#0",
+        "imp_b6754be8#0",
+        "imp_26395552#0"
+      ],
+      "source_type": "curated",
+      "origin": {
+        "format": "generic",
+        "origin_id": "dept_traffic",
+        "meta": {
+          "contact": "traffic@municipality.gov"
+        }
+      }
+    },
+    "ent_a608770d": {
+      "id": "ent_a608770d",
+      "name": "Trash Overflow SLA",
+      "type": "sla",
+      "description": "Waste must be cleared within 24 hours.",
+      "sources": [
+        "imp_1a92f554#0",
+        "imp_b6754be8#0",
+        "imp_26395552#0"
+      ],
+      "source_type": "curated",
+      "origin": {
+        "format": "generic",
+        "origin_id": "sla_trash",
+        "meta": {
+          "response_hours": 24,
+          "priority": "high"
+        }
+      }
+    },
+    "ent_94b324f6": {
+      "id": "ent_94b324f6",
+      "name": "Abandoned Vehicle SLA",
+      "type": "sla",
+      "description": "Vehicle must be assessed and towed within 72 hours.",
+      "sources": [
+        "imp_1a92f554#0",
+        "imp_b6754be8#0",
+        "imp_26395552#0"
+      ],
+      "source_type": "curated",
+      "origin": {
+        "format": "generic",
+        "origin_id": "sla_vehicle",
+        "meta": {
+          "response_hours": 72,
+          "priority": "medium"
+        }
+      }
+    },
+    "ent_1025c119": {
+      "id": "ent_1025c119",
+      "name": "Overcrowding SLA",
+      "type": "sla",
+      "description": "Crowd situations must be attended within 6 hours.",
+      "sources": [
+        "imp_1a92f554#0",
+        "imp_b6754be8#0",
+        "imp_26395552#0"
+      ],
+      "source_type": "curated",
+      "origin": {
+        "format": "generic",
+        "origin_id": "sla_crowd",
+        "meta": {
+          "response_hours": 6,
+          "priority": "high"
+        }
+      }
+    },
+    "ent_0df39d52": {
+      "id": "ent_0df39d52",
+      "name": "Illegal Parking SLA",
+      "type": "sla",
+      "description": "Illegal parking must be actioned within 12 hours.",
+      "sources": [
+        "imp_1a92f554#0",
+        "imp_b6754be8#0",
+        "imp_26395552#0"
+      ],
+      "source_type": "curated",
+      "origin": {
+        "format": "generic",
+        "origin_id": "sla_parking",
+        "meta": {
+          "response_hours": 12,
+          "priority": "medium"
+        }
+      }
+    },
+    "ent_f809990b": {
+      "id": "ent_f809990b",
+      "name": "Solid Waste Management Policy",
+      "type": "policy",
+      "description": "Public bins must not overflow; overflow is a sanitation violation.",
+      "sources": [
+        "imp_1a92f554#0",
+        "imp_b6754be8#0",
+        "imp_26395552#0"
+      ],
+      "source_type": "curated",
+      "origin": {
+        "format": "generic",
+        "origin_id": "policy_waste"
+      }
+    },
+    "ent_e19c963c": {
+      "id": "ent_e19c963c",
+      "name": "Municipal Parking Bylaw",
+      "type": "policy",
+      "description": "Parking is prohibited in marked no-parking and emergency zones.",
+      "sources": [
+        "imp_1a92f554#0",
+        "imp_b6754be8#0",
+        "imp_26395552#0"
+      ],
+      "source_type": "curated",
+      "origin": {
+        "format": "generic",
+        "origin_id": "policy_parking"
+      }
+    }
+  },
+  "relationships": {
+    "rel_fd58d29e": {
+      "id": "rel_fd58d29e",
+      "source": "ent_0cdce6e1",
+      "target": "ent_cd9e9ee4",
+      "description": "responsible_for",
+      "sources": [
+        "imp_1a92f554#0",
+        "imp_b6754be8#0",
+        "imp_26395552#0"
+      ],
+      "source_type": "curated",
+      "origin": {
+        "format": "generic"
+      }
+    },
+    "rel_408c4804": {
+      "id": "rel_408c4804",
+      "source": "ent_42651f3d",
+      "target": "ent_fe39dfa3",
+      "description": "responsible_for",
+      "sources": [
+        "imp_1a92f554#0",
+        "imp_b6754be8#0",
+        "imp_26395552#0"
+      ],
+      "source_type": "curated",
+      "origin": {
+        "format": "generic"
+      }
+    },
+    "rel_ae05a394": {
+      "id": "rel_ae05a394",
+      "source": "ent_7d7bad4b",
+      "target": "ent_d89c5c00",
+      "description": "responsible_for",
+      "sources": [
+        "imp_1a92f554#0",
+        "imp_b6754be8#0",
+        "imp_26395552#0"
+      ],
+      "source_type": "curated",
+      "origin": {
+        "format": "generic"
+      }
+    },
+    "rel_e9f57fd2": {
+      "id": "rel_e9f57fd2",
+      "source": "ent_11d45851",
+      "target": "ent_79bc8251",
+      "description": "responsible_for",
+      "sources": [
+        "imp_1a92f554#0",
+        "imp_b6754be8#0",
+        "imp_26395552#0"
+      ],
+      "source_type": "curated",
+      "origin": {
+        "format": "generic"
+      }
+    },
+    "rel_bc90641f": {
+      "id": "rel_bc90641f",
+      "source": "ent_0cdce6e1",
+      "target": "ent_a608770d",
+      "description": "has_sla",
+      "sources": [
+        "imp_1a92f554#0",
+        "imp_b6754be8#0",
+        "imp_26395552#0"
+      ],
+      "source_type": "curated",
+      "origin": {
+        "format": "generic"
+      }
+    },
+    "rel_c90dc499": {
+      "id": "rel_c90dc499",
+      "source": "ent_42651f3d",
+      "target": "ent_94b324f6",
+      "description": "has_sla",
+      "sources": [
+        "imp_1a92f554#0",
+        "imp_b6754be8#0",
+        "imp_26395552#0"
+      ],
+      "source_type": "curated",
+      "origin": {
+        "format": "generic"
+      }
+    },
+    "rel_43ccfd6a": {
+      "id": "rel_43ccfd6a",
+      "source": "ent_7d7bad4b",
+      "target": "ent_1025c119",
+      "description": "has_sla",
+      "sources": [
+        "imp_1a92f554#0",
+        "imp_b6754be8#0",
+        "imp_26395552#0"
+      ],
+      "source_type": "curated",
+      "origin": {
+        "format": "generic"
+      }
+    },
+    "rel_118fc744": {
+      "id": "rel_118fc744",
+      "source": "ent_11d45851",
+      "target": "ent_0df39d52",
+      "description": "has_sla",
+      "sources": [
+        "imp_1a92f554#0",
+        "imp_b6754be8#0",
+        "imp_26395552#0"
+      ],
+      "source_type": "curated",
+      "origin": {
+        "format": "generic"
+      }
+    },
+    "rel_ae474d67": {
+      "id": "rel_ae474d67",
+      "source": "ent_0cdce6e1",
+      "target": "ent_f809990b",
+      "description": "governed_by",
+      "sources": [
+        "imp_1a92f554#0",
+        "imp_b6754be8#0",
+        "imp_26395552#0"
+      ],
+      "source_type": "curated",
+      "origin": {
+        "format": "generic"
+      }
+    },
+    "rel_ebedfdda": {
+      "id": "rel_ebedfdda",
+      "source": "ent_11d45851",
+      "target": "ent_e19c963c",
+      "description": "governed_by",
+      "sources": [
+        "imp_1a92f554#0",
+        "imp_b6754be8#0",
+        "imp_26395552#0"
+      ],
+      "source_type": "curated",
+      "origin": {
+        "format": "generic"
+      }
+    }
+  }
+}
