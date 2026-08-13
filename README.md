@@ -116,8 +116,10 @@ Ready-to-run scripts that exercise the full Studio pipeline — no extra depende
 |---------|---------------------|
 | [`sample_pipeline.py`](demos/agent-studio/sample_pipeline.py) | **End-to-end governed agent** — ingests a company brief → builds a knowledge graph → multi-hop Q&A with citations → memory recall → PII redaction → guardrail block → prints audit log. |
 | [`sample_tools_explorer.py`](demos/agent-studio/sample_tools_explorer.py) | **Tool catalog seeder** — registers 17 tools (search, code runner, Slack, Teams, email, docs, etc.) and creates sample explorer agents wired to them. Idempotent. |
+| [`clinical-kg/`](clinical-kg/) | **Medical AI — HIPAA-Safe Clinical Knowledge Graph** — de-identifies clinical notes (Safe Harbor), extracts entities with ConText axes, detects contradictions across notes, normalizes to ICD-10-CM / RxNorm / SNOMED CT / LOINC, and loads everything into a patient knowledge graph with span-level `[doc#chunk]` citations. Includes a FastAPI backend + Next.js dashboard. |
+| [`municipality-incident-chatbot/`](municipality-incident-chatbot/) | **DMT Inspection System** — citizen-facing chatbot for municipal incident reporting (trash overflow, abandoned vehicles, illegal parking, overcrowding). Accepts photos, validates complaints using computer vision (YOLO / VLM) cross-checked against location and CCTV feeds, routes via knowledge-graph grounded reasoning, and registers verified cases with confidence scores. |
 
-**Quick run** (requires a running Studio server + Ollama):
+**Quick run — Studio** (requires a running Studio server + Ollama):
 
 ```bash
 # 1. Start Studio
@@ -129,6 +131,27 @@ python3 demos/agent-studio/sample_pipeline.py --model qwen3:latest
 
 # 3. Seed the tools catalog with sample agents
 python3 demos/agent-studio/sample_tools_explorer.py
+```
+
+**Quick run — Medical AI** (clinical knowledge graph):
+
+```bash
+cd clinical-kg/backend
+pip install -r requirements.txt
+python run.py                         # API on :8300
+# Frontend (separate terminal):
+cd clinical-kg/frontend && npm install && npm run dev   # Dashboard on :3200
+```
+
+**Quick run — DMT Inspection Chatbot** (runs fully offline — no GPU needed):
+
+```bash
+cd municipality-incident-chatbot
+pip install -r requirements.txt
+python cli.py
+#   you> trash overflowing near the market | photo=garbage_overflow.jpg | zone=downtown
+# Or run the test suite:
+python -m pytest -q
 ```
 
 **Enterprise scenario** — follow the [Northwind Bank compliance test playbook](docs/STUDIO_ENTERPRISE_TEST.md) for a guided walkthrough of every Studio section using realistic financial-services data (SoD policy violations, audit trails, PII handling).
