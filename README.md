@@ -108,7 +108,7 @@ See [`studio_api/README.md`](studio_api/README.md) for API and architecture, and
 
 </details>
 
-### 📋 Examples
+### 📋 Studio Examples
 
 Ready-to-run scripts that exercise the full Studio pipeline — no extra dependencies beyond stdlib `urllib`.
 
@@ -116,47 +116,98 @@ Ready-to-run scripts that exercise the full Studio pipeline — no extra depende
 |---------|---------------------|
 | [`sample_pipeline.py`](demos/agent-studio/sample_pipeline.py) | **End-to-end governed agent** — ingests a company brief → builds a knowledge graph → multi-hop Q&A with citations → memory recall → PII redaction → guardrail block → prints audit log. |
 | [`sample_tools_explorer.py`](demos/agent-studio/sample_tools_explorer.py) | **Tool catalog seeder** — registers 17 tools (search, code runner, Slack, Teams, email, docs, etc.) and creates sample explorer agents wired to them. Idempotent. |
-| [`clinical-kg/`](clinical-kg/) | **Medical AI — HIPAA-Safe Clinical Knowledge Graph** — de-identifies clinical notes (Safe Harbor), extracts entities with ConText axes, detects contradictions across notes, normalizes to ICD-10-CM / RxNorm / SNOMED CT / LOINC, and loads everything into a patient knowledge graph with span-level `[doc#chunk]` citations. Includes a FastAPI backend + Next.js dashboard. |
-| [`municipality-incident-chatbot/`](municipality-incident-chatbot/) | **DMT Inspection System** — citizen-facing chatbot for municipal incident reporting (trash overflow, abandoned vehicles, illegal parking, overcrowding). Accepts photos, validates complaints using computer vision (YOLO / VLM) cross-checked against location and CCTV feeds, routes via knowledge-graph grounded reasoning, and registers verified cases with confidence scores. |
-
-**Quick run — Studio** (requires a running Studio server + Ollama):
 
 ```bash
-# 1. Start Studio
-STUDIO_DATA_DIR="$PWD/studio_api/data" \
-  uvicorn studio_api.main:app --host 127.0.0.1 --port 8200 --log-level warning
-
-# 2. Run the end-to-end pipeline demo
 python3 demos/agent-studio/sample_pipeline.py --model qwen3:latest
-
-# 3. Seed the tools catalog with sample agents
 python3 demos/agent-studio/sample_tools_explorer.py
 ```
 
-**Quick run — Medical AI** (clinical knowledge graph):
+**Enterprise scenario** — follow the [Northwind Bank compliance test playbook](docs/STUDIO_ENTERPRISE_TEST.md) for a guided walkthrough of every Studio section using realistic financial-services data.
+
+For API-level examples and curl recipes, see [`studio_api/README.md`](studio_api/README.md).
+
+</details>
+
+---
+
+## 📋 Examples — Real-World Applications
+
+VeritasGraph powers production-grade systems across healthcare and civic infrastructure. Each example is a standalone, runnable project built on the VeritasGraph engine.
+
+### 🏥 Medical AI — HIPAA-Safe Clinical Knowledge Graph
+
+> **[`clinical-kg/`](clinical-kg/)** — Turn unstructured clinical notes into a governed, citable knowledge graph — fully on-prem.
+
+A 7-step pipeline that processes clinical notes end-to-end:
+
+| Step | What it does |
+|------|--------------|
+| **De-identify** | Safe Harbor regex redaction with a sealed `SurrogateVault` for audited re-identification |
+| **Extract** | Section-aware NER, med-sig / lab-value parsing, ConText axes (negation, certainty, temporality, experiencer) |
+| **Reconcile** | Groups mentions by concept; detects contradictions across notes (e.g. *"no diabetes"* in HPI vs *"T2DM"* in problem list) |
+| **Normalize** | Maps mentions → coded concepts (ICD-10-CM, RxNorm, SNOMED CT, LOINC) |
+| **Knowledge Graph** | Patient / Encounter / Condition / Medication / LabResult nodes with `EVIDENCED_BY` provenance edges |
+| **Query** | NL → structured `CohortQuery` → multi-hop traversal with `[doc#chunk]` citations |
+| **Governance** | k-anonymity over released cohorts |
+
+**Run it:**
 
 ```bash
+# Backend (FastAPI on :8300)
 cd clinical-kg/backend
 pip install -r requirements.txt
-python run.py                         # API on :8300
-# Frontend (separate terminal):
-cd clinical-kg/frontend && npm install && npm run dev   # Dashboard on :3200
+python run.py
+
+# Frontend (Next.js dashboard on :3200)
+cd clinical-kg/frontend
+npm install && npm run dev
 ```
 
-**Quick run — DMT Inspection Chatbot** (runs fully offline — no GPU needed):
+```
+clinical-kg/
+├── backend/          FastAPI + pipeline (Python, no heavy model downloads)
+│   ├── clinical_kg/  deid → extract → reconcile → graph → query
+│   └── tests/        34 pytest tests
+└── frontend/         Next.js 14 dashboard
+```
+
+---
+
+### 🏛️ DMT Inspection System — Municipality Incident Reporting Chatbot
+
+> **[`municipality-incident-chatbot/`](municipality-incident-chatbot/)** — AI chatbot for citizens to report civic incidents, validated by computer vision and grounded by a knowledge graph.
+
+A citizen uploads a photo and describes an incident. The system:
+
+1. **Classifies** the complaint using knowledge-graph grounded multi-hop retrieval (incident types → departments → SLAs → policies)
+2. **Validates** the photo using computer vision (YOLO object detection / vision-language models)
+3. **Cross-checks** against location data, CCTV feeds, and prior reports
+4. **Fuses evidence** into a confidence score
+5. **Registers** a verified case routed to the correct municipal department
+
+**Supported incident types:** trash overflow · abandoned vehicles · overcrowding · illegal parking *(extensible)*
+
+**Run it** (fully offline — no GPU needed):
 
 ```bash
 cd municipality-incident-chatbot
 pip install -r requirements.txt
+
+# Interactive CLI
 python cli.py
 #   you> trash overflowing near the market | photo=garbage_overflow.jpg | zone=downtown
-# Or run the test suite:
+
+# Test suite
 python -m pytest -q
 ```
 
-**Enterprise scenario** — follow the [Northwind Bank compliance test playbook](docs/STUDIO_ENTERPRISE_TEST.md) for a guided walkthrough of every Studio section using realistic financial-services data (SoD policy violations, audit trails, PII handling).
-
-For API-level examples and curl recipes, see [`studio_api/README.md`](studio_api/README.md).
+| Component | File |
+|-----------|------|
+| Knowledge graph (grounding + routing) | [`app/knowledge_graph.py`](municipality-incident-chatbot/app/knowledge_graph.py) |
+| CV validation (YOLO + VLM) | [`app/cv_service.py`](municipality-incident-chatbot/app/cv_service.py) |
+| Evidence fusion & scoring | [`app/fusion.py`](municipality-incident-chatbot/app/fusion.py) |
+| Chatbot orchestrator | [`app/orchestrator.py`](municipality-incident-chatbot/app/orchestrator.py) |
+| Architecture & design docs | [`01_architecture.md`](municipality-incident-chatbot/01_architecture.md) |
 
 ---
 
