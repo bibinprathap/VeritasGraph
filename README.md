@@ -108,37 +108,21 @@ See [`studio_api/README.md`](studio_api/README.md) for API and architecture, and
 
 </details>
 
-### 📋 Studio Examples
+### 📋 Examples
 
-Ready-to-run scripts that exercise the full Studio pipeline — no extra dependencies beyond stdlib `urllib`.
+| # | Example | What it demonstrates | Run |
+|---|---------|---------------------|-----|
+| 1 | [`sample_pipeline.py`](demos/agent-studio/sample_pipeline.py) | **Studio agent pipeline** — ingests a company brief → builds KG → multi-hop Q&A with citations → memory recall → PII redaction → guardrail block → audit log. | `python3 demos/agent-studio/sample_pipeline.py` |
+| 2 | [`sample_tools_explorer.py`](demos/agent-studio/sample_tools_explorer.py) | **Tool catalog seeder** — registers 17 tools and creates sample explorer agents. Idempotent. | `python3 demos/agent-studio/sample_tools_explorer.py` |
+| 3 | [`clinical-kg/`](clinical-kg/) | **Medical AI — Clinical Knowledge Graph** — de-identifies notes (Safe Harbor), extracts entities, detects contradictions, normalizes to ICD-10/RxNorm/SNOMED/LOINC, builds patient KG with citations. | `cd clinical-kg/backend && python run.py` |
+| 4 | [`municipality-incident-chatbot/`](municipality-incident-chatbot/) | **DMT Inspection System** — citizen incident reporting with CV validation (YOLO/VLM), KG-grounded routing, evidence fusion, case registration. | `cd municipality-incident-chatbot && python cli.py` |
 
-| Example | What it demonstrates |
-|---------|---------------------|
-| [`sample_pipeline.py`](demos/agent-studio/sample_pipeline.py) | **End-to-end governed agent** — ingests a company brief → builds a knowledge graph → multi-hop Q&A with citations → memory recall → PII redaction → guardrail block → prints audit log. |
-| [`sample_tools_explorer.py`](demos/agent-studio/sample_tools_explorer.py) | **Tool catalog seeder** — registers 17 tools (search, code runner, Slack, Teams, email, docs, etc.) and creates sample explorer agents wired to them. Idempotent. |
+<details>
+<summary><b>🏥 Example 3 — Medical AI: HIPAA-Safe Clinical Knowledge Graph</b></summary>
 
-```bash
-python3 demos/agent-studio/sample_pipeline.py --model qwen3:latest
-python3 demos/agent-studio/sample_tools_explorer.py
-```
+> Turn unstructured clinical notes into a governed, citable knowledge graph — fully on-prem.
 
-**Enterprise scenario** — follow the [Northwind Bank compliance test playbook](docs/STUDIO_ENTERPRISE_TEST.md) for a guided walkthrough of every Studio section using realistic financial-services data.
-
-For API-level examples and curl recipes, see [`studio_api/README.md`](studio_api/README.md).
-
-</details>
-
----
-
-## 📋 Examples — Real-World Applications
-
-VeritasGraph powers production-grade systems across healthcare and civic infrastructure. Each example is a standalone, runnable project built on the VeritasGraph engine.
-
-### 🏥 Medical AI — HIPAA-Safe Clinical Knowledge Graph
-
-> **[`clinical-kg/`](clinical-kg/)** — Turn unstructured clinical notes into a governed, citable knowledge graph — fully on-prem.
-
-A 7-step pipeline that processes clinical notes end-to-end:
+**The 7-step pipeline:**
 
 | Step | What it does |
 |------|--------------|
@@ -149,8 +133,6 @@ A 7-step pipeline that processes clinical notes end-to-end:
 | **Knowledge Graph** | Patient / Encounter / Condition / Medication / LabResult nodes with `EVIDENCED_BY` provenance edges |
 | **Query** | NL → structured `CohortQuery` → multi-hop traversal with `[doc#chunk]` citations |
 | **Governance** | k-anonymity over released cohorts |
-
-**Run it:**
 
 ```bash
 # Backend (FastAPI on :8300)
@@ -163,31 +145,18 @@ cd clinical-kg/frontend
 npm install && npm run dev
 ```
 
-```
-clinical-kg/
-├── backend/          FastAPI + pipeline (Python, no heavy model downloads)
-│   ├── clinical_kg/  deid → extract → reconcile → graph → query
-│   └── tests/        34 pytest tests
-└── frontend/         Next.js 14 dashboard
-```
+Open **http://localhost:3200** → click **Load sample notes** → run queries. The UI has 6 tabs: Cohort Query, Ingest Note, Patients, Contradictions, Graph, Re-ID Risk.
 
----
+</details>
 
-### 🏛️ DMT Inspection System — Municipality Incident Reporting Chatbot
+<details>
+<summary><b>🏛️ Example 4 — DMT Inspection System: Municipality Incident Chatbot</b></summary>
 
-> **[`municipality-incident-chatbot/`](municipality-incident-chatbot/)** — AI chatbot for citizens to report civic incidents, validated by computer vision and grounded by a knowledge graph.
+> AI chatbot for citizens to report civic incidents, validated by computer vision and grounded by a knowledge graph.
 
-A citizen uploads a photo and describes an incident. The system:
+**Pipeline flow:** citizen photo + description → KG classification → CV validation (YOLO/VLM) → cross-check (CCTV, location, prior reports) → evidence fusion → case registration.
 
-1. **Classifies** the complaint using knowledge-graph grounded multi-hop retrieval (incident types → departments → SLAs → policies)
-2. **Validates** the photo using computer vision (YOLO object detection / vision-language models)
-3. **Cross-checks** against location data, CCTV feeds, and prior reports
-4. **Fuses evidence** into a confidence score
-5. **Registers** a verified case routed to the correct municipal department
-
-**Supported incident types:** trash overflow · abandoned vehicles · overcrowding · illegal parking *(extensible)*
-
-**Run it** (fully offline — no GPU needed):
+**Supported incidents:** trash overflow · abandoned vehicles · overcrowding · illegal parking *(extensible)*
 
 ```bash
 cd municipality-incident-chatbot
@@ -207,7 +176,15 @@ python -m pytest -q
 | CV validation (YOLO + VLM) | [`app/cv_service.py`](municipality-incident-chatbot/app/cv_service.py) |
 | Evidence fusion & scoring | [`app/fusion.py`](municipality-incident-chatbot/app/fusion.py) |
 | Chatbot orchestrator | [`app/orchestrator.py`](municipality-incident-chatbot/app/orchestrator.py) |
-| Architecture & design docs | [`01_architecture.md`](municipality-incident-chatbot/01_architecture.md) |
+| Architecture docs | [`01_architecture.md`](municipality-incident-chatbot/01_architecture.md) |
+
+</details>
+
+**Enterprise scenario** — follow the [Northwind Bank compliance test playbook](docs/STUDIO_ENTERPRISE_TEST.md) for a guided walkthrough using realistic financial-services data.
+
+For API-level examples and curl recipes, see [`studio_api/README.md`](studio_api/README.md).
+
+</details>
 
 ---
 
