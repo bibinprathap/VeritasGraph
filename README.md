@@ -521,7 +521,7 @@ Presented at the **International Conference on Applied Science and Future Techno
 
 ## Star History
 
-[![Star History Chart](https://api.star-history.com/svg?repos=bibinprathap/VeritasGraph&type=Date)](https://www.star-history.com/#bibinprathap/VeritasGraph&Date)
+[![Star History Chart](https://star-history.dera.page/svg?repos=bibinprathap/VeritasGraph&type=Date)](https://star-history.dera.page/#bibinprathap/VeritasGraph&Date)
 
 ---
 
