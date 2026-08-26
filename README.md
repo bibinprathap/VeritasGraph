@@ -246,6 +246,85 @@ python -m veritasgraph_mcp     # from repo root (needs local Ollama for ingest/q
 
 Tools: `veritasgraph_ingest_document`, `veritasgraph_query` (multi-hop answers with `[doc#chunk]` citations), `veritasgraph_search_entities`, `veritasgraph_get_graph`, `veritasgraph_clear_graph`. See [`veritasgraph_mcp/README.md`](veritasgraph_mcp/README.md) for IDE registration snippets.
 
+### 🏥 VeritasGraph-MCP Use Case — Production Medical AI on Azure
+
+**Real-world deployment:** VeritasGraph MCP server running on Azure Functions with Azure AI Foundry, delivering GraphRAG-powered clinical decision support with verifiable citations and compliance-ready architecture.
+
+<details>
+<summary><b>📖 Production deployment walkthrough</b></summary>
+
+**The Challenge:** 90% of Azure AI demos work. Most never ship. The gap isn't the model — it's architecture, security, state management, and compliance.
+
+**The Solution:** VeritasGraph deployed as a remote MCP server that Azure AI Foundry agents call to answer clinical questions with:
+- ✅ **Multi-hop GraphRAG reasoning** — assembles answers from separate graph edges
+- ✅ **Verifiable citations** — every claim traces to `[doc#chunk]` sources
+- ✅ **Production-grade architecture** — externalized state, identity at boundary, observability
+- ✅ **Compliance-ready** — region-pinned, PHI-aware guardrails, semantic-layer RBAC
+
+**Architecture highlights:**
+
+```
+Foundry Agent / MCP client
+   → Identity (Entra ID + function key)
+      → Azure Functions (Flex Consumption, 4 mcpToolTrigger tools)
+         → veritasgraph-mcp + graphrag_engine
+            → Azure OpenAI (extraction + reasoning)
+            → Knowledge Graph
+         → Durable Azure Files mount (externalized state)
+         → Storage + App Insights (observability)
+```
+
+**Key production lessons learned:**
+1. **State externalization** — Flex Consumption wiped in-memory graphs; fixed with mounted Azure Files share
+2. **Identity at boundary** — Carry Entra identity; enforce Power BI RLS / Dataverse roles on-behalf-of user
+3. **Self-correcting agents** — Feed errors + schema back; retry up to 3× (e.g., DAX generation)
+4. **Compliance by design** — Foundry guardrails block PHI-leaking requests before reaching the model
+5. **Observability layers** — Application Insights + Foundry Traces + Evaluations + Alerts
+
+**Example query flow:**
+```json
+{
+  "question": "Should we adjust warfarin for patient 4471 on amiodarone?",
+  "answer": "Reduce the warfarin dose because amiodarone inhibits CYP2C9...",
+  "citations": ["doc_warfarin_note#0", "doc_warfarin_note#1"],
+  "reasoning_path": ["Amiodarone → CYP2C9", "CYP2C9 → Warfarin", "Warfarin → Bleeding Risk"]
+}
+```
+
+**Technical stack:**
+- **Compute:** Azure Functions (Flex Consumption) — scales to zero, fast event-driven scale-out
+- **State:** Azure Files mount — survives cold starts and scale events
+- **Inference:** Azure OpenAI (gpt-4-turbo/gpt-5-mini, swappable)
+- **Identity:** Entra ID + function/system key
+- **Observability:** Application Insights + Foundry Traces
+- **Compliance:** Region-pinned deployments, PHI-aware guardrails, Key Vault secrets
+
+**Deployed systems:**
+1. **Medical MCP Server** — Clinical knowledge graph with multi-hop reasoning and `[doc#chunk]` citations
+2. **Power BI Natural-Language Agent** — Validates OAuth token → discovers schema → generates DAX → executes via `executeQueries` REST API with row-level security enforced by the platform
+
+[![Watch: VeritasGraph MCP on Azure AI Foundry](https://img.youtube.com/vi/z-CPS5WUvyw/maxresdefault.jpg)](https://youtu.be/z-CPS5WUvyw?si=LG5HVMsvcwTQsQCy)
+> ▶️ **[Watch the deployment walkthrough on YouTube](https://youtu.be/z-CPS5WUvyw?si=LG5HVMsvcwTQsQCy)**
+
+**Resources:**
+- 📄 **[Read the full guide: *From Proof of Concept to Production: Azure AI That Actually Ships*](https://bibinprathap.com/blog/azure-ai-proof-of-concept-to-production)** — Complete walkthrough covering architecture, deployment, GraphRAG reasoning, auditability, semantic-layer access control, resilience, observability, and compliance.
+- 💻 **[Azure AI Foundry + VeritasGraph Implementation Repository](https://github.com/bibinprathap/azure-ai-foundry-veritas-graph)** — Production deployment code, configuration, and examples.
+
+**Production-ready checklist:**
+- ✓ Grounded — answers cite your data (`[doc#chunk]`)
+- ✓ State externalized — no reliance on serverless memory
+- ✓ Identity at boundary — Entra + keys; on-behalf-of for data
+- ✓ Entitlements enforced — RLS/roles before data reaches model
+- ✓ Resilient — handles bad params, throttling, tool failures
+- ✓ Observable — logs, traces, evals, cost alerts
+- ✓ Region-pinned & compliant — inference in-tenant, PHI-aware
+- ✓ Secrets in Key Vault — managed identity, least privilege
+- ✓ Reproducible deploy — remote build, pinned config
+
+> **💡 Key insight:** The gap between POC and production is architecture, not the model. Ground it, externalize state, secure it, observe it, make it resilient, keep it compliant.
+
+</details>
+
 ---
 
 ## 📖 Python API
