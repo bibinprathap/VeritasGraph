@@ -1,0 +1,68 @@
+{
+  "dataset": "GNN_for_EHR release (NYUMedML/GNN_for_EHR)",
+  "n_samples": 205,
+  "positive_rate": 0.25,
+  "models": [
+    "Signal-only",
+    "Text-only",
+    "Early Fusion",
+    "KG (no signal phenotypes)",
+    "MedKG-Signal (proposed)"
+  ],
+  "auroc": {
+    "Signal-only": 0.6078158789002163,
+    "Text-only": 0.8645350633302441,
+    "Early Fusion": 0.9243126351560086,
+    "KG (no signal phenotypes)": 0.8549582947173309,
+    "MedKG-Signal (proposed)": 0.9303367315415508
+  },
+  "auprc": {
+    "Signal-only": 0.2614706698713297,
+    "Text-only": 0.584082692650389,
+    "Early Fusion": 0.8007436732469011,
+    "KG (no signal phenotypes)": 0.6002195474536941,
+    "MedKG-Signal (proposed)": 0.7860891832937714
+  },
+  "macro_f1": {
+    "Signal-only": 0.481065739343885,
+    "Text-only": 0.8013366750208856,
+    "Early Fusion": 0.826159221193311,
+    "KG (no signal phenotypes)": 0.8013366750208856,
+    "MedKG-Signal (proposed)": 0.8413838841604953
+  },
+  "ece": {
+    "Signal-only": 0.4730810904754148,
+    "Text-only": 0.6544868558609832,
+    "Early Fusion": 0.6572551424965164,
+    "KG (no signal phenotypes)": 0.6715547057444512,
+    "MedKG-Signal (proposed)": 0.7190545954838489
+  },
+  "accuracy": {
+    "Signal-only": 0.5170731707317073,
+    "Text-only": 0.8585365853658536,
+    "Early Fusion": 0.8780487804878049,
+    "KG (no signal phenotypes)": 0.8585365853658536,
+    "MedKG-Signal (proposed)": 0.8975609756097561
+  },
+  "evidence_precision": {
+    "Signal-only": 0.0,
+    "Text-only": 0.0,
+    "Early Fusion": 0.0,
+    "KG (no signal phenotypes)": 0.9926829268292683,
+    "MedKG-Signal (proposed)": 1.0
+  },
+  "unsupported_claim_rate": {
+    "Signal-only": 0.0,
+    "Text-only": 0.0,
+    "Early Fusion": 0.0,
+    "KG (no signal phenotypes)": 0.007317073170731708,
+    "MedKG-Signal (proposed)": 0.0
+  },
+  "avg_evidence_paths": {
+    "Signal-only": 0.0,
+    "Text-only": 0.0,
+    "Early Fusion": 0.0,
+    "KG (no signal phenotypes)": 1.9853658536585366,
+    "MedKG-Signal (proposed)": 3.0
+  }
+}

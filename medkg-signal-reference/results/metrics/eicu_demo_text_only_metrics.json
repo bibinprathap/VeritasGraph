@@ -1,0 +1,27 @@
+{
+  "task": "mortality",
+  "n_samples": 498,
+  "n_classes": 2,
+  "auroc": 0.6965852130325814,
+  "auprc": 0.3066044573818681,
+  "macro_f1": 0.5830143540669857,
+  "ece": 0.771917338741113,
+  "accuracy": 0.7751004016064257,
+  "confusion_matrix": [
+    [
+      362,
+      94
+    ],
+    [
+      18,
+      24
+    ]
+  ],
+  "precision": 0.2033898305084746,
+  "recall": 0.5714285714285714,
+  "specificity": 0.793859649122807,
+  "dataset": "eICU-CRD Demo (2,492 ICU stays, 208 US hospitals)",
+  "split": "stratified 65/15/20 (1620/374/498)",
+  "outcome": "In-hospital death (real)",
+  "positive_rate": 0.08507223113964688
+}

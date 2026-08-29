@@ -1,0 +1,74 @@
+{
+  "dataset": "PhysioNet Challenge 2012 (set-a + set-b)",
+  "source": "https://physionet.org/content/challenge-2012/1.0.0/",
+  "license": "ODC-BY 1.0",
+  "n_samples": 8000,
+  "n_train": 5200,
+  "n_val": 1200,
+  "n_test": 1600,
+  "positive_rate": 0.14025,
+  "outcome": "In-hospital death (real, from Outcomes-a.txt / Outcomes-b.txt)",
+  "models": [
+    "Signal-only",
+    "Text-only",
+    "Early Fusion",
+    "KG (no signal phenotypes)",
+    "MedKG-Signal (proposed)"
+  ],
+  "auroc": {
+    "Signal-only": 0.7922517389950167,
+    "Text-only": 0.7767597591362126,
+    "Early Fusion": 0.828423484219269,
+    "KG (no signal phenotypes)": 0.7800787738787376,
+    "MedKG-Signal (proposed)": 0.8308859790282392
+  },
+  "auprc": {
+    "Signal-only": 0.42126529059269474,
+    "Text-only": 0.4094017803588578,
+    "Early Fusion": 0.47274663946094236,
+    "KG (no signal phenotypes)": 0.4099844608151322,
+    "MedKG-Signal (proposed)": 0.47640090470503427
+  },
+  "macro_f1": {
+    "Signal-only": 0.6212949420373228,
+    "Text-only": 0.6217748659386574,
+    "Early Fusion": 0.6519034217153015,
+    "KG (no signal phenotypes)": 0.6153303218520609,
+    "MedKG-Signal (proposed)": 0.6552073826183957
+  },
+  "ece": {
+    "Signal-only": 0.6172011154890061,
+    "Text-only": 0.5983574624941684,
+    "Early Fusion": 0.6704095472209156,
+    "KG (no signal phenotypes)": 0.6005523315351455,
+    "MedKG-Signal (proposed)": 0.673911983431317
+  },
+  "accuracy": {
+    "Signal-only": 0.72125,
+    "Text-only": 0.734375,
+    "Early Fusion": 0.765,
+    "KG (no signal phenotypes)": 0.7275,
+    "MedKG-Signal (proposed)": 0.76625
+  },
+  "evidence_precision": {
+    "Signal-only": 0.0,
+    "Text-only": 0.0,
+    "Early Fusion": 0.0,
+    "KG (no signal phenotypes)": 0.9828125,
+    "MedKG-Signal (proposed)": 1.0
+  },
+  "unsupported_claim_rate": {
+    "Signal-only": 0.0,
+    "Text-only": 0.0,
+    "Early Fusion": 0.0,
+    "KG (no signal phenotypes)": 0.0171875,
+    "MedKG-Signal (proposed)": 0.0
+  },
+  "avg_evidence_paths": {
+    "Signal-only": 0.0,
+    "Text-only": 0.0,
+    "Early Fusion": 0.0,
+    "KG (no signal phenotypes)": 1.965625,
+    "MedKG-Signal (proposed)": 3.0
+  }
+}

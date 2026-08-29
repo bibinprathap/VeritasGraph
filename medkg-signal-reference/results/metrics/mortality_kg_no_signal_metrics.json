@@ -1,0 +1,32 @@
+{
+  "task": "mortality",
+  "n_samples": 205,
+  "n_classes": 2,
+  "auroc": 0.8549582947173309,
+  "auprc": 0.6002195474536941,
+  "macro_f1": 0.8013366750208856,
+  "ece": 0.6715547057444512,
+  "accuracy": 0.8585365853658536,
+  "confusion_matrix": [
+    [
+      143,
+      23
+    ],
+    [
+      6,
+      33
+    ]
+  ],
+  "precision": 0.5892857142857143,
+  "recall": 0.8461538461538461,
+  "specificity": 0.8614457831325302,
+  "evidence_precision": 0.9926829268292683,
+  "unsupported_claim_rate": 0.007317073170731708,
+  "path_validity": 1.0,
+  "avg_evidence_paths": 1.9853658536585366,
+  "avg_explanation_length": 8.0,
+  "dataset": "GNN_for_EHR (1,000 patients, 133,279 features)",
+  "split": "GNN_for_EHR release (693/102/205)",
+  "outcome": "Learnable mortality (positive rate=0.250)",
+  "positive_rate": 0.25
+}

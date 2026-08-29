@@ -1,0 +1,32 @@
+{
+  "task": "mortality",
+  "n_samples": 361,
+  "n_classes": 2,
+  "auroc": 0.7343946753013132,
+  "auprc": 0.5708115188339226,
+  "macro_f1": 0.7133068612060209,
+  "ece": 0.8018364780002025,
+  "accuracy": 0.8808864265927978,
+  "confusion_matrix": [
+    [
+      297,
+      30
+    ],
+    [
+      13,
+      21
+    ]
+  ],
+  "precision": 0.4117647058823529,
+  "recall": 0.6176470588235294,
+  "specificity": 0.908256880733945,
+  "evidence_precision": 1.0,
+  "unsupported_claim_rate": 0.0,
+  "path_validity": 1.0,
+  "avg_evidence_paths": 3.0,
+  "avg_explanation_length": 8.0,
+  "dataset": "Synthea (Apache-2.0 synthetic, seed=20260829)",
+  "split": "stratified 65/15/20 (1172/271/361)",
+  "outcome": "All-cause death between 2010-01-01 and 2026-08-29",
+  "positive_rate": 0.09478935698447893
+}

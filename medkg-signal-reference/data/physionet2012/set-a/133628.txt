@@ -1,0 +1,12 @@
+Time,Parameter,Value
+00:00,RecordID,133628
+00:00,Age,88
+00:00,Gender,1
+00:00,Height,-1
+00:00,ICUType,3
+00:00,Weight,-1
+04:26,DiasABP,22
+04:26,HR,96
+04:26,MAP,30
+04:26,RespRate,16
+04:26,SysABP,85

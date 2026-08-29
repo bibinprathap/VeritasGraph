@@ -1,0 +1,7 @@
+Time,Parameter,Value
+00:00,RecordID,142731
+00:00,Age,58
+00:00,Gender,1
+00:00,Height,-1
+00:00,ICUType,3
+00:00,Weight,-1

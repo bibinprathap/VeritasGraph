@@ -1,0 +1,27 @@
+{
+  "task": "mortality",
+  "n_samples": 1600,
+  "n_classes": 2,
+  "auroc": 0.7767597591362126,
+  "auprc": 0.4094017803588578,
+  "macro_f1": 0.6217748659386574,
+  "ece": 0.5983574624941684,
+  "accuracy": 0.734375,
+  "confusion_matrix": [
+    [
+      1024,
+      352
+    ],
+    [
+      73,
+      151
+    ]
+  ],
+  "precision": 0.30019880715705766,
+  "recall": 0.6741071428571429,
+  "specificity": 0.7441860465116279,
+  "dataset": "PhysioNet Challenge 2012 (set-a + set-b)",
+  "split": "stratified 65/15/20 (5200/1200/1600)",
+  "outcome": "In-hospital death (real)",
+  "positive_rate": 0.14025
+}

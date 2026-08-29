@@ -1,0 +1,79 @@
+{
+  "dataset": "eICU-CRD Demo (2,492 ICU stays, 208 US hospitals)",
+  "source": "https://physionet.org/content/eicu-crd-demo/2.0.1/",
+  "license": "ODC-BY 1.0",
+  "n_samples": 2492,
+  "n_train": 1620,
+  "n_val": 374,
+  "n_test": 498,
+  "positive_rate": 0.08507223113964688,
+  "outcome": "In-hospital death (real, from patient.hospitaldischargestatus)",
+  "models": [
+    "Signal-only",
+    "Text-only",
+    "Early Fusion",
+    "KG (no signal phenotypes)",
+    "MedKG-Signal (proposed)"
+  ],
+  "auroc": {
+    "Signal-only": 0.8516081871345029,
+    "Text-only": 0.6965852130325814,
+    "Early Fusion": 0.8427579365079366,
+    "KG (no signal phenotypes)": 0.6999530075187969,
+    "MedKG-Signal (proposed)": 0.8579260651629073
+  },
+  "auprc": {
+    "Signal-only": 0.48032689684005864,
+    "Text-only": 0.3066044573818681,
+    "Early Fusion": 0.47980475571433934,
+    "KG (no signal phenotypes)": 0.31026973799953117,
+    "MedKG-Signal (proposed)": 0.5058440921769481
+  },
+  "macro_f1": {
+    "Signal-only": 0.63883964544722,
+    "Text-only": 0.5830143540669857,
+    "Early Fusion": 0.6873287671232877,
+    "KG (no signal phenotypes)": 0.581959706959707,
+    "MedKG-Signal (proposed)": 0.6827535616385467
+  },
+  "ece": {
+    "Signal-only": 0.7096303321989667,
+    "Text-only": 0.771917338741113,
+    "Early Fusion": 0.8351116626594499,
+    "KG (no signal phenotypes)": 0.7707671623931349,
+    "MedKG-Signal (proposed)": 0.8443516368760791
+  },
+  "accuracy": {
+    "Signal-only": 0.8192771084337349,
+    "Text-only": 0.7751004016064257,
+    "Early Fusion": 0.8674698795180723,
+    "KG (no signal phenotypes)": 0.7791164658634538,
+    "MedKG-Signal (proposed)": 0.8674698795180723
+  },
+  "evidence_precision": {
+    "Signal-only": 0.0,
+    "Text-only": 0.0,
+    "Early Fusion": 0.0,
+    "KG (no signal phenotypes)": 0.9809236947791165,
+    "MedKG-Signal (proposed)": 1.0
+  },
+  "unsupported_claim_rate": {
+    "Signal-only": 0.0,
+    "Text-only": 0.0,
+    "Early Fusion": 0.0,
+    "KG (no signal phenotypes)": 0.019076305220883535,
+    "MedKG-Signal (proposed)": 0.0
+  },
+  "avg_evidence_paths": {
+    "Signal-only": 0.0,
+    "Text-only": 0.0,
+    "Early Fusion": 0.0,
+    "KG (no signal phenotypes)": 1.961847389558233,
+    "MedKG-Signal (proposed)": 3.0
+  },
+  "apache_iv_baseline": {
+    "auroc": 0.9043019207008873,
+    "auprc": 0.6082698396384955,
+    "n_test_with_apache": 336
+  }
+}

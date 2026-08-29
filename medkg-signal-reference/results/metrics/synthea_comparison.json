@@ -1,0 +1,99 @@
+{
+  "models": [
+    "Signal-only",
+    "Text-only",
+    "Early Fusion",
+    "KG (no signal phenotypes)",
+    "MedKG-Signal (proposed)"
+  ],
+  "metrics": {
+    "specificity": {
+      "Signal-only": 0.9021406727828746,
+      "Text-only": 0.9021406727828746,
+      "Early Fusion": 0.9021406727828746,
+      "KG (no signal phenotypes)": 0.8899082568807339,
+      "MedKG-Signal (proposed)": 0.908256880733945,
+      "best_model": "MedKG-Signal (proposed)"
+    },
+    "auroc": {
+      "Signal-only": 0.904119445943515,
+      "Text-only": 0.7109192300773519,
+      "Early Fusion": 0.7398812736103615,
+      "KG (no signal phenotypes)": 0.6979672602986149,
+      "MedKG-Signal (proposed)": 0.7343946753013132,
+      "best_model": "Signal-only"
+    },
+    "positive_rate": {
+      "Signal-only": 0.09478935698447893,
+      "Text-only": 0.09478935698447893,
+      "Early Fusion": 0.09478935698447893,
+      "KG (no signal phenotypes)": 0.09478935698447893,
+      "MedKG-Signal (proposed)": 0.09478935698447893,
+      "best_model": "Signal-only"
+    },
+    "precision": {
+      "Signal-only": 0.41818181818181815,
+      "Text-only": 0.38461538461538464,
+      "Early Fusion": 0.39622641509433965,
+      "KG (no signal phenotypes)": 0.35714285714285715,
+      "MedKG-Signal (proposed)": 0.4117647058823529,
+      "best_model": "Signal-only"
+    },
+    "accuracy": {
+      "Signal-only": 0.8808864265927978,
+      "Text-only": 0.8725761772853186,
+      "Early Fusion": 0.8753462603878116,
+      "KG (no signal phenotypes)": 0.8614958448753463,
+      "MedKG-Signal (proposed)": 0.8808864265927978,
+      "best_model": "Signal-only"
+    },
+    "recall": {
+      "Signal-only": 0.6764705882352942,
+      "Text-only": 0.5882352941176471,
+      "Early Fusion": 0.6176470588235294,
+      "KG (no signal phenotypes)": 0.5882352941176471,
+      "MedKG-Signal (proposed)": 0.6176470588235294,
+      "best_model": "Signal-only"
+    },
+    "macro_f1": {
+      "Signal-only": 0.7244617214264161,
+      "Text-only": 0.6963946175223051,
+      "Early Fusion": 0.7059462394786858,
+      "KG (no signal phenotypes)": 0.6826652601969058,
+      "MedKG-Signal (proposed)": 0.7133068612060209,
+      "best_model": "Signal-only"
+    },
+    "ece": {
+      "Signal-only": 0.6841910924566419,
+      "Text-only": 0.7915108712426182,
+      "Early Fusion": 0.7997061090332318,
+      "KG (no signal phenotypes)": 0.7943838899877761,
+      "MedKG-Signal (proposed)": 0.8018364780002025,
+      "best_model": "Signal-only"
+    },
+    "n_samples": {
+      "Signal-only": 361,
+      "Text-only": 361,
+      "Early Fusion": 361,
+      "KG (no signal phenotypes)": 361,
+      "MedKG-Signal (proposed)": 361,
+      "best_model": "Signal-only"
+    },
+    "auprc": {
+      "Signal-only": 0.6839208936483924,
+      "Text-only": 0.5388149743527795,
+      "Early Fusion": 0.5652450267182823,
+      "KG (no signal phenotypes)": 0.5397139537691844,
+      "MedKG-Signal (proposed)": 0.5708115188339226,
+      "best_model": "Signal-only"
+    },
+    "n_classes": {
+      "Signal-only": 2,
+      "Text-only": 2,
+      "Early Fusion": 2,
+      "KG (no signal phenotypes)": 2,
+      "MedKG-Signal (proposed)": 2,
+      "best_model": "Signal-only"
+    }
+  }
+}

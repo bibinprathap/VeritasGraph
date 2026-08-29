@@ -1,0 +1,25 @@
+{
+  "num_nodes": 131,
+  "num_edges": 2180,
+  "num_entities_by_type": {
+    "diagnosis": 8,
+    "symptom": 6,
+    "medication": 6,
+    "lab_marker": 6,
+    "signal_phenotype": 5,
+    "encounter": 100
+  },
+  "num_relations_by_type": {
+    "symptom_suggests_diagnosis": 315,
+    "medication_treats_diagnosis": 251,
+    "lab_supports_diagnosis": 211,
+    "signal_indicates_condition": 136,
+    "encounter_has_diagnosis": 165,
+    "encounter_has_symptom": 315,
+    "encounter_has_medication": 251,
+    "encounter_has_lab": 340,
+    "encounter_has_signal": 196
+  },
+  "avg_degree": 33.282442748091604,
+  "density": 0.1280093951849677
+}
