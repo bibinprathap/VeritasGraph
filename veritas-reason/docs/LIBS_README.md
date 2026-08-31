@@ -1447,7 +1447,7 @@ This project is licensed under the MIT License - see the [LICENSE](https://githu
 
 ## 🌟 Star History
 
-[![Star History Chart](https://api.star-history.com/svg?repos=veritas-reason-dev/veritasreason&type=Date)](https://star-history.com/#veritas-reason-dev/veritasreason&Date)
+[![Star History Chart](https://star-history.dera.page/svg?repos=veritas-reason-dev/veritasreason&type=Date)](https://star-history.dera.page/#veritas-reason-dev/veritasreason&Date)
 
 ---
 
