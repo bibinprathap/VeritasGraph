@@ -130,3 +130,5 @@ ukbb-ehr-data/
 unity-mcp/
 medkg-signal-reference/data/synthea/output/
 *.jar
+patent/*
+studio_api/*
