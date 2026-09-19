@@ -132,3 +132,20 @@ medkg-signal-reference/data/synthea/output/
 *.jar
 patent/*
 studio_api/*
+1571348454 paper.pdf
+1571349206 paper.pdf
+1571349206_paper.txt
+1571349212 paper.pdf
+1571349212_paper.txt
+paper_1571348454.txt
+paper_text.txt
+reviews/review_1571349206_mangrove-remote-sensing.md
+reviews/review_1571349212_eye-tracking-ASD.md
+reviews/review_1571348454_LULC-XGBoost-ANN.md
+Construction Knowledge Graph.pdf
+floorplan-kg/engine/__pycache__/dimensions.cpython-312.pyc
+floorplan-kg/engine/__pycache__/pipeline.cpython-312.pyc
+floorplan-kg/engine/*
+floorplan-kg/engine/__pycache__/extract.cpython-312.pyc
+floorplan-kg/web/.next/*
+floorplan-kg/web/node_modules/*
