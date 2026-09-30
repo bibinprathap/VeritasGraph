@@ -17,7 +17,22 @@
 ⭐ [Star](https://github.com/bibinprathap/VeritasGraph) · 🍴 [Fork](https://github.com/bibinprathap/VeritasGraph/fork) · 💬 [Discuss](https://github.com/bibinprathap/VeritasGraph/discussions) · 🐛 [Report a bug](https://github.com/bibinprathap/VeritasGraph/issues)
 
 ---
+```bash
+python -m veritasgraph_mcp     # from repo root (needs local Ollama for ingest/query)
+```
+<p align="center">
+  <a href="https://www.youtube.com/watch?v=MDo1Mk8R5Wo"><img src="https://img.youtube.com/vi/MDo1Mk8R5Wo/maxresdefault.jpg" alt="Building Auditable Deep-Research Agents — Live at MBZUAI" width="48%"></a>
+  &nbsp;
+  <a href="https://youtu.be/oa8ektm7nLY"><img src="https://img.youtube.com/vi/oa8ektm7nLY/maxresdefault.jpg" alt="VeritasGraph Master Demo" width="48%"></a>
+</p>
 
+> **[▶️️ Watch the Full Talk & Live Demo on YouTube (27 mins)](https://www.youtube.com/watch?v=MDo1Mk8R5Wo)** 
+
+### Why Vector RAG Breaks on Deep Research
+- **Attribution is a data model, not a prompt:** Storing provenance at write time prevents hallucinated citations at read time.
+- **Deterministic retrieval:** Graph traversal is fully reproducible, separating factual evidence traces from stochastic LLM generation.
+- **Explicit abstention:** The agent identifies missing graph edges and returns "insufficient evidence" rather than guessing.
+- 
 ## 📚 Featured Guide — Build Governed AI Agents On-Prem
 
 A complete walkthrough of designing, wiring, and shipping governed AI agents entirely on your own infrastructure.
