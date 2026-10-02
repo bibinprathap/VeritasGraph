@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import { api } from "@/lib/basePath";
 import type { ExtractionResult } from "@/lib/types";
 
 type Status = { ok: boolean; engineAvailable?: boolean; reason?: string; error?: string };
@@ -28,7 +29,7 @@ export default function AssistPanel({ result }: { result: ExtractionResult | nul
   const [answer, setAnswer] = useState<Answer | null>(null);
 
   const call = useCallback(async (body: Record<string, unknown>) => {
-    const res = await fetch("/api/veritasgraph", {
+    const res = await fetch(api("/api/veritasgraph"), {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(body),

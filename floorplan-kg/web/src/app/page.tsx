@@ -7,6 +7,7 @@ import RoomsTable from "@/components/RoomsTable";
 import SchedulesPanel from "@/components/SchedulesPanel";
 import SummaryCards from "@/components/SummaryCards";
 import TakeoffPanel from "@/components/TakeoffPanel";
+import { api } from "@/lib/basePath";
 import type { ExtractionResult, TakeoffLine } from "@/lib/types";
 
 type Method = "pymupdf" | "pdfplumber";
@@ -41,7 +42,7 @@ export default function Home() {
   const fileInput = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    fetch("/api/samples")
+    fetch(api("/api/samples"))
       .then((r) => r.json())
       .then((d) => setSamples(Array.isArray(d.items) ? d.items : []))
       .catch(() => setSamples([]));
@@ -62,7 +63,7 @@ export default function Home() {
         form.append("method", method);
         if (ceilingHeightFeet) form.append("ceilingHeightFeet", String(ceilingHeightFeet));
 
-        const res = await fetch("/api/process", { method: "POST", body: form });
+        const res = await fetch(api("/api/process"), { method: "POST", body: form });
         const payload = await res.json();
         if (!res.ok) {
           setError(payload.error ?? `Request failed with status ${res.status}`);
@@ -88,7 +89,7 @@ export default function Home() {
       setExporting(true);
       setError(null);
       try {
-        const res = await fetch("/api/export", {
+        const res = await fetch(api("/api/export"), {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
