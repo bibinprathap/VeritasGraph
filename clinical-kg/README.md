@@ -1,5 +1,8 @@
 # Use Case 1 — HIPAA-Safe Clinical Knowledge Graph
 
+systemctl --user status veritasgraph-clinical-kg.service veritasgraph-clinical-kg-web.service
+systemctl --user restart veritasgraph-clinical-kg-web.service
+
 A working, on-prem implementation of VeritasGraph **Use Case 1**: turn
 unstructured clinical notes into a governed, citable knowledge graph — with
 de-identification, contradiction detection, and multi-hop cohort queries — plus
