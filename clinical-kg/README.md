@@ -1,12 +1,17 @@
 # Use Case 1 — HIPAA-Safe Clinical Knowledge Graph
 
-systemctl --user status veritasgraph-clinical-kg.service veritasgraph-clinical-kg-web.service
-systemctl --user restart veritasgraph-clinical-kg-web.service
-
 A working, on-prem implementation of VeritasGraph **Use Case 1**: turn
 unstructured clinical notes into a governed, citable knowledge graph — with
 de-identification, contradiction detection, and multi-hop cohort queries — plus
 a Next.js UI.
+
+> ### 🔗 Live demo — **[spaceai-llmpc.ngrok.app/clinical](https://spaceai-llmpc.ngrok.app/clinical)**
+>
+> A free, always-on instance of this tool, pre-loaded with the four bundled
+> synthetic patients. Open it, then try the flagship query
+> *"List patients with T2DM taking metformin whose most recent eGFR < 30"* or
+> explore the six tabs: **Cohort Query, Ingest Note, Patients, Contradictions,
+> Graph, Re-ID Risk**. 100% synthetic data — no real PHI.
 
 ```
 clinical-kg/

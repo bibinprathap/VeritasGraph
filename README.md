@@ -80,7 +80,18 @@ veritasgraph start --mode=full                    # full GraphRAG pipeline
 
 ---
 
-## 🛠️ VeritasGraph Studio — Build, wire & test governed agents locally
+## � Live Example — Floorplan-KG Takeoff Demo
+
+A hosted, zero-setup example of VeritasGraph applied to **construction drawings**. Upload a floorplan PDF (or pick a bundled sample) and the engine extracts rooms, dimensions, openings, fixtures, and schedules — then builds a knowledge graph and quantity takeoff you can query, all with verifiable provenance back to the source sheet.
+
+> **[🏗️ Try the Floorplan-KG demo](https://spaceai-llmpc.ngrok.app/floorplan)** — *free, no login; runs the live PyMuPDF/pdfplumber extraction pipeline.*
+
+- **What it shows:** PDF → structured rooms/dimensions/schedules → knowledge graph → CSV/XLSX takeoff export, with a VeritasGraph assist panel for grounded Q&A over the extracted graph.
+- **Why it matters:** the same governed-attribution model that powers document RAG applies to geometry — every measured quantity traces back to a specific sheet and element rather than a guessed value.
+- **Example output:** a single-sheet residential plan returns ~17 rooms and ~2,400 sq ft in under 200 ms.
+
+---
+
 
 **Studio** is a local Agent Build Workspace (FastAPI + single-page UI) that lets you build a knowledge graph from your own documents and **wire it into agents** alongside tools, memory, data logging, guardrails, and headroom-style context budgeting — then chat with those agents live and watch every stage of the orchestration pipeline. Everything runs **100% locally** against [Ollama](https://ollama.com).
 
