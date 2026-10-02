@@ -189,3 +189,10 @@ clinical-kg/backend/clinical_kg/__pycache__/query.cpython-312.pyc
 clinical-kg/backend/clinical_kg/__pycache__/risk.cpython-312.pyc
 clinical-kg/backend/clinical_kg/__pycache__/sample_data.cpython-312.pyc
 floorplan-kg/read.md
+
+# Removed embedded git repos
+BlueprintParser_OS/
+Floorplan-Dimractor/
+future-agi/
+provisional-patent-skills/
+tomorrowkit-for-minds/
