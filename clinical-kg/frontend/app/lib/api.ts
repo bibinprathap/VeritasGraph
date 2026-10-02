@@ -48,8 +48,12 @@ export type Interaction = {
   citations: string[];
 };
 
+// When served under a reverse-proxy subpath (nginx/ngrok), prefix API calls so
+// they resolve to /<basePath>/api/* and hit the Next.js rewrite -> backend.
+const BASE_PATH = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
+
 async function j<T>(url: string, init?: RequestInit): Promise<T> {
-  const res = await fetch(url, {
+  const res = await fetch(`${BASE_PATH}${url}`, {
     headers: { "Content-Type": "application/json" },
     ...init,
   });
