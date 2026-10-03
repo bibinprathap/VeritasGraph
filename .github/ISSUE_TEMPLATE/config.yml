@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Questions & Discussions
+    url: https://github.com/bibinprathap/VeritasGraph/discussions
+    about: Ask questions and discuss ideas with the community.
+  - name: Security Vulnerability
+    url: https://github.com/bibinprathap/VeritasGraph/security/advisories/new
+    about: Please report security vulnerabilities privately, not as public issues.
