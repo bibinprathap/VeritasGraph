@@ -14,7 +14,7 @@
 > **🎯 Traditional RAG guesses based on similarity. VeritasGraph reasons based on structure.**
 > Don't just find the document — understand the connection, then act on it with governed agents.
 
-⭐ [Star](https://github.com/bibinprathap/VeritasGraph) · 🍴 [Fork](https://github.com/bibinprathap/VeritasGraph/fork) · 💬 [Discuss](https://github.com/bibinprathap/VeritasGraph/discussions) · 🐛 [Report a bug](https://github.com/bibinprathap/VeritasGraph/issues)
+🌐 [Live site](https://veritasgraph.netlify.app/) · ⭐ [Star](https://github.com/bibinprathap/VeritasGraph) · 🍴 [Fork](https://github.com/bibinprathap/VeritasGraph/fork) · 💬 [Discuss](https://github.com/bibinprathap/VeritasGraph/discussions) · 🐛 [Report a bug](https://github.com/bibinprathap/VeritasGraph/issues)
 
 ---
 ```bash
@@ -77,6 +77,26 @@ veritasgraph start --mode=full                    # full GraphRAG pipeline
 </p>
 
 **Useful links:** [⚡ Live docs](https://bibinprathap.github.io/VeritasGraph/index.html) · [🎮 Live demo](https://bibinprathap.github.io/VeritasGraph/demo/) · [📖 Article](https://medium.com/@bibinprathap/beyond-vector-search-building-trustworthy-enterprise-ai-with-the-veritasgraph-rag-pipeline-53fc8e9e8ff9) · [📄 Research paper](VeritasGraph%20-%20A%20Sovereign%20GraphRAG%20Framework%20for%20Enterprise-Grade%20AI%20with%20Verifiable%20Attribution.pdf)
+
+---
+
+## 🧩 Built with VeritasGraph
+
+A growing ecosystem of projects is building on VeritasGraph for enterprise GraphRAG, agent orchestration, fact-checking, and governed reasoning.
+
+[![Built with VeritasGraph](https://img.shields.io/badge/Powered%20by-VeritasGraph-blue)](https://github.com/bibinprathap/VeritasGraph)
+
+### Community projects and integrations
+
+- [MeAkash77 / VeritasGraph-Enterprise-GraphRAG-Verifiable-AI-Platform](https://github.com/MeAkash77/VeritasGraph-Enterprise-GraphRAG-Verifiable-AI-Platform) — enterprise GraphRAG adapter and verifiable AI platform patterns.
+- [PTP063 / veritas-graph](https://github.com/PTP063/veritas-graph) — derivative project and live deployment using VeritasGraph concepts.
+- [RahulSagar2005 / multi-hop-rag](https://github.com/RahulSagar2005/multi-hop-rag) — multi-hop retrieval and reasoning workflows.
+- [lukehungngo / agentwall](https://github.com/lukehungngo/agentwall) — agent security and governance-oriented reasoning flows.
+- [gajanan229 / Fact-checker-Agent](https://github.com/gajanan229/Fact-checker-Agent) — evidence-focused fact-checking and explanation patterns.
+- [Minh-Tam-Solution / EndiorBot](https://github.com/Minh-Tam-Solution/EndiorBot) — enterprise chatbot and AI agent integration built around graph-backed reasoning.
+- [NistorDorinGabriel / Proiect_Licenta](https://github.com/NistorDorinGabriel/Proiect_Licenta) — academic thesis project extending VeritasGraph-inspired graph reasoning techniques.
+
+> If you are building with VeritasGraph and want to be featured here, open a PR or reach out with a short repo description and usage summary.
 
 ---
 
