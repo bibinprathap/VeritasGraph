@@ -1,0 +1,10 @@
+# Runtime dependencies for the FastAPI wrapper.
+#
+# The extraction engine lives next door in ../engine and is imported in place;
+# its own requirements (pymupdf, pdfplumber) are repeated here so this venv is
+# self-contained. Everything else the engine uses is the Python standard library.
+fastapi>=0.115
+uvicorn>=0.30
+python-multipart>=0.0.9
+pymupdf>=1.24
+pdfplumber>=0.11
