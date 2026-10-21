@@ -1,0 +1,8 @@
+# MedTrust Agent reference implementation — offline reproduction deps.
+matplotlib>=3.6
+numpy>=1.23
+pytest>=7.0
+# Optional (dashboards / screenshots):
+# fastapi>=0.110
+# uvicorn>=0.29
+# playwright>=1.40

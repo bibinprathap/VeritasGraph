@@ -1,0 +1,105 @@
+{
+  "injection_benchmark": {
+    "direct": {
+      "mean": 1.0,
+      "low": 0.5655085052479191,
+      "high": 1.0,
+      "n": 5
+    },
+    "exfiltration": {
+      "mean": 1.0,
+      "low": 0.43849391955098227,
+      "high": 1.0,
+      "n": 3
+    },
+    "indirect": {
+      "mean": 1.0,
+      "low": 0.43849391955098227,
+      "high": 1.0,
+      "n": 3
+    },
+    "jailbreak": {
+      "mean": 1.0,
+      "low": 0.43849391955098227,
+      "high": 1.0,
+      "n": 3
+    },
+    "overall": {
+      "mean": 1.0,
+      "low": 0.7846829880728186,
+      "high": 1.0,
+      "n": 14
+    }
+  },
+  "adaptive_attack": {
+    "rounds": 3,
+    "base_cases": 14,
+    "history": [
+      {
+        "round": 1,
+        "cases": 14,
+        "bypassed": 0,
+        "bypass_rate": {
+          "mean": 0.0,
+          "low": 0.0,
+          "high": 0.21531701192718142,
+          "n": 14
+        }
+      },
+      {
+        "round": 2,
+        "cases": 84,
+        "bypassed": 39,
+        "bypass_rate": {
+          "mean": 0.4642857142857143,
+          "low": 0.36154050446577934,
+          "high": 0.5701547287722308,
+          "n": 84
+        }
+      },
+      {
+        "round": 3,
+        "cases": 96,
+        "bypassed": 96,
+        "bypass_rate": {
+          "mean": 1.0,
+          "low": 0.9615230525151842,
+          "high": 1.0,
+          "n": 96
+        }
+      }
+    ],
+    "max_bypass_rate": {
+      "mean": 1.0,
+      "low": 0.9615230525151842,
+      "high": 1.0,
+      "n": 96
+    },
+    "residual_bypass_rate": {
+      "mean": 1.0,
+      "low": 0.9615230525151842,
+      "high": 1.0,
+      "n": 96
+    }
+  },
+  "false_denial": {
+    "false_denial_rate": {
+      "mean": 0.0,
+      "low": 0.0,
+      "high": 0.3244156195108769,
+      "n": 8
+    },
+    "n": 8
+  },
+  "conformance": {
+    "cases": 50,
+    "conforming": 50,
+    "conformance_rate": {
+      "mean": 1.0,
+      "low": 0.9286499658256813,
+      "high": 1.0,
+      "n": 50
+    },
+    "mismatches": []
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "description": "Tiny QFS corpus fixture for offline dataset/judge tests.",
+  "documents": [
+    { "title": "episode_1", "text": "The guest discusses how AI reshapes society and the economy over time." },
+    { "title": "episode_2", "text": "A researcher reflects on innovation, ethics, and the future of technology." }
+  ],
+  "queries": [
+    "What are the main themes discussed across the episodes?",
+    "Describe the relationship between AI and society."
+  ]
+}

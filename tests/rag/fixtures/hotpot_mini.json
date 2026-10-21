@@ -1,0 +1,26 @@
+{
+  "description": "Tiny hand-labeled HotpotQA-style fixture for offline metric tests.",
+  "records": [
+    {
+      "id": "q1",
+      "question": "Which engineer who worked on Project Phoenix holds Patent XYZ?",
+      "answer": "John Doe",
+      "supporting_facts": ["doc_phoenix#0", "doc_patent#2"],
+      "context_docs": ["doc_phoenix", "doc_john", "doc_patent"]
+    },
+    {
+      "id": "q2",
+      "question": "What year was the Mornington bridge opened?",
+      "answer": "1987",
+      "supporting_facts": ["doc_bridge#1"],
+      "context_docs": ["doc_bridge", "doc_town"]
+    },
+    {
+      "id": "q3",
+      "question": "In which city is the headquarters of Acme Corp located?",
+      "answer": "Lisbon",
+      "supporting_facts": ["doc_acme#0", "doc_city#3"],
+      "context_docs": ["doc_acme", "doc_city"]
+    }
+  ]
+}

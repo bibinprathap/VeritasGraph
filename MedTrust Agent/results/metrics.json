@@ -1,0 +1,298 @@
+{
+  "trials": 30,
+  "base_seed": 7,
+  "quality_label": "illustrative (seeded model)",
+  "configs": {
+    "B0": {
+      "label": "Plain LLM",
+      "flags": {
+        "retrieval": false,
+        "citations": false,
+        "iam": false,
+        "governance": false
+      },
+      "metrics": {
+        "accuracy": {
+          "mean": 0.5758333333333333,
+          "ci95": 0.02600099393915076,
+          "n": 30,
+          "std": 0.07265985152055092
+        },
+        "hallucination": {
+          "mean": 0.4058333333333334,
+          "ci95": 0.025486425656029262,
+          "n": 30,
+          "std": 0.07122188898972259
+        },
+        "citations_enforced": {
+          "mean": 0.0,
+          "ci95": 0.0,
+          "n": 30,
+          "std": 0.0
+        },
+        "unauthorized_blocked": {
+          "mean": 0.0,
+          "ci95": 0.0,
+          "n": 30,
+          "std": 0.0
+        },
+        "latency_ms": {
+          "mean": 0.0010374341666666666,
+          "ci95": 6.807525042648538e-05,
+          "n": 30,
+          "std": 0.00019023648095101644,
+          "relative": 1.0
+        }
+      },
+      "security_wilson": {
+        "unauthorized_blocked": {
+          "mean": 0.0,
+          "low": 0.0,
+          "high": 0.2425007574992425,
+          "n": 12
+        },
+        "citations_enforced": {
+          "mean": 0.0,
+          "low": 0.0,
+          "high": 0.08762453925039232,
+          "n": 40
+        }
+      }
+    },
+    "B1": {
+      "label": "Medical RAG",
+      "flags": {
+        "retrieval": true,
+        "citations": false,
+        "iam": false,
+        "governance": false
+      },
+      "metrics": {
+        "accuracy": {
+          "mean": 0.7133333333333333,
+          "ci95": 0.027969677067299907,
+          "n": 30,
+          "std": 0.07816134212191377
+        },
+        "hallucination": {
+          "mean": 0.24166666666666667,
+          "ci95": 0.026091057759683813,
+          "n": 30,
+          "std": 0.07291153512320933
+        },
+        "citations_enforced": {
+          "mean": 0.0,
+          "ci95": 0.0,
+          "n": 30,
+          "std": 0.0
+        },
+        "unauthorized_blocked": {
+          "mean": 0.0,
+          "ci95": 0.0,
+          "n": 30,
+          "std": 0.0
+        },
+        "latency_ms": {
+          "mean": 0.0056993225,
+          "ci95": 0.00012045990084239411,
+          "n": 30,
+          "std": 0.00033662553554191237,
+          "relative": 5.493671485981842
+        }
+      },
+      "security_wilson": {
+        "unauthorized_blocked": {
+          "mean": 0.0,
+          "low": 0.0,
+          "high": 0.2425007574992425,
+          "n": 12
+        },
+        "citations_enforced": {
+          "mean": 0.0,
+          "low": 0.0,
+          "high": 0.08762453925039232,
+          "n": 40
+        }
+      }
+    },
+    "B2": {
+      "label": "RAG + Citations",
+      "flags": {
+        "retrieval": true,
+        "citations": true,
+        "iam": false,
+        "governance": false
+      },
+      "metrics": {
+        "accuracy": {
+          "mean": 0.7617647058823529,
+          "ci95": 0.02741067358619107,
+          "n": 30,
+          "std": 0.07659920530391774
+        },
+        "hallucination": {
+          "mean": 0.1627450980392157,
+          "ci95": 0.0252919151411994,
+          "n": 30,
+          "std": 0.0706783288027621
+        },
+        "citations_enforced": {
+          "mean": 1.0,
+          "ci95": 0.0,
+          "n": 30,
+          "std": 0.0
+        },
+        "unauthorized_blocked": {
+          "mean": 0.0,
+          "ci95": 0.0,
+          "n": 30,
+          "std": 0.0
+        },
+        "latency_ms": {
+          "mean": 0.005531002500000001,
+          "ci95": 9.933879115358701e-05,
+          "n": 30,
+          "std": 0.00027760253443935844,
+          "relative": 5.331425046247915
+        }
+      },
+      "security_wilson": {
+        "unauthorized_blocked": {
+          "mean": 0.0,
+          "low": 0.0,
+          "high": 0.2425007574992425,
+          "n": 12
+        },
+        "citations_enforced": {
+          "mean": 1.0,
+          "low": 0.8984820937803899,
+          "high": 1.0,
+          "n": 34
+        }
+      }
+    },
+    "B3": {
+      "label": "Tool Agent (no gov.)",
+      "flags": {
+        "retrieval": true,
+        "citations": true,
+        "iam": false,
+        "governance": false
+      },
+      "metrics": {
+        "accuracy": {
+          "mean": 0.7617647058823529,
+          "ci95": 0.02741067358619107,
+          "n": 30,
+          "std": 0.07659920530391774
+        },
+        "hallucination": {
+          "mean": 0.1627450980392157,
+          "ci95": 0.0252919151411994,
+          "n": 30,
+          "std": 0.0706783288027621
+        },
+        "citations_enforced": {
+          "mean": 1.0,
+          "ci95": 0.0,
+          "n": 30,
+          "std": 0.0
+        },
+        "unauthorized_blocked": {
+          "mean": 0.0,
+          "ci95": 0.0,
+          "n": 30,
+          "std": 0.0
+        },
+        "latency_ms": {
+          "mean": 0.0055581208333333335,
+          "ci95": 0.0001374653861923909,
+          "n": 30,
+          "std": 0.00038414741272312086,
+          "relative": 5.357564857529113
+        }
+      },
+      "security_wilson": {
+        "unauthorized_blocked": {
+          "mean": 0.0,
+          "low": 0.0,
+          "high": 0.2425007574992425,
+          "n": 12
+        },
+        "citations_enforced": {
+          "mean": 1.0,
+          "low": 0.8984820937803899,
+          "high": 1.0,
+          "n": 34
+        }
+      }
+    },
+    "MT": {
+      "label": "MedTrust Agent (full)",
+      "flags": {
+        "retrieval": true,
+        "citations": true,
+        "iam": true,
+        "governance": true
+      },
+      "metrics": {
+        "accuracy": {
+          "mean": 0.7948717948717949,
+          "ci95": 0.027367913655631737,
+          "n": 30,
+          "std": 0.07647971255634273
+        },
+        "hallucination": {
+          "mean": 0.07051282051282051,
+          "ci95": 0.01881001545461588,
+          "n": 30,
+          "std": 0.052564641691397504
+        },
+        "citations_enforced": {
+          "mean": 1.0,
+          "ci95": 0.0,
+          "n": 30,
+          "std": 0.0
+        },
+        "unauthorized_blocked": {
+          "mean": 1.0,
+          "ci95": 0.0,
+          "n": 30,
+          "std": 0.0
+        },
+        "latency_ms": {
+          "mean": 0.008688416666666667,
+          "ci95": 0.00047228656770531037,
+          "n": 30,
+          "std": 0.0013198061568310685,
+          "relative": 8.374908929964231
+        }
+      },
+      "security_wilson": {
+        "unauthorized_blocked": {
+          "mean": 1.0,
+          "low": 0.7574992425007574,
+          "high": 1.0,
+          "n": 12
+        },
+        "citations_enforced": {
+          "mean": 1.0,
+          "low": 0.8712669561953784,
+          "high": 1.0,
+          "n": 26
+        }
+      }
+    }
+  },
+  "mt_over_b3_latency": 1.5631931955419585,
+  "audit_tamper_detected": true,
+  "n_scenarios": 40,
+  "categories": [
+    "clinical_qa",
+    "pharmacovigilance",
+    "phi_handling",
+    "privilege_escalation",
+    "prompt_injection",
+    "trial_access"
+  ]
+}

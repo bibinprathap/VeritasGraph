@@ -1,0 +1,23 @@
+{
+  "description": "Predicted answers for hotpot_mini.json with hand-computed expected metrics.",
+  "predictions": [
+    {
+      "id": "q1",
+      "answer": "The engineer is John Doe.",
+      "cited": ["doc_phoenix#0", "doc_patent#2"],
+      "expected": { "em": 0.0, "f1_gt": 0.5, "cit_p": 1.0, "cit_r": 1.0 }
+    },
+    {
+      "id": "q2",
+      "answer": "1987",
+      "cited": ["doc_bridge#1", "doc_town#0"],
+      "expected": { "em": 1.0, "f1": 1.0, "cit_p": 0.5, "cit_r": 1.0 }
+    },
+    {
+      "id": "q3",
+      "answer": "Madrid",
+      "cited": [],
+      "expected": { "em": 0.0, "f1": 0.0, "cit_p": 0.0, "cit_r": 0.0 }
+    }
+  ]
+}
