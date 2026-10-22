@@ -80,6 +80,23 @@ veritasgraph start --mode=full                    # full GraphRAG pipeline
 
 ---
 
+## 🏥 Example Implementation — MedTrust Agent
+
+**[MedTrust Agent](MedTrust%20Agent/README.md)** is a complete, reproducible example implementation of the VeritasGraph governed-agent architecture, applied to **medical and pharmaceutical workflows** — a zero-trust, observable LLM agent framework (NEECON 2026 paper).
+
+- **Zero-trust control plane:** least-privilege IAM with step-up authorization — no tool runs before authorization succeeds.
+- **Governed answers:** mandatory `[doc#chunk]` citations; uncited answers are withheld or routed to human review.
+- **Tamper-evident audit:** keyed, hash-chained audit log with published anchors.
+- **Honest evaluation:** security measured directly from the running code (100% unauthorized actions blocked, Wilson 95% CIs), answer quality clearly labelled *illustrative*; 69 tests, a versioned 40-scenario suite, and a one-command reproduce script.
+
+```bash
+python -m medtrust.demo    # end-to-end governed demo, 100% offline
+```
+
+> 📄 **Read the full write-up:** [MedTrust Agent README](MedTrust%20Agent/README.md)
+
+---
+
 ## 🧩 Built with VeritasGraph
 
 A growing ecosystem of projects is building on VeritasGraph for enterprise GraphRAG, agent orchestration, fact-checking, and governed reasoning.
