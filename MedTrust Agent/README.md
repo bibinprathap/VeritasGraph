@@ -14,6 +14,16 @@
 **Paper:** *MedTrust Agent: A Zero-Trust, Observable LLM Agent Framework for Medical and
 Pharmaceutical Workflows* — NEECON 2026, Dubai (Oct 21–23, 2026), Paper #1571353697.
 
+This work is a **peer-reviewed research paper**, published in the technical program of the
+**2026 International Near East Conference on Electrical & Energy Systems (NEECON)**:
+
+> **TS3: Technical Session TS3 — Artificial Intelligence**
+> Wednesday, October 21, 4:30–6:30 · Room: Fursa Ballroom A
+> Chair: Siddharth Joshi (Pandit Deendayal Energy University & APA Energy, India)
+> **MedTrust Agent: A Zero-Trust, Observable LLM Agent Framework for Medical and
+> Pharmaceutical Workflows** — Bibin Prathap (Abu Dhabi Executive Office, United Arab Emirates)
+> Paper record: <https://edas.info/p35211>
+
 MedTrust Agent is an **example implementation** of the governed-agent architecture
 described in the [VeritasGraph](../README.md) project. It reuses the VeritasGraph
 stack's design principles — provenance at write time, deterministic retrieval,
@@ -66,6 +76,63 @@ authorize → retrieve → govern → observe → answer
 **Key rule:** *no tool runs before authorization succeeds.* High-risk actions
 (`EXPORT_PATIENT_DATA`, `CLEAR_GRAPH`) require a valid step-up token; without it the
 request is denied and audited.
+
+## Diagrams (publication figures)
+
+The five figures below are the publication figures generated from the reference
+implementation (`diagrams.py`) and used in the research paper. Each is available as
+PDF (for the IEEE camera-ready manuscript) and PNG (for docs/slides) under
+[`diagrams/`](diagrams/).
+
+### Figure 1 — System Architecture
+
+The five cooperating layers: agent orchestration, zero-trust IAM, retrieval/grounding,
+governance, and cross-cutting observability.
+
+![System Architecture](diagrams/diagram1_system_architecture.png)
+([PDF](diagrams/diagram1_system_architecture.pdf))
+
+### Figure 2 — Request Sequence
+
+Per-request control flow: authorize → retrieve → govern → observe, including the
+step-up authorization branch and human-review escalation.
+
+![Request Sequence](diagrams/diagram2_request_sequence.png)
+([PDF](diagrams/diagram2_request_sequence.pdf))
+
+### Figure 3 — Module Mapping
+
+How each `medtrust/` module maps to a production engine in the VeritasGraph framework
+— the reuse path from research prototype to production.
+
+![Module Mapping](diagrams/diagram3_module_mapping.png)
+([PDF](diagrams/diagram3_module_mapping.pdf))
+
+### Figure 4 — Threat Model
+
+Adversary vectors (privilege escalation, data exfiltration, destructive actions, audit
+tampering, prompt injection) and the control that blocks each one.
+
+![Threat Model](diagrams/diagram4_threat_model.png)
+([PDF](diagrams/diagram4_threat_model.png))
+
+### Figure 5 — Results / Ablation
+
+Ablation across the five configurations (B0 Plain LLM → MT Full MedTrust Agent),
+showing measured security gains and the illustrative quality track.
+
+![Results Ablation](diagrams/diagram5_results_ablation.png)
+([PDF](diagrams/diagram5_results_ablation.pdf))
+
+### Dashboard
+
+Rendered dashboard of the governed flow (approved answers with citations, zero-trust
+denials, step-up authorization, audit chain):
+
+![MedTrust Agent Dashboard](MedTrust-Agent.png)
+
+To regenerate all figures: `python diagrams.py` (or run `./reproduce.sh`, which also
+syncs the PDFs into the paper's `graphics/` directory).
 
 ## Formal Properties
 
