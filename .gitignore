@@ -196,3 +196,12 @@ Floorplan-Dimractor/
 future-agi/
 provisional-patent-skills/
 tomorrowkit-for-minds/
+floorplan-kg/backend/.venv/*
+floorplan-kg/backend/app/__pycache__/*
+eb1a/VeritasGraph-Ecosystem-EB1A-and-Marketing-Plan.md
+veritasgraph_video_script.md
+eval/*
+MedTrust Agent/tests/__pycache__/*
+tests/rag/__pycache__/*
+MedTrust Agent/__pycache__/*
+MedTrust Agent/eval/__pycache__/*

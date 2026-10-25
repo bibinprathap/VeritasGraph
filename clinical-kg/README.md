@@ -183,3 +183,7 @@ not runnable without a signed DUA.
 
 > **Compliance:** all bundled notes are **synthetic** (no real PHI). Never send
 > PHI to cloud APIs — this stack is designed to run entirely on-prem.
+
+systemctl --user status veritasgraph-clinical-kg.service veritasgraph-clinical-kg-web.service
+systemctl --user restart veritasgraph-clinical-kg-web.service
+
