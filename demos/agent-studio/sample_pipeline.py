@@ -24,6 +24,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import sys
 import urllib.error
 import urllib.request
@@ -45,6 +46,9 @@ def _call(base: str, method: str, path: str, payload: dict | None = None) -> dic
     req = urllib.request.Request(url, data=data, method=method)
     if data is not None:
         req.add_header("Content-Type", "application/json")
+    token = os.environ.get("STUDIO_API_TOKEN", "").strip()
+    if token:
+        req.add_header("Authorization", f"Bearer {token}")
     try:
         with urllib.request.urlopen(req, timeout=300) as resp:
             return json.loads(resp.read().decode())
@@ -56,7 +60,8 @@ def _call(base: str, method: str, path: str, payload: dict | None = None) -> dic
         print(
             f"\nCould not reach the studio server at {base}.\n"
             f"Start it with:\n"
-            f"  uvicorn studio_api.main:app --host 127.0.0.1 --port 8200\n"
+            f"  STUDIO_AUTH=off uvicorn studio_api.main:app --host 127.0.0.1 --port 8200\n"
+            f"(or set STUDIO_API_TOKENS on the server and STUDIO_API_TOKEN here)\n"
             f"Original error: {exc}",
             file=sys.stderr,
         )

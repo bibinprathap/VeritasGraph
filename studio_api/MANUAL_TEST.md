@@ -28,6 +28,7 @@ Use a fresh data dir and fast simulation steps so progress is visible quickly:
 export STUDIO_DATA_DIR=$(mktemp -d)
 export STUDIO_EVAL_STEP_SECONDS=1
 export STUDIO_FT_STEP_SECONDS=1
+export STUDIO_AUTH=off          # local testing only; otherwise set STUDIO_API_TOKENS and send a Bearer token
 uvicorn studio_api.main:app --host 127.0.0.1 --port 8200 --log-level warning
 ```
 

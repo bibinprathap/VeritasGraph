@@ -15,6 +15,7 @@ graphrag-ollama-config/input/youtube_EY_CAP_Discover_How_to_Analyze_your_Climate
 *.env
 !*.env.example
 !*.env.template
+.studio-api-token
 
 # Logs
 *.log
@@ -205,3 +206,5 @@ MedTrust Agent/tests/__pycache__/*
 tests/rag/__pycache__/*
 MedTrust Agent/__pycache__/*
 MedTrust Agent/eval/__pycache__/*
+data/*
+AUTO_ONTOLOGY_ARCHITECTURE_AND_VERITASGRAPH_GAPS.md

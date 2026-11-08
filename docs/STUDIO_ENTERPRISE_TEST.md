@@ -23,9 +23,10 @@ and the **Expected result / pass criteria**. Tick `[ ]` → `[x]` as you go.
 - [ ] **Start the Studio API** (serves the JSON API and the UI):
   ```bash
   cd /home/sijo/VeritasGraph
-  STUDIO_DATA_DIR="$PWD/studio_api/data" \
+  STUDIO_AUTH=off STUDIO_DATA_DIR="$PWD/studio_api/data" \
     .venv/bin/uvicorn studio_api.main:app --host 127.0.0.1 --port 8200 --log-level warning
   ```
+  (For the role checks, use `STUDIO_API_TOKENS="<viewer-token>:viewer,<admin-token>:admin"` instead of `STUDIO_AUTH=off`.)
 - [ ] **Open** <http://127.0.0.1:8200/> → redirects to `/studio` and renders
   **"VeritasGraph Studio"**.
 - [ ] **Hard refresh** (`Ctrl+Shift+R`) to bypass cached HTML/JS.

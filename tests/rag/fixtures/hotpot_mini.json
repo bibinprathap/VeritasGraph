@@ -6,21 +6,57 @@
       "question": "Which engineer who worked on Project Phoenix holds Patent XYZ?",
       "answer": "John Doe",
       "supporting_facts": ["doc_phoenix#0", "doc_patent#2"],
-      "context_docs": ["doc_phoenix", "doc_john", "doc_patent"]
+      "context": [
+        ["doc_phoenix", [
+          "Project Phoenix was led by the engineer John Doe.",
+          "The project ran from 2001 to 2004."
+        ]],
+        ["doc_john", [
+          "John Doe is a mechanical engineer.",
+          "He joined the lab in 1999."
+        ]],
+        ["doc_patent", [
+          "Patent XYZ covers a novel heat exchanger.",
+          "It was filed in 2003.",
+          "The inventor listed on Patent XYZ is John Doe."
+        ]]
+      ]
     },
     {
       "id": "q2",
       "question": "What year was the Mornington bridge opened?",
       "answer": "1987",
       "supporting_facts": ["doc_bridge#1"],
-      "context_docs": ["doc_bridge", "doc_town"]
+      "context": [
+        ["doc_bridge", [
+          "The Mornington bridge spans the river.",
+          "The Mornington bridge was opened in 1987.",
+          "It carries two lanes of traffic."
+        ]],
+        ["doc_town", [
+          "Mornington is a small coastal town.",
+          "It has a population of about 5000."
+        ]]
+      ]
     },
     {
       "id": "q3",
       "question": "In which city is the headquarters of Acme Corp located?",
       "answer": "Lisbon",
       "supporting_facts": ["doc_acme#0", "doc_city#3"],
-      "context_docs": ["doc_acme", "doc_city"]
+      "context": [
+        ["doc_acme", [
+          "Acme Corp is headquartered in Lisbon.",
+          "Acme Corp manufactures widgets.",
+          "It was founded in 1975."
+        ]],
+        ["doc_city", [
+          "Lisbon is the capital of Portugal.",
+          "It lies on the Tagus river.",
+          "It is known for its hills.",
+          "Lisbon hosts the headquarters of Acme Corp."
+        ]]
+      ]
     }
   ]
 }

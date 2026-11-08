@@ -6,18 +6,18 @@ one tool-specific action the generic surface can't express: actually *calling*
 the tool's configured endpoint so an operator can validate a real external tool
 before exposing it to agents.
 
-Security: outbound probes are guarded against the most dangerous SSRF target —
-the cloud metadata / link-local range (169.254.0.0/16) — while still allowing
-loopback, private (on-prem/enterprise), and public endpoints, since enterprise
-tools legitimately live on internal networks.
+Security: outbound probes go through :mod:`studio_api.netguard`. Public
+endpoints are allowed; link-local (cloud metadata) is always refused; loopback
+and private ranges are refused unless allowlisted with
+``STUDIO_TOOL_ALLOWED_NETWORKS``. Studio's own VeritasGraph endpoints
+(``/graphrag/query``, ``/mcp/tools/veritasgraph_*`` on loopback) are checked
+in-process instead of over HTTP, mirroring the orchestrator.
 """
 
 from __future__ import annotations
 
 import asyncio
-import ipaddress
 import json
-import socket
 import time
 from typing import Any, Dict, Optional
 from urllib import parse as urlparse
@@ -27,6 +27,7 @@ from fastapi import HTTPException
 from fastapi.responses import JSONResponse
 
 from studio_api.models import ResourceUpdateRequest, Section
+from studio_api.netguard import UnsafeURLError, assert_safe_url
 from studio_api.store import StudioStore
 
 # Cap how much of a tool response we read back into the validation panel.
@@ -39,36 +40,54 @@ class ToolProbeError(Exception):
 
 
 def _assert_safe_url(endpoint: str) -> str:
-    """Validate scheme/host and block link-local (cloud metadata) targets."""
-    parsed = urlparse.urlparse(endpoint)
-    if parsed.scheme not in {"http", "https"}:
-        raise ToolProbeError("Endpoint must be an http:// or https:// URL.")
-    host = parsed.hostname
-    if not host:
-        raise ToolProbeError("Endpoint is missing a host.")
-
-    # Resolve every address the host maps to and reject link-local / metadata.
+    """Validate scheme/host and refuse non-public targets unless allowlisted."""
     try:
-        infos = socket.getaddrinfo(host, parsed.port or (443 if parsed.scheme == "https" else 80))
-    except socket.gaierror as exc:
-        raise ToolProbeError(f"Cannot resolve host '{host}': {exc}") from exc
+        return assert_safe_url(endpoint)
+    except UnsafeURLError as exc:
+        raise ToolProbeError(str(exc)) from exc
 
-    for info in infos:
-        ip = ipaddress.ip_address(info[4][0])
-        if ip.is_link_local or ip.is_multicast or ip.is_reserved or ip.is_unspecified:
-            raise ToolProbeError(
-                f"Refusing to call blocked address {ip} (link-local/metadata range)."
-            )
-    return endpoint
+
+_LOOPBACK_HOSTS = {"127.0.0.1", "localhost", "::1"}
+
+
+def _probe_in_process(endpoint: str, method: str) -> Optional[Dict[str, Any]]:
+    """Check Studio's own VeritasGraph endpoints without an HTTP self-call."""
+    parsed = urlparse.urlparse(endpoint)
+    if (parsed.hostname or "").lower() not in _LOOPBACK_HOSTS:
+        return None
+    path = parsed.path
+    if path.endswith("/graphrag/query"):
+        detail = "in-process VeritasGraph graph query endpoint"
+    elif "/mcp/tools/" in path:
+        from veritasgraph_mcp.tools import TOOL_HANDLERS
+
+        name = path.split("/mcp/tools/", 1)[1].strip("/")
+        if name not in TOOL_HANDLERS:
+            raise ToolProbeError(f"Unknown VeritasGraph MCP tool '{name}'.")
+        detail = f"in-process VeritasGraph MCP tool {name}"
+    else:
+        return None
+    return {
+        "ok": True,
+        "status_code": 200,
+        "latency_ms": 0,
+        "content_type": "application/json",
+        "sample": detail,
+        "method": method,
+    }
 
 
 def _probe(endpoint: str, config: Dict[str, Any]) -> Dict[str, Any]:
     """Perform a real HTTP request to the tool endpoint and summarise the result."""
-    _assert_safe_url(endpoint)
-
     method = str(config.get("method") or "").upper() or "POST"
     if method not in {"GET", "POST", "PUT", "PATCH", "DELETE", "HEAD"}:
         method = "POST"
+    local = _probe_in_process(endpoint, method)
+    if local is not None:
+        return local
+
+    _assert_safe_url(endpoint)
+
     timeout = float(config.get("timeout_seconds") or _DEFAULT_TIMEOUT)
 
     headers: Dict[str, str] = {"Accept": "application/json"}

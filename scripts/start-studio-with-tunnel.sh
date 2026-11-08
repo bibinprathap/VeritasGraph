@@ -17,11 +17,11 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 
-# Load GITHUB_TOKEN from .env if not already in the environment
+# Load GITHUB_TOKEN / STUDIO_API_TOKENS from .env if not already in the environment
 ENV_FILE="$REPO_DIR/.env"
 if [ -f "$ENV_FILE" ]; then
     # shellcheck disable=SC2046
-    export $(grep -E '^GITHUB_TOKEN=' "$ENV_FILE" | xargs) || true
+    export $(grep -E '^(GITHUB_TOKEN|STUDIO_API_TOKENS)=' "$ENV_FILE" | xargs) || true
 fi
 
 GITHUB_REPO="bibinprathap/VeritasGraph"
@@ -37,6 +37,23 @@ LOG_FILE="$REPO_DIR/studio-tunnel.log"
 export STUDIO_DATA_DIR="${STUDIO_DATA_DIR:-$REPO_DIR/studio_api/data}"
 export STUDIO_EVAL_STEP_SECONDS="${STUDIO_EVAL_STEP_SECONDS:-2}"
 export STUDIO_FT_STEP_SECONDS="${STUDIO_FT_STEP_SECONDS:-3}"
+
+# The tunnel makes Studio reachable from the public internet, so it must never
+# run without authentication. Use STUDIO_API_TOKENS when provided; otherwise
+# generate an admin token once and keep it in a 0600 file (never in the log).
+TOKEN_FILE="$REPO_DIR/.studio-api-token"
+if [ "${STUDIO_AUTH:-}" = "off" ]; then
+    echo "Refusing to expose Studio through a public tunnel with STUDIO_AUTH=off." >&2
+    exit 1
+fi
+if [ -z "${STUDIO_API_TOKENS:-}" ]; then
+    if [ ! -s "$TOKEN_FILE" ]; then
+        (umask 077 && "$REPO_DIR/.venv/bin/python" -c 'import secrets; print(secrets.token_urlsafe(32))' > "$TOKEN_FILE")
+    fi
+    chmod 600 "$TOKEN_FILE"
+    STUDIO_API_TOKENS="$(tr -d '[:space:]' < "$TOKEN_FILE"):admin"
+    export STUDIO_API_TOKENS
+fi
 
 # Keep only one instance active (common on reboot + manual start overlap).
 LOCK_FILE="/tmp/veritasgraph-studio-tunnel.lock"
@@ -305,6 +322,9 @@ main() {
         cleanup 1
     fi
     log "✅ studio_api is healthy."
+    if [ -s "$TOKEN_FILE" ]; then
+        log "🔐 Studio API admin token is stored in $TOKEN_FILE (enter it when the UI prompts)."
+    fi
 
     log "Starting Cloudflare tunnel..."
     local URL_FOUND=false

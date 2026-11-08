@@ -79,6 +79,13 @@ Start the Studio API and the bridge mounts under `/mcp`:
 uvicorn studio_api.main:app --port 8200
 ```
 
+The bridge uses Studio auth (`Authorization: Bearer <token>` from
+`STUDIO_API_TOKENS`). Tools are tiered **read / write / admin**: a viewer token
+sees read tools, an editor also gets ingest/import/propose, and admin tools
+(`veritasgraph_clear_graph`) appear only when `VERITASGRAPH_MCP_MODE=admin`.
+The stdio server honours the same `VERITASGRAPH_MCP_MODE` (default `write`;
+use `read` for untrusted clients). Hidden tools return JSON-RPC `-32601`.
+
 | Method & path | Purpose |
 |---------------|---------|
 | `GET /mcp/` | Server identity, capabilities, tool/resource counts. |

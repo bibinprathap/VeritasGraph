@@ -20,7 +20,16 @@ Classifier: Topic :: Scientific/Engineering :: Artificial Intelligence
 Classifier: Topic :: Software Development :: Libraries :: Python Modules
 Requires-Python: >=3.10
 Description-Content-Type: text/markdown
+License-File: LICENSE
 Requires-Dist: httpx>=0.27
+Provides-Extra: studio
+Requires-Dist: fastapi>=0.110; extra == "studio"
+Requires-Dist: uvicorn[standard]>=0.29; extra == "studio"
+Requires-Dist: pydantic>=2.5; extra == "studio"
+Provides-Extra: dev
+Requires-Dist: pytest>=8; extra == "dev"
+Requires-Dist: ruff>=0.5; extra == "dev"
+Dynamic: license-file
 
 # VeritasGraph MCP Server
 
@@ -102,6 +111,13 @@ Start the Studio API and the bridge mounts under `/mcp`:
 ```bash
 uvicorn studio_api.main:app --port 8200
 ```
+
+The bridge uses Studio auth (`Authorization: Bearer <token>` from
+`STUDIO_API_TOKENS`). Tools are tiered **read / write / admin**: a viewer token
+sees read tools, an editor also gets ingest/import/propose, and admin tools
+(`veritasgraph_clear_graph`) appear only when `VERITASGRAPH_MCP_MODE=admin`.
+The stdio server honours the same `VERITASGRAPH_MCP_MODE` (default `write`;
+use `read` for untrusted clients). Hidden tools return JSON-RPC `-32601`.
 
 | Method & path | Purpose |
 |---------------|---------|

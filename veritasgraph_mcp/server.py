@@ -23,12 +23,17 @@ _REPO_ROOT = Path(__file__).resolve().parent.parent
 if str(_REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(_REPO_ROOT))
 
-from veritasgraph_mcp import __version__
-from veritasgraph_mcp.tools import (
+from veritasgraph_mcp import __version__  # noqa: E402
+from veritasgraph_mcp.tools import (  # noqa: E402
     RESOURCE_DEFINITIONS,
-    TOOL_DEFINITIONS,
+    SERVER_INSTRUCTIONS,
     TOOL_HANDLERS,
+    call_context,
+    current_mode,
+    effective_mode,
     handle_resource_read,
+    public_tools,
+    tool_allowed,
 )
 
 log = logging.getLogger("veritasgraph.mcp.server")
@@ -62,15 +67,12 @@ def _handle_initialize(req_id: Any, _params: dict) -> dict:
         "protocolVersion": "2024-11-05",
         "capabilities": {"tools": {}, "resources": {}},
         "serverInfo": {"name": "veritasgraph-mcp", "version": __version__},
+        "instructions": SERVER_INSTRUCTIONS,
     })
 
 
 def _handle_tools_list(req_id: Any, _params: dict) -> dict:
-    tools = [
-        {"name": t["name"], "description": t["description"], "inputSchema": t["inputSchema"]}
-        for t in TOOL_DEFINITIONS
-    ]
-    return _ok(req_id, {"tools": tools})
+    return _ok(req_id, {"tools": public_tools(current_mode())})
 
 
 def _handle_tools_call(req_id: Any, params: dict) -> dict:
@@ -78,7 +80,8 @@ def _handle_tools_call(req_id: Any, params: dict) -> dict:
     args = params.get("arguments", {}) or {}
 
     handler = TOOL_HANDLERS.get(name)
-    if handler is None:
+    # A tool above the current mode is reported exactly like an unknown one.
+    if handler is None or not tool_allowed(name):
         return _err(req_id, _METHOD_NOT_FOUND, f"Unknown tool: {name}")
 
     try:
@@ -138,7 +141,14 @@ class VeritasGraphMCPServer:
             format="%(name)s %(levelname)s %(message)s",
         )
 
-    def dispatch(self, request: dict) -> Optional[dict]:
+    def dispatch(
+        self, request: dict, *, mode: Optional[str] = None, actor: str = "mcp:stdio"
+    ) -> Optional[dict]:
+        """Handle one JSON-RPC request as ``mode`` (capped by VERITASGRAPH_MCP_MODE)."""
+        with call_context(effective_mode(mode), actor):
+            return self._dispatch(request)
+
+    def _dispatch(self, request: dict) -> Optional[dict]:
         req_id = request.get("id")  # None for notifications
         method = request.get("method", "")
         params = request.get("params") or {}

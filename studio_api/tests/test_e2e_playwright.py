@@ -47,6 +47,7 @@ def server():
     data_dir = tempfile.mkdtemp(prefix="studio-e2e-")
     env = {
         **os.environ,
+        "STUDIO_AUTH": "off",
         "STUDIO_DATA_DIR": data_dir,
         "STUDIO_EVAL_STEP_SECONDS": "1",
         "STUDIO_FT_STEP_SECONDS": "1",
@@ -341,6 +342,7 @@ def test_11_state_persists_across_restart(server):
     port = _free_port()
     env = {
         **os.environ,
+        "STUDIO_AUTH": "off",
         "STUDIO_DATA_DIR": server["data_dir"],
         "STUDIO_EVAL_STEP_SECONDS": "1",
         "STUDIO_FT_STEP_SECONDS": "1",

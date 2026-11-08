@@ -18,9 +18,10 @@ recent fixes.
 - [ ] **Start the Studio API** (serves both the JSON API and the UI):
   ```bash
   cd /home/sijo/VeritasGraph
-  STUDIO_DATA_DIR="$PWD/studio_api/data" \
+  STUDIO_AUTH=off STUDIO_DATA_DIR="$PWD/studio_api/data" \
     .venv/bin/uvicorn studio_api.main:app --host 127.0.0.1 --port 8200 --log-level warning
   ```
+  (`STUDIO_AUTH=off` is for local testing only; with `STUDIO_API_TOKENS` set the UI prompts for a token.)
 - [ ] **Open the UI**: browse to <http://127.0.0.1:8200/> — it should redirect to
   `/studio` and render the "VeritasGraph Studio" workspace.
 - [ ] **Hard refresh** (`Ctrl+Shift+R`) to bypass any cached HTML/JS.

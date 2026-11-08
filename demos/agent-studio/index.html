@@ -1023,6 +1023,11 @@
                 <input id="graphQuestion" placeholder="Ask about the ingested documents..." autocomplete="off" />
                 <button class="primary" id="graphAsk">Reason</button>
               </div>
+              <label class="meta" style="display:flex;gap:6px;align-items:center;margin-top:6px">
+                <input type="checkbox" id="graphGoverned" style="width:auto" />
+                Governed mode (answer only from certified terms; withhold ungrounded answers)
+              </label>
+              <div id="graphGrounding" class="meta" style="margin-top:6px"></div>
               <div id="graphAnswer" class="chat-log" style="min-height:120px"></div>
             </article>
 
@@ -1032,6 +1037,45 @@
               <div class="list" id="graphPath"></div>
               <div class="list" id="graphCitations" style="margin-top:10px"></div>
             </article>
+          </div>
+        </div>
+
+        <div id="ontology" class="section">
+          <div class="grid">
+            <article class="card">
+              <h3>Propose an entry</h3>
+              <p class="meta">Editors propose types, predicates and glossary terms. Only certified entries constrain extraction and governed answers; certifying needs the admin role.</p>
+              <div class="split" style="margin-top:8px">
+                <select id="ontoKind">
+                  <option value="types">Entity type</option>
+                  <option value="predicates">Predicate</option>
+                  <option value="terms">Glossary term</option>
+                </select>
+                <input id="ontoName" placeholder="Name" />
+              </div>
+              <input id="ontoSynonyms" placeholder="Synonyms (comma-separated)" style="margin-top:10px" />
+              <textarea id="ontoDescription" placeholder="Description / definition" style="min-height:70px"></textarea>
+              <div class="form-row">
+                <span class="meta" id="ontoStatus"></span>
+                <button class="primary" id="ontoPropose">Propose</button>
+              </div>
+            </article>
+
+            <article class="card">
+              <h3>Compile &amp; suggestions</h3>
+              <p class="meta">Compile normalises the graph against certified vocabulary and suggests merges and terms for review.</p>
+              <div class="form-row">
+                <span class="meta" id="compileStatus">Not compiled yet.</span>
+                <button class="ghost" id="compileRun">Run compile</button>
+              </div>
+              <div class="list" id="suggestionList" style="margin-top:10px"></div>
+            </article>
+          </div>
+
+          <div class="grid" style="margin-top:18px">
+            <article class="card"><h3>Entity types</h3><div class="list" id="ontoTypes"></div></article>
+            <article class="card"><h3>Predicates</h3><div class="list" id="ontoPredicates"></div></article>
+            <article class="card" style="grid-column:1 / -1"><h3>Glossary terms</h3><div class="list" id="ontoTerms"></div></article>
           </div>
         </div>
       </section>
@@ -1049,16 +1093,38 @@
       { id: "evaluation", label: "Evaluation", subtitle: "Benchmark quality, reliability, and compliance." },
       { id: "fine-tune", label: "Fine-tune", subtitle: "Queue and monitor model specialization jobs." },
       { id: "playground", label: "Playground", subtitle: "Test an agent live against its local model." },
-      { id: "graphrag", label: "Knowledge Graph", subtitle: "Build a VeritasGraph knowledge graph and reason over it with citations." }
+      { id: "graphrag", label: "Knowledge Graph", subtitle: "Build a VeritasGraph knowledge graph and reason over it with citations." },
+      { id: "ontology", label: "Ontology", subtitle: "Govern the vocabulary: propose, certify and review compile suggestions." }
     ];
 
     // Same-origin when served from the studio_api backend (/studio).
     // Falls back to the default dev port when the file is opened directly.
     const API_BASE = location.protocol.startsWith("http") ? "" : "http://127.0.0.1:8200";
 
-    async function api(path, options = {}) {
-      const opts = Object.assign({ headers: { "Content-Type": "application/json" } }, options);
-      const res = await fetch(API_BASE + path, opts);
+    // Bearer token for the Studio API (STUDIO_API_TOKENS on the server). Kept in
+    // sessionStorage so it is dropped when the tab closes.
+    const TOKEN_KEY = "veritasgraph_studio_token";
+
+    function authHeaders() {
+      const token = sessionStorage.getItem(TOKEN_KEY);
+      return token ? { Authorization: "Bearer " + token } : {};
+    }
+
+    async function api(path, options = {}, retried = false) {
+      const headers = Object.assign(
+        { "Content-Type": "application/json" },
+        authHeaders(),
+        options.headers || {}
+      );
+      const res = await fetch(API_BASE + path, Object.assign({}, options, { headers }));
+      if (res.status === 401 && !retried) {
+        sessionStorage.removeItem(TOKEN_KEY);
+        const token = window.prompt("VeritasGraph Studio API token");
+        if (token && token.trim()) {
+          sessionStorage.setItem(TOKEN_KEY, token.trim());
+          return api(path, options, true);
+        }
+      }
       if (!res.ok) {
         throw new Error(path + " -> " + res.status);
       }
@@ -1532,8 +1598,20 @@
       answerEl.innerHTML = `<div class="chat-msg assistant"><span class="who">VeritasGraph</span>Reasoning over the graph...</div>`;
       document.getElementById("graphPath").innerHTML = "";
       document.getElementById("graphCitations").innerHTML = "";
+      const groundingEl = document.getElementById("graphGrounding");
+      groundingEl.innerHTML = "";
+      const mode = document.getElementById("graphGoverned").checked ? "governed" : "exploratory";
       try {
-        const res = await api("/graphrag/query", { method: "POST", body: JSON.stringify({ question, model }) });
+        const res = await api("/graphrag/query", { method: "POST", body: JSON.stringify({ question, model, mode }) });
+        const receipt = res.answer_id ? ` · receipt <span class="mono">${escapeHtml(res.answer_id)}</span>` : "";
+        if (res.abstained) {
+          groundingEl.innerHTML = `${pill("abstained", [], ["abstained"])} ${escapeHtml(res.abstain_reason || "")}${receipt}`;
+        } else if (!res.grounded) {
+          const unknown = (res.unknown_citations || []).join(", ");
+          groundingEl.innerHTML = `${pill("not grounded", [], ["not grounded"])} Verify before use${unknown ? ": cited unknown ids " + escapeHtml(unknown) : ": no retrieved source was cited"}.${receipt}`;
+        } else {
+          groundingEl.innerHTML = `${pill("grounded", ["grounded"], [])} Every citation matches a retrieved source.${receipt}`;
+        }
         answerEl.innerHTML = `<div class="chat-msg user"><span class="who">You</span>${escapeHtml(question)}</div>
           <div class="chat-msg assistant"><span class="who">VeritasGraph</span>${escapeHtml(res.answer)}</div>`;
         renderList("graphPath", res.reasoning_path.map((p) => ({ p })), (item) => `<div class="meta mono">${escapeHtml(item.p)}</div>`);
@@ -1557,6 +1635,116 @@
       } finally {
         btn.disabled = false;
       }
+    }
+
+    // ----------------------------------------------------------------- //
+    // Ontology
+    // ----------------------------------------------------------------- //
+    function ontologyItem(kind, ident, item) {
+      const syn = (item.synonyms || []).join(", ");
+      const desc = item.description || item.definition || "";
+      const actions = item.status === "certified"
+        ? `<button class="ghost" data-onto="deprecate" data-kind="${kind}" data-id="${escapeHtml(ident)}">Deprecate</button>`
+        : `<button class="ghost" data-onto="certify" data-kind="${kind}" data-id="${escapeHtml(ident)}">Certify</button>`;
+      return `
+        <div>
+          <div class="name">${escapeHtml(item.name)}</div>
+          <div class="meta">${escapeHtml(desc)}${syn ? " · synonyms: " + escapeHtml(syn) : ""}</div>
+        </div>
+        <div class="split">${pill(item.status, ["certified"], ["deprecated"])}${actions}</div>`;
+    }
+
+    async function loadOntology() {
+      let onto;
+      try {
+        onto = await api("/ontology");
+      } catch (err) {
+        document.getElementById("ontoStatus").textContent = err.message || "Could not load the ontology";
+        return;
+      }
+      renderList("ontoTypes", onto.types || [], (t) => ontologyItem("types", t.name, t));
+      renderList("ontoPredicates", onto.predicates || [], (p) => ontologyItem("predicates", p.name, p));
+      renderList("ontoTerms", onto.terms || [], (t) => ontologyItem("terms", t.id, t));
+      await loadSuggestions();
+    }
+
+    async function loadSuggestions() {
+      try {
+        const status = await api("/graphrag/compile/status");
+        const last = status.last_run;
+        document.getElementById("compileStatus").textContent = last
+          ? `Last compile: ${last.status} (${last.trigger}) · graph v${status.graph_version}`
+          : `Not compiled yet · graph v${status.graph_version}`;
+        const res = await api("/graphrag/suggestions?status=open&limit=50");
+        const items = res.suggestions || [];
+        renderList("suggestionList", items, (s) => `
+          <div>
+            <div class="name">${escapeHtml(s.kind)}</div>
+            <div class="meta">${escapeHtml(s.rationale || JSON.stringify(s.payload || {}))}</div>
+          </div>
+          <div class="split">
+            <button class="ghost" data-suggest="accept" data-id="${escapeHtml(s.id)}">Accept</button>
+            <button class="ghost" data-suggest="reject" data-id="${escapeHtml(s.id)}">Reject</button>
+          </div>`);
+        if (!items.length) {
+          document.getElementById("suggestionList").innerHTML = `<div class="meta">No open suggestions.</div>`;
+        }
+      } catch (err) {
+        document.getElementById("compileStatus").textContent = err.message || "Compile status unavailable";
+      }
+    }
+
+    async function proposeOntology() {
+      const kind = document.getElementById("ontoKind").value;
+      const name = document.getElementById("ontoName").value.trim();
+      const statusEl = document.getElementById("ontoStatus");
+      if (!name) return;
+      const synonyms = document.getElementById("ontoSynonyms").value.split(",").map((s) => s.trim()).filter(Boolean);
+      const text = document.getElementById("ontoDescription").value.trim();
+      const body = kind === "terms" ? { name, synonyms, definition: text } : { name, synonyms, description: text };
+      try {
+        await api("/ontology/" + kind, { method: "POST", body: JSON.stringify(body) });
+        statusEl.textContent = `Proposed "${name}".`;
+        document.getElementById("ontoName").value = "";
+        document.getElementById("ontoSynonyms").value = "";
+        document.getElementById("ontoDescription").value = "";
+        await loadOntology();
+      } catch (err) {
+        statusEl.textContent = err.message || "Propose failed";
+      }
+    }
+
+    async function ontologyAction(ev) {
+      const btn = ev.target.closest("button[data-onto], button[data-suggest]");
+      if (!btn) return;
+      const statusEl = document.getElementById("ontoStatus");
+      const id = encodeURIComponent(btn.dataset.id);
+      const path = btn.dataset.onto
+        ? `/ontology/${btn.dataset.kind}/${id}/${btn.dataset.onto}`
+        : `/graphrag/suggestions/${id}/${btn.dataset.suggest}`;
+      try {
+        await api(path, { method: "POST" });
+        statusEl.textContent = "";
+      } catch (err) {
+        const m = String(err.message || "");
+        statusEl.textContent = m.endsWith("403") ? "That action needs a higher role (admin to certify)." : m;
+      }
+      await loadOntology();
+    }
+
+    async function runCompile() {
+      const btn = document.getElementById("compileRun");
+      btn.disabled = true;
+      try {
+        await api("/graphrag/compile", { method: "POST" });
+      } catch (err) {
+        const m = String(err.message || "");
+        document.getElementById("compileStatus").textContent = m.endsWith("409") ? "A compile is already running." : m;
+      } finally {
+        btn.disabled = false;
+      }
+      await loadOntology();
+      await loadGraph();
     }
 
     // ----------------------------------------------------------------- //
@@ -1966,6 +2154,11 @@
       document.getElementById("graphQuestion").addEventListener("keydown", (e) => {
         if (e.key === "Enter") { e.preventDefault(); askGraph(); }
       });
+
+      document.getElementById("ontoPropose").addEventListener("click", proposeOntology);
+      document.getElementById("compileRun").addEventListener("click", runCompile);
+      document.getElementById("ontology").addEventListener("click", ontologyAction);
+      document.querySelector('.nav button[data-target="ontology"]')?.addEventListener("click", loadOntology);
 
       document.getElementById("addAgent").addEventListener("click", async () => {
         const name = document.getElementById("agentName").value.trim();

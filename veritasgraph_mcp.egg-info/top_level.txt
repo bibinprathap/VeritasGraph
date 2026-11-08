@@ -1,2 +1,3 @@
 studio_api
+veritasgraph
 veritasgraph_mcp

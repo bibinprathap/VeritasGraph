@@ -29,7 +29,18 @@ from typing import Any, Dict, List, Optional
 
 from studio_api.compression import ContextBudgeter, budgeter as _default_budgeter
 from studio_api.graphrag_engine import GraphRAGEngine, engine as _default_engine
+from studio_api.netguard import assert_safe_url
 from studio_api.store import StudioStore
+
+
+class _NoRedirect(urlrequest.HTTPRedirectHandler):
+    """Refuse redirects so a validated URL cannot bounce to a blocked address."""
+
+    def redirect_request(self, req, fp, code, msg, headers, newurl):  # noqa: D401
+        return None
+
+
+_OPENER = urlrequest.build_opener(_NoRedirect)
 
 # --------------------------------------------------------------------------- #
 # Guardrail primitives
@@ -479,17 +490,29 @@ class Orchestrator:
                 tool_name = path.split(marker, 1)[1].strip("/")
                 # Imported lazily to avoid a circular import at module load time.
                 from studio_api.routes.mcp import _coerce_arguments
-                from veritasgraph_mcp.tools import TOOL_HANDLERS
+                from veritasgraph_mcp.tools import (
+                    TOOL_HANDLERS,
+                    call_context,
+                    effective_mode,
+                    tool_allowed,
+                )
 
                 handler = TOOL_HANDLERS.get(tool_name)
                 if handler is None:
                     raise RuntimeError(f"Unknown MCP tool: {tool_name}")
-                return handler(_coerce_arguments(tool_name, payload))
+                # Agent tool loops never get admin (destructive) MCP tools.
+                mode = effective_mode("write")
+                if not tool_allowed(tool_name, mode):
+                    raise RuntimeError(f"MCP tool {tool_name} is not allowed in '{mode}' mode")
+                with call_context(mode, "studio:orchestrator"):
+                    return handler(_coerce_arguments(tool_name, payload))
 
-        # Fallback: a real outbound HTTP call (only reached for allowed external
-        # endpoints, which never point back at this process). Honour a per-tool
-        # HTTP method and auth/custom headers so real enterprise tools can be
-        # driven with their own credentials.
+        # Fallback: a real outbound HTTP call. It passes the shared SSRF guard
+        # (loopback/private targets need STUDIO_TOOL_ALLOWED_NETWORKS) and never
+        # follows redirects. Honour a per-tool HTTP method and auth/custom
+        # headers so real enterprise tools can be driven with their own
+        # credentials.
+        assert_safe_url(endpoint)
         config = config or {}
         method = str(config.get("method") or "POST").upper()
         if method not in {"GET", "POST", "PUT", "PATCH", "DELETE"}:
@@ -508,7 +531,7 @@ class Orchestrator:
         req = urlrequest.Request(endpoint, data=data, method=method)
         for key, value in headers.items():
             req.add_header(key, value)
-        with urlrequest.urlopen(req, timeout=call_timeout) as resp:
+        with _OPENER.open(req, timeout=call_timeout) as resp:
             raw = resp.read().decode("utf-8", errors="replace")
             content_type = (resp.headers.get("Content-Type") or "").lower()
             if "application/json" in content_type:

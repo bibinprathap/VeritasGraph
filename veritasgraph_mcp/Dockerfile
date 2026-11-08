@@ -21,9 +21,15 @@ WORKDIR /app
 COPY pyproject.toml README.md ./
 COPY veritasgraph_mcp/ ./veritasgraph_mcp/
 COPY studio_api/ ./studio_api/
+COPY veritasgraph/ ./veritasgraph/
 
 # Install the package (declares its single runtime dep: httpx).
 RUN pip install --upgrade pip && pip install .
+
+# Graph store lives on a volume; default to read-only tools for untrusted clients.
+ENV STUDIO_DATA_DIR=/data \
+    VERITASGRAPH_MCP_MODE=read
+VOLUME ["/data"]
 
 # stdio MCP server — Glama connects here and issues `initialize` / `tools/list`.
 ENTRYPOINT ["python", "-m", "veritasgraph_mcp"]

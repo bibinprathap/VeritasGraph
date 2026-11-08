@@ -141,10 +141,17 @@ A hosted, zero-setup example of VeritasGraph applied to **construction drawings*
 ```bash
 pip install -r requirements.txt
 ollama serve & ollama pull qwen3:latest          # any local chat model
+export STUDIO_API_TOKENS="$(openssl rand -hex 24):admin"   # auth is on by default
 STUDIO_DATA_DIR="$PWD/studio_api/data" \
   uvicorn studio_api.main:app --host 127.0.0.1 --port 8200 --log-level warning
-# Studio UI → http://localhost:8200/studio   ·   API docs → /docs
+# Studio UI → http://localhost:8200/studio (asks for the token)   ·   API docs → /docs
+# Local-only demo without auth: STUDIO_AUTH=off (logs a warning on startup)
 ```
+
+See [studio_api/README.md](studio_api/README.md#configuration) for roles, governed mode,
+the ontology workflow and every environment variable. `pip install -e ".[studio]"`
+also installs a `veritasgraph` CLI (`serve`, `mcp`, `migrate`, `compile`, `export`,
+`import --dry-run`).
 
 **One-command end-to-end demo** (builds a graph + drives a fully-wired agent through graph reasoning, memory recall, PII redaction, and a guardrail block):
 

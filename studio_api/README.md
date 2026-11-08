@@ -44,7 +44,9 @@ pip install -r requirements.txt
 ollama serve &
 ollama pull qwen3:latest        # or any chat model you prefer
 
-# 3. Start the studio
+# 3. Start the studio (auth is required unless STUDIO_AUTH=off)
+export STUDIO_API_TOKENS="$(openssl rand -hex 24):admin"
+echo "$STUDIO_API_TOKENS"      # paste the token part when the UI asks
 STUDIO_DATA_DIR="$PWD/studio_api/data" \
   uvicorn studio_api.main:app --host 127.0.0.1 --port 8200 --log-level warning
 ```
@@ -53,11 +55,42 @@ Then open:
 
 - **Studio UI:** http://localhost:8200/studio
 - **API docs:** http://localhost:8200/docs
-- **Health:**   http://localhost:8200/health
+- **Health:**   http://localhost:8200/health  ·  **Ready:** http://localhost:8200/ready
 
 > Tip: `--log-level warning` keeps the console quiet (the UI polls for
 > evaluation/fine-tune progress). After editing the UI, hard-reload the page
 > (Ctrl+Shift+R).
+
+## Configuration
+
+Clients send `Authorization: Bearer <token>`. Roles: **viewer** (read, answer
+feedback), **editor** (ingest, import, propose ontology entries, compile),
+**admin** (certify/deprecate, restore snapshots, clear the graph). Clearing the
+graph snapshots it first.
+
+| Variable | Default | Purpose |
+|---|---|---|
+| `STUDIO_API_TOKENS` | — | `token:role,...`; tokens must be at least 24 characters. |
+| `STUDIO_AUTH` | on | `off` disables auth for local demos and tests only. |
+| `STUDIO_CORS_ORIGINS` | none | Comma-separated extra origins (the bundled UI is same-origin). |
+| `STUDIO_TOOL_ALLOWED_NETWORKS` | none | CIDRs agent tools may call; private/loopback hosts are blocked otherwise. |
+| `STUDIO_DATA_DIR` | `studio_api/data` | Data directory. |
+| `VERITASGRAPH_DB` | `$STUDIO_DATA_DIR/veritasgraph.db` | SQLite graph store shared by Studio, MCP and the CLI. A legacy `graphrag.json` is migrated on first start. |
+| `VERITASGRAPH_MCP_MODE` | `write` | Highest MCP tool tier: `read`, `write` or `admin`. Callers are further capped by role. |
+| `VERITASGRAPH_PII_POLICY` | `tag` | `off`, `tag`, `redact_before_extract` or `reject`. |
+| `VERITASGRAPH_PII_REVEAL_ROLE` | `editor` | Lowest role that sees PII-tagged text unredacted. |
+| `VERITASGRAPH_COMPILE_INTERVAL` | `0` | Seconds between background compile runs; `0` disables. |
+| `VERITASGRAPH_TERM_MIN_DEGREE` | `3` | Entity degree at which compile suggests a glossary term. |
+| `VERITASGRAPH_SNAPSHOT_KEEP` | `20` | Number of graph snapshots retained. |
+
+**Governed mode.** `POST /graphrag/query` with `"mode": "governed"` (or the UI
+toggle) answers only when certified glossary terms cover the question, and
+withholds answers whose citations do not match retrieved sources. Every answer
+returns an `answer_id`; `GET /graphrag/answers/{id}` shows its receipt.
+
+**Ontology.** Propose types, predicates and terms under `/ontology` (editor),
+certify them (admin), then run `POST /graphrag/compile` to normalise the graph
+and review merge/term suggestions at `/graphrag/suggestions`.
 
 ### One-command end-to-end sample
 

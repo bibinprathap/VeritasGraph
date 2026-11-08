@@ -11,7 +11,7 @@ from __future__ import annotations
 
 import time
 from enum import Enum
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Literal, Optional
 
 from pydantic import BaseModel, Field
 
@@ -224,6 +224,61 @@ class GraphQueryRequest(BaseModel):
     model: str = Field(min_length=1)
     max_depth: int = Field(default=2, ge=1, le=4)
     max_nodes: int = Field(default=25, ge=1, le=200)
+    mode: Literal["exploratory", "governed"] = Field(
+        default="exploratory",
+        description="governed: require certified glossary terms and withhold ungrounded answers.",
+    )
+
+
+class AnswerableRequest(BaseModel):
+    """Check whether the graph can answer a question, without calling an LLM."""
+
+    question: str = Field(min_length=1, max_length=4000)
+    mode: Literal["exploratory", "governed"] = "exploratory"
+
+
+class FeedbackRequest(BaseModel):
+    rating: Literal[-1, 0, 1]
+    comment: str = Field(default="", max_length=2000)
+
+
+class SnapshotRequest(BaseModel):
+    label: str = Field(default="", max_length=200)
+
+
+class MergeEntitiesRequest(BaseModel):
+    keep_id: str = Field(min_length=1)
+    drop_id: str = Field(min_length=1)
+
+
+# --------------------------------------------------------------------------- #
+# Ontology
+# --------------------------------------------------------------------------- #
+class EntityTypeRequest(BaseModel):
+    name: str = Field(min_length=1, max_length=120)
+    description: str = Field(default="", max_length=4000)
+    parent: Optional[str] = Field(default=None, max_length=120)
+    synonyms: List[str] = Field(default_factory=list, max_length=100)
+
+
+class PredicateRequest(BaseModel):
+    name: str = Field(min_length=1, max_length=120)
+    description: str = Field(default="", max_length=4000)
+    domain_type: Optional[str] = Field(default=None, max_length=120)
+    range_type: Optional[str] = Field(default=None, max_length=120)
+    inverse: Optional[str] = Field(default=None, max_length=120)
+    synonyms: List[str] = Field(default_factory=list, max_length=100)
+
+
+class TermRequest(BaseModel):
+    name: str = Field(min_length=1, max_length=120)
+    definition: str = Field(default="", max_length=4000)
+    synonyms: List[str] = Field(default_factory=list, max_length=100)
+    entity_ids: Optional[List[str]] = Field(default=None, max_length=1000)
+
+
+class TermLinkRequest(BaseModel):
+    entity_ids: List[str] = Field(min_length=1, max_length=1000)
 
 
 class GraphImportRequest(BaseModel):

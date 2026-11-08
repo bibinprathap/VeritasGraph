@@ -13,28 +13,51 @@ This is a self-contained, local implementation of the core VeritasGraph ideas:
   chunks are handed to the LLM, which must answer using only that context and
   cite the source ids it relied on.
 
-The graph is held in memory and snapshotted to JSON so it survives a restart,
-matching the persistence approach of :class:`studio_api.store.StudioStore`.
+Storage: the graph lives in a SQLite database shared by every process (Studio,
+MCP, CLI) — see :mod:`veritasgraph.store`. The engine keeps the graph in
+in-memory dicts as a read cache, re-syncs it whenever another process has
+written (``graph_version`` changed), and persists only the rows it changed in
+one ``BEGIN IMMEDIATE`` transaction. A legacy ``knowledge_graph.json`` is
+migrated automatically on first start.
+
+Subclasses that override :meth:`GraphRAGEngine._load` (e.g. the evaluation
+harness) opt out of the database and keep pure in-memory behaviour.
 """
 
 from __future__ import annotations
 
 import json
+import logging
 import os
 import re
 import threading
 import time
 import uuid
 from collections import deque
+from contextlib import contextmanager
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, Iterator, List, Optional, Tuple
 
 import httpx
+
+from veritasgraph import governance, pii
+from veritasgraph.ontology import Ontology, Vocabulary
+from veritasgraph.ontology import key as onto_key
+from veritasgraph.store.migrate_json import migrate_json
+from veritasgraph.store.sqlite import SqliteGraphStore, default_db_path, open_store
+from veritasgraph.text import norm as norm_text
+from veritasgraph.text import query_tokens as _query_tokens
+
+log = logging.getLogger(__name__)
 
 _DATA_DIR = Path(
     os.getenv("STUDIO_DATA_DIR", str(Path(__file__).resolve().parent / "data"))
 )
 _GRAPH_SNAPSHOT = _DATA_DIR / "knowledge_graph.json"
+
+# Source ids look like "doc_<hex>#<n>" (ingest) or "imp_<hex>#<n>" (import);
+# callers such as the eval harness may use other "<prefix>_<id>#<n>" forms.
+_SOURCE_ID_RE = re.compile(r"(?<![\w#])([A-Za-z][A-Za-z0-9]*_[A-Za-z0-9]+#\d+)")
 
 # Roughly characters per source chunk during ingestion.
 _CHUNK_SIZE = int(os.getenv("STUDIO_GRAPH_CHUNK_SIZE", "1200"))
@@ -53,7 +76,7 @@ def _new_id(prefix: str) -> str:
 
 def _norm(name: str) -> str:
     """Normalise an entity name for de-duplication."""
-    return re.sub(r"\s+", " ", name or "").strip().lower()
+    return norm_text(name)
 
 
 def _chunk_text(text: str, size: int = _CHUNK_SIZE) -> List[str]:
@@ -94,6 +117,32 @@ _EXTRACTION_SYSTEM = (
     "entity names that appear in the entities list. Keep descriptions concise. "
     "If nothing is present, return empty arrays."
 )
+
+# Used once an ontology has certified vocabulary: constrains types and asks for
+# a typed predicate on each relationship.
+_GUIDED_EXTRACTION_SYSTEM = (
+    "You are a knowledge-graph extraction engine. From the given text you extract "
+    "entities and the relationships between them. Respond with STRICT JSON only, "
+    "no prose, using this schema:\n"
+    '{{"entities": [{{"name": "...", "type": "...", "description": "..."}}], '
+    '"relationships": [{{"source": "...", "target": "...", "predicate": "...", '
+    '"description": "..."}}]}}\n'
+    "Rules: entity 'type' MUST be one of: {types}. Use 'concept' if none fits. "
+    "Relationship 'predicate' MUST be one of: {predicates}. Leave it empty if none "
+    "fits and describe the relation in 'description'. 'source' and 'target' MUST "
+    "be entity names that appear in the entities list. Keep descriptions concise. "
+    "If nothing is present, return empty arrays."
+)
+
+
+def extraction_prompt(vocab: Optional[Vocabulary]) -> str:
+    """The extraction system prompt; unchanged when no vocabulary is certified."""
+    if vocab is None or not vocab.constrained:
+        return _EXTRACTION_SYSTEM
+    return _GUIDED_EXTRACTION_SYSTEM.format(
+        types=", ".join(vocab.type_names) or "any short category",
+        predicates=", ".join(vocab.predicate_names) or "any short verb phrase",
+    )
 
 
 def _extract_json(text: str) -> Dict[str, Any]:
@@ -358,43 +407,164 @@ class GraphRAGEngine:
         self.relationships: Dict[str, Dict[str, Any]] = {}
         # Fast lookup from normalised entity name -> entity id.
         self._name_index: Dict[str, str] = {}
+        # (source_eid, target_eid) -> relationship id; rebuilt lazily.
+        self._rel_index: Dict[Tuple[str, str], str] = {}
+        # Extra Ollama options (e.g. temperature) and request timeout.
+        self.chat_options: Dict[str, Any] = {}
+        self.chat_timeout: float = 180.0
+        # Shared store; None for subclasses that manage their own persistence.
+        self.store: Optional[SqliteGraphStore] = None
+        self.ontology: Optional[Ontology] = None
+        self._version = -1
+        self._epoch = -1
+        self._dirty: Dict[str, set] = {"source": set(), "entity": set(), "relationship": set()}
+        self._deleted: Dict[str, set] = {"source": set(), "entity": set(), "relationship": set()}
+        if type(self)._load is GraphRAGEngine._load:
+            self.store = open_store(default_db_path(_DATA_DIR))
+            self.ontology = Ontology(self.store)
         self._load()
 
     # ------------------------------------------------------------------ #
     # Persistence
     # ------------------------------------------------------------------ #
     def _load(self) -> None:
-        if not _GRAPH_SNAPSHOT.is_file():
+        store = self.store
+        if store is None:
             return
-        try:
-            data = json.loads(_GRAPH_SNAPSHOT.read_text())
-        except (json.JSONDecodeError, OSError):
+        if store.is_empty() and _GRAPH_SNAPSHOT.is_file():
+            try:
+                report = migrate_json(_GRAPH_SNAPSHOT, store)
+                log.info("Migrated %s into %s: %s", _GRAPH_SNAPSHOT, store.path, report)
+            except (json.JSONDecodeError, OSError, KeyError, TypeError) as exc:
+                log.warning("Could not migrate %s: %s", _GRAPH_SNAPSHOT, exc)
+        self._reload_all()
+
+    def _reload_all(self) -> None:
+        assert self.store is not None
+        version, epoch, sources, entities, rels = self.store.load_all()
+        self.sources, self.entities, self.relationships = sources, entities, rels
+        self._name_index = {_norm(e["name"]): eid for eid, e in self.entities.items()}
+        self._rel_index = {}
+        self._version, self._epoch = version, epoch
+        self._clear_dirty()
+
+    def _sync(self) -> None:
+        """Pull writes made by other processes since our last sync."""
+        store = self.store
+        if store is None:
             return
-        self.sources = data.get("sources", {})
-        self.entities = data.get("entities", {})
-        self.relationships = data.get("relationships", {})
-        self._name_index = {
-            _norm(e["name"]): eid for eid, e in self.entities.items()
-        }
+        version, epoch = store.versions()
+        if epoch != self._epoch:
+            self._reload_all()
+            return
+        if version == self._version:
+            return
+        version, epoch, upserts, deleted = store.changes_since(self._version)
+        if epoch != self._epoch:
+            self._reload_all()
+            return
+        self.sources.update(upserts["source"])
+        for eid, ent in upserts["entity"].items():
+            self.entities[eid] = ent
+            self._name_index[_norm(ent["name"])] = eid
+        self.relationships.update(upserts["relationship"])
+        for sid in deleted.get("source", []):
+            self.sources.pop(sid, None)
+        for eid in deleted.get("entity", []):
+            ent = self.entities.pop(eid, None)
+            if ent is not None and self._name_index.get(_norm(ent["name"])) == eid:
+                del self._name_index[_norm(ent["name"])]
+        for rid in deleted.get("relationship", []):
+            self.relationships.pop(rid, None)
+        self._rel_index = {}
+        self._version = version
+
+    def _mark(self, kind: str, row_id: str) -> None:
+        self._dirty[kind].add(row_id)
+        self._deleted[kind].discard(row_id)
+
+    def _mark_deleted(self, kind: str, row_id: str) -> None:
+        self._deleted[kind].add(row_id)
+        self._dirty[kind].discard(row_id)
+
+    def _clear_dirty(self) -> None:
+        for kind in self._dirty:
+            self._dirty[kind].clear()
+            self._deleted[kind].clear()
+
+    def _flush(self) -> None:
+        """Write dirty rows to the store (caller holds a store transaction)."""
+        assert self.store is not None
+        if not any(self._dirty.values()) and not any(self._deleted.values()):
+            return
+        self._version = self.store.write_rows(
+            sources=[self.sources[i] for i in self._dirty["source"] if i in self.sources],
+            entities=[self.entities[i] for i in self._dirty["entity"] if i in self.entities],
+            relationships=[
+                self.relationships[i] for i in self._dirty["relationship"] if i in self.relationships
+            ],
+            deleted={k: list(v) for k, v in self._deleted.items() if v},
+        )
+        self._clear_dirty()
 
     def _save(self) -> None:
-        _DATA_DIR.mkdir(parents=True, exist_ok=True)
-        snapshot = {
-            "sources": self.sources,
-            "entities": self.entities,
-            "relationships": self.relationships,
-        }
-        tmp = _GRAPH_SNAPSHOT.with_suffix(".tmp")
-        tmp.write_text(json.dumps(snapshot, indent=2))
-        tmp.replace(_GRAPH_SNAPSHOT)
+        """Persist pending changes (kept for subclasses/older callers)."""
+        if self.store is None:
+            return
+        with self._lock, self.store.transaction():
+            self._flush()
+
+    @contextmanager
+    def _write(self) -> Iterator[None]:
+        """Serialise a mutation across threads *and* processes.
+
+        Inside the block the cache is up to date with the database and nobody
+        else can write; on success the dirty rows are committed atomically, on
+        failure the database rolls back and the cache is reloaded from it.
+        """
+        with self._lock:
+            if self.store is None:
+                yield
+                self._save()
+                return
+            try:
+                with self.store.transaction():
+                    self._sync()
+                    yield
+                    self._flush()
+            except BaseException:
+                self._reload_all()
+                raise
+
+    @contextmanager
+    def _read(self) -> Iterator[None]:
+        with self._lock:
+            self._sync()
+            yield
+
+    @property
+    def graph_version(self) -> int:
+        if self.store is None:
+            return 0
+        with self._read():
+            return self._version
+
+    def _audit(self, actor: str, action: str, target: str = "", detail: Optional[Dict[str, Any]] = None) -> None:
+        if self.store is not None:
+            governance.record_audit(self.store, actor or "system", action, target, detail)
+
+    def _vocabulary(self) -> Optional[Vocabulary]:
+        return self.ontology.vocabulary() if self.ontology is not None else None
 
     # ------------------------------------------------------------------ #
     # LLM access
     # ------------------------------------------------------------------ #
     def _chat(self, model: str, messages: List[Dict[str, str]]) -> str:
         url = f"{_ollama_base()}/api/chat"
-        body = {"model": model, "messages": messages, "stream": False}
-        with httpx.Client(timeout=180.0) as client:
+        body: Dict[str, Any] = {"model": model, "messages": messages, "stream": False}
+        if self.chat_options:
+            body["options"] = dict(self.chat_options)
+        with httpx.Client(timeout=self.chat_timeout) as client:
             resp = client.post(url, json=body)
             resp.raise_for_status()
             result = resp.json()
@@ -413,6 +583,7 @@ class GraphRAGEngine:
         source_type: str = _DEFAULT_SOURCE_TYPE,
         origin: Optional[Dict[str, Any]] = None,
         overwrite: bool = False,
+        pii_flags: Optional[List[str]] = None,
     ) -> Optional[str]:
         key = _norm(name)
         if not key:
@@ -430,12 +601,16 @@ class GraphRAGEngine:
             }
             if origin:
                 entity["origin"] = origin
+            if pii_flags:
+                entity["pii_flags"] = sorted(set(pii_flags))
             self.entities[eid] = entity
             self._name_index[key] = eid
         else:
             entity = self.entities[eid]
             if source_id not in entity["sources"]:
                 entity["sources"].append(source_id)
+            if pii_flags:
+                entity["pii_flags"] = sorted(set(entity.get("pii_flags", [])) | set(pii_flags))
             new_rank = _provenance_rank(source_type)
             old_rank = _provenance_rank(entity.get("source_type"))
             incoming_desc = (description or "").strip()
@@ -453,12 +628,18 @@ class GraphRAGEngine:
             ):
                 # Same provenance tier: keep the richer description.
                 entity["description"] = incoming_desc
+        self._mark("entity", eid)
         return eid
 
     def _find_relationship(self, source_eid: str, target_eid: str) -> Optional[str]:
-        for rid, rel in self.relationships.items():
-            if rel["source"] == source_eid and rel["target"] == target_eid:
-                return rid
+        if len(self._rel_index) != len(self.relationships):
+            self._rel_index = {
+                (rel["source"], rel["target"]): rid
+                for rid, rel in self.relationships.items()
+            }
+        rid = self._rel_index.get((source_eid, target_eid))
+        if rid is not None and rid in self.relationships:
+            return rid
         return None
 
     def _upsert_relationship(
@@ -471,15 +652,21 @@ class GraphRAGEngine:
         source_type: str = _DEFAULT_SOURCE_TYPE,
         origin: Optional[Dict[str, Any]] = None,
         overwrite: bool = False,
+        predicate: Optional[str] = None,
+        pii_flags: Optional[List[str]] = None,
     ) -> None:
         rid = self._find_relationship(source_eid, target_eid)
         if rid is not None:
             rel = self.relationships[rid]
             if source_id not in rel["sources"]:
                 rel["sources"].append(source_id)
+            if pii_flags:
+                rel["pii_flags"] = sorted(set(rel.get("pii_flags", [])) | set(pii_flags))
             new_rank = _provenance_rank(source_type)
             old_rank = _provenance_rank(rel.get("source_type"))
             incoming_desc = (description or "").strip()
+            if predicate and (not rel.get("predicate") or overwrite or new_rank > old_rank):
+                rel["predicate"] = predicate
             if overwrite or new_rank > old_rank:
                 if incoming_desc:
                     rel["description"] = incoming_desc
@@ -490,6 +677,7 @@ class GraphRAGEngine:
                 rel.get("description", "")
             ):
                 rel["description"] = incoming_desc
+            self._mark("relationship", rid)
             return
         rid = _new_id("rel")
         rel = {
@@ -500,78 +688,189 @@ class GraphRAGEngine:
             "sources": [source_id],
             "source_type": source_type,
         }
+        if predicate:
+            rel["predicate"] = predicate
         if origin:
             rel["origin"] = origin
+        if pii_flags:
+            rel["pii_flags"] = sorted(set(pii_flags))
         self.relationships[rid] = rel
+        self._rel_index[(source_eid, target_eid)] = rid
+        self._mark("relationship", rid)
 
-    def ingest(self, title: str, text: str, model: str) -> Dict[str, Any]:
-        """Chunk a document, extract a graph from each chunk, and merge it in."""
+    def extract_chunk(
+        self, chunk: str, model: str, *, vocab: Optional[Vocabulary] = None
+    ) -> Dict[str, Any]:
+        """Run LLM extraction on one chunk. Thread-safe: touches no graph state.
+
+        With a certified ontology the prompt constrains entity types and asks
+        for a predicate per relationship; otherwise the prompt is unchanged.
+        """
+        if vocab is None:
+            vocab = self._vocabulary()
+        raw = self._chat(
+            model,
+            [
+                {"role": "system", "content": extraction_prompt(vocab)},
+                {"role": "user", "content": chunk},
+            ],
+        )
+        return _extract_json(raw)
+
+    def merge_chunk(
+        self,
+        source_id: str,
+        doc_id: str,
+        title: str,
+        chunk: str,
+        parsed: Dict[str, Any],
+        *,
+        pii_flags: Optional[List[str]] = None,
+        vocab: Optional[Vocabulary] = None,
+    ) -> Tuple[int, int]:
+        """Record a source chunk and merge its extracted graph (caller holds lock).
+
+        Returns ``(entities_added, relationships_merged)``: entities that did not
+        exist before, and relationships created or reinforced.
+        """
+        if vocab is None:
+            vocab = self._vocabulary()
+        source = {
+            "id": source_id,
+            "doc_id": doc_id,
+            "title": title,
+            "text": chunk,
+            "created_at": time.time(),
+        }
+        if pii_flags:
+            source["pii_flags"] = list(pii_flags)
+        self.sources[source_id] = source
+        self._mark("source", source_id)
+        added_entities = 0
+        added_relationships = 0
+        local_ids: Dict[str, str] = {}
+        unmapped_types: List[str] = []
+        unmapped_predicates: List[str] = []
+        for ent in parsed.get("entities", []) or []:
+            if not isinstance(ent, dict):
+                continue
+            name = str(ent.get("name", "") or "")
+            key = _norm(name)
+            existed = key in self._name_index
+            raw_type = str(ent.get("type", "concept") or "concept")
+            etype, unmapped = vocab.resolve_type(raw_type) if vocab else (raw_type, None)
+            eid = self._upsert_entity(
+                name,
+                etype,
+                str(ent.get("description", "") or ""),
+                source_id,
+                pii_flags=pii_flags,
+            )
+            if eid:
+                local_ids[key] = eid
+                if not existed:
+                    added_entities += 1
+                    if unmapped:
+                        self.entities[eid]["raw_type"] = unmapped
+                if unmapped:
+                    unmapped_types.append(unmapped)
+                elif vocab is not None and not vocab.constrained:
+                    # No certified vocabulary yet: every type is a candidate.
+                    unmapped_types.append(etype)
+
+        for rel in parsed.get("relationships", []) or []:
+            if not isinstance(rel, dict):
+                continue
+            s_key = _norm(str(rel.get("source", "") or ""))
+            t_key = _norm(str(rel.get("target", "") or ""))
+            s_eid = local_ids.get(s_key) or self._name_index.get(s_key)
+            t_eid = local_ids.get(t_key) or self._name_index.get(t_key)
+            if s_eid and t_eid and s_eid != t_eid:
+                predicate: Optional[str] = None
+                raw_pred = str(rel.get("predicate", "") or "")
+                if vocab is not None and raw_pred:
+                    predicate, unmapped_p = vocab.resolve_predicate(raw_pred)
+                    if unmapped_p:
+                        unmapped_predicates.append(unmapped_p)
+                elif vocab is not None and vocab.predicate_names:
+                    # No predicate given: accept a description that is exactly a
+                    # certified predicate or synonym (the same rule compile uses).
+                    predicate = vocab.predicates.get(onto_key(str(rel.get("description", ""))))
+                self._upsert_relationship(
+                    s_eid,
+                    t_eid,
+                    str(rel.get("description", "") or ""),
+                    source_id,
+                    predicate=predicate,
+                    pii_flags=pii_flags,
+                )
+                added_relationships += 1
+        if self.ontology is not None and (unmapped_types or unmapped_predicates):
+            known_t = vocab.known_types if vocab else set()
+            known_p = vocab.known_predicates if vocab else set()
+            self.ontology.record_proposals(
+                [t for t in unmapped_types if t not in known_t],
+                [p for p in unmapped_predicates if p.replace("_", " ") not in known_p],
+            )
+        return added_entities, added_relationships
+
+    def ingest(
+        self, title: str, text: str, model: str, *, actor: str = "system"
+    ) -> Dict[str, Any]:
+        """Chunk a document, extract a graph from each chunk, and merge it in.
+
+        LLM extraction runs *before* taking the write lock, so a slow model
+        never blocks readers or other writers; the merge is one transaction.
+        """
         chunks = _chunk_text(text)
         if not chunks:
             raise ValueError("Document is empty.")
+        prepared = [pii.prepare_chunk(chunk) for chunk in chunks]  # may raise PIIRejected
 
         doc_id = _new_id("doc")
+        vocab = self._vocabulary()
+        parsed_chunks = [self.extract_chunk(c, model, vocab=vocab) for c, _ in prepared]
+
         added_entities = 0
         added_relationships = 0
-        chunks_processed = 0
-
-        with self._lock:
-            for idx, chunk in enumerate(chunks):
-                source_id = f"{doc_id}#{idx}"
-                self.sources[source_id] = {
-                    "id": source_id,
-                    "doc_id": doc_id,
-                    "title": f"{title} [{idx + 1}/{len(chunks)}]",
-                    "text": chunk,
-                    "created_at": time.time(),
-                }
-                raw = self._chat(
-                    model,
-                    [
-                        {"role": "system", "content": _EXTRACTION_SYSTEM},
-                        {"role": "user", "content": chunk},
-                    ],
+        flagged = sorted({f for _, flags in prepared for f in flags})
+        with self._write():
+            for idx, ((chunk, flags), parsed) in enumerate(zip(prepared, parsed_chunks)):
+                ents, rels = self.merge_chunk(
+                    f"{doc_id}#{idx}",
+                    doc_id,
+                    f"{title} [{idx + 1}/{len(chunks)}]",
+                    chunk,
+                    parsed,
+                    pii_flags=flags,
+                    vocab=vocab,
                 )
-                parsed = _extract_json(raw)
-                chunks_processed += 1
-
-                local_ids: Dict[str, str] = {}
-                for ent in parsed.get("entities", []) or []:
-                    if not isinstance(ent, dict):
-                        continue
-                    name = ent.get("name", "")
-                    eid = self._upsert_entity(
-                        name,
-                        ent.get("type", "concept"),
-                        ent.get("description", ""),
-                        source_id,
-                    )
-                    if eid:
-                        before = eid in self.entities
-                        local_ids[_norm(name)] = eid
-                        added_entities += 1 if before else 0
-
-                for rel in parsed.get("relationships", []) or []:
-                    if not isinstance(rel, dict):
-                        continue
-                    s_key = _norm(rel.get("source", ""))
-                    t_key = _norm(rel.get("target", ""))
-                    s_eid = local_ids.get(s_key) or self._name_index.get(s_key)
-                    t_eid = local_ids.get(t_key) or self._name_index.get(t_key)
-                    if s_eid and t_eid and s_eid != t_eid:
-                        self._upsert_relationship(
-                            s_eid, t_eid, rel.get("description", ""), source_id
-                        )
-                        added_relationships += 1
-            self._save()
+                added_entities += ents
+                added_relationships += rels
+            self._audit(
+                actor,
+                "graph.ingest",
+                doc_id,
+                {
+                    "title": title,
+                    "chunks": len(chunks),
+                    "entities_added": added_entities,
+                    "relationships_added": added_relationships,
+                    "pii_flags": flagged,
+                },
+            )
+            entities_total = len(self.entities)
+            relationships_total = len(self.relationships)
 
         return {
             "doc_id": doc_id,
             "title": title,
-            "chunks_processed": chunks_processed,
-            "entities_total": len(self.entities),
-            "relationships_total": len(self.relationships),
+            "chunks_processed": len(chunks),
+            "entities_total": entities_total,
+            "relationships_total": relationships_total,
+            "entities_added": added_entities,
             "relationships_added": added_relationships,
+            "pii_flags": flagged,
         }
 
     # ------------------------------------------------------------------ #
@@ -586,6 +885,7 @@ class GraphRAGEngine:
         merge_strategy: str = "preserve_curated",
         title: Optional[str] = None,
         origin_version: Optional[str] = None,
+        actor: str = "system",
     ) -> Dict[str, Any]:
         """Import a pre-built knowledge graph produced by another tool.
 
@@ -622,7 +922,25 @@ class GraphRAGEngine:
         version = origin_version or norm.get("version")
         overwrite = merge_strategy == "overwrite"
 
-        with self._lock:
+        # Apply the PII policy to node/edge descriptions before anything is stored.
+        pii_by_node: Dict[int, List[str]] = {}
+        for i, node in enumerate(nodes):
+            desc, flags = pii.prepare_chunk(str(node.get("description", "") or ""))
+            if flags:
+                node["description"] = desc
+                pii_by_node[i] = flags
+        for edge in edges:
+            desc, flags = pii.prepare_chunk(str(edge.get("description", "") or ""))
+            if flags:
+                edge["description"] = desc
+                edge["_pii"] = flags
+
+        snapshot_id: Optional[str] = None
+        with self._write():
+            if overwrite and self.store is not None and self.entities:
+                snapshot_id = governance.create_snapshot(
+                    self.store, f"before overwrite import of '{graph_title}'", actor
+                )["id"]
             doc_id = _new_id("imp")
             source_id = f"{doc_id}#0"
             summary_text = norm.get("summary") or (
@@ -638,12 +956,13 @@ class GraphRAGEngine:
                 "source_type": source_type,
                 "format": graph_format,
             }
+            self._mark("source", source_id)
 
             origin_to_eid: Dict[str, str] = {}
             added_entities = 0
             updated_entities = 0
             skipped_entities = 0
-            for node in nodes:
+            for i, node in enumerate(nodes):
                 name = node.get("name")
                 origin_id = node.get("origin_id")
                 if not name:
@@ -667,6 +986,7 @@ class GraphRAGEngine:
                     source_type=source_type,
                     origin=origin,
                     overwrite=overwrite,
+                    pii_flags=pii_by_node.get(i),
                 )
                 if eid:
                     origin_to_eid[origin_id] = eid
@@ -695,10 +1015,28 @@ class GraphRAGEngine:
                     source_type=source_type,
                     origin={"format": graph_format},
                     overwrite=overwrite,
+                    predicate=edge.get("predicate"),
+                    pii_flags=edge.get("_pii"),
                 )
                 added_relationships += 1
 
-            self._save()
+            self._audit(
+                actor,
+                "graph.import",
+                doc_id,
+                {
+                    "title": graph_title,
+                    "format": graph_format,
+                    "source_type": source_type,
+                    "merge_strategy": merge_strategy,
+                    "entities_added": added_entities,
+                    "entities_updated": updated_entities,
+                    "relationships_added": added_relationships,
+                    "snapshot_id": snapshot_id,
+                },
+            )
+            entities_total = len(self.entities)
+            relationships_total = len(self.relationships)
 
         return {
             "doc_id": doc_id,
@@ -713,13 +1051,14 @@ class GraphRAGEngine:
             "entities_skipped": skipped_entities,
             "relationships_added": added_relationships,
             "relationships_skipped": skipped_relationships,
-            "entities_total": len(self.entities),
-            "relationships_total": len(self.relationships),
+            "entities_total": entities_total,
+            "relationships_total": relationships_total,
+            "snapshot_id": snapshot_id,
         }
 
     def export_graph(self) -> Dict[str, Any]:
         """Export the full graph (sources, entities, relationships) as JSON."""
-        with self._lock:
+        with self._read():
             return {
                 "sources": {k: dict(v) for k, v in self.sources.items()},
                 "entities": {k: dict(v) for k, v in self.entities.items()},
@@ -735,7 +1074,7 @@ class GraphRAGEngine:
     # Graph access / visualisation
     # ------------------------------------------------------------------ #
     def graph(self) -> Dict[str, Any]:
-        with self._lock:
+        with self._read():
             degree: Dict[str, int] = {eid: 0 for eid in self.entities}
             for rel in self.relationships.values():
                 degree[rel["source"]] = degree.get(rel["source"], 0) + 1
@@ -750,6 +1089,7 @@ class GraphRAGEngine:
                     "sources": e["sources"],
                     "source_type": e.get("source_type", _DEFAULT_SOURCE_TYPE),
                     "origin": e.get("origin"),
+                    "pii_flags": e.get("pii_flags", []),
                 }
                 for e in self.entities.values()
             ]
@@ -759,49 +1099,243 @@ class GraphRAGEngine:
                     "source": r["source"],
                     "target": r["target"],
                     "description": r["description"],
+                    "predicate": r.get("predicate"),
                     "sources": r["sources"],
                     "source_type": r.get("source_type", _DEFAULT_SOURCE_TYPE),
                     "origin": r.get("origin"),
+                    "pii_flags": r.get("pii_flags", []),
                 }
                 for r in self.relationships.values()
             ]
+            sources_total = len(self.sources)
+            version = self._version
         return {
             "nodes": nodes,
             "edges": edges,
             "stats": {
                 "entities": len(nodes),
                 "relationships": len(edges),
-                "sources": len(self.sources),
+                "sources": sources_total,
+                "graph_version": version,
             },
         }
 
-    def clear(self) -> None:
+    def clear(self, *, actor: str = "system") -> Dict[str, Any]:
+        """Wipe the graph. A snapshot is taken first, so this can be undone."""
         with self._lock:
-            self.sources.clear()
-            self.entities.clear()
-            self.relationships.clear()
-            self._name_index.clear()
-            self._save()
+            if self.store is None:
+                self.sources.clear()
+                self.entities.clear()
+                self.relationships.clear()
+                self._name_index.clear()
+                self._rel_index.clear()
+                self._save()
+                return {"snapshot_id": None}
+            with self.store.transaction():
+                self._sync()
+                snapshot_id = None
+                if self.entities or self.sources:
+                    snapshot_id = governance.create_snapshot(
+                        self.store, "before clear", actor
+                    )["id"]
+                self.store.replace_graph({}, {}, {})
+                self._audit(actor, "graph.clear", "", {"snapshot_id": snapshot_id})
+            self._reload_all()
+            return {"snapshot_id": snapshot_id}
+
+    # ------------------------------------------------------------------ #
+    # Snapshots, entity details, curation
+    # ------------------------------------------------------------------ #
+    def snapshot(self, label: str = "", *, actor: str = "system") -> Dict[str, Any]:
+        if self.store is None:
+            raise RuntimeError("Snapshots need the shared store.")
+        with self._lock, self.store.transaction():
+            snap = governance.create_snapshot(self.store, label, actor)
+            self._audit(actor, "graph.snapshot", snap["id"], {"label": label})
+        return snap
+
+    def restore(self, snapshot_id: str, *, actor: str = "system") -> Dict[str, Any]:
+        """Replace the graph with a snapshot (the current graph is snapshotted first)."""
+        if self.store is None:
+            raise RuntimeError("Snapshots need the shared store.")
+        with self._lock:
+            with self.store.transaction():
+                data = governance.load_snapshot(self.store, snapshot_id)
+                backup = governance.create_snapshot(
+                    self.store, f"before restore of {snapshot_id}", actor
+                )
+                self.store.replace_graph(
+                    data["sources"], data["entities"], data["relationships"]
+                )
+                governance.restore_term_links(self.store, data.get("term_entity", []))
+                self._audit(
+                    actor, "graph.restore", snapshot_id, {"backup_snapshot_id": backup["id"]}
+                )
+            self._reload_all()
+            return {
+                "restored": snapshot_id,
+                "backup_snapshot_id": backup["id"],
+                "entities": len(self.entities),
+                "relationships": len(self.relationships),
+                "sources": len(self.sources),
+            }
+
+    def entity(self, entity_id_or_name: str) -> Optional[Dict[str, Any]]:
+        """One entity with its neighbours, backing sources and glossary terms."""
+        with self._read():
+            eid = entity_id_or_name
+            if eid not in self.entities:
+                eid = self._name_index.get(_norm(entity_id_or_name), "")
+            ent = self.entities.get(eid)
+            if ent is None:
+                return None
+            neighbors = []
+            for rel in self.relationships.values():
+                if rel["source"] == eid or rel["target"] == eid:
+                    other = rel["target"] if rel["source"] == eid else rel["source"]
+                    other_ent = self.entities.get(other, {})
+                    neighbors.append(
+                        {
+                            "relationship_id": rel["id"],
+                            "direction": "out" if rel["source"] == eid else "in",
+                            "entity_id": other,
+                            "name": other_ent.get("name", "?"),
+                            "type": other_ent.get("type", ""),
+                            "predicate": rel.get("predicate"),
+                            "description": rel.get("description", ""),
+                        }
+                    )
+            sources = [self.sources[s] for s in ent.get("sources", []) if s in self.sources]
+            out = {**ent, "neighbors": neighbors, "source_records": sources}
+        out["terms"] = self.ontology.terms_for_entity(eid) if self.ontology else []
+        return out
+
+    def merge_entities(self, keep_id: str, drop_id: str, *, actor: str = "system") -> Dict[str, Any]:
+        """Fold ``drop_id`` into ``keep_id``: sources, relationships and term links."""
+        if keep_id == drop_id:
+            raise ValueError("Cannot merge an entity into itself.")
+        with self._write():
+            keep = self.entities.get(keep_id)
+            drop = self.entities.get(drop_id)
+            if keep is None or drop is None:
+                raise KeyError(keep_id if keep is None else drop_id)
+            for sid in drop.get("sources", []):
+                if sid not in keep["sources"]:
+                    keep["sources"].append(sid)
+            if drop.get("pii_flags"):
+                keep["pii_flags"] = sorted(set(keep.get("pii_flags", [])) | set(drop["pii_flags"]))
+            aliases = keep.setdefault("aliases", [])
+            if drop["name"] not in aliases:
+                aliases.append(drop["name"])
+            if not keep.get("description") and drop.get("description"):
+                keep["description"] = drop["description"]
+            self._mark("entity", keep_id)
+            rewired = 0
+            for rid, rel in list(self.relationships.items()):
+                if drop_id not in (rel["source"], rel["target"]):
+                    continue
+                s = keep_id if rel["source"] == drop_id else rel["source"]
+                t = keep_id if rel["target"] == drop_id else rel["target"]
+                del self.relationships[rid]
+                self._mark_deleted("relationship", rid)
+                if s == t:
+                    continue
+                self._rel_index = {}
+                for sid in rel.get("sources", []):
+                    self._upsert_relationship(
+                        s,
+                        t,
+                        rel.get("description", ""),
+                        sid,
+                        source_type=rel.get("source_type", _DEFAULT_SOURCE_TYPE),
+                        origin=rel.get("origin"),
+                        predicate=rel.get("predicate"),
+                        pii_flags=rel.get("pii_flags"),
+                    )
+                rewired += 1
+            del self.entities[drop_id]
+            self._name_index.pop(_norm(drop["name"]), None)
+            self._rel_index = {}
+            self._mark_deleted("entity", drop_id)
+            if self.store is not None:
+                conn = self.store.conn
+                conn.execute(
+                    "INSERT OR IGNORE INTO term_entity(term_id, entity_id) "
+                    "SELECT term_id, ? FROM term_entity WHERE entity_id = ?",
+                    (keep_id, drop_id),
+                )
+                conn.execute("DELETE FROM term_entity WHERE entity_id = ?", (drop_id,))
+            self._audit(
+                actor,
+                "graph.merge_entities",
+                keep_id,
+                {"dropped": drop_id, "dropped_name": drop["name"], "rewired": rewired},
+            )
+        return {"kept": keep_id, "dropped": drop_id, "relationships_rewired": rewired}
+
+    def update_rows(
+        self,
+        *,
+        entity_types: Optional[Dict[str, str]] = None,
+        predicates: Optional[Dict[str, Optional[str]]] = None,
+        actor: str = "system",
+        action: str = "graph.update",
+    ) -> Dict[str, int]:
+        """Bulk-set entity types / relationship predicates (used by compile)."""
+        changed = {"entities": 0, "relationships": 0}
+        with self._write():
+            for eid, etype in (entity_types or {}).items():
+                ent = self.entities.get(eid)
+                if ent is not None and ent.get("type") != etype:
+                    ent.setdefault("raw_type", ent.get("type"))
+                    ent["type"] = etype
+                    self._mark("entity", eid)
+                    changed["entities"] += 1
+            for rid, pred in (predicates or {}).items():
+                rel = self.relationships.get(rid)
+                if rel is not None and rel.get("predicate") != pred:
+                    rel["predicate"] = pred
+                    self._mark("relationship", rid)
+                    changed["relationships"] += 1
+            if any(changed.values()):
+                self._audit(actor, action, "", changed)
+        return changed
 
     # ------------------------------------------------------------------ #
     # Retrieval + reasoning
     # ------------------------------------------------------------------ #
     def _seed_entities(self, query: str) -> List[str]:
-        """Match query terms to entity names (case-insensitive substring)."""
-        q = query.lower()
+        """Match the question to entities. Returns [] when nothing matches.
+
+        An entity is a seed when its full name appears in the question as a
+        phrase, when a content word of the question starts a word of its name,
+        or when it is linked to a glossary term the question mentions.
+        """
+        q = _norm(query)
+        tokens = _query_tokens(q)
+        token_res = [re.compile(rf"(?<!\w){re.escape(t)}") for t in tokens]
         seeds: List[str] = []
         for eid, ent in self.entities.items():
-            name = ent["name"].lower()
-            if name and (name in q or any(tok in name for tok in q.split() if len(tok) > 3)):
+            name = _norm(ent["name"])
+            if not name:
+                continue
+            phrase_hit = re.search(rf"(?<!\w){re.escape(name)}(?!\w)", q) is not None
+            if phrase_hit or any(rx.search(name) for rx in token_res):
                 seeds.append(eid)
-        # Fall back to the highest-degree nodes when nothing matches.
-        if not seeds:
-            degree: Dict[str, int] = {eid: 0 for eid in self.entities}
-            for rel in self.relationships.values():
-                degree[rel["source"]] = degree.get(rel["source"], 0) + 1
-                degree[rel["target"]] = degree.get(rel["target"], 0) + 1
-            seeds = sorted(degree, key=degree.get, reverse=True)[:3]
+        for eid in self._term_seeds(query):
+            if eid not in seeds:
+                seeds.append(eid)
         return seeds
+
+    def _term_seeds(self, query: str) -> List[str]:
+        if self.ontology is None:
+            return []
+        out: List[str] = []
+        for term in self.ontology.match_terms(query):
+            for eid in term["entity_ids"]:
+                if eid in self.entities and eid not in out:
+                    out.append(eid)
+        return out
 
     def _expand(
         self, seeds: List[str], max_depth: int, max_nodes: int
@@ -833,7 +1367,7 @@ class GraphRAGEngine:
     def retrieve(
         self, query: str, max_depth: int = 2, max_nodes: int = 25
     ) -> Dict[str, Any]:
-        with self._lock:
+        with self._read():
             seeds = self._seed_entities(query)
             node_ids, edge_ids = self._expand(seeds, max_depth, max_nodes)
             nodes = [self.entities[n] for n in node_ids if n in self.entities]
@@ -852,24 +1386,137 @@ class GraphRAGEngine:
             "sources": sources,
         }
 
-    def query(
-        self, question: str, model: str, max_depth: int = 2, max_nodes: int = 25
+    def _abstain(
+        self,
+        answer: str,
+        *,
+        reason: str,
+        question: str,
+        model: str,
+        mode: str,
+        actor: str,
+        answerability: Optional[Dict[str, Any]] = None,
     ) -> Dict[str, Any]:
-        """Answer a question grounded in the knowledge graph, with citations."""
-        if not self.entities:
-            return {
-                "answer": "The knowledge graph is empty. Ingest a document first.",
-                "citations": [],
-                "reasoning_path": [],
-                "subgraph": {"nodes": [], "edges": []},
-            }
+        result: Dict[str, Any] = {
+            "answer": answer,
+            "abstained": True,
+            "abstain_reason": reason,
+            "mode": mode,
+            "citations": [],
+            "grounded": False,
+            "unknown_citations": [],
+            "retrieved_source_ids": [],
+            "reasoning_path": [],
+            "subgraph": {"nodes": [], "edges": []},
+        }
+        if answerability is not None:
+            result["answerability"] = answerability
+        result["answer_id"] = self._receipt(question, model, mode, actor, result, seeds=[])
+        return result
+
+    def _receipt(
+        self,
+        question: str,
+        model: str,
+        mode: str,
+        actor: str,
+        result: Dict[str, Any],
+        *,
+        seeds: List[str],
+    ) -> Optional[str]:
+        """Persist an answer receipt (store-backed engines only)."""
+        if self.store is None:
+            return None
+        evidence = {
+            "seeds": seeds,
+            "node_ids": [n["id"] for n in result["subgraph"]["nodes"]],
+            "edges": [[e["source"], e["target"]] for e in result["subgraph"]["edges"]],
+            "retrieved_source_ids": result["retrieved_source_ids"],
+            "cited_source_ids": [c["id"] for c in result["citations"]],
+            "unknown_citations": result["unknown_citations"],
+            "abstain_reason": result.get("abstain_reason"),
+        }
+        if "answerability" in result:
+            evidence["matched_terms"] = result["answerability"].get("matched_terms", [])
+            evidence["coverage"] = result["answerability"].get("coverage")
+        return governance.record_answer(
+            self.store,
+            question=question,
+            answer=result["answer"],
+            mode=mode,
+            model=model,
+            grounded=bool(result["grounded"]),
+            abstained=bool(result["abstained"]),
+            evidence=evidence,
+            actor=actor,
+        )
+
+    def query(
+        self,
+        question: str,
+        model: str,
+        max_depth: int = 2,
+        max_nodes: int = 25,
+        *,
+        mode: str = "exploratory",
+        actor: str = "",
+    ) -> Dict[str, Any]:
+        """Answer a question grounded in the knowledge graph, with citations.
+
+        ``mode="exploratory"`` (default) answers whenever an entity matches.
+        ``mode="governed"`` first runs :func:`veritasgraph.answerability.check_answerable`
+        and abstains unless certified glossary terms cover the question; an
+        ungrounded answer is withheld rather than returned with a warning.
+        Every answer (and abstention) is recorded as a receipt with an
+        ``answer_id`` when the engine is store-backed.
+        """
+        if mode not in ("exploratory", "governed"):
+            raise ValueError("mode must be 'exploratory' or 'governed'.")
+        with self._read():
+            empty = not self.entities
+        if empty:
+            return self._abstain(
+                "The knowledge graph is empty. Ingest a document first.",
+                reason="empty_graph",
+                question=question,
+                model=model,
+                mode=mode,
+                actor=actor,
+            )
+
+        answerability: Optional[Dict[str, Any]] = None
+        if mode == "governed":
+            from veritasgraph.answerability import check_answerable
+
+            answerability = check_answerable(self, question, mode="governed")
+            if not answerability["answerable"]:
+                return self._abstain(
+                    "I can't give a governed answer to this: " + answerability["reason"],
+                    reason="not_answerable",
+                    question=question,
+                    model=model,
+                    mode=mode,
+                    actor=actor,
+                    answerability=answerability,
+                )
 
         ctx = self.retrieve(question, max_depth=max_depth, max_nodes=max_nodes)
+        if not ctx["seeds"]:
+            return self._abstain(
+                "I can't answer this from the knowledge graph: none of the entities "
+                "in the question appear in it.",
+                reason="no_matching_entities",
+                question=question,
+                model=model,
+                mode=mode,
+                actor=actor,
+                answerability=answerability,
+            )
         id_to_name = {e["id"]: e["name"] for e in ctx["nodes"]}
 
         # Build a reasoning path from the relationships (multi-hop chain).
         reasoning_path = [
-            f"{id_to_name.get(r['source'], '?')} --[{r['description'] or 'related to'}]--> "
+            f"{id_to_name.get(r['source'], '?')} --[{r.get('predicate') or r['description'] or 'related to'}]--> "
             f"{id_to_name.get(r['target'], '?')}"
             for r in ctx["edges"]
         ]
@@ -902,22 +1549,26 @@ class GraphRAGEngine:
             ],
         )
 
-        cited_ids = set(re.findall(r"\[([a-z0-9]+#\d+)\]", answer))
+        # Only sources that were actually retrieved count as citations; ids the
+        # model invented are reported, and nothing is cited on its behalf.
+        cited_ids = set(_SOURCE_ID_RE.findall(answer or ""))
+        retrieved = {s["id"]: s for s in ctx["sources"]}
         citations = [
-            {"id": s["id"], "title": s["title"], "text": s["text"]}
-            for s in ctx["sources"]
-            if s["id"] in cited_ids
+            {"id": sid, "title": s["title"], "text": s["text"]}
+            for sid, s in retrieved.items()
+            if sid in cited_ids
         ]
-        # If the model didn't cite explicitly, surface the retrieved sources.
-        if not citations:
-            citations = [
-                {"id": s["id"], "title": s["title"], "text": s["text"]}
-                for s in ctx["sources"]
-            ]
+        unknown_citations = sorted(cited_ids - retrieved.keys())
+        grounded = bool(citations) and not unknown_citations
 
-        return {
+        result: Dict[str, Any] = {
             "answer": answer,
+            "abstained": False,
+            "mode": mode,
             "citations": citations,
+            "grounded": grounded,
+            "unknown_citations": unknown_citations,
+            "retrieved_source_ids": list(retrieved.keys()),
             "reasoning_path": reasoning_path,
             "subgraph": {
                 "nodes": [
@@ -929,11 +1580,27 @@ class GraphRAGEngine:
                         "source": r["source"],
                         "target": r["target"],
                         "description": r["description"],
+                        "predicate": r.get("predicate"),
                     }
                     for r in ctx["edges"]
                 ],
             },
         }
+        if answerability is not None:
+            result["answerability"] = answerability
+        if mode == "governed" and not grounded:
+            # Governed mode never hands out an answer it cannot trace to sources;
+            # the ungrounded text is discarded, not returned alongside.
+            result["answer"] = (
+                "The model's answer was withheld: it did not cite the retrieved "
+                "sources" + (" (it cited unknown ids)" if unknown_citations else "") + "."
+            )
+            result["abstained"] = True
+            result["abstain_reason"] = "ungrounded_answer"
+        result["answer_id"] = self._receipt(
+            question, model, mode, actor, result, seeds=ctx["seeds"]
+        )
+        return result
 
 
 # Process-wide singleton, mirroring studio_api.store.store.

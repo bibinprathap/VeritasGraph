@@ -191,7 +191,10 @@ def _patch_graph_chat(monkeypatch):
         system = messages[0]["content"] if messages else ""
         if "extract" in system.lower() or "json" in system.lower():
             return extraction
-        return "Jane Doe founded Acme Corp [doc_test#0] after working at Globex [doc_test#0]."
+        # Cite a source id that was actually put in front of the model.
+        found = ge._SOURCE_ID_RE.search(messages[-1]["content"])
+        cite = found.group(1) if found else "doc_missing#0"
+        return f"Jane Doe founded Acme Corp [{cite}] after working at Globex [{cite}]."
 
     monkeypatch.setattr(ge.GraphRAGEngine, "_chat", fake_chat)
     # Start each test from an empty graph.
@@ -241,8 +244,15 @@ def test_graphrag_query_returns_citations(client, monkeypatch):
     assert "Jane Doe" in body["answer"]
     assert body["citations"], "expected at least one citation"
     assert all(c["id"] for c in body["citations"])
+    assert body["grounded"] is True
+    assert body["unknown_citations"] == []
+    assert body["answer_id"]
     assert isinstance(body["reasoning_path"], list)
     assert body["subgraph"]["nodes"]
+
+    receipt = client.get(f"/graphrag/answers/{body['answer_id']}").json()
+    assert receipt["grounded"] is True
+    assert receipt["graph_changed_since"] is False
 
 
 def test_graphrag_clear_empties_graph(client, monkeypatch):
