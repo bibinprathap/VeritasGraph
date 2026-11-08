@@ -146,3 +146,45 @@ def redact_answer_payload(payload: Dict[str, Any], role: str) -> Dict[str, Any]:
     out = _redact_item(payload)
     out["citations"] = [{**c, "text": redact(c.get("text", ""))} for c in out.get("citations", [])]
     return out
+
+
+# --------------------------------------------------------------------------- #
+# Structured data: column classification and sample masking
+# --------------------------------------------------------------------------- #
+_COLUMN_HINTS: List[Tuple[str, re.Pattern[str]]] = [
+    ("email", re.compile(r"e[-_]?mail", re.I)),
+    ("phone", re.compile(r"phone|mobile|\btel\b|telephone|fax", re.I)),
+    ("ssn", re.compile(r"\bssn\b|social[-_]?sec|national[-_]?id|tax[-_]?id", re.I)),
+    ("credit_card", re.compile(r"card[-_]?(no|num|number)|\bpan\b|cc[-_]?num", re.I)),
+    ("person_name", re.compile(r"(first|last|full|given|family|middle|sur)[-_]?name", re.I)),
+    ("address", re.compile(r"address|street|\bzip\b|postal|postcode", re.I)),
+    ("birth_date", re.compile(r"birth|\bdob\b", re.I)),
+    ("ip_address", re.compile(r"\bip[-_]?(addr|address)?\b", re.I)),
+]
+_VALUE_HIT_RATIO = 0.5
+
+
+def classify_column(name: str, values: List[Any]) -> str | None:
+    """A PII category for a column from its name, else from its sampled values."""
+    for kind, rx in _COLUMN_HINTS:
+        if rx.search(name):
+            return kind
+    texts = [str(v) for v in values if isinstance(v, str) and v]
+    if not texts:
+        return None
+    counts: Dict[str, int] = {}
+    for text in texts:
+        for kind in {k for k, _, _ in _matches(text)}:
+            counts[kind] = counts.get(kind, 0) + 1
+    best = max(counts.items(), key=lambda kv: kv[1], default=None)
+    return best[0] if best and best[1] / len(texts) >= _VALUE_HIT_RATIO else None
+
+
+def mask_samples(values: List[Any], pii_class: str | None, limit: int = 5) -> List[Any]:
+    """Samples that are safe to store, embed and show to a model."""
+    if pii_class:
+        return [f"[REDACTED:{pii_class}]"] if values else []
+    out: List[Any] = []
+    for v in values[:limit]:
+        out.append(redact(v) if isinstance(v, str) else v)
+    return out

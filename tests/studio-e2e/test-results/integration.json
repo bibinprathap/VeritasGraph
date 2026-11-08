@@ -5,7 +5,11 @@
       "/home/sijo/VeritasGraph/tests/studio-e2e/node_modules/.bin/playwright",
       "test",
       "-c",
-      "playwright.integration.config.ts"
+      "playwright.integration.config.ts",
+      "tests/integration/s01-security.spec.ts",
+      "tests/integration/s02-ssrf.spec.ts",
+      "tests/integration/s03-citations.spec.ts",
+      "tests/integration/s04-mcp-modes.spec.ts"
     ],
     "configFile": "/home/sijo/VeritasGraph/tests/studio-e2e/playwright.integration.config.ts",
     "rootDir": "/home/sijo/VeritasGraph/tests/studio-e2e/tests/integration",
@@ -70,8 +74,8 @@
       "reuseExistingServer": false,
       "timeout": 90000,
       "env": {
-        "STUDIO_DATA_DIR": "/tmp/vg-it-7hsdEM",
-        "STUDIO_API_TOKENS": "bb4a3e73000384708a18d9d36f9f9bbe53eaba40b4047ae8:viewer,78f62781c4940c8e7b786a4373bc45a8e7159aaf4495cc1b:editor,5a309f26efe369c5ff833cbcbc8721644657253463329a49:admin",
+        "STUDIO_DATA_DIR": "/tmp/vg-it-hLQp5d",
+        "STUDIO_API_TOKENS": "76d08349e1292ce339c827a7d5acc8784bc0145eec0e3d9b:viewer,f495c28a1712f051d1f5298fba172c155b91e18a19f10afd:editor,d21ad5e2cc2573be0b74594dad1d74351d55be102f95b228:admin",
         "STUDIO_AUTH": "",
         "STUDIO_TOOL_ALLOWED_NETWORKS": "",
         "STUDIO_CORS_ORIGINS": "",
@@ -110,12 +114,12 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 18,
+                      "duration": 24,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-07T17:16:09.001Z",
+                      "startTime": "2026-11-08T14:00:45.222Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -144,12 +148,12 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 4,
+                      "duration": 5,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-07T17:16:09.036Z",
+                      "startTime": "2026-11-08T14:00:45.275Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -178,12 +182,12 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 3,
+                      "duration": 4,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-07T17:16:09.045Z",
+                      "startTime": "2026-11-08T14:00:45.288Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -212,12 +216,12 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 10,
+                      "duration": 13,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-07T17:16:09.053Z",
+                      "startTime": "2026-11-08T14:00:45.298Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -246,12 +250,12 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 3,
+                      "duration": 4,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-07T17:16:09.068Z",
+                      "startTime": "2026-11-08T14:00:45.317Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -280,12 +284,12 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1199,
+                      "duration": 1248,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-07T17:16:09.077Z",
+                      "startTime": "2026-11-08T14:00:45.326Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -314,12 +318,12 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 3,
+                      "duration": 4,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-07T17:16:10.281Z",
+                      "startTime": "2026-11-08T14:00:46.580Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -348,12 +352,12 @@
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 2,
+                      "duration": 3,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-07T17:16:10.289Z",
+                      "startTime": "2026-11-08T14:00:46.590Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -368,7 +372,7 @@
             },
             {
               "title": "1.9 UI prompts for a token once, stores it per tab, and loads the graph",
-              "ok": false,
+              "ok": true,
               "tags": [],
               "tests": [
                 {
@@ -376,7 +380,7 @@
                   "annotations": [
                     {
                       "type": "prompts",
-                      "description": "11"
+                      "description": "1"
                     },
                     {
                       "type": "initial-401s",
@@ -390,62 +394,27 @@
                     {
                       "workerIndex": 0,
                       "parallelIndex": 0,
-                      "status": "failed",
-                      "duration": 746,
-                      "error": {
-                        "message": "Error: the user should be asked for the token exactly once\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m1\u001b[39m\nReceived: \u001b[31m11\u001b[39m",
-                        "stack": "Error: the user should be asked for the token exactly once\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m1\u001b[39m\nReceived: \u001b[31m11\u001b[39m\n    at /home/sijo/VeritasGraph/tests/studio-e2e/tests/integration/s01-security.spec.ts:76:76",
-                        "location": {
-                          "file": "/home/sijo/VeritasGraph/tests/studio-e2e/tests/integration/s01-security.spec.ts",
-                          "column": 76,
-                          "line": 76
-                        },
-                        "snippet": "\u001b[0m \u001b[90m 74 |\u001b[39m     test\u001b[33m.\u001b[39minfo()\u001b[33m.\u001b[39mannotations\u001b[33m.\u001b[39mpush({ type\u001b[33m:\u001b[39m \u001b[32m\"prompts\"\u001b[39m\u001b[33m,\u001b[39m description\u001b[33m:\u001b[39m \u001b[33mString\u001b[39m(prompts) })\u001b[33m;\u001b[39m\n \u001b[90m 75 |\u001b[39m     test\u001b[33m.\u001b[39minfo()\u001b[33m.\u001b[39mannotations\u001b[33m.\u001b[39mpush({ type\u001b[33m:\u001b[39m \u001b[32m\"initial-401s\"\u001b[39m\u001b[33m,\u001b[39m description\u001b[33m:\u001b[39m \u001b[33mString\u001b[39m(unauthorized\u001b[33m.\u001b[39mlength) })\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 76 |\u001b[39m     expect(prompts\u001b[33m,\u001b[39m \u001b[32m\"the user should be asked for the token exactly once\"\u001b[39m)\u001b[33m.\u001b[39mtoBe(\u001b[35m1\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                                                            \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 77 |\u001b[39m     \u001b[36mawait\u001b[39m ctx\u001b[33m.\u001b[39mclose()\u001b[33m;\u001b[39m\n \u001b[90m 78 |\u001b[39m   })\u001b[33m;\u001b[39m\n \u001b[90m 79 |\u001b[39m\u001b[0m"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "/home/sijo/VeritasGraph/tests/studio-e2e/tests/integration/s01-security.spec.ts",
-                            "column": 76,
-                            "line": 76
-                          },
-                          "message": "Error: the user should be asked for the token exactly once\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m1\u001b[39m\nReceived: \u001b[31m11\u001b[39m\n\n\u001b[0m \u001b[90m 74 |\u001b[39m     test\u001b[33m.\u001b[39minfo()\u001b[33m.\u001b[39mannotations\u001b[33m.\u001b[39mpush({ type\u001b[33m:\u001b[39m \u001b[32m\"prompts\"\u001b[39m\u001b[33m,\u001b[39m description\u001b[33m:\u001b[39m \u001b[33mString\u001b[39m(prompts) })\u001b[33m;\u001b[39m\n \u001b[90m 75 |\u001b[39m     test\u001b[33m.\u001b[39minfo()\u001b[33m.\u001b[39mannotations\u001b[33m.\u001b[39mpush({ type\u001b[33m:\u001b[39m \u001b[32m\"initial-401s\"\u001b[39m\u001b[33m,\u001b[39m description\u001b[33m:\u001b[39m \u001b[33mString\u001b[39m(unauthorized\u001b[33m.\u001b[39mlength) })\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 76 |\u001b[39m     expect(prompts\u001b[33m,\u001b[39m \u001b[32m\"the user should be asked for the token exactly once\"\u001b[39m)\u001b[33m.\u001b[39mtoBe(\u001b[35m1\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                                                            \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 77 |\u001b[39m     \u001b[36mawait\u001b[39m ctx\u001b[33m.\u001b[39mclose()\u001b[33m;\u001b[39m\n \u001b[90m 78 |\u001b[39m   })\u001b[33m;\u001b[39m\n \u001b[90m 79 |\u001b[39m\u001b[0m\n\u001b[2m    at /home/sijo/VeritasGraph/tests/studio-e2e/tests/integration/s01-security.spec.ts:76:76\u001b[22m"
-                        }
-                      ],
+                      "status": "passed",
+                      "duration": 716,
+                      "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-07T17:16:10.296Z",
+                      "startTime": "2026-11-08T14:00:46.601Z",
                       "annotations": [
                         {
                           "type": "prompts",
-                          "description": "11"
+                          "description": "1"
                         },
                         {
                           "type": "initial-401s",
                           "description": "11"
                         }
                       ],
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "/home/sijo/VeritasGraph/tests/studio-e2e/test-results/s01-security-S1-security-C-e6453-per-tab-and-loads-the-graph-integration/test-failed-1.png"
-                        },
-                        {
-                          "name": "error-context",
-                          "contentType": "text/markdown",
-                          "path": "/home/sijo/VeritasGraph/tests/studio-e2e/test-results/s01-security-S1-security-C-e6453-per-tab-and-loads-the-graph-integration/error-context.md"
-                        }
-                      ],
-                      "errorLocation": {
-                        "file": "/home/sijo/VeritasGraph/tests/studio-e2e/tests/integration/s01-security.spec.ts",
-                        "column": 76,
-                        "line": 76
-                      }
+                      "attachments": []
                     }
                   ],
-                  "status": "unexpected"
+                  "status": "expected"
                 }
               ],
               "id": "a655f8e3375727aa7a36-72602ca856d3fdc5c7ba",
@@ -455,7 +424,7 @@
             },
             {
               "title": "1.10 UI with a wrong token prompts once and shows an error",
-              "ok": false,
+              "ok": true,
               "tags": [],
               "tests": [
                 {
@@ -463,7 +432,7 @@
                   "annotations": [
                     {
                       "type": "prompts",
-                      "description": "11"
+                      "description": "1"
                     }
                   ],
                   "expectedStatus": "passed",
@@ -471,60 +440,25 @@
                   "projectName": "integration",
                   "results": [
                     {
-                      "workerIndex": 1,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
-                      "status": "failed",
-                      "duration": 1245,
-                      "error": {
-                        "message": "Error: retried guard should stop repeated prompts\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m1\u001b[39m\nReceived: \u001b[31m11\u001b[39m",
-                        "stack": "Error: retried guard should stop repeated prompts\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m1\u001b[39m\nReceived: \u001b[31m11\u001b[39m\n    at /home/sijo/VeritasGraph/tests/studio-e2e/tests/integration/s01-security.spec.ts:92:67",
-                        "location": {
-                          "file": "/home/sijo/VeritasGraph/tests/studio-e2e/tests/integration/s01-security.spec.ts",
-                          "column": 67,
-                          "line": 92
-                        },
-                        "snippet": "\u001b[0m \u001b[90m 90 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForLoadState(\u001b[32m\"networkidle\"\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 91 |\u001b[39m     test\u001b[33m.\u001b[39minfo()\u001b[33m.\u001b[39mannotations\u001b[33m.\u001b[39mpush({ type\u001b[33m:\u001b[39m \u001b[32m\"prompts\"\u001b[39m\u001b[33m,\u001b[39m description\u001b[33m:\u001b[39m \u001b[33mString\u001b[39m(prompts) })\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 92 |\u001b[39m     expect(prompts\u001b[33m,\u001b[39m \u001b[32m\"retried guard should stop repeated prompts\"\u001b[39m)\u001b[33m.\u001b[39mtoBe(\u001b[35m1\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                                                   \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 93 |\u001b[39m     \u001b[36mawait\u001b[39m ctx\u001b[33m.\u001b[39mclose()\u001b[33m;\u001b[39m\n \u001b[90m 94 |\u001b[39m   })\u001b[33m;\u001b[39m\n \u001b[90m 95 |\u001b[39m\u001b[0m"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "/home/sijo/VeritasGraph/tests/studio-e2e/tests/integration/s01-security.spec.ts",
-                            "column": 67,
-                            "line": 92
-                          },
-                          "message": "Error: retried guard should stop repeated prompts\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m1\u001b[39m\nReceived: \u001b[31m11\u001b[39m\n\n\u001b[0m \u001b[90m 90 |\u001b[39m     \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForLoadState(\u001b[32m\"networkidle\"\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 91 |\u001b[39m     test\u001b[33m.\u001b[39minfo()\u001b[33m.\u001b[39mannotations\u001b[33m.\u001b[39mpush({ type\u001b[33m:\u001b[39m \u001b[32m\"prompts\"\u001b[39m\u001b[33m,\u001b[39m description\u001b[33m:\u001b[39m \u001b[33mString\u001b[39m(prompts) })\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 92 |\u001b[39m     expect(prompts\u001b[33m,\u001b[39m \u001b[32m\"retried guard should stop repeated prompts\"\u001b[39m)\u001b[33m.\u001b[39mtoBe(\u001b[35m1\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                                                   \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 93 |\u001b[39m     \u001b[36mawait\u001b[39m ctx\u001b[33m.\u001b[39mclose()\u001b[33m;\u001b[39m\n \u001b[90m 94 |\u001b[39m   })\u001b[33m;\u001b[39m\n \u001b[90m 95 |\u001b[39m\u001b[0m\n\u001b[2m    at /home/sijo/VeritasGraph/tests/studio-e2e/tests/integration/s01-security.spec.ts:92:67\u001b[22m"
-                        }
-                      ],
+                      "status": "passed",
+                      "duration": 1147,
+                      "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-07T17:16:11.359Z",
+                      "startTime": "2026-11-08T14:00:47.369Z",
                       "annotations": [
                         {
                           "type": "prompts",
-                          "description": "11"
+                          "description": "1"
                         }
                       ],
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "/home/sijo/VeritasGraph/tests/studio-e2e/test-results/s01-security-S1-security-C-a7b5c-pts-once-and-shows-an-error-integration/test-failed-1.png"
-                        },
-                        {
-                          "name": "error-context",
-                          "contentType": "text/markdown",
-                          "path": "/home/sijo/VeritasGraph/tests/studio-e2e/test-results/s01-security-S1-security-C-a7b5c-pts-once-and-shows-an-error-integration/error-context.md"
-                        }
-                      ],
-                      "errorLocation": {
-                        "file": "/home/sijo/VeritasGraph/tests/studio-e2e/tests/integration/s01-security.spec.ts",
-                        "column": 67,
-                        "line": 92
-                      }
+                      "attachments": []
                     }
                   ],
-                  "status": "unexpected"
+                  "status": "expected"
                 }
               ],
               "id": "a655f8e3375727aa7a36-65d83c076245f160812b",
@@ -545,15 +479,15 @@
                   "projectName": "integration",
                   "results": [
                     {
-                      "workerIndex": 2,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1212,
+                      "duration": 1203,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-07T17:16:12.934Z",
+                      "startTime": "2026-11-08T14:00:48.523Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -596,15 +530,15 @@
                   "projectName": "integration",
                   "results": [
                     {
-                      "workerIndex": 2,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 23,
+                      "duration": 20,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-07T17:16:14.211Z",
+                      "startTime": "2026-11-08T14:00:49.737Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -614,7 +548,7 @@
               ],
               "id": "e8fa5e9d96064e212dd3-87df9cecba5ee50a298b",
               "file": "s02-ssrf.spec.ts",
-              "line": 53,
+              "line": 64,
               "column": 5
             },
             {
@@ -630,15 +564,15 @@
                   "projectName": "integration",
                   "results": [
                     {
-                      "workerIndex": 2,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 8,
+                      "duration": 9,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-07T17:16:15.470Z",
+                      "startTime": "2026-11-08T14:00:50.995Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -648,7 +582,7 @@
               ],
               "id": "e8fa5e9d96064e212dd3-ac20ef61ec0fa5985312",
               "file": "s02-ssrf.spec.ts",
-              "line": 53,
+              "line": 64,
               "column": 5
             },
             {
@@ -664,15 +598,15 @@
                   "projectName": "integration",
                   "results": [
                     {
-                      "workerIndex": 2,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 8,
+                      "duration": 7,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-07T17:16:15.483Z",
+                      "startTime": "2026-11-08T14:00:51.012Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -682,7 +616,7 @@
               ],
               "id": "e8fa5e9d96064e212dd3-808cdaa7ae1fb6d356aa",
               "file": "s02-ssrf.spec.ts",
-              "line": 53,
+              "line": 64,
               "column": 5
             },
             {
@@ -698,15 +632,15 @@
                   "projectName": "integration",
                   "results": [
                     {
-                      "workerIndex": 2,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 13,
+                      "duration": 8,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-07T17:16:15.495Z",
+                      "startTime": "2026-11-08T14:00:51.024Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -716,7 +650,7 @@
               ],
               "id": "e8fa5e9d96064e212dd3-4ed1bc66350195916626",
               "file": "s02-ssrf.spec.ts",
-              "line": 53,
+              "line": 64,
               "column": 5
             },
             {
@@ -732,15 +666,15 @@
                   "projectName": "integration",
                   "results": [
                     {
-                      "workerIndex": 2,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 34,
+                      "duration": 29,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-07T17:16:15.512Z",
+                      "startTime": "2026-11-08T14:00:51.040Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -750,7 +684,7 @@
               ],
               "id": "e8fa5e9d96064e212dd3-77a6a1d1e8b30a878b6e",
               "file": "s02-ssrf.spec.ts",
-              "line": 60,
+              "line": 71,
               "column": 3
             },
             {
@@ -760,31 +694,51 @@
               "tests": [
                 {
                   "timeout": 600000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
+                  "annotations": [
+                    {
+                      "type": "skip",
+                      "description": "BLOCKED: OPA is not reachable at http://172.17.0.1:8181/health",
+                      "location": {
+                        "file": "/home/sijo/VeritasGraph/tests/studio-e2e/tests/integration/s02-ssrf.spec.ts",
+                        "line": 79,
+                        "column": 10
+                      }
+                    }
+                  ],
+                  "expectedStatus": "skipped",
                   "projectId": "integration",
                   "projectName": "integration",
                   "results": [
                     {
-                      "workerIndex": 2,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 21,
+                      "status": "skipped",
+                      "duration": 0,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-07T17:16:15.551Z",
-                      "annotations": [],
+                      "startTime": "2026-11-08T14:00:51.075Z",
+                      "annotations": [
+                        {
+                          "type": "skip",
+                          "description": "BLOCKED: OPA is not reachable at http://172.17.0.1:8181/health",
+                          "location": {
+                            "file": "/home/sijo/VeritasGraph/tests/studio-e2e/tests/integration/s02-ssrf.spec.ts",
+                            "line": 79,
+                            "column": 10
+                          }
+                        }
+                      ],
                       "attachments": []
                     }
                   ],
-                  "status": "expected"
+                  "status": "skipped"
                 }
               ],
               "id": "e8fa5e9d96064e212dd3-64ce9feefba81083398a",
               "file": "s02-ssrf.spec.ts",
-              "line": 67,
+              "line": 78,
               "column": 3
             },
             {
@@ -800,15 +754,15 @@
                   "projectName": "integration",
                   "results": [
                     {
-                      "workerIndex": 2,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 11,
+                      "duration": 9,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-07T17:16:15.584Z",
+                      "startTime": "2026-11-08T14:00:51.081Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -818,7 +772,7 @@
               ],
               "id": "e8fa5e9d96064e212dd3-7f80f30a28b894322004",
               "file": "s02-ssrf.spec.ts",
-              "line": 73,
+              "line": 85,
               "column": 3
             },
             {
@@ -834,15 +788,15 @@
                   "projectName": "integration",
                   "results": [
                     {
-                      "workerIndex": 2,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 23,
+                      "duration": 19,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-07T17:16:15.600Z",
+                      "startTime": "2026-11-08T14:00:51.098Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -852,7 +806,7 @@
               ],
               "id": "e8fa5e9d96064e212dd3-aa48bdabdaf17e47bba4",
               "file": "s02-ssrf.spec.ts",
-              "line": 79,
+              "line": 91,
               "column": 3
             }
           ]
@@ -898,15 +852,15 @@
                   "projectName": "integration",
                   "results": [
                     {
-                      "workerIndex": 2,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 3355,
+                      "duration": 4159,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-07T17:16:15.882Z",
+                      "startTime": "2026-11-08T14:00:51.375Z",
                       "annotations": [
                         {
                           "type": "run1",
@@ -945,15 +899,15 @@
                   "projectName": "integration",
                   "results": [
                     {
-                      "workerIndex": 2,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 526,
+                      "duration": 683,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-07T17:16:21.670Z",
+                      "startTime": "2026-11-08T14:00:57.591Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -979,15 +933,15 @@
                   "projectName": "integration",
                   "results": [
                     {
-                      "workerIndex": 2,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 2424,
+                      "duration": 2259,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-07T17:16:22.205Z",
+                      "startTime": "2026-11-08T14:00:58.281Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -1013,15 +967,15 @@
                   "projectName": "integration",
                   "results": [
                     {
-                      "workerIndex": 2,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 6,
+                      "duration": 4,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-07T17:16:24.649Z",
+                      "startTime": "2026-11-08T14:01:00.547Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -1047,7 +1001,7 @@
                   "projectName": "integration",
                   "results": [
                     {
-                      "workerIndex": 2,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
                       "duration": 3,
@@ -1055,7 +1009,7 @@
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-07T17:16:24.661Z",
+                      "startTime": "2026-11-08T14:01:00.558Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -1078,7 +1032,7 @@
                   "annotations": [
                     {
                       "type": "re-ingest",
-                      "description": "entities_added=1 growth=1"
+                      "description": "entities_added=2 growth=2"
                     }
                   ],
                   "expectedStatus": "passed",
@@ -1086,19 +1040,19 @@
                   "projectName": "integration",
                   "results": [
                     {
-                      "workerIndex": 2,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 1936,
+                      "duration": 2070,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-07T17:16:24.669Z",
+                      "startTime": "2026-11-08T14:01:00.567Z",
                       "annotations": [
                         {
                           "type": "re-ingest",
-                          "description": "entities_added=1 growth=1"
+                          "description": "entities_added=2 growth=2"
                         }
                       ],
                       "attachments": []
@@ -1114,7 +1068,7 @@
             },
             {
               "title": "3.7 empty citations show the grounding explanation, not a generic empty state",
-              "ok": false,
+              "ok": true,
               "tags": [],
               "tests": [
                 {
@@ -1125,55 +1079,20 @@
                   "projectName": "integration",
                   "results": [
                     {
-                      "workerIndex": 2,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
-                      "status": "failed",
-                      "duration": 60970,
-                      "error": {
-                        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).not.\u001b[22mtoContainText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: locator('#graphCitations')\nExpected substring: not \u001b[32m\"No citations returned.\"\u001b[39m\nReceived string: \u001b[31m\"\u001b[7mNo citations returned.\u001b[27m\"\u001b[39m\nTimeout: 60000ms\n\nCall log:\n\u001b[2m  - Expect \"not toContainText\" with timeout 60000ms\u001b[22m\n\u001b[2m  - waiting for locator('#graphCitations')\u001b[22m\n\u001b[2m    123 × locator resolved to <div class=\"list\" id=\"graphCitations\">…</div>\u001b[22m\n\u001b[2m        - unexpected value \"No citations returned.\"\u001b[22m\n",
-                        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).not.\u001b[22mtoContainText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: locator('#graphCitations')\nExpected substring: not \u001b[32m\"No citations returned.\"\u001b[39m\nReceived string: \u001b[31m\"\u001b[7mNo citations returned.\u001b[27m\"\u001b[39m\nTimeout: 60000ms\n\nCall log:\n\u001b[2m  - Expect \"not toContainText\" with timeout 60000ms\u001b[22m\n\u001b[2m  - waiting for locator('#graphCitations')\u001b[22m\n\u001b[2m    123 × locator resolved to <div class=\"list\" id=\"graphCitations\">…</div>\u001b[22m\n\u001b[2m        - unexpected value \"No citations returned.\"\u001b[22m\n\n    at /home/sijo/VeritasGraph/tests/studio-e2e/tests/integration/s03-citations.spec.ts:110:29",
-                        "location": {
-                          "file": "/home/sijo/VeritasGraph/tests/studio-e2e/tests/integration/s03-citations.spec.ts",
-                          "column": 29,
-                          "line": 110
-                        },
-                        "snippet": "\u001b[0m \u001b[90m 108 |\u001b[39m     expect(body\u001b[33m.\u001b[39mcitations)\u001b[33m.\u001b[39mtoEqual([])\u001b[33m;\u001b[39m\n \u001b[90m 109 |\u001b[39m     \u001b[36mconst\u001b[39m panel \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m\"#graphCitations\"\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 110 |\u001b[39m     \u001b[36mawait\u001b[39m expect(panel)\u001b[33m.\u001b[39mnot\u001b[33m.\u001b[39mtoContainText(\u001b[32m\"No citations returned.\"\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                             \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 111 |\u001b[39m     \u001b[36mawait\u001b[39m expect(panel)\u001b[33m.\u001b[39mtoContainText(\u001b[35m/Answer is not grounded/i\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 112 |\u001b[39m   })\u001b[33m;\u001b[39m\n \u001b[90m 113 |\u001b[39m })\u001b[33m;\u001b[39m\u001b[0m"
-                      },
-                      "errors": [
-                        {
-                          "location": {
-                            "file": "/home/sijo/VeritasGraph/tests/studio-e2e/tests/integration/s03-citations.spec.ts",
-                            "column": 29,
-                            "line": 110
-                          },
-                          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).not.\u001b[22mtoContainText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: locator('#graphCitations')\nExpected substring: not \u001b[32m\"No citations returned.\"\u001b[39m\nReceived string: \u001b[31m\"\u001b[7mNo citations returned.\u001b[27m\"\u001b[39m\nTimeout: 60000ms\n\nCall log:\n\u001b[2m  - Expect \"not toContainText\" with timeout 60000ms\u001b[22m\n\u001b[2m  - waiting for locator('#graphCitations')\u001b[22m\n\u001b[2m    123 × locator resolved to <div class=\"list\" id=\"graphCitations\">…</div>\u001b[22m\n\u001b[2m        - unexpected value \"No citations returned.\"\u001b[22m\n\n\n\u001b[0m \u001b[90m 108 |\u001b[39m     expect(body\u001b[33m.\u001b[39mcitations)\u001b[33m.\u001b[39mtoEqual([])\u001b[33m;\u001b[39m\n \u001b[90m 109 |\u001b[39m     \u001b[36mconst\u001b[39m panel \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m\"#graphCitations\"\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 110 |\u001b[39m     \u001b[36mawait\u001b[39m expect(panel)\u001b[33m.\u001b[39mnot\u001b[33m.\u001b[39mtoContainText(\u001b[32m\"No citations returned.\"\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                             \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 111 |\u001b[39m     \u001b[36mawait\u001b[39m expect(panel)\u001b[33m.\u001b[39mtoContainText(\u001b[35m/Answer is not grounded/i\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 112 |\u001b[39m   })\u001b[33m;\u001b[39m\n \u001b[90m 113 |\u001b[39m })\u001b[33m;\u001b[39m\u001b[0m\n\u001b[2m    at /home/sijo/VeritasGraph/tests/studio-e2e/tests/integration/s03-citations.spec.ts:110:29\u001b[22m"
-                        }
-                      ],
+                      "status": "passed",
+                      "duration": 925,
+                      "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-07T17:16:26.610Z",
+                      "startTime": "2026-11-08T14:01:02.642Z",
                       "annotations": [],
-                      "attachments": [
-                        {
-                          "name": "screenshot",
-                          "contentType": "image/png",
-                          "path": "/home/sijo/VeritasGraph/tests/studio-e2e/test-results/s03-citations-S3-citations-f2ab7-n-not-a-generic-empty-state-integration/test-failed-1.png"
-                        },
-                        {
-                          "name": "error-context",
-                          "contentType": "text/markdown",
-                          "path": "/home/sijo/VeritasGraph/tests/studio-e2e/test-results/s03-citations-S3-citations-f2ab7-n-not-a-generic-empty-state-integration/error-context.md"
-                        }
-                      ],
-                      "errorLocation": {
-                        "file": "/home/sijo/VeritasGraph/tests/studio-e2e/tests/integration/s03-citations.spec.ts",
-                        "column": 29,
-                        "line": 110
-                      }
+                      "attachments": []
                     }
                   ],
-                  "status": "unexpected"
+                  "status": "expected"
                 }
               ],
               "id": "ab75e41db9eccc1a02dd-ebb413286d0995130892",
@@ -1195,7 +1114,7 @@
         {
           "title": "S4 MCP modes (C8, C9, C11)",
           "file": "s04-mcp-modes.spec.ts",
-          "line": 17,
+          "line": 18,
           "column": 6,
           "specs": [
             {
@@ -1211,15 +1130,15 @@
                   "projectName": "integration",
                   "results": [
                     {
-                      "workerIndex": 3,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 88,
+                      "duration": 78,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-07T17:17:27.839Z",
+                      "startTime": "2026-11-08T14:01:03.578Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -1229,7 +1148,7 @@
               ],
               "id": "6d19b8920f004c58f589-483ceed1ef358747c1c0",
               "file": "s04-mcp-modes.spec.ts",
-              "line": 23,
+              "line": 24,
               "column": 3
             },
             {
@@ -1245,15 +1164,15 @@
                   "projectName": "integration",
                   "results": [
                     {
-                      "workerIndex": 3,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 34,
+                      "duration": 29,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-07T17:17:28.716Z",
+                      "startTime": "2026-11-08T14:01:04.219Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -1263,7 +1182,7 @@
               ],
               "id": "6d19b8920f004c58f589-6c5db225aaf000366f6d",
               "file": "s04-mcp-modes.spec.ts",
-              "line": 34,
+              "line": 35,
               "column": 3
             },
             {
@@ -1279,15 +1198,15 @@
                   "projectName": "integration",
                   "results": [
                     {
-                      "workerIndex": 3,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 917,
+                      "duration": 723,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-07T17:17:28.762Z",
+                      "startTime": "2026-11-08T14:01:04.255Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -1297,7 +1216,7 @@
               ],
               "id": "6d19b8920f004c58f589-c857a8e75a71bba65055",
               "file": "s04-mcp-modes.spec.ts",
-              "line": 41,
+              "line": 42,
               "column": 3
             },
             {
@@ -1313,15 +1232,15 @@
                   "projectName": "integration",
                   "results": [
                     {
-                      "workerIndex": 3,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 155,
+                      "duration": 127,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-07T17:17:29.686Z",
+                      "startTime": "2026-11-08T14:01:04.985Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -1331,7 +1250,7 @@
               ],
               "id": "6d19b8920f004c58f589-1e49e24d7abad8c3829b",
               "file": "s04-mcp-modes.spec.ts",
-              "line": 58,
+              "line": 59,
               "column": 3
             },
             {
@@ -1347,15 +1266,15 @@
                   "projectName": "integration",
                   "results": [
                     {
-                      "workerIndex": 3,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 31,
+                      "duration": 29,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-07T17:17:29.849Z",
+                      "startTime": "2026-11-08T14:01:05.118Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -1365,7 +1284,7 @@
               ],
               "id": "6d19b8920f004c58f589-c01f9fe411629b8faf9d",
               "file": "s04-mcp-modes.spec.ts",
-              "line": 69,
+              "line": 70,
               "column": 3
             },
             {
@@ -1381,15 +1300,15 @@
                   "projectName": "integration",
                   "results": [
                     {
-                      "workerIndex": 3,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 31,
+                      "duration": 28,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-07T17:17:29.889Z",
+                      "startTime": "2026-11-08T14:01:05.155Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -1399,7 +1318,7 @@
               ],
               "id": "6d19b8920f004c58f589-c86efc6cee2095db6856",
               "file": "s04-mcp-modes.spec.ts",
-              "line": 73,
+              "line": 74,
               "column": 3
             },
             {
@@ -1415,15 +1334,15 @@
                   "projectName": "integration",
                   "results": [
                     {
-                      "workerIndex": 3,
+                      "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 748,
+                      "duration": 975,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-07T17:17:29.935Z",
+                      "startTime": "2026-11-08T14:01:05.191Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -1433,3087 +1352,7 @@
               ],
               "id": "6d19b8920f004c58f589-9a3761a8e85b12ea5431",
               "file": "s04-mcp-modes.spec.ts",
-              "line": 78,
-              "column": 3
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "title": "s05-store.spec.ts",
-      "file": "s05-store.spec.ts",
-      "column": 0,
-      "line": 0,
-      "specs": [],
-      "suites": [
-        {
-          "title": "S5 shared store (C12, C13)",
-          "file": "s05-store.spec.ts",
-          "line": 15,
-          "column": 6,
-          "specs": [
-            {
-              "title": "5.1 concurrent Studio + MCP ingests both survive (3 iterations)",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 600000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "integration",
-                  "projectName": "integration",
-                  "results": [
-                    {
-                      "workerIndex": 3,
-                      "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 7660,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-11-07T17:17:30.695Z",
-                      "annotations": [],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "c45e4ee96312954de41b-c2e0d41d92c025a4c514",
-              "file": "s05-store.spec.ts",
-              "line": 20,
-              "column": 3
-            },
-            {
-              "title": "5.2 legacy knowledge_graph.json migrates on first start",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 600000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "integration",
-                  "projectName": "integration",
-                  "results": [
-                    {
-                      "workerIndex": 3,
-                      "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 758,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-11-07T17:17:38.376Z",
-                      "annotations": [],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "c45e4ee96312954de41b-da97b3a7c1805a799128",
-              "file": "s05-store.spec.ts",
-              "line": 36,
-              "column": 3
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "title": "s06-ontology.spec.ts",
-      "file": "s06-ontology.spec.ts",
-      "column": 0,
-      "line": 0,
-      "specs": [],
-      "suites": [
-        {
-          "title": "S6 ontology and governed answers (C14-C19)",
-          "file": "s06-ontology.spec.ts",
-          "line": 22,
-          "column": 6,
-          "specs": [
-            {
-              "title": "6.1 editors propose, only admins certify",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 600000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "integration",
-                  "projectName": "integration",
-                  "results": [
-                    {
-                      "workerIndex": 3,
-                      "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 39,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-11-07T17:17:39.147Z",
-                      "annotations": [],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "35278fd9f68c4d7f7fe7-74a8b0eb0906486afbb1",
-              "file": "s06-ontology.spec.ts",
-              "line": 27,
-              "column": 3
-            },
-            {
-              "title": "6.2 real extraction is mapped onto the certified vocabulary",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 600000,
-                  "annotations": [
-                    {
-                      "type": "extraction",
-                      "description": "Acme Corp:organization, Bob Smith:person, Fenwick Metals:organization"
-                    }
-                  ],
-                  "expectedStatus": "passed",
-                  "projectId": "integration",
-                  "projectName": "integration",
-                  "results": [
-                    {
-                      "workerIndex": 3,
-                      "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 1084,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-11-07T17:17:39.212Z",
-                      "annotations": [
-                        {
-                          "type": "extraction",
-                          "description": "Acme Corp:organization, Bob Smith:person, Fenwick Metals:organization"
-                        }
-                      ],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "35278fd9f68c4d7f7fe7-241baf672e838b338c68",
-              "file": "s06-ontology.spec.ts",
-              "line": 51,
-              "column": 3
-            },
-            {
-              "title": "6.3 unmapped extraction becomes proposals, never certified",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 600000,
-                  "annotations": [
-                    {
-                      "type": "proposals",
-                      "description": "concept, location, role, buys_from"
-                    }
-                  ],
-                  "expectedStatus": "passed",
-                  "projectId": "integration",
-                  "projectName": "integration",
-                  "results": [
-                    {
-                      "workerIndex": 3,
-                      "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 1031,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-11-07T17:17:40.307Z",
-                      "annotations": [
-                        {
-                          "type": "proposals",
-                          "description": "concept, location, role, buys_from"
-                        }
-                      ],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "35278fd9f68c4d7f7fe7-86bc4e5ba5c8f17db416",
-              "file": "s06-ontology.spec.ts",
-              "line": 63,
-              "column": 3
-            },
-            {
-              "title": "6.4 answerability reports coverage and uncovered words",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 600000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "integration",
-                  "projectName": "integration",
-                  "results": [
-                    {
-                      "workerIndex": 3,
-                      "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 101,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-11-07T17:17:41.345Z",
-                      "annotations": [],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "35278fd9f68c4d7f7fe7-be85757af024a51e9080",
-              "file": "s06-ontology.spec.ts",
-              "line": 76,
-              "column": 3
-            },
-            {
-              "title": "6.5 governed mode abstains on a proposed-only term, then answers after certification",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 600000,
-                  "annotations": [
-                    {
-                      "type": "governed",
-                      "description": "abstained=false reason= grounded=true citations=1"
-                    }
-                  ],
-                  "expectedStatus": "passed",
-                  "projectId": "integration",
-                  "projectName": "integration",
-                  "results": [
-                    {
-                      "workerIndex": 3,
-                      "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 497,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-11-07T17:17:41.452Z",
-                      "annotations": [
-                        {
-                          "type": "governed",
-                          "description": "abstained=false reason= grounded=true citations=1"
-                        }
-                      ],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "35278fd9f68c4d7f7fe7-6f86179d8861eebbf88e",
-              "file": "s06-ontology.spec.ts",
-              "line": 89,
-              "column": 3
-            },
-            {
-              "title": "6.6 MCP agents can propose terms but never certify",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 600000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "integration",
-                  "projectName": "integration",
-                  "results": [
-                    {
-                      "workerIndex": 3,
-                      "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 117,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-11-07T17:17:41.957Z",
-                      "annotations": [],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "35278fd9f68c4d7f7fe7-448e8d543964ee5fe3ad",
-              "file": "s06-ontology.spec.ts",
-              "line": 118,
-              "column": 3
-            },
-            {
-              "title": "6.7 deprecating a type is admin-only and removes it from mapping",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 600000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "integration",
-                  "projectName": "integration",
-                  "results": [
-                    {
-                      "workerIndex": 3,
-                      "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 10,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-11-07T17:17:42.084Z",
-                      "annotations": [],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "35278fd9f68c4d7f7fe7-c222595914356f4e1a96",
-              "file": "s06-ontology.spec.ts",
-              "line": 134,
-              "column": 3
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "title": "s07-ao-connectors.spec.ts",
-      "file": "s07-ao-connectors.spec.ts",
-      "column": 0,
-      "line": 0,
-      "specs": [],
-      "suites": [
-        {
-          "title": "S7a connectors via CONNECTION_STRINGS (profile A)",
-          "file": "s07-ao-connectors.spec.ts",
-          "line": 9,
-          "column": 6,
-          "specs": [
-            {
-              "title": "7a.1 AO reports CONNECTION_STRINGS as the source",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 600000,
-                  "annotations": [
-                    {
-                      "type": "blocked",
-                      "description": "AO_URL unset — Auto-Ontology is not deployed for this run"
-                    },
-                    {
-                      "type": "skip",
-                      "description": "BLOCKED: AO_URL unset — Auto-Ontology is not deployed for this run",
-                      "location": {
-                        "file": "/home/sijo/VeritasGraph/tests/studio-e2e/tests/integration/ao.ts",
-                        "line": 44,
-                        "column": 10
-                      }
-                    }
-                  ],
-                  "expectedStatus": "skipped",
-                  "projectId": "integration",
-                  "projectName": "integration",
-                  "results": [
-                    {
-                      "workerIndex": 3,
-                      "parallelIndex": 0,
-                      "status": "skipped",
-                      "duration": 1,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-11-07T17:17:42.109Z",
-                      "annotations": [
-                        {
-                          "type": "blocked",
-                          "description": "AO_URL unset — Auto-Ontology is not deployed for this run"
-                        },
-                        {
-                          "type": "skip",
-                          "description": "BLOCKED: AO_URL unset — Auto-Ontology is not deployed for this run",
-                          "location": {
-                            "file": "/home/sijo/VeritasGraph/tests/studio-e2e/tests/integration/ao.ts",
-                            "line": 44,
-                            "column": 10
-                          }
-                        }
-                      ],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "skipped"
-                }
-              ],
-              "id": "2ac2718be0ed2787d361-1321ae14ca55412882e8",
-              "file": "s07-ao-connectors.spec.ts",
-              "line": 10,
-              "column": 3
-            }
-          ],
-          "suites": [
-            {
-              "title": "connector: postgresql",
-              "file": "s07-ao-connectors.spec.ts",
-              "line": 18,
-              "column": 10,
-              "specs": [
-                {
-                  "title": "7a.2 postgresql catalog ingested",
-                  "ok": true,
-                  "tags": [],
-                  "tests": [
-                    {
-                      "timeout": 600000,
-                      "annotations": [
-                        {
-                          "type": "blocked",
-                          "description": "AO_URL unset — Auto-Ontology is not deployed for this run"
-                        },
-                        {
-                          "type": "skip",
-                          "description": "BLOCKED: AO_URL unset — Auto-Ontology is not deployed for this run",
-                          "location": {
-                            "file": "/home/sijo/VeritasGraph/tests/studio-e2e/tests/integration/ao.ts",
-                            "line": 44,
-                            "column": 10
-                          }
-                        }
-                      ],
-                      "expectedStatus": "skipped",
-                      "projectId": "integration",
-                      "projectName": "integration",
-                      "results": [
-                        {
-                          "workerIndex": 3,
-                          "parallelIndex": 0,
-                          "status": "skipped",
-                          "duration": 0,
-                          "errors": [],
-                          "stdout": [],
-                          "stderr": [],
-                          "retry": 0,
-                          "startTime": "2026-11-07T17:17:42.117Z",
-                          "annotations": [
-                            {
-                              "type": "blocked",
-                              "description": "AO_URL unset — Auto-Ontology is not deployed for this run"
-                            },
-                            {
-                              "type": "skip",
-                              "description": "BLOCKED: AO_URL unset — Auto-Ontology is not deployed for this run",
-                              "location": {
-                                "file": "/home/sijo/VeritasGraph/tests/studio-e2e/tests/integration/ao.ts",
-                                "line": 44,
-                                "column": 10
-                              }
-                            }
-                          ],
-                          "attachments": []
-                        }
-                      ],
-                      "status": "skipped"
-                    }
-                  ],
-                  "id": "2ac2718be0ed2787d361-7ff4d39a56b0313e4e85",
-                  "file": "s07-ao-connectors.spec.ts",
-                  "line": 19,
-                  "column": 7
-                },
-                {
-                  "title": "7a.3 postgresql golden revenue = 588.80",
-                  "ok": true,
-                  "tags": [],
-                  "tests": [
-                    {
-                      "timeout": 600000,
-                      "annotations": [
-                        {
-                          "type": "blocked",
-                          "description": "AO_URL unset — Auto-Ontology is not deployed for this run"
-                        },
-                        {
-                          "type": "skip",
-                          "description": "BLOCKED: AO_URL unset — Auto-Ontology is not deployed for this run",
-                          "location": {
-                            "file": "/home/sijo/VeritasGraph/tests/studio-e2e/tests/integration/ao.ts",
-                            "line": 44,
-                            "column": 10
-                          }
-                        }
-                      ],
-                      "expectedStatus": "skipped",
-                      "projectId": "integration",
-                      "projectName": "integration",
-                      "results": [
-                        {
-                          "workerIndex": 3,
-                          "parallelIndex": 0,
-                          "status": "skipped",
-                          "duration": 0,
-                          "errors": [],
-                          "stdout": [],
-                          "stderr": [],
-                          "retry": 0,
-                          "startTime": "2026-11-07T17:17:42.125Z",
-                          "annotations": [
-                            {
-                              "type": "blocked",
-                              "description": "AO_URL unset — Auto-Ontology is not deployed for this run"
-                            },
-                            {
-                              "type": "skip",
-                              "description": "BLOCKED: AO_URL unset — Auto-Ontology is not deployed for this run",
-                              "location": {
-                                "file": "/home/sijo/VeritasGraph/tests/studio-e2e/tests/integration/ao.ts",
-                                "line": 44,
-                                "column": 10
-                              }
-                            }
-                          ],
-                          "attachments": []
-                        }
-                      ],
-                      "status": "skipped"
-                    }
-                  ],
-                  "id": "2ac2718be0ed2787d361-253d8bdd0f6ebda697b9",
-                  "file": "s07-ao-connectors.spec.ts",
-                  "line": 25,
-                  "column": 7
-                }
-              ]
-            },
-            {
-              "title": "connector: mysql",
-              "file": "s07-ao-connectors.spec.ts",
-              "line": 18,
-              "column": 10,
-              "specs": [
-                {
-                  "title": "7a.2 mysql catalog ingested",
-                  "ok": true,
-                  "tags": [],
-                  "tests": [
-                    {
-                      "timeout": 600000,
-                      "annotations": [
-                        {
-                          "type": "blocked",
-                          "description": "AO_URL unset — Auto-Ontology is not deployed for this run"
-                        },
-                        {
-                          "type": "skip",
-                          "description": "BLOCKED: AO_URL unset — Auto-Ontology is not deployed for this run",
-                          "location": {
-                            "file": "/home/sijo/VeritasGraph/tests/studio-e2e/tests/integration/ao.ts",
-                            "line": 44,
-                            "column": 10
-                          }
-                        }
-                      ],
-                      "expectedStatus": "skipped",
-                      "projectId": "integration",
-                      "projectName": "integration",
-                      "results": [
-                        {
-                          "workerIndex": 3,
-                          "parallelIndex": 0,
-                          "status": "skipped",
-                          "duration": 0,
-                          "errors": [],
-                          "stdout": [],
-                          "stderr": [],
-                          "retry": 0,
-                          "startTime": "2026-11-07T17:17:42.139Z",
-                          "annotations": [
-                            {
-                              "type": "blocked",
-                              "description": "AO_URL unset — Auto-Ontology is not deployed for this run"
-                            },
-                            {
-                              "type": "skip",
-                              "description": "BLOCKED: AO_URL unset — Auto-Ontology is not deployed for this run",
-                              "location": {
-                                "file": "/home/sijo/VeritasGraph/tests/studio-e2e/tests/integration/ao.ts",
-                                "line": 44,
-                                "column": 10
-                              }
-                            }
-                          ],
-                          "attachments": []
-                        }
-                      ],
-                      "status": "skipped"
-                    }
-                  ],
-                  "id": "2ac2718be0ed2787d361-abeae4a8b58bf3cc9698",
-                  "file": "s07-ao-connectors.spec.ts",
-                  "line": 19,
-                  "column": 7
-                },
-                {
-                  "title": "7a.3 mysql golden revenue = 412.50",
-                  "ok": true,
-                  "tags": [],
-                  "tests": [
-                    {
-                      "timeout": 600000,
-                      "annotations": [
-                        {
-                          "type": "blocked",
-                          "description": "AO_URL unset — Auto-Ontology is not deployed for this run"
-                        },
-                        {
-                          "type": "skip",
-                          "description": "BLOCKED: AO_URL unset — Auto-Ontology is not deployed for this run",
-                          "location": {
-                            "file": "/home/sijo/VeritasGraph/tests/studio-e2e/tests/integration/ao.ts",
-                            "line": 44,
-                            "column": 10
-                          }
-                        }
-                      ],
-                      "expectedStatus": "skipped",
-                      "projectId": "integration",
-                      "projectName": "integration",
-                      "results": [
-                        {
-                          "workerIndex": 3,
-                          "parallelIndex": 0,
-                          "status": "skipped",
-                          "duration": 0,
-                          "errors": [],
-                          "stdout": [],
-                          "stderr": [],
-                          "retry": 0,
-                          "startTime": "2026-11-07T17:17:42.151Z",
-                          "annotations": [
-                            {
-                              "type": "blocked",
-                              "description": "AO_URL unset — Auto-Ontology is not deployed for this run"
-                            },
-                            {
-                              "type": "skip",
-                              "description": "BLOCKED: AO_URL unset — Auto-Ontology is not deployed for this run",
-                              "location": {
-                                "file": "/home/sijo/VeritasGraph/tests/studio-e2e/tests/integration/ao.ts",
-                                "line": 44,
-                                "column": 10
-                              }
-                            }
-                          ],
-                          "attachments": []
-                        }
-                      ],
-                      "status": "skipped"
-                    }
-                  ],
-                  "id": "2ac2718be0ed2787d361-f2216fc49f8316be0561",
-                  "file": "s07-ao-connectors.spec.ts",
-                  "line": 25,
-                  "column": 7
-                }
-              ]
-            },
-            {
-              "title": "connector: databricks",
-              "file": "s07-ao-connectors.spec.ts",
-              "line": 18,
-              "column": 10,
-              "specs": [
-                {
-                  "title": "7a.2 databricks catalog ingested",
-                  "ok": true,
-                  "tags": [],
-                  "tests": [
-                    {
-                      "timeout": 600000,
-                      "annotations": [
-                        {
-                          "type": "blocked",
-                          "description": "AO_URL unset — Auto-Ontology is not deployed for this run"
-                        },
-                        {
-                          "type": "skip",
-                          "description": "BLOCKED: AO_URL unset — Auto-Ontology is not deployed for this run",
-                          "location": {
-                            "file": "/home/sijo/VeritasGraph/tests/studio-e2e/tests/integration/ao.ts",
-                            "line": 44,
-                            "column": 10
-                          }
-                        }
-                      ],
-                      "expectedStatus": "skipped",
-                      "projectId": "integration",
-                      "projectName": "integration",
-                      "results": [
-                        {
-                          "workerIndex": 3,
-                          "parallelIndex": 0,
-                          "status": "skipped",
-                          "duration": 0,
-                          "errors": [],
-                          "stdout": [],
-                          "stderr": [],
-                          "retry": 0,
-                          "startTime": "2026-11-07T17:17:42.165Z",
-                          "annotations": [
-                            {
-                              "type": "blocked",
-                              "description": "AO_URL unset — Auto-Ontology is not deployed for this run"
-                            },
-                            {
-                              "type": "skip",
-                              "description": "BLOCKED: AO_URL unset — Auto-Ontology is not deployed for this run",
-                              "location": {
-                                "file": "/home/sijo/VeritasGraph/tests/studio-e2e/tests/integration/ao.ts",
-                                "line": 44,
-                                "column": 10
-                              }
-                            }
-                          ],
-                          "attachments": []
-                        }
-                      ],
-                      "status": "skipped"
-                    }
-                  ],
-                  "id": "2ac2718be0ed2787d361-7ca62f51387d3130bd15",
-                  "file": "s07-ao-connectors.spec.ts",
-                  "line": 19,
-                  "column": 7
-                },
-                {
-                  "title": "7a.3 databricks golden revenue = 1024.00",
-                  "ok": true,
-                  "tags": [],
-                  "tests": [
-                    {
-                      "timeout": 600000,
-                      "annotations": [
-                        {
-                          "type": "blocked",
-                          "description": "AO_URL unset — Auto-Ontology is not deployed for this run"
-                        },
-                        {
-                          "type": "skip",
-                          "description": "BLOCKED: AO_URL unset — Auto-Ontology is not deployed for this run",
-                          "location": {
-                            "file": "/home/sijo/VeritasGraph/tests/studio-e2e/tests/integration/ao.ts",
-                            "line": 44,
-                            "column": 10
-                          }
-                        }
-                      ],
-                      "expectedStatus": "skipped",
-                      "projectId": "integration",
-                      "projectName": "integration",
-                      "results": [
-                        {
-                          "workerIndex": 3,
-                          "parallelIndex": 0,
-                          "status": "skipped",
-                          "duration": 0,
-                          "errors": [],
-                          "stdout": [],
-                          "stderr": [],
-                          "retry": 0,
-                          "startTime": "2026-11-07T17:17:42.174Z",
-                          "annotations": [
-                            {
-                              "type": "blocked",
-                              "description": "AO_URL unset — Auto-Ontology is not deployed for this run"
-                            },
-                            {
-                              "type": "skip",
-                              "description": "BLOCKED: AO_URL unset — Auto-Ontology is not deployed for this run",
-                              "location": {
-                                "file": "/home/sijo/VeritasGraph/tests/studio-e2e/tests/integration/ao.ts",
-                                "line": 44,
-                                "column": 10
-                              }
-                            }
-                          ],
-                          "attachments": []
-                        }
-                      ],
-                      "status": "skipped"
-                    }
-                  ],
-                  "id": "2ac2718be0ed2787d361-490a782d972b19cce7e2",
-                  "file": "s07-ao-connectors.spec.ts",
-                  "line": 25,
-                  "column": 7
-                }
-              ]
-            },
-            {
-              "title": "connector: snowflake",
-              "file": "s07-ao-connectors.spec.ts",
-              "line": 18,
-              "column": 10,
-              "specs": [
-                {
-                  "title": "7a.2 snowflake catalog ingested",
-                  "ok": true,
-                  "tags": [],
-                  "tests": [
-                    {
-                      "timeout": 600000,
-                      "annotations": [
-                        {
-                          "type": "blocked",
-                          "description": "AO_URL unset — Auto-Ontology is not deployed for this run"
-                        },
-                        {
-                          "type": "skip",
-                          "description": "BLOCKED: AO_URL unset — Auto-Ontology is not deployed for this run",
-                          "location": {
-                            "file": "/home/sijo/VeritasGraph/tests/studio-e2e/tests/integration/ao.ts",
-                            "line": 44,
-                            "column": 10
-                          }
-                        }
-                      ],
-                      "expectedStatus": "skipped",
-                      "projectId": "integration",
-                      "projectName": "integration",
-                      "results": [
-                        {
-                          "workerIndex": 3,
-                          "parallelIndex": 0,
-                          "status": "skipped",
-                          "duration": 0,
-                          "errors": [],
-                          "stdout": [],
-                          "stderr": [],
-                          "retry": 0,
-                          "startTime": "2026-11-07T17:17:42.183Z",
-                          "annotations": [
-                            {
-                              "type": "blocked",
-                              "description": "AO_URL unset — Auto-Ontology is not deployed for this run"
-                            },
-                            {
-                              "type": "skip",
-                              "description": "BLOCKED: AO_URL unset — Auto-Ontology is not deployed for this run",
-                              "location": {
-                                "file": "/home/sijo/VeritasGraph/tests/studio-e2e/tests/integration/ao.ts",
-                                "line": 44,
-                                "column": 10
-                              }
-                            }
-                          ],
-                          "attachments": []
-                        }
-                      ],
-                      "status": "skipped"
-                    }
-                  ],
-                  "id": "2ac2718be0ed2787d361-5b352a1f5cd4111699f6",
-                  "file": "s07-ao-connectors.spec.ts",
-                  "line": 19,
-                  "column": 7
-                },
-                {
-                  "title": "7a.3 snowflake golden revenue = 77.25",
-                  "ok": true,
-                  "tags": [],
-                  "tests": [
-                    {
-                      "timeout": 600000,
-                      "annotations": [
-                        {
-                          "type": "blocked",
-                          "description": "AO_URL unset — Auto-Ontology is not deployed for this run"
-                        },
-                        {
-                          "type": "skip",
-                          "description": "BLOCKED: AO_URL unset — Auto-Ontology is not deployed for this run",
-                          "location": {
-                            "file": "/home/sijo/VeritasGraph/tests/studio-e2e/tests/integration/ao.ts",
-                            "line": 44,
-                            "column": 10
-                          }
-                        }
-                      ],
-                      "expectedStatus": "skipped",
-                      "projectId": "integration",
-                      "projectName": "integration",
-                      "results": [
-                        {
-                          "workerIndex": 3,
-                          "parallelIndex": 0,
-                          "status": "skipped",
-                          "duration": 0,
-                          "errors": [],
-                          "stdout": [],
-                          "stderr": [],
-                          "retry": 0,
-                          "startTime": "2026-11-07T17:17:42.193Z",
-                          "annotations": [
-                            {
-                              "type": "blocked",
-                              "description": "AO_URL unset — Auto-Ontology is not deployed for this run"
-                            },
-                            {
-                              "type": "skip",
-                              "description": "BLOCKED: AO_URL unset — Auto-Ontology is not deployed for this run",
-                              "location": {
-                                "file": "/home/sijo/VeritasGraph/tests/studio-e2e/tests/integration/ao.ts",
-                                "line": 44,
-                                "column": 10
-                              }
-                            }
-                          ],
-                          "attachments": []
-                        }
-                      ],
-                      "status": "skipped"
-                    }
-                  ],
-                  "id": "2ac2718be0ed2787d361-15c7dfd744e9a5b7d297",
-                  "file": "s07-ao-connectors.spec.ts",
-                  "line": 25,
-                  "column": 7
-                }
-              ]
-            },
-            {
-              "title": "connector: clickhouse",
-              "file": "s07-ao-connectors.spec.ts",
-              "line": 18,
-              "column": 10,
-              "specs": [
-                {
-                  "title": "7a.2 clickhouse catalog ingested",
-                  "ok": true,
-                  "tags": [],
-                  "tests": [
-                    {
-                      "timeout": 600000,
-                      "annotations": [
-                        {
-                          "type": "blocked",
-                          "description": "AO_URL unset — Auto-Ontology is not deployed for this run"
-                        },
-                        {
-                          "type": "skip",
-                          "description": "BLOCKED: AO_URL unset — Auto-Ontology is not deployed for this run",
-                          "location": {
-                            "file": "/home/sijo/VeritasGraph/tests/studio-e2e/tests/integration/ao.ts",
-                            "line": 44,
-                            "column": 10
-                          }
-                        }
-                      ],
-                      "expectedStatus": "skipped",
-                      "projectId": "integration",
-                      "projectName": "integration",
-                      "results": [
-                        {
-                          "workerIndex": 3,
-                          "parallelIndex": 0,
-                          "status": "skipped",
-                          "duration": 0,
-                          "errors": [],
-                          "stdout": [],
-                          "stderr": [],
-                          "retry": 0,
-                          "startTime": "2026-11-07T17:17:42.204Z",
-                          "annotations": [
-                            {
-                              "type": "blocked",
-                              "description": "AO_URL unset — Auto-Ontology is not deployed for this run"
-                            },
-                            {
-                              "type": "skip",
-                              "description": "BLOCKED: AO_URL unset — Auto-Ontology is not deployed for this run",
-                              "location": {
-                                "file": "/home/sijo/VeritasGraph/tests/studio-e2e/tests/integration/ao.ts",
-                                "line": 44,
-                                "column": 10
-                              }
-                            }
-                          ],
-                          "attachments": []
-                        }
-                      ],
-                      "status": "skipped"
-                    }
-                  ],
-                  "id": "2ac2718be0ed2787d361-a0e296acecb5d87edb9c",
-                  "file": "s07-ao-connectors.spec.ts",
-                  "line": 19,
-                  "column": 7
-                },
-                {
-                  "title": "7a.3 clickhouse golden revenue = 300.00",
-                  "ok": true,
-                  "tags": [],
-                  "tests": [
-                    {
-                      "timeout": 600000,
-                      "annotations": [
-                        {
-                          "type": "blocked",
-                          "description": "AO_URL unset — Auto-Ontology is not deployed for this run"
-                        },
-                        {
-                          "type": "skip",
-                          "description": "BLOCKED: AO_URL unset — Auto-Ontology is not deployed for this run",
-                          "location": {
-                            "file": "/home/sijo/VeritasGraph/tests/studio-e2e/tests/integration/ao.ts",
-                            "line": 44,
-                            "column": 10
-                          }
-                        }
-                      ],
-                      "expectedStatus": "skipped",
-                      "projectId": "integration",
-                      "projectName": "integration",
-                      "results": [
-                        {
-                          "workerIndex": 3,
-                          "parallelIndex": 0,
-                          "status": "skipped",
-                          "duration": 0,
-                          "errors": [],
-                          "stdout": [],
-                          "stderr": [],
-                          "retry": 0,
-                          "startTime": "2026-11-07T17:17:42.212Z",
-                          "annotations": [
-                            {
-                              "type": "blocked",
-                              "description": "AO_URL unset — Auto-Ontology is not deployed for this run"
-                            },
-                            {
-                              "type": "skip",
-                              "description": "BLOCKED: AO_URL unset — Auto-Ontology is not deployed for this run",
-                              "location": {
-                                "file": "/home/sijo/VeritasGraph/tests/studio-e2e/tests/integration/ao.ts",
-                                "line": 44,
-                                "column": 10
-                              }
-                            }
-                          ],
-                          "attachments": []
-                        }
-                      ],
-                      "status": "skipped"
-                    }
-                  ],
-                  "id": "2ac2718be0ed2787d361-254b08fd2c8a3df7d9b5",
-                  "file": "s07-ao-connectors.spec.ts",
-                  "line": 25,
-                  "column": 7
-                }
-              ]
-            },
-            {
-              "title": "connector: trino",
-              "file": "s07-ao-connectors.spec.ts",
-              "line": 18,
-              "column": 10,
-              "specs": [
-                {
-                  "title": "7a.2 trino catalog ingested",
-                  "ok": true,
-                  "tags": [],
-                  "tests": [
-                    {
-                      "timeout": 600000,
-                      "annotations": [
-                        {
-                          "type": "blocked",
-                          "description": "AO_URL unset — Auto-Ontology is not deployed for this run"
-                        },
-                        {
-                          "type": "skip",
-                          "description": "BLOCKED: AO_URL unset — Auto-Ontology is not deployed for this run",
-                          "location": {
-                            "file": "/home/sijo/VeritasGraph/tests/studio-e2e/tests/integration/ao.ts",
-                            "line": 44,
-                            "column": 10
-                          }
-                        }
-                      ],
-                      "expectedStatus": "skipped",
-                      "projectId": "integration",
-                      "projectName": "integration",
-                      "results": [
-                        {
-                          "workerIndex": 3,
-                          "parallelIndex": 0,
-                          "status": "skipped",
-                          "duration": 0,
-                          "errors": [],
-                          "stdout": [],
-                          "stderr": [],
-                          "retry": 0,
-                          "startTime": "2026-11-07T17:17:42.219Z",
-                          "annotations": [
-                            {
-                              "type": "blocked",
-                              "description": "AO_URL unset — Auto-Ontology is not deployed for this run"
-                            },
-                            {
-                              "type": "skip",
-                              "description": "BLOCKED: AO_URL unset — Auto-Ontology is not deployed for this run",
-                              "location": {
-                                "file": "/home/sijo/VeritasGraph/tests/studio-e2e/tests/integration/ao.ts",
-                                "line": 44,
-                                "column": 10
-                              }
-                            }
-                          ],
-                          "attachments": []
-                        }
-                      ],
-                      "status": "skipped"
-                    }
-                  ],
-                  "id": "2ac2718be0ed2787d361-3b0cbf35162c9cec7fa2",
-                  "file": "s07-ao-connectors.spec.ts",
-                  "line": 19,
-                  "column": 7
-                },
-                {
-                  "title": "7a.3 trino golden revenue = 950.40",
-                  "ok": true,
-                  "tags": [],
-                  "tests": [
-                    {
-                      "timeout": 600000,
-                      "annotations": [
-                        {
-                          "type": "blocked",
-                          "description": "AO_URL unset — Auto-Ontology is not deployed for this run"
-                        },
-                        {
-                          "type": "skip",
-                          "description": "BLOCKED: AO_URL unset — Auto-Ontology is not deployed for this run",
-                          "location": {
-                            "file": "/home/sijo/VeritasGraph/tests/studio-e2e/tests/integration/ao.ts",
-                            "line": 44,
-                            "column": 10
-                          }
-                        }
-                      ],
-                      "expectedStatus": "skipped",
-                      "projectId": "integration",
-                      "projectName": "integration",
-                      "results": [
-                        {
-                          "workerIndex": 3,
-                          "parallelIndex": 0,
-                          "status": "skipped",
-                          "duration": 0,
-                          "errors": [],
-                          "stdout": [],
-                          "stderr": [],
-                          "retry": 0,
-                          "startTime": "2026-11-07T17:17:42.226Z",
-                          "annotations": [
-                            {
-                              "type": "blocked",
-                              "description": "AO_URL unset — Auto-Ontology is not deployed for this run"
-                            },
-                            {
-                              "type": "skip",
-                              "description": "BLOCKED: AO_URL unset — Auto-Ontology is not deployed for this run",
-                              "location": {
-                                "file": "/home/sijo/VeritasGraph/tests/studio-e2e/tests/integration/ao.ts",
-                                "line": 44,
-                                "column": 10
-                              }
-                            }
-                          ],
-                          "attachments": []
-                        }
-                      ],
-                      "status": "skipped"
-                    }
-                  ],
-                  "id": "2ac2718be0ed2787d361-ff524d56a344df43ed23",
-                  "file": "s07-ao-connectors.spec.ts",
-                  "line": 25,
-                  "column": 7
-                }
-              ]
-            },
-            {
-              "title": "connector: kyuubi",
-              "file": "s07-ao-connectors.spec.ts",
-              "line": 18,
-              "column": 10,
-              "specs": [
-                {
-                  "title": "7a.2 kyuubi catalog ingested",
-                  "ok": true,
-                  "tags": [],
-                  "tests": [
-                    {
-                      "timeout": 600000,
-                      "annotations": [
-                        {
-                          "type": "blocked",
-                          "description": "AO_URL unset — Auto-Ontology is not deployed for this run"
-                        },
-                        {
-                          "type": "skip",
-                          "description": "BLOCKED: AO_URL unset — Auto-Ontology is not deployed for this run",
-                          "location": {
-                            "file": "/home/sijo/VeritasGraph/tests/studio-e2e/tests/integration/ao.ts",
-                            "line": 44,
-                            "column": 10
-                          }
-                        }
-                      ],
-                      "expectedStatus": "skipped",
-                      "projectId": "integration",
-                      "projectName": "integration",
-                      "results": [
-                        {
-                          "workerIndex": 3,
-                          "parallelIndex": 0,
-                          "status": "skipped",
-                          "duration": 0,
-                          "errors": [],
-                          "stdout": [],
-                          "stderr": [],
-                          "retry": 0,
-                          "startTime": "2026-11-07T17:17:42.235Z",
-                          "annotations": [
-                            {
-                              "type": "blocked",
-                              "description": "AO_URL unset — Auto-Ontology is not deployed for this run"
-                            },
-                            {
-                              "type": "skip",
-                              "description": "BLOCKED: AO_URL unset — Auto-Ontology is not deployed for this run",
-                              "location": {
-                                "file": "/home/sijo/VeritasGraph/tests/studio-e2e/tests/integration/ao.ts",
-                                "line": 44,
-                                "column": 10
-                              }
-                            }
-                          ],
-                          "attachments": []
-                        }
-                      ],
-                      "status": "skipped"
-                    }
-                  ],
-                  "id": "2ac2718be0ed2787d361-f343abda8fb2f0e6daba",
-                  "file": "s07-ao-connectors.spec.ts",
-                  "line": 19,
-                  "column": 7
-                },
-                {
-                  "title": "7a.3 kyuubi golden revenue = 128.64",
-                  "ok": true,
-                  "tags": [],
-                  "tests": [
-                    {
-                      "timeout": 600000,
-                      "annotations": [
-                        {
-                          "type": "blocked",
-                          "description": "AO_URL unset — Auto-Ontology is not deployed for this run"
-                        },
-                        {
-                          "type": "skip",
-                          "description": "BLOCKED: AO_URL unset — Auto-Ontology is not deployed for this run",
-                          "location": {
-                            "file": "/home/sijo/VeritasGraph/tests/studio-e2e/tests/integration/ao.ts",
-                            "line": 44,
-                            "column": 10
-                          }
-                        }
-                      ],
-                      "expectedStatus": "skipped",
-                      "projectId": "integration",
-                      "projectName": "integration",
-                      "results": [
-                        {
-                          "workerIndex": 3,
-                          "parallelIndex": 0,
-                          "status": "skipped",
-                          "duration": 0,
-                          "errors": [],
-                          "stdout": [],
-                          "stderr": [],
-                          "retry": 0,
-                          "startTime": "2026-11-07T17:17:42.245Z",
-                          "annotations": [
-                            {
-                              "type": "blocked",
-                              "description": "AO_URL unset — Auto-Ontology is not deployed for this run"
-                            },
-                            {
-                              "type": "skip",
-                              "description": "BLOCKED: AO_URL unset — Auto-Ontology is not deployed for this run",
-                              "location": {
-                                "file": "/home/sijo/VeritasGraph/tests/studio-e2e/tests/integration/ao.ts",
-                                "line": 44,
-                                "column": 10
-                              }
-                            }
-                          ],
-                          "attachments": []
-                        }
-                      ],
-                      "status": "skipped"
-                    }
-                  ],
-                  "id": "2ac2718be0ed2787d361-8ba9ded5b3c37b767638",
-                  "file": "s07-ao-connectors.spec.ts",
-                  "line": 25,
-                  "column": 7
-                }
-              ]
-            },
-            {
-              "title": "connector: heavydb",
-              "file": "s07-ao-connectors.spec.ts",
-              "line": 18,
-              "column": 10,
-              "specs": [
-                {
-                  "title": "7a.2 heavydb catalog ingested",
-                  "ok": true,
-                  "tags": [],
-                  "tests": [
-                    {
-                      "timeout": 600000,
-                      "annotations": [
-                        {
-                          "type": "blocked",
-                          "description": "AO_URL unset — Auto-Ontology is not deployed for this run"
-                        },
-                        {
-                          "type": "skip",
-                          "description": "BLOCKED: AO_URL unset — Auto-Ontology is not deployed for this run",
-                          "location": {
-                            "file": "/home/sijo/VeritasGraph/tests/studio-e2e/tests/integration/ao.ts",
-                            "line": 44,
-                            "column": 10
-                          }
-                        }
-                      ],
-                      "expectedStatus": "skipped",
-                      "projectId": "integration",
-                      "projectName": "integration",
-                      "results": [
-                        {
-                          "workerIndex": 3,
-                          "parallelIndex": 0,
-                          "status": "skipped",
-                          "duration": 0,
-                          "errors": [],
-                          "stdout": [],
-                          "stderr": [],
-                          "retry": 0,
-                          "startTime": "2026-11-07T17:17:42.253Z",
-                          "annotations": [
-                            {
-                              "type": "blocked",
-                              "description": "AO_URL unset — Auto-Ontology is not deployed for this run"
-                            },
-                            {
-                              "type": "skip",
-                              "description": "BLOCKED: AO_URL unset — Auto-Ontology is not deployed for this run",
-                              "location": {
-                                "file": "/home/sijo/VeritasGraph/tests/studio-e2e/tests/integration/ao.ts",
-                                "line": 44,
-                                "column": 10
-                              }
-                            }
-                          ],
-                          "attachments": []
-                        }
-                      ],
-                      "status": "skipped"
-                    }
-                  ],
-                  "id": "2ac2718be0ed2787d361-b2002521fbdf7886d20f",
-                  "file": "s07-ao-connectors.spec.ts",
-                  "line": 19,
-                  "column": 7
-                },
-                {
-                  "title": "7a.3 heavydb golden revenue = 640.00",
-                  "ok": true,
-                  "tags": [],
-                  "tests": [
-                    {
-                      "timeout": 600000,
-                      "annotations": [
-                        {
-                          "type": "blocked",
-                          "description": "AO_URL unset — Auto-Ontology is not deployed for this run"
-                        },
-                        {
-                          "type": "skip",
-                          "description": "BLOCKED: AO_URL unset — Auto-Ontology is not deployed for this run",
-                          "location": {
-                            "file": "/home/sijo/VeritasGraph/tests/studio-e2e/tests/integration/ao.ts",
-                            "line": 44,
-                            "column": 10
-                          }
-                        }
-                      ],
-                      "expectedStatus": "skipped",
-                      "projectId": "integration",
-                      "projectName": "integration",
-                      "results": [
-                        {
-                          "workerIndex": 3,
-                          "parallelIndex": 0,
-                          "status": "skipped",
-                          "duration": 0,
-                          "errors": [],
-                          "stdout": [],
-                          "stderr": [],
-                          "retry": 0,
-                          "startTime": "2026-11-07T17:17:42.261Z",
-                          "annotations": [
-                            {
-                              "type": "blocked",
-                              "description": "AO_URL unset — Auto-Ontology is not deployed for this run"
-                            },
-                            {
-                              "type": "skip",
-                              "description": "BLOCKED: AO_URL unset — Auto-Ontology is not deployed for this run",
-                              "location": {
-                                "file": "/home/sijo/VeritasGraph/tests/studio-e2e/tests/integration/ao.ts",
-                                "line": 44,
-                                "column": 10
-                              }
-                            }
-                          ],
-                          "attachments": []
-                        }
-                      ],
-                      "status": "skipped"
-                    }
-                  ],
-                  "id": "2ac2718be0ed2787d361-f40ed99e0939a70e880c",
-                  "file": "s07-ao-connectors.spec.ts",
-                  "line": 25,
-                  "column": 7
-                }
-              ]
-            },
-            {
-              "title": "connector: duckdb",
-              "file": "s07-ao-connectors.spec.ts",
-              "line": 18,
-              "column": 10,
-              "specs": [
-                {
-                  "title": "7a.2 duckdb catalog ingested",
-                  "ok": true,
-                  "tags": [],
-                  "tests": [
-                    {
-                      "timeout": 600000,
-                      "annotations": [
-                        {
-                          "type": "blocked",
-                          "description": "AO_URL unset — Auto-Ontology is not deployed for this run"
-                        },
-                        {
-                          "type": "skip",
-                          "description": "BLOCKED: AO_URL unset — Auto-Ontology is not deployed for this run",
-                          "location": {
-                            "file": "/home/sijo/VeritasGraph/tests/studio-e2e/tests/integration/ao.ts",
-                            "line": 44,
-                            "column": 10
-                          }
-                        }
-                      ],
-                      "expectedStatus": "skipped",
-                      "projectId": "integration",
-                      "projectName": "integration",
-                      "results": [
-                        {
-                          "workerIndex": 3,
-                          "parallelIndex": 0,
-                          "status": "skipped",
-                          "duration": 0,
-                          "errors": [],
-                          "stdout": [],
-                          "stderr": [],
-                          "retry": 0,
-                          "startTime": "2026-11-07T17:17:42.268Z",
-                          "annotations": [
-                            {
-                              "type": "blocked",
-                              "description": "AO_URL unset — Auto-Ontology is not deployed for this run"
-                            },
-                            {
-                              "type": "skip",
-                              "description": "BLOCKED: AO_URL unset — Auto-Ontology is not deployed for this run",
-                              "location": {
-                                "file": "/home/sijo/VeritasGraph/tests/studio-e2e/tests/integration/ao.ts",
-                                "line": 44,
-                                "column": 10
-                              }
-                            }
-                          ],
-                          "attachments": []
-                        }
-                      ],
-                      "status": "skipped"
-                    }
-                  ],
-                  "id": "2ac2718be0ed2787d361-75974337ceac8370d6f9",
-                  "file": "s07-ao-connectors.spec.ts",
-                  "line": 19,
-                  "column": 7
-                },
-                {
-                  "title": "7a.3 duckdb golden revenue = 215.10",
-                  "ok": true,
-                  "tags": [],
-                  "tests": [
-                    {
-                      "timeout": 600000,
-                      "annotations": [
-                        {
-                          "type": "blocked",
-                          "description": "AO_URL unset — Auto-Ontology is not deployed for this run"
-                        },
-                        {
-                          "type": "skip",
-                          "description": "BLOCKED: AO_URL unset — Auto-Ontology is not deployed for this run",
-                          "location": {
-                            "file": "/home/sijo/VeritasGraph/tests/studio-e2e/tests/integration/ao.ts",
-                            "line": 44,
-                            "column": 10
-                          }
-                        }
-                      ],
-                      "expectedStatus": "skipped",
-                      "projectId": "integration",
-                      "projectName": "integration",
-                      "results": [
-                        {
-                          "workerIndex": 3,
-                          "parallelIndex": 0,
-                          "status": "skipped",
-                          "duration": 0,
-                          "errors": [],
-                          "stdout": [],
-                          "stderr": [],
-                          "retry": 0,
-                          "startTime": "2026-11-07T17:17:42.277Z",
-                          "annotations": [
-                            {
-                              "type": "blocked",
-                              "description": "AO_URL unset — Auto-Ontology is not deployed for this run"
-                            },
-                            {
-                              "type": "skip",
-                              "description": "BLOCKED: AO_URL unset — Auto-Ontology is not deployed for this run",
-                              "location": {
-                                "file": "/home/sijo/VeritasGraph/tests/studio-e2e/tests/integration/ao.ts",
-                                "line": 44,
-                                "column": 10
-                              }
-                            }
-                          ],
-                          "attachments": []
-                        }
-                      ],
-                      "status": "skipped"
-                    }
-                  ],
-                  "id": "2ac2718be0ed2787d361-771f0fd28411ce9f9a12",
-                  "file": "s07-ao-connectors.spec.ts",
-                  "line": 25,
-                  "column": 7
-                }
-              ]
-            },
-            {
-              "title": "connector: sqlite",
-              "file": "s07-ao-connectors.spec.ts",
-              "line": 18,
-              "column": 10,
-              "specs": [
-                {
-                  "title": "7a.2 sqlite catalog ingested",
-                  "ok": true,
-                  "tags": [],
-                  "tests": [
-                    {
-                      "timeout": 600000,
-                      "annotations": [
-                        {
-                          "type": "blocked",
-                          "description": "AO_URL unset — Auto-Ontology is not deployed for this run"
-                        },
-                        {
-                          "type": "skip",
-                          "description": "BLOCKED: AO_URL unset — Auto-Ontology is not deployed for this run",
-                          "location": {
-                            "file": "/home/sijo/VeritasGraph/tests/studio-e2e/tests/integration/ao.ts",
-                            "line": 44,
-                            "column": 10
-                          }
-                        }
-                      ],
-                      "expectedStatus": "skipped",
-                      "projectId": "integration",
-                      "projectName": "integration",
-                      "results": [
-                        {
-                          "workerIndex": 3,
-                          "parallelIndex": 0,
-                          "status": "skipped",
-                          "duration": 0,
-                          "errors": [],
-                          "stdout": [],
-                          "stderr": [],
-                          "retry": 0,
-                          "startTime": "2026-11-07T17:17:42.284Z",
-                          "annotations": [
-                            {
-                              "type": "blocked",
-                              "description": "AO_URL unset — Auto-Ontology is not deployed for this run"
-                            },
-                            {
-                              "type": "skip",
-                              "description": "BLOCKED: AO_URL unset — Auto-Ontology is not deployed for this run",
-                              "location": {
-                                "file": "/home/sijo/VeritasGraph/tests/studio-e2e/tests/integration/ao.ts",
-                                "line": 44,
-                                "column": 10
-                              }
-                            }
-                          ],
-                          "attachments": []
-                        }
-                      ],
-                      "status": "skipped"
-                    }
-                  ],
-                  "id": "2ac2718be0ed2787d361-0366234c4c0c62c1e75b",
-                  "file": "s07-ao-connectors.spec.ts",
-                  "line": 19,
-                  "column": 7
-                },
-                {
-                  "title": "7a.3 sqlite golden revenue = 49.99",
-                  "ok": true,
-                  "tags": [],
-                  "tests": [
-                    {
-                      "timeout": 600000,
-                      "annotations": [
-                        {
-                          "type": "blocked",
-                          "description": "AO_URL unset — Auto-Ontology is not deployed for this run"
-                        },
-                        {
-                          "type": "skip",
-                          "description": "BLOCKED: AO_URL unset — Auto-Ontology is not deployed for this run",
-                          "location": {
-                            "file": "/home/sijo/VeritasGraph/tests/studio-e2e/tests/integration/ao.ts",
-                            "line": 44,
-                            "column": 10
-                          }
-                        }
-                      ],
-                      "expectedStatus": "skipped",
-                      "projectId": "integration",
-                      "projectName": "integration",
-                      "results": [
-                        {
-                          "workerIndex": 3,
-                          "parallelIndex": 0,
-                          "status": "skipped",
-                          "duration": 0,
-                          "errors": [],
-                          "stdout": [],
-                          "stderr": [],
-                          "retry": 0,
-                          "startTime": "2026-11-07T17:17:42.291Z",
-                          "annotations": [
-                            {
-                              "type": "blocked",
-                              "description": "AO_URL unset — Auto-Ontology is not deployed for this run"
-                            },
-                            {
-                              "type": "skip",
-                              "description": "BLOCKED: AO_URL unset — Auto-Ontology is not deployed for this run",
-                              "location": {
-                                "file": "/home/sijo/VeritasGraph/tests/studio-e2e/tests/integration/ao.ts",
-                                "line": 44,
-                                "column": 10
-                              }
-                            }
-                          ],
-                          "attachments": []
-                        }
-                      ],
-                      "status": "skipped"
-                    }
-                  ],
-                  "id": "2ac2718be0ed2787d361-6d2ed329555138c8c745",
-                  "file": "s07-ao-connectors.spec.ts",
-                  "line": 25,
-                  "column": 7
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "title": "S7b connectors via UI (profile B)",
-          "file": "s07-ao-connectors.spec.ts",
-          "line": 39,
-          "column": 6,
-          "specs": [
-            {
-              "title": "7b.4 connection list never leaks secrets",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 600000,
-                  "annotations": [
-                    {
-                      "type": "blocked",
-                      "description": "AO_URL unset — Auto-Ontology is not deployed for this run"
-                    },
-                    {
-                      "type": "skip",
-                      "description": "BLOCKED: AO_URL unset — Auto-Ontology is not deployed for this run",
-                      "location": {
-                        "file": "/home/sijo/VeritasGraph/tests/studio-e2e/tests/integration/ao.ts",
-                        "line": 44,
-                        "column": 10
-                      }
-                    }
-                  ],
-                  "expectedStatus": "skipped",
-                  "projectId": "integration",
-                  "projectName": "integration",
-                  "results": [
-                    {
-                      "workerIndex": 3,
-                      "parallelIndex": 0,
-                      "status": "skipped",
-                      "duration": 0,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-11-07T17:17:42.298Z",
-                      "annotations": [
-                        {
-                          "type": "blocked",
-                          "description": "AO_URL unset — Auto-Ontology is not deployed for this run"
-                        },
-                        {
-                          "type": "skip",
-                          "description": "BLOCKED: AO_URL unset — Auto-Ontology is not deployed for this run",
-                          "location": {
-                            "file": "/home/sijo/VeritasGraph/tests/studio-e2e/tests/integration/ao.ts",
-                            "line": 44,
-                            "column": 10
-                          }
-                        }
-                      ],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "skipped"
-                }
-              ],
-              "id": "2ac2718be0ed2787d361-35f173626bd2078835f9",
-              "file": "s07-ao-connectors.spec.ts",
-              "line": 40,
-              "column": 3
-            },
-            {
-              "title": "7b.7 viewer cannot create connections",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 600000,
-                  "annotations": [
-                    {
-                      "type": "blocked",
-                      "description": "AO_URL unset — Auto-Ontology is not deployed for this run"
-                    },
-                    {
-                      "type": "skip",
-                      "description": "BLOCKED: AO_URL unset — Auto-Ontology is not deployed for this run",
-                      "location": {
-                        "file": "/home/sijo/VeritasGraph/tests/studio-e2e/tests/integration/ao.ts",
-                        "line": 44,
-                        "column": 10
-                      }
-                    }
-                  ],
-                  "expectedStatus": "skipped",
-                  "projectId": "integration",
-                  "projectName": "integration",
-                  "results": [
-                    {
-                      "workerIndex": 3,
-                      "parallelIndex": 0,
-                      "status": "skipped",
-                      "duration": 0,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-11-07T17:17:42.305Z",
-                      "annotations": [
-                        {
-                          "type": "blocked",
-                          "description": "AO_URL unset — Auto-Ontology is not deployed for this run"
-                        },
-                        {
-                          "type": "skip",
-                          "description": "BLOCKED: AO_URL unset — Auto-Ontology is not deployed for this run",
-                          "location": {
-                            "file": "/home/sijo/VeritasGraph/tests/studio-e2e/tests/integration/ao.ts",
-                            "line": 44,
-                            "column": 10
-                          }
-                        }
-                      ],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "skipped"
-                }
-              ],
-              "id": "2ac2718be0ed2787d361-882f50a469d56c116ef5",
-              "file": "s07-ao-connectors.spec.ts",
-              "line": 46,
-              "column": 3
-            },
-            {
-              "title": "7b.2-7b.9 postgresql test/save/ask/delete through Settings → Connections",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 600000,
-                  "annotations": [
-                    {
-                      "type": "blocked",
-                      "description": "AO_URL unset — Auto-Ontology is not deployed for this run"
-                    },
-                    {
-                      "type": "skip",
-                      "description": "BLOCKED: AO_URL unset — Auto-Ontology is not deployed for this run",
-                      "location": {
-                        "file": "/home/sijo/VeritasGraph/tests/studio-e2e/tests/integration/ao.ts",
-                        "line": 44,
-                        "column": 10
-                      }
-                    }
-                  ],
-                  "expectedStatus": "skipped",
-                  "projectId": "integration",
-                  "projectName": "integration",
-                  "results": [
-                    {
-                      "workerIndex": 3,
-                      "parallelIndex": 0,
-                      "status": "skipped",
-                      "duration": 0,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-11-07T17:17:42.312Z",
-                      "annotations": [
-                        {
-                          "type": "blocked",
-                          "description": "AO_URL unset — Auto-Ontology is not deployed for this run"
-                        },
-                        {
-                          "type": "skip",
-                          "description": "BLOCKED: AO_URL unset — Auto-Ontology is not deployed for this run",
-                          "location": {
-                            "file": "/home/sijo/VeritasGraph/tests/studio-e2e/tests/integration/ao.ts",
-                            "line": 44,
-                            "column": 10
-                          }
-                        }
-                      ],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "skipped"
-                }
-              ],
-              "id": "2ac2718be0ed2787d361-ff734fd0bec1aeadc10a",
-              "file": "s07-ao-connectors.spec.ts",
-              "line": 53,
-              "column": 5
-            },
-            {
-              "title": "7b.2-7b.9 mysql test/save/ask/delete through Settings → Connections",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 600000,
-                  "annotations": [
-                    {
-                      "type": "blocked",
-                      "description": "AO_URL unset — Auto-Ontology is not deployed for this run"
-                    },
-                    {
-                      "type": "skip",
-                      "description": "BLOCKED: AO_URL unset — Auto-Ontology is not deployed for this run",
-                      "location": {
-                        "file": "/home/sijo/VeritasGraph/tests/studio-e2e/tests/integration/ao.ts",
-                        "line": 44,
-                        "column": 10
-                      }
-                    }
-                  ],
-                  "expectedStatus": "skipped",
-                  "projectId": "integration",
-                  "projectName": "integration",
-                  "results": [
-                    {
-                      "workerIndex": 3,
-                      "parallelIndex": 0,
-                      "status": "skipped",
-                      "duration": 0,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-11-07T17:17:42.320Z",
-                      "annotations": [
-                        {
-                          "type": "blocked",
-                          "description": "AO_URL unset — Auto-Ontology is not deployed for this run"
-                        },
-                        {
-                          "type": "skip",
-                          "description": "BLOCKED: AO_URL unset — Auto-Ontology is not deployed for this run",
-                          "location": {
-                            "file": "/home/sijo/VeritasGraph/tests/studio-e2e/tests/integration/ao.ts",
-                            "line": 44,
-                            "column": 10
-                          }
-                        }
-                      ],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "skipped"
-                }
-              ],
-              "id": "2ac2718be0ed2787d361-7c5a3af89b0d788a4cec",
-              "file": "s07-ao-connectors.spec.ts",
-              "line": 53,
-              "column": 5
-            },
-            {
-              "title": "7b.2-7b.9 databricks test/save/ask/delete through Settings → Connections",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 600000,
-                  "annotations": [
-                    {
-                      "type": "blocked",
-                      "description": "AO_URL unset — Auto-Ontology is not deployed for this run"
-                    },
-                    {
-                      "type": "skip",
-                      "description": "BLOCKED: AO_URL unset — Auto-Ontology is not deployed for this run",
-                      "location": {
-                        "file": "/home/sijo/VeritasGraph/tests/studio-e2e/tests/integration/ao.ts",
-                        "line": 44,
-                        "column": 10
-                      }
-                    }
-                  ],
-                  "expectedStatus": "skipped",
-                  "projectId": "integration",
-                  "projectName": "integration",
-                  "results": [
-                    {
-                      "workerIndex": 3,
-                      "parallelIndex": 0,
-                      "status": "skipped",
-                      "duration": 0,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-11-07T17:17:42.328Z",
-                      "annotations": [
-                        {
-                          "type": "blocked",
-                          "description": "AO_URL unset — Auto-Ontology is not deployed for this run"
-                        },
-                        {
-                          "type": "skip",
-                          "description": "BLOCKED: AO_URL unset — Auto-Ontology is not deployed for this run",
-                          "location": {
-                            "file": "/home/sijo/VeritasGraph/tests/studio-e2e/tests/integration/ao.ts",
-                            "line": 44,
-                            "column": 10
-                          }
-                        }
-                      ],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "skipped"
-                }
-              ],
-              "id": "2ac2718be0ed2787d361-2298a8fe994f3e53fda8",
-              "file": "s07-ao-connectors.spec.ts",
-              "line": 53,
-              "column": 5
-            },
-            {
-              "title": "7b.2-7b.9 snowflake test/save/ask/delete through Settings → Connections",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 600000,
-                  "annotations": [
-                    {
-                      "type": "blocked",
-                      "description": "AO_URL unset — Auto-Ontology is not deployed for this run"
-                    },
-                    {
-                      "type": "skip",
-                      "description": "BLOCKED: AO_URL unset — Auto-Ontology is not deployed for this run",
-                      "location": {
-                        "file": "/home/sijo/VeritasGraph/tests/studio-e2e/tests/integration/ao.ts",
-                        "line": 44,
-                        "column": 10
-                      }
-                    }
-                  ],
-                  "expectedStatus": "skipped",
-                  "projectId": "integration",
-                  "projectName": "integration",
-                  "results": [
-                    {
-                      "workerIndex": 3,
-                      "parallelIndex": 0,
-                      "status": "skipped",
-                      "duration": 0,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-11-07T17:17:42.334Z",
-                      "annotations": [
-                        {
-                          "type": "blocked",
-                          "description": "AO_URL unset — Auto-Ontology is not deployed for this run"
-                        },
-                        {
-                          "type": "skip",
-                          "description": "BLOCKED: AO_URL unset — Auto-Ontology is not deployed for this run",
-                          "location": {
-                            "file": "/home/sijo/VeritasGraph/tests/studio-e2e/tests/integration/ao.ts",
-                            "line": 44,
-                            "column": 10
-                          }
-                        }
-                      ],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "skipped"
-                }
-              ],
-              "id": "2ac2718be0ed2787d361-97493eaa12df08b7f00e",
-              "file": "s07-ao-connectors.spec.ts",
-              "line": 53,
-              "column": 5
-            },
-            {
-              "title": "7b.2-7b.9 clickhouse test/save/ask/delete through Settings → Connections",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 600000,
-                  "annotations": [
-                    {
-                      "type": "blocked",
-                      "description": "AO_URL unset — Auto-Ontology is not deployed for this run"
-                    },
-                    {
-                      "type": "skip",
-                      "description": "BLOCKED: AO_URL unset — Auto-Ontology is not deployed for this run",
-                      "location": {
-                        "file": "/home/sijo/VeritasGraph/tests/studio-e2e/tests/integration/ao.ts",
-                        "line": 44,
-                        "column": 10
-                      }
-                    }
-                  ],
-                  "expectedStatus": "skipped",
-                  "projectId": "integration",
-                  "projectName": "integration",
-                  "results": [
-                    {
-                      "workerIndex": 3,
-                      "parallelIndex": 0,
-                      "status": "skipped",
-                      "duration": 0,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-11-07T17:17:42.341Z",
-                      "annotations": [
-                        {
-                          "type": "blocked",
-                          "description": "AO_URL unset — Auto-Ontology is not deployed for this run"
-                        },
-                        {
-                          "type": "skip",
-                          "description": "BLOCKED: AO_URL unset — Auto-Ontology is not deployed for this run",
-                          "location": {
-                            "file": "/home/sijo/VeritasGraph/tests/studio-e2e/tests/integration/ao.ts",
-                            "line": 44,
-                            "column": 10
-                          }
-                        }
-                      ],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "skipped"
-                }
-              ],
-              "id": "2ac2718be0ed2787d361-20c04d044629aab692d0",
-              "file": "s07-ao-connectors.spec.ts",
-              "line": 53,
-              "column": 5
-            },
-            {
-              "title": "7b.2-7b.9 trino test/save/ask/delete through Settings → Connections",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 600000,
-                  "annotations": [
-                    {
-                      "type": "blocked",
-                      "description": "AO_URL unset — Auto-Ontology is not deployed for this run"
-                    },
-                    {
-                      "type": "skip",
-                      "description": "BLOCKED: AO_URL unset — Auto-Ontology is not deployed for this run",
-                      "location": {
-                        "file": "/home/sijo/VeritasGraph/tests/studio-e2e/tests/integration/ao.ts",
-                        "line": 44,
-                        "column": 10
-                      }
-                    }
-                  ],
-                  "expectedStatus": "skipped",
-                  "projectId": "integration",
-                  "projectName": "integration",
-                  "results": [
-                    {
-                      "workerIndex": 3,
-                      "parallelIndex": 0,
-                      "status": "skipped",
-                      "duration": 0,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-11-07T17:17:42.347Z",
-                      "annotations": [
-                        {
-                          "type": "blocked",
-                          "description": "AO_URL unset — Auto-Ontology is not deployed for this run"
-                        },
-                        {
-                          "type": "skip",
-                          "description": "BLOCKED: AO_URL unset — Auto-Ontology is not deployed for this run",
-                          "location": {
-                            "file": "/home/sijo/VeritasGraph/tests/studio-e2e/tests/integration/ao.ts",
-                            "line": 44,
-                            "column": 10
-                          }
-                        }
-                      ],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "skipped"
-                }
-              ],
-              "id": "2ac2718be0ed2787d361-77a313e34c04d5b59d69",
-              "file": "s07-ao-connectors.spec.ts",
-              "line": 53,
-              "column": 5
-            },
-            {
-              "title": "7b.2-7b.9 kyuubi test/save/ask/delete through Settings → Connections",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 600000,
-                  "annotations": [
-                    {
-                      "type": "blocked",
-                      "description": "AO_URL unset — Auto-Ontology is not deployed for this run"
-                    },
-                    {
-                      "type": "skip",
-                      "description": "BLOCKED: AO_URL unset — Auto-Ontology is not deployed for this run",
-                      "location": {
-                        "file": "/home/sijo/VeritasGraph/tests/studio-e2e/tests/integration/ao.ts",
-                        "line": 44,
-                        "column": 10
-                      }
-                    }
-                  ],
-                  "expectedStatus": "skipped",
-                  "projectId": "integration",
-                  "projectName": "integration",
-                  "results": [
-                    {
-                      "workerIndex": 3,
-                      "parallelIndex": 0,
-                      "status": "skipped",
-                      "duration": 0,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-11-07T17:17:42.355Z",
-                      "annotations": [
-                        {
-                          "type": "blocked",
-                          "description": "AO_URL unset — Auto-Ontology is not deployed for this run"
-                        },
-                        {
-                          "type": "skip",
-                          "description": "BLOCKED: AO_URL unset — Auto-Ontology is not deployed for this run",
-                          "location": {
-                            "file": "/home/sijo/VeritasGraph/tests/studio-e2e/tests/integration/ao.ts",
-                            "line": 44,
-                            "column": 10
-                          }
-                        }
-                      ],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "skipped"
-                }
-              ],
-              "id": "2ac2718be0ed2787d361-1deac2028dce75d646e6",
-              "file": "s07-ao-connectors.spec.ts",
-              "line": 53,
-              "column": 5
-            },
-            {
-              "title": "7b.2-7b.9 heavydb test/save/ask/delete through Settings → Connections",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 600000,
-                  "annotations": [
-                    {
-                      "type": "blocked",
-                      "description": "AO_URL unset — Auto-Ontology is not deployed for this run"
-                    },
-                    {
-                      "type": "skip",
-                      "description": "BLOCKED: AO_URL unset — Auto-Ontology is not deployed for this run",
-                      "location": {
-                        "file": "/home/sijo/VeritasGraph/tests/studio-e2e/tests/integration/ao.ts",
-                        "line": 44,
-                        "column": 10
-                      }
-                    }
-                  ],
-                  "expectedStatus": "skipped",
-                  "projectId": "integration",
-                  "projectName": "integration",
-                  "results": [
-                    {
-                      "workerIndex": 3,
-                      "parallelIndex": 0,
-                      "status": "skipped",
-                      "duration": 0,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-11-07T17:17:42.363Z",
-                      "annotations": [
-                        {
-                          "type": "blocked",
-                          "description": "AO_URL unset — Auto-Ontology is not deployed for this run"
-                        },
-                        {
-                          "type": "skip",
-                          "description": "BLOCKED: AO_URL unset — Auto-Ontology is not deployed for this run",
-                          "location": {
-                            "file": "/home/sijo/VeritasGraph/tests/studio-e2e/tests/integration/ao.ts",
-                            "line": 44,
-                            "column": 10
-                          }
-                        }
-                      ],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "skipped"
-                }
-              ],
-              "id": "2ac2718be0ed2787d361-658d5f16839f59cd08e5",
-              "file": "s07-ao-connectors.spec.ts",
-              "line": 53,
-              "column": 5
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "title": "s08-models.spec.ts",
-      "file": "s08-models.spec.ts",
-      "column": 0,
-      "line": 0,
-      "specs": [],
-      "suites": [
-        {
-          "title": "S8 models",
-          "file": "s08-models.spec.ts",
-          "line": 8,
-          "column": 6,
-          "specs": [
-            {
-              "title": "8.1 EMBED + 8.2 RERANK: semantic compilation is ready",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 600000,
-                  "annotations": [
-                    {
-                      "type": "blocked",
-                      "description": "AO_URL unset — Auto-Ontology is not deployed for this run"
-                    },
-                    {
-                      "type": "skip",
-                      "description": "BLOCKED: AO_URL unset — Auto-Ontology is not deployed for this run",
-                      "location": {
-                        "file": "/home/sijo/VeritasGraph/tests/studio-e2e/tests/integration/ao.ts",
-                        "line": 44,
-                        "column": 10
-                      }
-                    }
-                  ],
-                  "expectedStatus": "skipped",
-                  "projectId": "integration",
-                  "projectName": "integration",
-                  "results": [
-                    {
-                      "workerIndex": 3,
-                      "parallelIndex": 0,
-                      "status": "skipped",
-                      "duration": 0,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-11-07T17:17:42.376Z",
-                      "annotations": [
-                        {
-                          "type": "blocked",
-                          "description": "AO_URL unset — Auto-Ontology is not deployed for this run"
-                        },
-                        {
-                          "type": "skip",
-                          "description": "BLOCKED: AO_URL unset — Auto-Ontology is not deployed for this run",
-                          "location": {
-                            "file": "/home/sijo/VeritasGraph/tests/studio-e2e/tests/integration/ao.ts",
-                            "line": 44,
-                            "column": 10
-                          }
-                        }
-                      ],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "skipped"
-                }
-              ],
-              "id": "d8c24940541249a17541-5a1571a8e439234bf77d",
-              "file": "s08-models.spec.ts",
-              "line": 9,
-              "column": 3
-            },
-            {
-              "title": "8.4 NON_REASONING: intent, extraction and SQL validation steps run",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 600000,
-                  "annotations": [
-                    {
-                      "type": "blocked",
-                      "description": "AO_URL unset — Auto-Ontology is not deployed for this run"
-                    },
-                    {
-                      "type": "skip",
-                      "description": "BLOCKED: AO_URL unset — Auto-Ontology is not deployed for this run",
-                      "location": {
-                        "file": "/home/sijo/VeritasGraph/tests/studio-e2e/tests/integration/ao.ts",
-                        "line": 44,
-                        "column": 10
-                      }
-                    }
-                  ],
-                  "expectedStatus": "skipped",
-                  "projectId": "integration",
-                  "projectName": "integration",
-                  "results": [
-                    {
-                      "workerIndex": 3,
-                      "parallelIndex": 0,
-                      "status": "skipped",
-                      "duration": 0,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-11-07T17:17:42.382Z",
-                      "annotations": [
-                        {
-                          "type": "blocked",
-                          "description": "AO_URL unset — Auto-Ontology is not deployed for this run"
-                        },
-                        {
-                          "type": "skip",
-                          "description": "BLOCKED: AO_URL unset — Auto-Ontology is not deployed for this run",
-                          "location": {
-                            "file": "/home/sijo/VeritasGraph/tests/studio-e2e/tests/integration/ao.ts",
-                            "line": 44,
-                            "column": 10
-                          }
-                        }
-                      ],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "skipped"
-                }
-              ],
-              "id": "d8c24940541249a17541-e7c0e50657323d049e5d",
-              "file": "s08-models.spec.ts",
-              "line": 16,
-              "column": 3
-            },
-            {
-              "title": "8.5/8.6 role override and broken key",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 600000,
-                  "annotations": [
-                    {
-                      "type": "blocked",
-                      "description": "AO_URL unset — Auto-Ontology is not deployed for this run"
-                    },
-                    {
-                      "type": "skip",
-                      "description": "BLOCKED: AO_URL unset — Auto-Ontology is not deployed for this run",
-                      "location": {
-                        "file": "/home/sijo/VeritasGraph/tests/studio-e2e/tests/integration/ao.ts",
-                        "line": 44,
-                        "column": 10
-                      }
-                    }
-                  ],
-                  "expectedStatus": "skipped",
-                  "projectId": "integration",
-                  "projectName": "integration",
-                  "results": [
-                    {
-                      "workerIndex": 3,
-                      "parallelIndex": 0,
-                      "status": "skipped",
-                      "duration": 0,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-11-07T17:17:42.388Z",
-                      "annotations": [
-                        {
-                          "type": "blocked",
-                          "description": "AO_URL unset — Auto-Ontology is not deployed for this run"
-                        },
-                        {
-                          "type": "skip",
-                          "description": "BLOCKED: AO_URL unset — Auto-Ontology is not deployed for this run",
-                          "location": {
-                            "file": "/home/sijo/VeritasGraph/tests/studio-e2e/tests/integration/ao.ts",
-                            "line": 44,
-                            "column": 10
-                          }
-                        }
-                      ],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "skipped"
-                }
-              ],
-              "id": "d8c24940541249a17541-a30e17478eb90ceff207",
-              "file": "s08-models.spec.ts",
-              "line": 23,
-              "column": 3
-            },
-            {
-              "title": "8.8 VeritasGraph model is listed and selectable in Studio",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 600000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "integration",
-                  "projectName": "integration",
-                  "results": [
-                    {
-                      "workerIndex": 3,
-                      "parallelIndex": 0,
-                      "status": "passed",
-                      "duration": 749,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-11-07T17:17:42.395Z",
-                      "annotations": [],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "expected"
-                }
-              ],
-              "id": "d8c24940541249a17541-a5c1b5a45a6390f1dfa6",
-              "file": "s08-models.spec.ts",
-              "line": 27,
-              "column": 3
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "title": "s09-ao-predictions.spec.ts",
-      "file": "s09-ao-predictions.spec.ts",
-      "column": 0,
-      "line": 0,
-      "specs": [],
-      "suites": [
-        {
-          "title": "S9 predictions (KumoRFM)",
-          "file": "s09-ao-predictions.spec.ts",
-          "line": 9,
-          "column": 6,
-          "specs": [
-            {
-              "title": "9.1 predictive question routes to kumo_predict",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 600000,
-                  "annotations": [
-                    {
-                      "type": "blocked",
-                      "description": "AO_URL unset — Auto-Ontology is not deployed for this run"
-                    },
-                    {
-                      "type": "skip",
-                      "description": "BLOCKED: AO_URL unset — Auto-Ontology is not deployed for this run",
-                      "location": {
-                        "file": "/home/sijo/VeritasGraph/tests/studio-e2e/tests/integration/ao.ts",
-                        "line": 44,
-                        "column": 10
-                      }
-                    }
-                  ],
-                  "expectedStatus": "skipped",
-                  "projectId": "integration",
-                  "projectName": "integration",
-                  "results": [
-                    {
-                      "workerIndex": 3,
-                      "parallelIndex": 0,
-                      "status": "skipped",
-                      "duration": 0,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-11-07T17:17:43.194Z",
-                      "annotations": [
-                        {
-                          "type": "blocked",
-                          "description": "AO_URL unset — Auto-Ontology is not deployed for this run"
-                        },
-                        {
-                          "type": "skip",
-                          "description": "BLOCKED: AO_URL unset — Auto-Ontology is not deployed for this run",
-                          "location": {
-                            "file": "/home/sijo/VeritasGraph/tests/studio-e2e/tests/integration/ao.ts",
-                            "line": 44,
-                            "column": 10
-                          }
-                        }
-                      ],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "skipped"
-                }
-              ],
-              "id": "244b92fdeedc65029138-a97a4b84b0c4df4bb6a3",
-              "file": "s09-ao-predictions.spec.ts",
-              "line": 10,
-              "column": 3
-            },
-            {
-              "title": "9.2 descriptive question does not route to Kumo",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 600000,
-                  "annotations": [
-                    {
-                      "type": "blocked",
-                      "description": "AO_URL unset — Auto-Ontology is not deployed for this run"
-                    },
-                    {
-                      "type": "skip",
-                      "description": "BLOCKED: AO_URL unset — Auto-Ontology is not deployed for this run",
-                      "location": {
-                        "file": "/home/sijo/VeritasGraph/tests/studio-e2e/tests/integration/ao.ts",
-                        "line": 44,
-                        "column": 10
-                      }
-                    }
-                  ],
-                  "expectedStatus": "skipped",
-                  "projectId": "integration",
-                  "projectName": "integration",
-                  "results": [
-                    {
-                      "workerIndex": 3,
-                      "parallelIndex": 0,
-                      "status": "skipped",
-                      "duration": 0,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-11-07T17:17:43.201Z",
-                      "annotations": [
-                        {
-                          "type": "blocked",
-                          "description": "AO_URL unset — Auto-Ontology is not deployed for this run"
-                        },
-                        {
-                          "type": "skip",
-                          "description": "BLOCKED: AO_URL unset — Auto-Ontology is not deployed for this run",
-                          "location": {
-                            "file": "/home/sijo/VeritasGraph/tests/studio-e2e/tests/integration/ao.ts",
-                            "line": 44,
-                            "column": 10
-                          }
-                        }
-                      ],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "skipped"
-                }
-              ],
-              "id": "244b92fdeedc65029138-a310999bab5f00abba52",
-              "file": "s09-ao-predictions.spec.ts",
-              "line": 19,
-              "column": 3
-            },
-            {
-              "title": "9.4 persisted analyses are listed",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 600000,
-                  "annotations": [
-                    {
-                      "type": "blocked",
-                      "description": "AO_URL unset — Auto-Ontology is not deployed for this run"
-                    },
-                    {
-                      "type": "skip",
-                      "description": "BLOCKED: AO_URL unset — Auto-Ontology is not deployed for this run",
-                      "location": {
-                        "file": "/home/sijo/VeritasGraph/tests/studio-e2e/tests/integration/ao.ts",
-                        "line": 44,
-                        "column": 10
-                      }
-                    }
-                  ],
-                  "expectedStatus": "skipped",
-                  "projectId": "integration",
-                  "projectName": "integration",
-                  "results": [
-                    {
-                      "workerIndex": 3,
-                      "parallelIndex": 0,
-                      "status": "skipped",
-                      "duration": 0,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-11-07T17:17:43.207Z",
-                      "annotations": [
-                        {
-                          "type": "blocked",
-                          "description": "AO_URL unset — Auto-Ontology is not deployed for this run"
-                        },
-                        {
-                          "type": "skip",
-                          "description": "BLOCKED: AO_URL unset — Auto-Ontology is not deployed for this run",
-                          "location": {
-                            "file": "/home/sijo/VeritasGraph/tests/studio-e2e/tests/integration/ao.ts",
-                            "line": 44,
-                            "column": 10
-                          }
-                        }
-                      ],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "skipped"
-                }
-              ],
-              "id": "244b92fdeedc65029138-d8eb0a3f144c545018c4",
-              "file": "s09-ao-predictions.spec.ts",
-              "line": 25,
-              "column": 3
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "title": "s10-federation.spec.ts",
-      "file": "s10-federation.spec.ts",
-      "column": 0,
-      "line": 0,
-      "specs": [],
-      "suites": [
-        {
-          "title": "S10 federation",
-          "file": "s10-federation.spec.ts",
-          "line": 7,
-          "column": 6,
-          "specs": [
-            {
-              "title": "10.1 AO tool is refused until AO's network is allowlisted",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 600000,
-                  "annotations": [
-                    {
-                      "type": "blocked",
-                      "description": "AO_URL unset — Auto-Ontology is not deployed for this run"
-                    },
-                    {
-                      "type": "skip",
-                      "description": "BLOCKED: AO_URL unset — Auto-Ontology is not deployed for this run",
-                      "location": {
-                        "file": "/home/sijo/VeritasGraph/tests/studio-e2e/tests/integration/ao.ts",
-                        "line": 44,
-                        "column": 10
-                      }
-                    }
-                  ],
-                  "expectedStatus": "skipped",
-                  "projectId": "integration",
-                  "projectName": "integration",
-                  "results": [
-                    {
-                      "workerIndex": 3,
-                      "parallelIndex": 0,
-                      "status": "skipped",
-                      "duration": 0,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-11-07T17:17:43.219Z",
-                      "annotations": [
-                        {
-                          "type": "blocked",
-                          "description": "AO_URL unset — Auto-Ontology is not deployed for this run"
-                        },
-                        {
-                          "type": "skip",
-                          "description": "BLOCKED: AO_URL unset — Auto-Ontology is not deployed for this run",
-                          "location": {
-                            "file": "/home/sijo/VeritasGraph/tests/studio-e2e/tests/integration/ao.ts",
-                            "line": 44,
-                            "column": 10
-                          }
-                        }
-                      ],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "skipped"
-                }
-              ],
-              "id": "4a3216a978922f651d54-1402870461c73a6bef5c",
-              "file": "s10-federation.spec.ts",
-              "line": 8,
-              "column": 3
-            },
-            {
-              "title": "10.3 one Playground answer combines AO SQL and a VG citation",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 600000,
-                  "annotations": [
-                    {
-                      "type": "fixme",
-                      "description": "Phase 8 not implemented: no Auto-Ontology tool kind in Studio",
-                      "location": {
-                        "file": "/home/sijo/VeritasGraph/tests/studio-e2e/tests/integration/s10-federation.spec.ts",
-                        "line": 21,
-                        "column": 10
-                      }
-                    }
-                  ],
-                  "expectedStatus": "skipped",
-                  "projectId": "integration",
-                  "projectName": "integration",
-                  "results": [
-                    {
-                      "workerIndex": 3,
-                      "parallelIndex": 0,
-                      "status": "skipped",
-                      "duration": 0,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-11-07T17:17:43.227Z",
-                      "annotations": [
-                        {
-                          "type": "fixme",
-                          "description": "Phase 8 not implemented: no Auto-Ontology tool kind in Studio",
-                          "location": {
-                            "file": "/home/sijo/VeritasGraph/tests/studio-e2e/tests/integration/s10-federation.spec.ts",
-                            "line": 21,
-                            "column": 10
-                          }
-                        }
-                      ],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "skipped"
-                }
-              ],
-              "id": "4a3216a978922f651d54-58c83c460a7f05a1ef41",
-              "file": "s10-federation.spec.ts",
-              "line": 20,
-              "column": 3
-            },
-            {
-              "title": "10.4/10.5 AO model export imports into VG as proposed terms",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 600000,
-                  "annotations": [
-                    {
-                      "type": "fixme",
-                      "description": "Phase 8 not implemented: VG has no /interchange/import route",
-                      "location": {
-                        "file": "/home/sijo/VeritasGraph/tests/studio-e2e/tests/integration/s10-federation.spec.ts",
-                        "line": 25,
-                        "column": 10
-                      }
-                    }
-                  ],
-                  "expectedStatus": "skipped",
-                  "projectId": "integration",
-                  "projectName": "integration",
-                  "results": [
-                    {
-                      "workerIndex": 3,
-                      "parallelIndex": 0,
-                      "status": "skipped",
-                      "duration": 0,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-11-07T17:17:43.238Z",
-                      "annotations": [
-                        {
-                          "type": "fixme",
-                          "description": "Phase 8 not implemented: VG has no /interchange/import route",
-                          "location": {
-                            "file": "/home/sijo/VeritasGraph/tests/studio-e2e/tests/integration/s10-federation.spec.ts",
-                            "line": 25,
-                            "column": 10
-                          }
-                        }
-                      ],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "skipped"
-                }
-              ],
-              "id": "4a3216a978922f651d54-58857ed8f420d7395f11",
-              "file": "s10-federation.spec.ts",
-              "line": 24,
-              "column": 3
-            },
-            {
-              "title": "10.6 Studio uses AO MCP via OAuth",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 600000,
-                  "annotations": [
-                    {
-                      "type": "fixme",
-                      "description": "Studio has no OAuth MCP client",
-                      "location": {
-                        "file": "/home/sijo/VeritasGraph/tests/studio-e2e/tests/integration/s10-federation.spec.ts",
-                        "line": 29,
-                        "column": 10
-                      }
-                    }
-                  ],
-                  "expectedStatus": "skipped",
-                  "projectId": "integration",
-                  "projectName": "integration",
-                  "results": [
-                    {
-                      "workerIndex": 3,
-                      "parallelIndex": 0,
-                      "status": "skipped",
-                      "duration": 0,
-                      "errors": [],
-                      "stdout": [],
-                      "stderr": [],
-                      "retry": 0,
-                      "startTime": "2026-11-07T17:17:43.248Z",
-                      "annotations": [
-                        {
-                          "type": "fixme",
-                          "description": "Studio has no OAuth MCP client",
-                          "location": {
-                            "file": "/home/sijo/VeritasGraph/tests/studio-e2e/tests/integration/s10-federation.spec.ts",
-                            "line": 29,
-                            "column": 10
-                          }
-                        }
-                      ],
-                      "attachments": []
-                    }
-                  ],
-                  "status": "skipped"
-                }
-              ],
-              "id": "4a3216a978922f651d54-05bb73f13fe238e828aa",
-              "file": "s10-federation.spec.ts",
-              "line": 28,
+              "line": 79,
               "column": 3
             }
           ]
@@ -4523,11 +1362,11 @@
   ],
   "errors": [],
   "stats": {
-    "startTime": "2026-11-07T17:16:08.333Z",
-    "duration": 94967.461,
-    "expected": 40,
-    "skipped": 41,
-    "unexpected": 3,
+    "startTime": "2026-11-08T14:00:44.032Z",
+    "duration": 22187.225,
+    "expected": 32,
+    "skipped": 1,
+    "unexpected": 0,
     "flaky": 0
   }
 }

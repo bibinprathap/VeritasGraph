@@ -43,9 +43,27 @@ studio = [
     "uvicorn[standard]>=0.29",
     "pydantic>=2.5",
 ]
+structured = [
+    "pydantic>=2.5",
+    "sqlalchemy>=2.0.30",
+    "alembic>=1.13",
+    "psycopg[binary]>=3.1.18",
+    "pgvector>=0.3.2",
+    "sqlglot>=25.0",
+    "networkx>=3.2",
+    "cryptography>=42",
+    "pymysql>=1.1",
+    "duckdb-engine>=0.13",
+    "clickhouse-sqlalchemy>=0.3.2",
+    "trino[sqlalchemy]>=0.328",
+]
+structured-hive = ["pyhive[hive-pure-sasl]>=0.7", "thrift>=0.16"]
+structured-saas = ["snowflake-sqlalchemy>=1.6", "databricks-sqlalchemy>=2.0"]
+rerank-local = ["sentence-transformers>=3.0"]
 dev = [
     "pytest>=8",
     "ruff>=0.5",
+    "pip-licenses>=4.4",
 ]
 
 [project.urls]
@@ -67,13 +85,25 @@ packages = [
     "veritasgraph",
     "veritasgraph.store",
     "veritasgraph.ontology",
+    "veritasgraph.llm",
+    "veritasgraph.structured",
+    "veritasgraph.structured.store",
+    "veritasgraph.structured.connectors",
+    "veritasgraph.structured.compile",
+    "veritasgraph.structured.ask",
+    "veritasgraph.structured.migrations",
+    "veritasgraph.structured.migrations.versions",
 ]
 
 [tool.setuptools.package-data]
 veritasgraph_mcp = ["README.md"]
+"veritasgraph.structured" = ["prompts/*.md"]
+"veritasgraph.structured.migrations" = ["script.py.mako"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 markers = [
     "ollama: integration tests that require a live Ollama server (deselect with -m 'not ollama')",
+    "postgres: tests that need VG_TEST_PG_DSN pointing at a disposable Postgres + pgvector",
+    "engines: tests that need the docker test engines (deploy/docker-compose.onprem.yml --profile test-engines)",
 ]

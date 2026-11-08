@@ -6,6 +6,7 @@ import { MODEL, graph, ingest, mcp, toolResult, vg } from "./vg";
 const READ_TOOLS = [
   "check_answerable", "query", "search_entities", "get_entity", "get_graph",
   "get_ontology", "search_terms", "get_term", "get_answer_receipt", "compile_status",
+  "structured_search", "structured_get_term", "structured_list_measures", "structured_ask",
 ].map((t) => `veritasgraph_${t}`);
 
 const listTools = (mode: string | null) => {

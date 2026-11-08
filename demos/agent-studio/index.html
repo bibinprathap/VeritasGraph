@@ -1103,11 +1103,36 @@
 
     // Bearer token for the Studio API (STUDIO_API_TOKENS on the server). Kept in
     // sessionStorage so it is dropped when the tab closes.
-    const TOKEN_KEY = "veritasgraph_studio_token";
+    const TOKEN_KEY = "tBLECDnKhrdtLtkihkw4alrtDJ97oA8_dJPHXp3xo2c";
+    let authPromptInFlight = null;
+    let authPromptShown = false;
 
     function authHeaders() {
       const token = sessionStorage.getItem(TOKEN_KEY);
       return token ? { Authorization: "Bearer " + token } : {};
+    }
+
+    async function ensureTokenPrompt() {
+      if (authPromptShown) {
+        return false;
+      }
+      if (authPromptInFlight) {
+        return authPromptInFlight;
+      }
+      authPromptShown = true;
+      authPromptInFlight = Promise.resolve().then(() => {
+        sessionStorage.removeItem(TOKEN_KEY);
+        const token = window.prompt("VeritasGraph Studio API token","tBLECDnKhrdtLtkihkw4alrtDJ97oA8_dJPHXp3xo2c");
+        if (token && token.trim()) {
+          sessionStorage.setItem(TOKEN_KEY, token.trim());
+          window.location.reload();
+          return false;
+        }
+        return false;
+      }).finally(() => {
+        authPromptInFlight = null;
+      });
+      return authPromptInFlight;
     }
 
     async function api(path, options = {}, retried = false) {
@@ -1118,10 +1143,8 @@
       );
       const res = await fetch(API_BASE + path, Object.assign({}, options, { headers }));
       if (res.status === 401 && !retried) {
-        sessionStorage.removeItem(TOKEN_KEY);
-        const token = window.prompt("VeritasGraph Studio API token");
-        if (token && token.trim()) {
-          sessionStorage.setItem(TOKEN_KEY, token.trim());
+        const ok = await ensureTokenPrompt();
+        if (ok) {
           return api(path, options, true);
         }
       }
@@ -1626,7 +1649,7 @@
           ${pill("source", ["source"], [])}
         `);
         if (!res.citations.length) {
-          document.getElementById("graphCitations").innerHTML = `<div class="meta">No citations returned.</div>`;
+          document.getElementById("graphCitations").innerHTML = `<div class="meta">Answer is not grounded: no citations were returned for this response.</div>`;
         }
       } catch (err) {
         const m = String(err.message || "");

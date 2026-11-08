@@ -560,6 +560,16 @@ class GraphRAGEngine:
     # LLM access
     # ------------------------------------------------------------------ #
     def _chat(self, model: str, messages: List[Dict[str, str]]) -> str:
+        if os.environ.get("VG_GRAPHRAG_CHAT", "").strip().lower() == "openai":
+            from dataclasses import replace
+
+            from veritasgraph.llm import ChatClient, endpoint
+
+            client = ChatClient(replace(endpoint("fast"), model=model or endpoint("fast").model))
+            try:
+                return client.complete(messages)
+            finally:
+                client.close()
         url = f"{_ollama_base()}/api/chat"
         body: Dict[str, Any] = {"model": model, "messages": messages, "stream": False}
         if self.chat_options:

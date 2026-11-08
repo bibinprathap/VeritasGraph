@@ -1,0 +1,62 @@
+name: veritasgraph-onprem
+
+services:
+  store:
+    image: pgvector/pgvector:pg17
+    environment:
+      POSTGRES_USER: vg
+      POSTGRES_PASSWORD: ${VG_STORE_PASSWORD:?set VG_STORE_PASSWORD}
+      POSTGRES_DB: vg
+    ports: ["127.0.0.1:5433:5432"]
+    volumes: ["vg-store:/var/lib/postgresql/data"]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U vg"]
+      interval: 5s
+      retries: 20
+
+  studio:
+    build: { context: .., dockerfile: veritasgraph_mcp/Dockerfile }
+    command: ["veritasgraph", "serve", "--host", "0.0.0.0", "--port", "8200"]
+    env_file: ["../.env.structured"]
+    environment:
+      VG_STRUCTURED_DSN: postgresql+psycopg://vg:${VG_STORE_PASSWORD}@store:5432/vg
+      VG_LLM_BASE_URL: ${VG_LLM_BASE_URL:-http://ollama:11434/v1}
+      VG_EMBED_BASE_URL: ${VG_EMBED_BASE_URL:-http://ollama:11434/v1}
+    ports: ["127.0.0.1:8200:8200"]
+    depends_on: { store: { condition: service_healthy } }
+
+  ollama:
+    profiles: ["ollama"]
+    image: ollama/ollama:latest
+    volumes: ["ollama:/root/.ollama"]
+    deploy: { resources: { reservations: { devices: [{ driver: nvidia, count: all, capabilities: [gpu] }] } } }
+
+  vllm:
+    profiles: ["vllm"]
+    image: vllm/vllm-openai:latest
+    command: ["--model", "Qwen/Qwen2.5-Coder-32B-Instruct-AWQ", "--max-model-len", "8192"]
+    volumes: ["hf-cache:/root/.cache/huggingface"]
+    deploy: { resources: { reservations: { devices: [{ driver: nvidia, count: all, capabilities: [gpu] }] } } }
+
+  # ---- test engines for sales_mini (pytest -m engines, Playwright S7/S9) ----
+  src-postgres:
+    profiles: ["test-engines"]
+    image: postgres:17
+    environment: { POSTGRES_USER: ro, POSTGRES_PASSWORD: ro_pw, POSTGRES_DB: sales_pg }
+    ports: ["127.0.0.1:55432:5432"]
+  src-mysql:
+    profiles: ["test-engines"]
+    image: mysql:8.4
+    environment: { MYSQL_ROOT_PASSWORD: root_pw, MYSQL_DATABASE: sales_my, MYSQL_USER: ro, MYSQL_PASSWORD: ro_pw }
+    ports: ["127.0.0.1:53306:3306"]
+  src-clickhouse:
+    profiles: ["test-engines"]
+    image: clickhouse/clickhouse-server:24.8
+    environment: { CLICKHOUSE_DB: sales_ch, CLICKHOUSE_USER: ro, CLICKHOUSE_PASSWORD: ro_pw }
+    ports: ["127.0.0.1:58123:8123"]
+  src-trino:
+    profiles: ["test-engines"]
+    image: trinodb/trino:460
+    ports: ["127.0.0.1:58080:8080"]
+
+volumes: { vg-store: {}, ollama: {}, hf-cache: {} }

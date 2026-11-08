@@ -32,6 +32,7 @@ from studio_api.routes.models import models_router
 from studio_api.routes.ontology import ontology_router
 from studio_api.routes.playground import playground_router
 from studio_api.routes.resources import resource_routers
+from studio_api.routes.structured import structured_router
 from studio_api.routes.tools import tools_router
 from studio_api.routes.workspace import workspace_router
 from studio_api.security import authorize, check_config
@@ -55,6 +56,22 @@ async def _compile_loop(interval: int) -> None:
             _log.exception("Scheduled compile run failed")
 
 
+async def _start_structured() -> tuple[asyncio.Task | None, asyncio.Event | None]:
+    try:
+        from veritasgraph.structured import config as s_config
+    except ImportError:
+        return None, None
+    if not s_config.enabled():
+        return None, None
+    from veritasgraph.structured import worker
+    from veritasgraph.structured.store import db as s_db
+
+    if s_config.auto_migrate():
+        await asyncio.to_thread(s_db.upgrade)
+    stop = asyncio.Event()
+    return asyncio.create_task(worker.run_forever(stop)), stop
+
+
 @asynccontextmanager
 async def _lifespan(_: FastAPI):
     interval = compiler.interval_seconds()
@@ -63,13 +80,17 @@ async def _lifespan(_: FastAPI):
         if interval and engine.store is not None
         else None
     )
+    s_task, s_stop = await _start_structured()
     try:
         yield
     finally:
-        if task is not None:
-            task.cancel()
-            with contextlib.suppress(asyncio.CancelledError):
-                await task
+        if s_stop is not None:
+            s_stop.set()
+        for t in (task, s_task):
+            if t is not None:
+                t.cancel()
+                with contextlib.suppress(asyncio.CancelledError):
+                    await t
 
 
 app = FastAPI(title="Agent Studio API", version=__version__, lifespan=_lifespan)
@@ -111,6 +132,7 @@ app.include_router(playground_router, dependencies=_protected)
 app.include_router(graphrag_router, dependencies=_protected)
 app.include_router(ontology_router, dependencies=_protected)
 app.include_router(mcp_router, dependencies=_protected)
+app.include_router(structured_router, dependencies=_protected)
 
 
 @app.get("/health", tags=["meta"])

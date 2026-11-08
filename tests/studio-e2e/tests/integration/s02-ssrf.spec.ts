@@ -26,10 +26,21 @@ test.describe("S2 SSRF guard (C10)", () => {
   let allowAll: Studio;
   let redirector: http.Server;
   let redirectUrl = "";
+  let opaReachable = false;
+
+  async function isReachable(url: string): Promise<boolean> {
+    try {
+      const res = await fetch(url, { signal: AbortSignal.timeout(2_500) });
+      return res.ok;
+    } catch {
+      return false;
+    }
+  }
 
   test.beforeAll(async () => {
     allowPrivate = await startStudio(8211, { STUDIO_TOOL_ALLOWED_NETWORKS: "127.0.0.1/32,172.17.0.0/16" });
     allowAll = await startStudio(8212, { STUDIO_TOOL_ALLOWED_NETWORKS: "0.0.0.0/0" });
+    opaReachable = await isReachable(OPA_HEALTH);
     redirector = http.createServer((_req, res) => {
       res.writeHead(302, { Location: "http://169.254.169.254/latest/meta-data/" });
       res.end();
@@ -65,6 +76,7 @@ test.describe("S2 SSRF guard (C10)", () => {
   });
 
   test("2.5 allowlisted docker bridge reaches the real OPA", async () => {
+    test.skip(!opaReachable, `BLOCKED: OPA is not reachable at ${OPA_HEALTH}`);
     const res = await probe(allowPrivate.base, OPA_HEALTH);
     expect(res.ok, JSON.stringify(res)).toBe(true);
     expect(res.status_code).toBe(200);

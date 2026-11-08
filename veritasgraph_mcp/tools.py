@@ -328,6 +328,63 @@ def handle_clear_graph(_args: dict) -> dict:
         return {"error": str(exc)}
 
 
+def _structured_service():
+    try:
+        from veritasgraph.structured import service
+    except ImportError:
+        return None, {"error": "Structured layer not installed."}
+    if not service.enabled():
+        return None, {"error": "Structured layer disabled (VG_STRUCTURED_DSN unset)."}
+    return service, None
+
+
+def _structured_call(fn_name: str, *args: Any, **kwargs: Any) -> dict:
+    svc, err = _structured_service()
+    if err:
+        return err
+    from veritasgraph.structured import errors
+
+    try:
+        result = getattr(svc, fn_name)(*args, **kwargs)
+    except errors.StructuredError as exc:
+        return {"error": str(exc)}
+    return result if isinstance(result, dict) else {"items": result}
+
+
+def handle_structured_search(args: dict) -> dict:
+    return _structured_call(
+        "search",
+        str(args["query"])[:500],
+        list(args.get("kinds") or []),
+        max(1, min(int(args.get("k", 10)), 50)),
+    )
+
+
+def handle_structured_get_term(args: dict) -> dict:
+    wanted = str(args["term"]).strip().lower()
+    out = _structured_call("list_objects", "terms")
+    if "error" in out:
+        return out
+    match = [x for x in out["items"] if x["id"] == args["term"] or x["name"].lower() == wanted]
+    return match[0] if match else {"error": f"term {args['term']!r} not found"}
+
+
+def handle_structured_list_measures(args: dict) -> dict:
+    return _structured_call("list_objects", "measures", args.get("status"))
+
+
+def handle_structured_ask(args: dict) -> dict:
+    out = _structured_call(
+        "ask",
+        str(args["question"])[:2000],
+        actor=_actor(),
+        role=_role(),
+        mode=args.get("mode", "exploratory"),
+        connection_id=args.get("connection_id"),
+    )
+    return pii.redact_payload(out, _role())
+
+
 # --------------------------------------------------------------------------- #
 # Tool definitions (exposed via tools/list)
 # --------------------------------------------------------------------------- #
@@ -475,6 +532,63 @@ TOOL_DEFINITIONS: List[Dict[str, Any]] = [
         "description": "Last ontology compile run and the number of open curation suggestions.",
         "inputSchema": {"type": "object", "properties": {}},
         "_handler": handle_compile_status,
+        "_mode": "read",
+    },
+    {
+        "name": "veritasgraph_structured_search",
+        "description": "Search the structured-data catalog (terms, measures, tables, columns) by meaning and name. No SQL is run.",
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "query": {"type": "string"},
+                "kinds": {
+                    "type": "array",
+                    "items": {"type": "string", "enum": ["term", "measure", "dataset", "field"]},
+                },
+                "k": {"type": "integer", "description": "Max results (default 10, max 50)."},
+            },
+            "required": ["query"],
+        },
+        "_handler": handle_structured_search,
+        "_mode": "read",
+    },
+    {
+        "name": "veritasgraph_structured_get_term",
+        "description": "One structured-data business term by id or name, with definition, synonyms and status.",
+        "inputSchema": {
+            "type": "object",
+            "properties": {"term": {"type": "string"}},
+            "required": ["term"],
+        },
+        "_handler": handle_structured_get_term,
+        "_mode": "read",
+    },
+    {
+        "name": "veritasgraph_structured_list_measures",
+        "description": "Named SQL measures with their expression, table and review status.",
+        "inputSchema": {
+            "type": "object",
+            "properties": {"status": {"type": "string"}},
+        },
+        "_handler": handle_structured_list_measures,
+        "_mode": "read",
+    },
+    {
+        "name": "veritasgraph_structured_ask",
+        "description": (
+            "Answer a question from connected databases with one validated, read-only, row-capped SQL query. "
+            "Returns the SQL, rows and a receipt; refuses with status no_coverage when the catalog does not cover the question."
+        ),
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "question": {"type": "string"},
+                "mode": _MODE_PROP,
+                "connection_id": {"type": "string"},
+            },
+            "required": ["question"],
+        },
+        "_handler": handle_structured_ask,
         "_mode": "read",
     },
     {
