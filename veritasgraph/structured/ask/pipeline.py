@@ -35,7 +35,7 @@ def _mask_rows(columns: List[str], rows: List[List[Any]], pii_columns: set[str],
     if pii.can_see_pii(role):
         return rows
     hide = [c.lower() in pii_columns for c in columns]
-    return [[f"[REDACTED]" if h else (pii.redact(v) if isinstance(v, str) else v) for v, h in zip(r, hide)]
+    return [["[REDACTED]" if h else (pii.redact(v) if isinstance(v, str) else v) for v, h in zip(r, hide)]
             for r in rows]
 
 

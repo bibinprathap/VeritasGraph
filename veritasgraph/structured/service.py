@@ -7,7 +7,7 @@ import sqlalchemy as sa
 from veritasgraph.llm import Embedder, endpoint, rerank_mode
 from veritasgraph.structured import ask as _ask
 from veritasgraph.structured import config, measures, secrets, worker
-from veritasgraph.structured.config import enabled  # re-export
+from veritasgraph.structured.config import enabled as enabled  # re-export
 from veritasgraph.structured.connectors import Source, check_dsn
 from veritasgraph.structured.errors import Conflict, Invalid, NotFound
 from veritasgraph.structured.search import KINDS, search as _search

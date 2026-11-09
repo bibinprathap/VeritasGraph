@@ -11,7 +11,7 @@ from __future__ import annotations
 
 import re
 from dataclasses import dataclass
-from typing import Dict, List, Optional
+from typing import Dict, List
 
 import sqlalchemy as sa
 from sqlalchemy.dialects.postgresql import insert as pg_insert

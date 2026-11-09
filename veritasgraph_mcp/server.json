@@ -6,14 +6,14 @@
     "url": "https://github.com/bibinprathap/VeritasGraph",
     "source": "github"
   },
-  "version": "0.1.2",
+  "version": "0.2.0",
   "websiteUrl": "https://bibinprathap.github.io/VeritasGraph/",
   "packages": [
     {
       "registryType": "pypi",
       "registryBaseUrl": "https://pypi.org",
       "identifier": "veritasgraph-mcp",
-      "version": "0.1.2",
+      "version": "0.2.0",
       "transport": {
         "type": "stdio"
       },
@@ -31,9 +31,26 @@
           "default": "127.0.0.1:11434"
         },
         {
+          "name": "VERITASGRAPH_MCP_MODE",
+          "description": "Tool tier exposed to the client: read, write or admin.",
+          "isRequired": false,
+          "default": "write"
+        },
+        {
           "name": "STUDIO_DATA_DIR",
-          "description": "Directory where the knowledge-graph snapshot is persisted.",
+          "description": "Data directory; the SQLite graph store lives here unless VERITASGRAPH_DB is set.",
           "isRequired": false
+        },
+        {
+          "name": "VERITASGRAPH_DB",
+          "description": "Path to the SQLite graph store shared with Studio and the CLI.",
+          "isRequired": false
+        },
+        {
+          "name": "VERITASGRAPH_PII_POLICY",
+          "description": "PII handling on ingest: off, tag, redact_before_extract or reject.",
+          "isRequired": false,
+          "default": "tag"
         }
       ]
     }
