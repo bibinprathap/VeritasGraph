@@ -52,8 +52,13 @@ Guardrails (input) -> Memory recall -> Knowledge Graph retrieval -> Context budg
 - Package: [veritasgraph_mcp/](./veritasgraph_mcp/)
 - Server: [veritasgraph_mcp/server.py](./veritasgraph_mcp/server.py)
 - Tools: [veritasgraph_mcp/tools.py](./veritasgraph_mcp/tools.py)
-- Run: `python -m veritasgraph_mcp`
-- Exposed tools: veritasgraph_ingest_document, veritasgraph_query, veritasgraph_search_entities, veritasgraph_get_graph, veritasgraph_clear_graph
+- Install: `pip install veritasgraph-mcp` (PyPI, current version 0.2.0); MCP registry name `io.github.bibinprathap/veritasgraph`
+- Run: `veritasgraph-mcp` or `python -m veritasgraph_mcp`
+- Tool tiers set by `VERITASGRAPH_MCP_MODE` (read | write (default) | admin); each tier includes the one below it. All tool names are prefixed `veritasgraph_`.
+  - read: check_answerable, query (mode exploratory|governed, returns answer_id receipt), search_entities, get_entity, get_graph, get_ontology, search_terms, get_term, get_answer_receipt, compile_status, structured_search, structured_get_term, structured_list_measures, structured_ask
+  - write: ingest_document, import_graph, propose_term
+  - admin: clear_graph (snapshots first)
+- Resources: veritasgraph://graph, veritasgraph://stats, veritasgraph://ontology
 
 ## Deterministic Reasoning Layer
 - Reasoner package root: [veritas-reason/](./veritas-reason/)
