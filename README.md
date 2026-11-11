@@ -11,6 +11,7 @@
 [![GitHub Stars](https://img.shields.io/github/stars/bibinprathap/VeritasGraph?style=social)](https://github.com/bibinprathap/VeritasGraph)
 [![MCPVault: claimed](https://mcpvault.io/badge/veritasgraph.svg)](https://mcpvault.io/servers/veritasgraph/health?utm_source=external_badge&utm_medium=referral&utm_campaign=mcp_health_report)
 
+[![M8ven Score](https://m8ven.ai/badge/mcp/bibinprathap-veritasgraph-1j3e99?v=f8443b898ba9825dad454f37918183c5)](https://m8ven.ai/mcp/bibinprathap-veritasgraph-1j3e99?s=readme)
 > **🎯 Traditional RAG guesses based on similarity. VeritasGraph reasons based on structure — and refuses to answer when the evidence isn't there.**
 
 🌐 [Live site](https://veritasgraph.netlify.app/) · 🎮 [Try the Studio live](https://bibinprathap.github.io/VeritasGraph/studio/) · ⭐ [Star](https://github.com/bibinprathap/VeritasGraph) · 🍴 [Fork](https://github.com/bibinprathap/VeritasGraph/fork) · 💬 [Discuss](https://github.com/bibinprathap/VeritasGraph/discussions) · 🐛 [Report a bug](https://github.com/bibinprathap/VeritasGraph/issues)
