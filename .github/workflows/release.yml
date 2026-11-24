@@ -1,0 +1,230 @@
+name: Release
+
+# Push a tag like v0.3.0 to publish everywhere:
+#   PyPI (veritasgraph-mcp) -> GHCR image -> MCPB bundle on the GitHub Release -> official MCP Registry.
+#
+# One-time setup:
+#   - PyPI: add a trusted publisher for this repo, workflow "release.yml", environment "pypi".
+#   - GHCR: after the first run, make the "veritasgraph-mcp" package public.
+#   - MCP Registry: nothing; GitHub OIDC proves ownership of io.github.bibinprathap/*.
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+env:
+  IMAGE: ghcr.io/bibinprathap/veritasgraph-mcp
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+    env:
+      STUDIO_AUTH: "off"
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Check the tag matches every version string
+        id: version
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          python - "$VERSION" <<'EOF'
+          import json, sys, tomllib
+          from pathlib import Path
+
+          tag = sys.argv[1]
+          init = Path("veritasgraph_mcp/__init__.py").read_text()
+          server = json.loads(Path("veritasgraph_mcp/server.json").read_text())
+          found = {
+              "pyproject.toml": tomllib.loads(Path("pyproject.toml").read_text())["project"]["version"],
+              "veritasgraph_mcp/__init__.py": init.split("__version__")[1].split('"')[1],
+              "server.json": server["version"],
+              "mcpb/manifest.json": json.loads(Path("mcpb/manifest.json").read_text())["version"],
+          }
+          for pkg in server["packages"]:
+              found[f"server.json {pkg['registryType']}"] = pkg.get("version") or pkg["identifier"].rsplit(":", 1)[-1]
+          bad = {k: v for k, v in found.items() if v != tag}
+          if bad:
+              sys.exit(f"Tag v{tag} does not match: {bad}")
+          EOF
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+
+      - name: Lint and test
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e ".[studio,dev]" pyyaml numpy
+          ruff check veritasgraph studio_api veritasgraph_mcp
+          python -m pytest studio_api/tests tests -q -m "not ollama" --ignore=studio_api/tests/test_e2e_playwright.py
+
+  pypi:
+    needs: verify
+    runs-on: ubuntu-latest
+    environment: pypi
+    permissions:
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Build sdist and wheel
+        run: |
+          # build/ and *.egg-info are committed; stale copies must not leak into the wheel.
+          rm -rf build ./*.egg-info
+          python -m pip install --upgrade build
+          python -m build
+
+      - uses: pypa/gh-action-pypi-publish@release/v1
+
+  docker:
+    needs: verify
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: docker/setup-qemu-action@v3
+
+      - uses: docker/setup-buildx-action@v3
+
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: veritasgraph_mcp/Dockerfile
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: |
+            ${{ env.IMAGE }}:${{ needs.verify.outputs.version }}
+            ${{ env.IMAGE }}:latest
+          labels: |
+            org.opencontainers.image.version=${{ needs.verify.outputs.version }}
+            org.opencontainers.image.revision=${{ github.sha }}
+
+  mcpb:
+    needs: verify
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    outputs:
+      url: ${{ steps.bundle.outputs.url }}
+      sha256: ${{ steps.bundle.outputs.sha256 }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "lts/*"
+
+      - name: Build the MCPB bundle
+        id: bundle
+        env:
+          VERSION: ${{ needs.verify.outputs.version }}
+        run: |
+          set -euo pipefail
+          STAGE="$RUNNER_TEMP/mcpb"
+          FILE="veritasgraph-mcp-${VERSION}.mcpb"
+          mkdir -p "$STAGE/server"
+          cp mcpb/manifest.json mcpb/.mcpbignore LICENSE "$STAGE/"
+          cp mcpb/server/main.py "$STAGE/server/"
+          cp assets/veritasgraph-logo.png "$STAGE/icon.png"
+          rm -rf build ./*.egg-info
+          # The server and its dependencies are pure Python, so one bundle works on every platform.
+          python -m pip install --no-compile --target "$STAGE/server/lib" .
+          rm -rf "$STAGE/server/lib/bin"
+          npx -y @anthropic-ai/mcpb validate "$STAGE/manifest.json"
+          npx -y @anthropic-ai/mcpb pack "$STAGE" "$FILE"
+          echo "file=$FILE" >> "$GITHUB_OUTPUT"
+          echo "sha256=$(sha256sum "$FILE" | cut -d' ' -f1)" >> "$GITHUB_OUTPUT"
+          echo "url=https://github.com/${GITHUB_REPOSITORY}/releases/download/${GITHUB_REF_NAME}/${FILE}" >> "$GITHUB_OUTPUT"
+
+      - name: Attach to the GitHub Release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          FILE: ${{ steps.bundle.outputs.file }}
+        run: |
+          gh release view "$GITHUB_REF_NAME" >/dev/null 2>&1 \
+            || gh release create "$GITHUB_REF_NAME" --title "$GITHUB_REF_NAME" --generate-notes
+          gh release upload "$GITHUB_REF_NAME" "$FILE" --clobber
+
+  registry:
+    needs: [pypi, docker, mcpb]
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+    env:
+      MCP_PUBLISHER_VERSION: v1.8.1
+    defaults:
+      run:
+        working-directory: veritasgraph_mcp
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Add the MCPB package to server.json
+        env:
+          URL: ${{ needs.mcpb.outputs.url }}
+          SHA: ${{ needs.mcpb.outputs.sha256 }}
+        run: |
+          jq --arg url "$URL" --arg sha "$SHA" \
+            '.packages += [{"registryType": "mcpb", "identifier": $url, "fileSha256": $sha, "transport": {"type": "stdio"}}]' \
+            server.json > server.tmp && mv server.tmp server.json
+          cat server.json
+
+      - name: Install cosign
+        uses: sigstore/cosign-installer@6f9f17788090df1f26f669e9d70d6ae9567deba6 # v4.1.2
+
+      - name: Download and verify mcp-publisher
+        run: |
+          set -euo pipefail
+          os="$(uname -s | tr '[:upper:]' '[:lower:]')"
+          arch="$(uname -m | sed 's/x86_64/amd64/;s/aarch64/arm64/')"
+          archive="mcp-publisher_${os}_${arch}.tar.gz"
+          base_url="https://github.com/modelcontextprotocol/registry/releases/download/${MCP_PUBLISHER_VERSION}"
+          curl --fail --location --silent --show-error --output "$archive" "$base_url/$archive"
+          curl --fail --location --silent --show-error --output "$archive.sigstore.json" "$base_url/$archive.sigstore.json"
+          cosign verify-blob \
+            --bundle "$archive.sigstore.json" \
+            --certificate-identity "https://github.com/modelcontextprotocol/registry/.github/workflows/release.yml@refs/tags/${MCP_PUBLISHER_VERSION}" \
+            --certificate-oidc-issuer "https://token.actions.githubusercontent.com" \
+            "$archive"
+          tar xzf "$archive" mcp-publisher
+          rm -f "$archive" "$archive.sigstore.json"
+
+      - name: Authenticate to the MCP Registry
+        run: ./mcp-publisher login github-oidc
+
+      - name: Publish to the MCP Registry
+        # PyPI and GHCR can take a minute to serve a new release, so retry.
+        run: |
+          for attempt in 1 2 3 4 5; do
+            ./mcp-publisher publish && exit 0
+            echo "Attempt $attempt failed; retrying in 30s"
+            sleep 30
+          done
+          exit 1

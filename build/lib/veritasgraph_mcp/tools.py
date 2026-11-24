@@ -328,6 +328,63 @@ def handle_clear_graph(_args: dict) -> dict:
         return {"error": str(exc)}
 
 
+def _structured_service():
+    try:
+        from veritasgraph.structured import service
+    except ImportError:
+        return None, {"error": "Structured layer not installed."}
+    if not service.enabled():
+        return None, {"error": "Structured layer disabled (VG_STRUCTURED_DSN unset)."}
+    return service, None
+
+
+def _structured_call(fn_name: str, *args: Any, **kwargs: Any) -> dict:
+    svc, err = _structured_service()
+    if err:
+        return err
+    from veritasgraph.structured import errors
+
+    try:
+        result = getattr(svc, fn_name)(*args, **kwargs)
+    except errors.StructuredError as exc:
+        return {"error": str(exc)}
+    return result if isinstance(result, dict) else {"items": result}
+
+
+def handle_structured_search(args: dict) -> dict:
+    return _structured_call(
+        "search",
+        str(args["query"])[:500],
+        list(args.get("kinds") or []),
+        max(1, min(int(args.get("k", 10)), 50)),
+    )
+
+
+def handle_structured_get_term(args: dict) -> dict:
+    wanted = str(args["term"]).strip().lower()
+    out = _structured_call("list_objects", "terms")
+    if "error" in out:
+        return out
+    match = [x for x in out["items"] if x["id"] == args["term"] or x["name"].lower() == wanted]
+    return match[0] if match else {"error": f"term {args['term']!r} not found"}
+
+
+def handle_structured_list_measures(args: dict) -> dict:
+    return _structured_call("list_objects", "measures", args.get("status"))
+
+
+def handle_structured_ask(args: dict) -> dict:
+    out = _structured_call(
+        "ask",
+        str(args["question"])[:2000],
+        actor=_actor(),
+        role=_role(),
+        mode=args.get("mode", "exploratory"),
+        connection_id=args.get("connection_id"),
+    )
+    return pii.redact_payload(out, _role())
+
+
 # --------------------------------------------------------------------------- #
 # Tool definitions (exposed via tools/list)
 # --------------------------------------------------------------------------- #
@@ -348,9 +405,68 @@ _LIMIT_PROPS = {
     "max_nodes": {"type": "integer", "description": "Max subgraph nodes (default 25)."},
 }
 
+# Tool annotations (MCP 2025-03-26+). Nothing here reaches beyond the local
+# graph store, the local Ollama runtime or user-configured databases.
+_READ_ONLY = {"readOnlyHint": True, "openWorldHint": False}
+_ADDITIVE = {"readOnlyHint": False, "destructiveHint": False, "idempotentHint": False, "openWorldHint": False}
+_UPSERT = {"readOnlyHint": False, "destructiveHint": False, "idempotentHint": True, "openWorldHint": False}
+_OVERWRITE = {"readOnlyHint": False, "destructiveHint": True, "idempotentHint": False, "openWorldHint": False}
+_DESTRUCTIVE = {"readOnlyHint": False, "destructiveHint": True, "idempotentHint": True, "openWorldHint": False}
+
+_ERROR_PROP = {"error": {"type": "string", "description": "Set instead of the other fields when the call fails."}}
+_REF_LIST = {
+    "type": "array",
+    "items": {"type": "object", "properties": {"id": {"type": "string"}, "name": {"type": "string"}}},
+}
+
+_ANSWERABLE_OUTPUT = {
+    "type": "object",
+    "properties": {
+        "answerable": {"type": "boolean"},
+        "mode": {"type": "string"},
+        "coverage": {"type": "number", "description": "Share of question tokens covered (0-1)."},
+        "matched_entities": _REF_LIST,
+        "matched_terms": _REF_LIST,
+        "unmatched_tokens": {"type": "array", "items": {"type": "string"}},
+        "reason": {"type": ["string", "null"]},
+        **_ERROR_PROP,
+    },
+}
+
+_ANSWER_OUTPUT = {
+    "type": "object",
+    "properties": {
+        "answer": {"type": "string"},
+        "abstained": {"type": "boolean"},
+        "abstain_reason": {"type": "string"},
+        "mode": {"type": "string"},
+        "grounded": {"type": "boolean", "description": "Every citation is a retrieved source."},
+        "citations": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "id": {"type": "string"},
+                    "title": {"type": "string"},
+                    "text": {"type": "string"},
+                },
+            },
+        },
+        "unknown_citations": {"type": "array", "items": {"type": "string"}},
+        "retrieved_source_ids": {"type": "array", "items": {"type": "string"}},
+        "reasoning_path": {"type": "array", "items": {"type": "string"}},
+        "subgraph": {"type": "object"},
+        "answer_id": {"type": ["string", "null"], "description": "Receipt id for veritasgraph_get_answer_receipt."},
+        **_ERROR_PROP,
+    },
+}
+
 TOOL_DEFINITIONS: List[Dict[str, Any]] = [
     {
         "name": "veritasgraph_check_answerable",
+        "title": "Check answerability",
+        "annotations": _READ_ONLY,
+        "outputSchema": _ANSWERABLE_OUTPUT,
         "description": (
             "Check whether the knowledge graph covers a question before asking it: "
             "returns matched entities and glossary terms, coverage and a reason. No LLM call."
@@ -368,6 +484,9 @@ TOOL_DEFINITIONS: List[Dict[str, Any]] = [
     },
     {
         "name": "veritasgraph_query",
+        "title": "Ask the knowledge graph",
+        "annotations": _READ_ONLY,
+        "outputSchema": _ANSWER_OUTPUT,
         "description": (
             "Ask a question and get a graph-grounded, multi-hop answer with "
             "verifiable [doc#chunk] citations, a grounded flag, the reasoning path "
@@ -388,6 +507,8 @@ TOOL_DEFINITIONS: List[Dict[str, Any]] = [
     },
     {
         "name": "veritasgraph_search_entities",
+        "title": "Search entities",
+        "annotations": _READ_ONLY,
         "description": (
             "Retrieve the subgraph most relevant to a query (entities, "
             "relationships, seeds) without invoking the LLM. Fast graph lookup."
@@ -405,6 +526,8 @@ TOOL_DEFINITIONS: List[Dict[str, Any]] = [
     },
     {
         "name": "veritasgraph_get_entity",
+        "title": "Get entity",
+        "annotations": _READ_ONLY,
         "description": "One entity (by id or name) with neighbours, source chunks and glossary terms.",
         "inputSchema": {
             "type": "object",
@@ -416,6 +539,8 @@ TOOL_DEFINITIONS: List[Dict[str, Any]] = [
     },
     {
         "name": "veritasgraph_get_graph",
+        "title": "Get full graph",
+        "annotations": _READ_ONLY,
         "description": "Return the full knowledge graph: all nodes, edges, and stats.",
         "inputSchema": {"type": "object", "properties": {}},
         "_handler": handle_get_graph,
@@ -423,6 +548,8 @@ TOOL_DEFINITIONS: List[Dict[str, Any]] = [
     },
     {
         "name": "veritasgraph_get_ontology",
+        "title": "Get ontology",
+        "annotations": _READ_ONLY,
         "description": (
             "The governed vocabulary: entity types, predicates (with domain/range) and "
             "glossary terms, each with status proposed / certified / deprecated."
@@ -433,6 +560,8 @@ TOOL_DEFINITIONS: List[Dict[str, Any]] = [
     },
     {
         "name": "veritasgraph_search_terms",
+        "title": "Search glossary terms",
+        "annotations": _READ_ONLY,
         "description": "Search the business glossary by name, synonym or definition.",
         "inputSchema": {
             "type": "object",
@@ -447,6 +576,8 @@ TOOL_DEFINITIONS: List[Dict[str, Any]] = [
     },
     {
         "name": "veritasgraph_get_term",
+        "title": "Get glossary term",
+        "annotations": _READ_ONLY,
         "description": "One glossary term (by id or name) with its definition, synonyms, status and linked entities.",
         "inputSchema": {
             "type": "object",
@@ -458,6 +589,8 @@ TOOL_DEFINITIONS: List[Dict[str, Any]] = [
     },
     {
         "name": "veritasgraph_get_answer_receipt",
+        "title": "Get answer receipt",
+        "annotations": _READ_ONLY,
         "description": (
             "Fetch the receipt for a previous answer_id: evidence ids, grounding, the "
             "graph version it used, whether the graph changed since, and feedback."
@@ -472,13 +605,85 @@ TOOL_DEFINITIONS: List[Dict[str, Any]] = [
     },
     {
         "name": "veritasgraph_compile_status",
+        "title": "Ontology compile status",
+        "annotations": _READ_ONLY,
         "description": "Last ontology compile run and the number of open curation suggestions.",
         "inputSchema": {"type": "object", "properties": {}},
         "_handler": handle_compile_status,
         "_mode": "read",
     },
     {
+        "name": "veritasgraph_structured_search",
+        "title": "Search data catalog",
+        "annotations": _READ_ONLY,
+        "description": "Search the structured-data catalog (terms, measures, tables, columns) by meaning and name. No SQL is run.",
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "query": {"type": "string", "description": "What to look for, e.g. 'monthly revenue'."},
+                "kinds": {
+                    "type": "array",
+                    "items": {"type": "string", "enum": ["term", "measure", "dataset", "field"]},
+                    "description": "Restrict results to these object kinds (default: all).",
+                },
+                "k": {"type": "integer", "description": "Max results (default 10, max 50)."},
+            },
+            "required": ["query"],
+        },
+        "_handler": handle_structured_search,
+        "_mode": "read",
+    },
+    {
+        "name": "veritasgraph_structured_get_term",
+        "title": "Get data catalog term",
+        "annotations": _READ_ONLY,
+        "description": "One structured-data business term by id or name, with definition, synonyms and status.",
+        "inputSchema": {
+            "type": "object",
+            "properties": {"term": {"type": "string", "description": "Term id or name (case-insensitive)."}},
+            "required": ["term"],
+        },
+        "_handler": handle_structured_get_term,
+        "_mode": "read",
+    },
+    {
+        "name": "veritasgraph_structured_list_measures",
+        "title": "List SQL measures",
+        "annotations": _READ_ONLY,
+        "description": "Named SQL measures with their expression, table and review status.",
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "status": {"type": "string", "description": "Only measures with this review status (default: all)."},
+            },
+        },
+        "_handler": handle_structured_list_measures,
+        "_mode": "read",
+    },
+    {
+        "name": "veritasgraph_structured_ask",
+        "title": "Ask connected databases",
+        "annotations": _READ_ONLY,
+        "description": (
+            "Answer a question from connected databases with one validated, read-only, row-capped SQL query. "
+            "Returns the SQL, rows and a receipt; refuses with status no_coverage when the catalog does not cover the question."
+        ),
+        "inputSchema": {
+            "type": "object",
+            "properties": {
+                "question": {"type": "string", "description": "Natural-language question about the data."},
+                "mode": _MODE_PROP,
+                "connection_id": {"type": "string", "description": "Database connection to use (default: the only/primary one)."},
+            },
+            "required": ["question"],
+        },
+        "_handler": handle_structured_ask,
+        "_mode": "read",
+    },
+    {
         "name": "veritasgraph_ingest_document",
+        "title": "Ingest document",
+        "annotations": _ADDITIVE,
         "description": (
             "Ingest a document into the VeritasGraph knowledge graph. Chunks the "
             "text, extracts entities and relationships with a local model, and "
@@ -499,6 +704,8 @@ TOOL_DEFINITIONS: List[Dict[str, Any]] = [
     },
     {
         "name": "veritasgraph_import_graph",
+        "title": "Import knowledge graph",
+        "annotations": _OVERWRITE,
         "description": (
             "Import a pre-built knowledge graph produced by another tool "
             "(Graphify graph.json, Understand-Anything KnowledgeGraph, AI Atlas "
@@ -523,6 +730,8 @@ TOOL_DEFINITIONS: List[Dict[str, Any]] = [
     },
     {
         "name": "veritasgraph_propose_term",
+        "title": "Propose glossary term",
+        "annotations": _UPSERT,
         "description": (
             "Propose a business glossary term (status 'proposed' until an admin "
             "certifies it), optionally linked to entity ids."
@@ -542,6 +751,8 @@ TOOL_DEFINITIONS: List[Dict[str, Any]] = [
     },
     {
         "name": "veritasgraph_clear_graph",
+        "title": "Clear knowledge graph",
+        "annotations": _DESTRUCTIVE,
         "description": "Clear the entire knowledge graph (destructive; a snapshot is taken first).",
         "inputSchema": {"type": "object", "properties": {}},
         "_handler": handle_clear_graph,
@@ -560,7 +771,7 @@ def tool_allowed(name: str, mode: Optional[str] = None) -> bool:
 def public_tools(mode: Optional[str] = None) -> List[Dict[str, Any]]:
     """Handler-free tool definitions visible at ``mode``."""
     return [
-        {"name": t["name"], "description": t["description"], "inputSchema": t["inputSchema"]}
+        {k: v for k, v in t.items() if not k.startswith("_")}
         for t in TOOL_DEFINITIONS
         if tool_allowed(t["name"], mode)
     ]
@@ -612,6 +823,78 @@ def handle_resource_read(uri: str) -> Dict[str, Any]:
 TOOL_HANDLERS: Dict[str, Callable[[dict], dict]] = {
     t["name"]: t["_handler"] for t in TOOL_DEFINITIONS
 }
+
+# --------------------------------------------------------------------------- #
+# Prompts (exposed via prompts/list + prompts/get)
+# --------------------------------------------------------------------------- #
+PROMPT_DEFINITIONS: List[Dict[str, Any]] = [
+    {
+        "name": "grounded_answer",
+        "title": "Grounded answer with citations",
+        "description": "Answer a question only from the knowledge graph, citing [doc#chunk] sources.",
+        "arguments": [
+            {"name": "question", "description": "The question to answer.", "required": True},
+        ],
+        "_text": (
+            "Answer this question using only the VeritasGraph knowledge graph: {question}\n\n"
+            "1. Call veritasgraph_check_answerable. If it is not answerable, say so and stop.\n"
+            "2. Call veritasgraph_query and quote its [doc#chunk] citations.\n"
+            "3. If grounded is false or abstained is true, say the answer is unverified.\n"
+            "4. End with the answer_id so the answer can be audited later."
+        ),
+    },
+    {
+        "name": "verify_claim",
+        "title": "Verify a claim",
+        "description": "Check a statement against the knowledge graph and report supporting evidence.",
+        "arguments": [
+            {"name": "claim", "description": "The statement to verify.", "required": True},
+        ],
+        "_text": (
+            "Verify this claim against the VeritasGraph knowledge graph: {claim}\n\n"
+            "Use veritasgraph_search_entities to find the entities involved, then "
+            "veritasgraph_query to test the claim. Reply with one of SUPPORTED, "
+            "CONTRADICTED or NOT IN GRAPH, followed by the [doc#chunk] citations that "
+            "justify it. Do not use outside knowledge."
+        ),
+    },
+    {
+        "name": "explore_entity",
+        "title": "Explore an entity",
+        "description": "Summarise an entity, its relationships and the sources behind them.",
+        "arguments": [
+            {"name": "entity", "description": "Entity name or id.", "required": True},
+        ],
+        "_text": (
+            "Use veritasgraph_get_entity for \"{entity}\" and summarise what the knowledge "
+            "graph says about it: its type, its most important relationships, any glossary "
+            "terms linked to it, and the source chunks that back each fact."
+        ),
+    },
+]
+
+
+def public_prompts() -> List[Dict[str, Any]]:
+    return [{k: v for k, v in p.items() if not k.startswith("_")} for p in PROMPT_DEFINITIONS]
+
+
+def render_prompt(name: str, arguments: Dict[str, Any]) -> Dict[str, Any]:
+    """Fill a prompt template; raises ``KeyError`` (unknown) or ``ValueError`` (missing arg)."""
+    prompt = next((p for p in PROMPT_DEFINITIONS if p["name"] == name), None)
+    if prompt is None:
+        raise KeyError(name)
+    values = {}
+    for arg in prompt["arguments"]:
+        value = str(arguments.get(arg["name"], "") or "").strip()
+        if arg.get("required") and not value:
+            raise ValueError(f"argument '{arg['name']}' is required")
+        values[arg["name"]] = value
+    return {
+        "description": prompt["description"],
+        "messages": [
+            {"role": "user", "content": {"type": "text", "text": prompt["_text"].format(**values)}}
+        ],
+    }
 
 SERVER_INSTRUCTIONS = (
     "VeritasGraph answers questions from a local knowledge graph with verifiable "

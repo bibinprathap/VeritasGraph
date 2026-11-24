@@ -20,7 +20,7 @@ from __future__ import annotations
 import ipaddress
 import os
 import socket
-from typing import List, Union
+from typing import List, Optional, Union
 from urllib import parse as urlparse
 
 IPAddress = Union[ipaddress.IPv4Address, ipaddress.IPv6Address]
@@ -40,7 +40,7 @@ def allowed_networks() -> List[IPNetwork]:
     return nets
 
 
-def is_blocked(ip: IPAddress) -> bool:
+def is_blocked(ip: IPAddress, allowed: Optional[List[IPNetwork]] = None) -> bool:
     if isinstance(ip, ipaddress.IPv6Address) and ip.ipv4_mapped is not None:
         ip = ip.ipv4_mapped  # ::ffff:127.0.0.1 must be treated as 127.0.0.1
     # Never reachable, even with an allowlist (cloud metadata, broadcast, ...).
@@ -49,7 +49,8 @@ def is_blocked(ip: IPAddress) -> bool:
     if ip.is_global:
         return False
     # Loopback, RFC1918, CGNAT, ULA: only when the operator allowlisted it.
-    return not any(ip in net for net in allowed_networks())
+    nets = allowed_networks() if allowed is None else allowed
+    return not any(ip in net for net in nets)
 
 
 def assert_safe_url(endpoint: str) -> str:

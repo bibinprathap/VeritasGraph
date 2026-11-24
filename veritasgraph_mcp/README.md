@@ -17,6 +17,22 @@ inspect entities — all **100% locally**, with **zero external data egress**.
   came from, so answers cite their evidence.
 - **Drop-in** — wraps the same `studio_api.graphrag_engine` used by Studio.
 
+[![PyPI](https://img.shields.io/pypi/v/veritasgraph-mcp)](https://pypi.org/project/veritasgraph-mcp/)
+[![MCP Registry](https://img.shields.io/badge/MCP%20Registry-io.github.bibinprathap%2Fveritasgraph-blue)](https://registry.modelcontextprotocol.io/v0/servers?search=io.github.bibinprathap/veritasgraph)
+[![Install in VS Code](https://img.shields.io/badge/VS_Code-Install_MCP_server-0098FF?logo=visualstudiocode&logoColor=white)](https://insiders.vscode.dev/redirect/mcp/install?name=veritasgraph&config=%7B%22command%22%3A%22uvx%22%2C%22args%22%3A%5B%22veritasgraph-mcp%22%5D%7D)
+[![Install in VS Code Insiders](https://img.shields.io/badge/VS_Code_Insiders-Install_MCP_server-24bfa5?logo=visualstudiocode&logoColor=white)](https://insiders.vscode.dev/redirect/mcp/install?name=veritasgraph&config=%7B%22command%22%3A%22uvx%22%2C%22args%22%3A%5B%22veritasgraph-mcp%22%5D%7D&quality=insiders)
+[![Install in Cursor](https://cursor.com/deeplink/mcp-install-dark.svg)](https://cursor.com/en/install-mcp?name=veritasgraph&config=eyJjb21tYW5kIjoidXZ4IiwiYXJncyI6WyJ2ZXJpdGFzZ3JhcGgtbWNwIl19)
+
+## Quick start
+
+```bash
+ollama pull qwen3:latest                              # once; any local chat model works
+uvx veritasgraph-mcp                                  # run the server over stdio
+claude mcp add veritasgraph -- uvx veritasgraph-mcp   # or register it in Claude Code
+```
+
+The graph is stored in `~/.veritasgraph` unless you set `STUDIO_DATA_DIR`.
+
 ---
 
 ## Tools
@@ -43,6 +59,19 @@ Tools are tiered by `VERITASGRAPH_MCP_MODE` (`read`, `write` *(default)*,
 
 Tools outside the active tier are hidden and return JSON-RPC `-32601`.
 
+Every tool has a `title` and annotations (`readOnlyHint`, `destructiveHint`,
+`idempotentHint`), so clients can auto-approve read tools and ask before
+`veritasgraph_clear_graph`. `check_answerable` and `query` also return
+`structuredContent` that matches their `outputSchema`.
+
+## Prompts
+
+| Prompt | Argument | What it does |
+|--------|----------|--------------|
+| `grounded_answer` | `question` | Checks answerability, then answers with `[doc#chunk]` citations and the `answer_id`. |
+| `verify_claim` | `claim` | Labels a statement SUPPORTED, CONTRADICTED or NOT IN GRAPH, with citations. |
+| `explore_entity` | `entity` | Summarises an entity, its relationships and their sources. |
+
 ## Resources
 
 | URI | Description |
@@ -55,8 +84,7 @@ Tools outside the active tier are hidden and return JSON-RPC `-32601`.
 
 ## Requirements
 
-- Python 3.10+
-- VeritasGraph repo dependencies: `pip install -r requirements.txt`
+- Python 3.10+ (or Docker)
 - A local [Ollama](https://ollama.com) runtime with a chat model pulled
   (ingest/query need a model; `search_entities`/`get_graph` do not):
 
@@ -67,10 +95,32 @@ Tools outside the active tier are hidden and return JSON-RPC `-32601`.
 ## Run it
 
 ```bash
-# From the repository root
+uvx veritasgraph-mcp                  # from PyPI with uv
+pip install veritasgraph-mcp && veritasgraph-mcp
+docker run --rm -i -v veritasgraph:/data ghcr.io/bibinprathap/veritasgraph-mcp
+
+# From a clone of the repository
 python -m veritasgraph_mcp            # stdio JSON-RPC server
 python -m veritasgraph_mcp --debug    # verbose logging on stderr
 ```
+
+In Docker, reach Ollama on the host with `-e OLLAMA_HOST=host.docker.internal:11434`
+(on Linux also add `--add-host=host.docker.internal:host-gateway`). The image
+defaults to `VERITASGRAPH_MCP_MODE=read`.
+
+### Streamable HTTP
+
+```bash
+VERITASGRAPH_MCP_TOKEN=$(openssl rand -hex 24) veritasgraph-mcp --transport http --port 8765
+```
+
+Clients POST JSON-RPC to `http://127.0.0.1:8765/mcp`; `GET /healthz` is a
+liveness probe. The server binds to `127.0.0.1` by default, rejects browser
+`Origin` headers that are not loopback or listed in
+`VERITASGRAPH_MCP_ALLOWED_ORIGINS`, and requires `Authorization: Bearer <token>`
+when `VERITASGRAPH_MCP_TOKEN` is set. Keep a token set whenever you bind to
+anything other than loopback. The Docker image switches to HTTP on `0.0.0.0`
+when `PORT` is set.
 
 ### Environment variables
 
@@ -79,9 +129,14 @@ python -m veritasgraph_mcp --debug    # verbose logging on stderr
 | `VERITASGRAPH_MODEL` | `qwen3:latest` | Default Ollama model for ingest/query. |
 | `OLLAMA_HOST` | `127.0.0.1:11434` | Local Ollama endpoint. |
 | `VERITASGRAPH_MCP_MODE` | `write` | Tool tier: `read`, `write` or `admin`. Use `read` for untrusted clients. |
-| `STUDIO_DATA_DIR` | `studio_api/data` | Data directory. |
+| `STUDIO_DATA_DIR` | `~/.veritasgraph` (`studio_api/data` in a clone) | Data directory. |
 | `VERITASGRAPH_DB` | `$STUDIO_DATA_DIR/veritasgraph.db` | SQLite graph store shared with Studio and the CLI. |
 | `VERITASGRAPH_PII_POLICY` | `tag` | `off`, `tag`, `redact_before_extract` or `reject`. |
+| `VERITASGRAPH_MCP_TRANSPORT` | `stdio` | `stdio` or `http` (same as `--transport`). |
+| `VERITASGRAPH_MCP_HOST` / `VERITASGRAPH_MCP_PORT` | `127.0.0.1` / `8765` | HTTP bind address and port. |
+| `VERITASGRAPH_MCP_TOKEN` | *(unset)* | Bearer token required by the HTTP transport. |
+| `VERITASGRAPH_MCP_ALLOWED_ORIGINS` | *(unset)* | Comma-separated browser origins allowed in addition to loopback. |
+| `VERITASGRAPH_MCP_MAX_BODY` | `10485760` | Largest accepted HTTP request body, in bytes. |
 
 ---
 
@@ -126,39 +181,39 @@ curl -s http://127.0.0.1:8200/mcp/tools/veritasgraph_search_entities \
 
 ---
 
-## Register in your IDE
+## Register in your client
 
-Replace `/abs/path/to/VeritasGraph` with the absolute path to your clone, and
-point `command` at the repo's Python (e.g. `.venv/bin/python`).
+All examples run the PyPI package with `uvx`. To run from a clone instead, use
+`"command": "/abs/path/to/VeritasGraph/.venv/bin/python"` with
+`"args": ["-m", "veritasgraph_mcp"]`.
 
-### Claude Desktop — `claude_desktop_config.json`
+### Claude Code
+
+```bash
+claude mcp add veritasgraph -e VERITASGRAPH_MODEL=qwen3:latest -- uvx veritasgraph-mcp
+```
+
+### Claude Desktop
+
+Download `veritasgraph-mcp-<version>.mcpb` from the
+[latest release](https://github.com/bibinprathap/VeritasGraph/releases/latest) and
+open it, or add this to `claude_desktop_config.json`:
 
 ```json
 {
   "mcpServers": {
     "veritasgraph": {
-      "command": "/abs/path/to/VeritasGraph/.venv/bin/python",
-      "args": ["-m", "veritasgraph_mcp"],
-      "cwd": "/abs/path/to/VeritasGraph",
+      "command": "uvx",
+      "args": ["veritasgraph-mcp"],
       "env": { "VERITASGRAPH_MODEL": "qwen3:latest" }
     }
   }
 }
 ```
 
-### Cursor — `.cursor/mcp.json`
-
-```json
-{
-  "mcpServers": {
-    "veritasgraph": {
-      "command": "/abs/path/to/VeritasGraph/.venv/bin/python",
-      "args": ["-m", "veritasgraph_mcp"],
-      "cwd": "/abs/path/to/VeritasGraph"
-    }
-  }
-}
-```
+The same `mcpServers` block works for **Cursor** (`~/.cursor/mcp.json`),
+**Windsurf** (`~/.codeium/windsurf/mcp_config.json`) and **Cline**
+(`cline_mcp_settings.json`).
 
 ### VS Code — `.vscode/mcp.json`
 
@@ -167,15 +222,56 @@ point `command` at the repo's Python (e.g. `.venv/bin/python`).
   "servers": {
     "veritasgraph": {
       "type": "stdio",
-      "command": "/abs/path/to/VeritasGraph/.venv/bin/python",
-      "args": ["-m", "veritasgraph_mcp"],
-      "cwd": "/abs/path/to/VeritasGraph"
+      "command": "uvx",
+      "args": ["veritasgraph-mcp"]
     }
   }
 }
 ```
 
-Windsurf, Cline, and Continue use the same `command` / `args` / `cwd` shape.
+Or run `code --add-mcp '{"name":"veritasgraph","command":"uvx","args":["veritasgraph-mcp"]}'`.
+
+### OpenAI Codex CLI — `~/.codex/config.toml`
+
+```toml
+[mcp_servers.veritasgraph]
+command = "uvx"
+args = ["veritasgraph-mcp"]
+```
+
+### Gemini CLI — `~/.gemini/settings.json`
+
+```json
+{
+  "mcpServers": {
+    "veritasgraph": { "command": "uvx", "args": ["veritasgraph-mcp"] }
+  }
+}
+```
+
+### Continue — `~/.continue/config.yaml`
+
+```yaml
+mcpServers:
+  - name: veritasgraph
+    command: uvx
+    args: ["veritasgraph-mcp"]
+```
+
+### Docker (any client)
+
+```json
+{
+  "mcpServers": {
+    "veritasgraph": {
+      "command": "docker",
+      "args": ["run", "--rm", "-i", "-v", "veritasgraph:/data",
+               "-e", "OLLAMA_HOST=host.docker.internal:11434",
+               "ghcr.io/bibinprathap/veritasgraph-mcp"]
+    }
+  }
+}
+```
 
 ---
 

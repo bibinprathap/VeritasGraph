@@ -1,0 +1,12 @@
+# Smithery deployment: build the MCP image and serve Streamable HTTP on $PORT/mcp.
+# The image's entrypoint switches to HTTP when PORT is set (stdio otherwise).
+runtime: "container"
+build:
+  dockerfile: "veritasgraph_mcp/Dockerfile"
+  dockerBuildPath: "."
+startCommand:
+  type: "http"
+  configSchema:
+    type: "object"
+    properties: {}
+  exampleConfig: {}

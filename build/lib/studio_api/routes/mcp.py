@@ -27,7 +27,7 @@ from fastapi import APIRouter, Body, HTTPException, Query, Request
 
 from studio_api.security import caller_actor, caller_role
 from veritasgraph_mcp import __version__ as _MCP_VERSION
-from veritasgraph_mcp.server import VeritasGraphMCPServer
+from veritasgraph_mcp.server import LATEST_PROTOCOL_VERSION, VeritasGraphMCPServer
 from veritasgraph_mcp.tools import (
     RESOURCE_DEFINITIONS,
     ROLE_MODE,
@@ -83,9 +83,9 @@ async def mcp_info(request: Request) -> dict:
     return {
         "server": "veritasgraph-mcp",
         "version": _MCP_VERSION,
-        "protocolVersion": "2024-11-05",
+        "protocolVersion": LATEST_PROTOCOL_VERSION,
         "transport": "http-bridge",
-        "capabilities": {"tools": {}, "resources": {}},
+        "capabilities": {"tools": {}, "resources": {}, "prompts": {}},
         "mode": mode,
         "tool_count": len(public_tools(mode)),
         "resource_count": len(RESOURCE_DEFINITIONS),

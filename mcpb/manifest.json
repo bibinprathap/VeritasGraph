@@ -1,0 +1,119 @@
+{
+  "manifest_version": "0.3",
+  "name": "veritasgraph",
+  "display_name": "VeritasGraph",
+  "version": "0.3.0",
+  "description": "Zero-trust, air-gapped GraphRAG: citation-grounded answers from a local knowledge graph.",
+  "long_description": "VeritasGraph builds a knowledge graph from your documents with a local Ollama model and answers questions with multi-hop reasoning and verifiable [doc#chunk] citations. It abstains when the graph has no evidence, records an answer receipt for every response, and keeps all data on your machine.",
+  "author": {
+    "name": "Bibin Prathap",
+    "url": "https://github.com/bibinprathap"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bibinprathap/VeritasGraph"
+  },
+  "homepage": "https://bibinprathap.github.io/VeritasGraph/",
+  "documentation": "https://github.com/bibinprathap/VeritasGraph/blob/restored-main/veritasgraph_mcp/README.md",
+  "support": "https://github.com/bibinprathap/VeritasGraph/issues",
+  "icon": "icon.png",
+  "license": "MIT",
+  "keywords": ["graphrag", "knowledge-graph", "rag", "citations", "ollama", "offline", "air-gapped", "ontology"],
+  "server": {
+    "type": "python",
+    "entry_point": "server/main.py",
+    "mcp_config": {
+      "command": "python3",
+      "args": ["${__dirname}/server/main.py"],
+      "env": {
+        "PYTHONPATH": "${__dirname}/server/lib",
+        "VERITASGRAPH_MODEL": "${user_config.model}",
+        "OLLAMA_HOST": "${user_config.ollama_host}",
+        "VERITASGRAPH_MCP_MODE": "${user_config.mode}",
+        "STUDIO_DATA_DIR": "${user_config.data_dir}"
+      },
+      "platform_overrides": {
+        "win32": {
+          "command": "python"
+        }
+      }
+    }
+  },
+  "user_config": {
+    "model": {
+      "type": "string",
+      "title": "Ollama model",
+      "description": "Local model used for extraction and answers.",
+      "default": "qwen3:latest",
+      "required": false
+    },
+    "ollama_host": {
+      "type": "string",
+      "title": "Ollama host",
+      "description": "Address of the Ollama server.",
+      "default": "127.0.0.1:11434",
+      "required": false
+    },
+    "mode": {
+      "type": "string",
+      "title": "Tool mode",
+      "description": "Which tools to expose: read (query only), write (adds ingest and term proposals) or admin (adds import and clear).",
+      "default": "write",
+      "required": false
+    },
+    "data_dir": {
+      "type": "directory",
+      "title": "Data directory",
+      "description": "Where the knowledge graph is stored.",
+      "default": "${HOME}/.veritasgraph",
+      "required": false
+    }
+  },
+  "tools": [
+    {"name": "veritasgraph_check_answerable", "description": "Check whether the knowledge graph covers a question before asking it."},
+    {"name": "veritasgraph_query", "description": "Graph-grounded, multi-hop answer with [doc#chunk] citations and an answer_id receipt."},
+    {"name": "veritasgraph_search_entities", "description": "Retrieve the subgraph most relevant to a query without calling the LLM."},
+    {"name": "veritasgraph_get_entity", "description": "One entity with neighbours, source chunks and glossary terms."},
+    {"name": "veritasgraph_get_graph", "description": "The full knowledge graph: nodes, edges and stats."},
+    {"name": "veritasgraph_get_ontology", "description": "Entity types, predicates and glossary terms with their status."},
+    {"name": "veritasgraph_search_terms", "description": "Search the business glossary."},
+    {"name": "veritasgraph_get_term", "description": "One glossary term with definition, synonyms and linked entities."},
+    {"name": "veritasgraph_get_answer_receipt", "description": "Receipt for a previous answer: evidence, grounding and graph version."},
+    {"name": "veritasgraph_compile_status", "description": "Last ontology compile run and open curation suggestions."},
+    {"name": "veritasgraph_structured_search", "description": "Search the structured-data catalog. No SQL is run."},
+    {"name": "veritasgraph_structured_get_term", "description": "One structured-data business term."},
+    {"name": "veritasgraph_structured_list_measures", "description": "Named SQL measures with expression and review status."},
+    {"name": "veritasgraph_structured_ask", "description": "Answer from connected databases with one validated, read-only SQL query."},
+    {"name": "veritasgraph_ingest_document", "description": "Ingest a document into the knowledge graph with source-chunk provenance."},
+    {"name": "veritasgraph_import_graph", "description": "Import a pre-built graph (Graphify, Understand-Anything, AI Atlas or node/edge JSON)."},
+    {"name": "veritasgraph_propose_term", "description": "Propose a glossary term for admin certification."},
+    {"name": "veritasgraph_clear_graph", "description": "Clear the knowledge graph (a snapshot is taken first)."}
+  ],
+  "tools_generated": false,
+  "prompts": [
+    {
+      "name": "grounded_answer",
+      "description": "Answer a question only from the knowledge graph, citing [doc#chunk] sources.",
+      "arguments": ["question"],
+      "text": "Answer this question using only the VeritasGraph knowledge graph: ${arguments.question}\n\n1. Call veritasgraph_check_answerable. If it is not answerable, say so and stop.\n2. Call veritasgraph_query and quote its [doc#chunk] citations.\n3. If grounded is false or abstained is true, say the answer is unverified.\n4. End with the answer_id so the answer can be audited later."
+    },
+    {
+      "name": "verify_claim",
+      "description": "Check a statement against the knowledge graph and report supporting evidence.",
+      "arguments": ["claim"],
+      "text": "Verify this claim against the VeritasGraph knowledge graph: ${arguments.claim}\n\nUse veritasgraph_search_entities to find the entities involved, then veritasgraph_query to test the claim. Reply with one of SUPPORTED, CONTRADICTED or NOT IN GRAPH, followed by the [doc#chunk] citations that justify it. Do not use outside knowledge."
+    },
+    {
+      "name": "explore_entity",
+      "description": "Summarise an entity, its relationships and the sources behind them.",
+      "arguments": ["entity"],
+      "text": "Use veritasgraph_get_entity for \"${arguments.entity}\" and summarise what the knowledge graph says about it: its type, its most important relationships, any glossary terms linked to it, and the source chunks that back each fact."
+    }
+  ],
+  "compatibility": {
+    "platforms": ["darwin", "win32", "linux"],
+    "runtimes": {
+      "python": ">=3.10"
+    }
+  }
+}

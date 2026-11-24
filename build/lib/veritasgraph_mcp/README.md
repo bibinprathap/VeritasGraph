@@ -21,13 +21,27 @@ inspect entities — all **100% locally**, with **zero external data egress**.
 
 ## Tools
 
-| Tool | Purpose |
-|------|---------|
-| `veritasgraph_ingest_document` | Chunk a document, extract entities/relationships, merge into the graph. |
-| `veritasgraph_query` | Multi-hop, graph-grounded answer with citations and reasoning path. |
-| `veritasgraph_search_entities` | Fast subgraph retrieval for a query (no LLM call). |
-| `veritasgraph_get_graph` | Return the full graph: nodes, edges, stats. |
-| `veritasgraph_clear_graph` | Clear the entire graph (destructive). |
+Tools are tiered by `VERITASGRAPH_MCP_MODE` (`read`, `write` *(default)*,
+`admin`). Each tier includes the one below it.
+
+| Tier | Tool | Purpose |
+|------|------|---------|
+| read | `veritasgraph_check_answerable` | Whether the graph (and, in governed mode, the certified glossary) can answer a question, before spending a model call. |
+| read | `veritasgraph_query` | Multi-hop, graph-grounded answer with citations, reasoning path and an `answer_id` receipt. `mode`: `exploratory` or `governed`. |
+| read | `veritasgraph_search_entities` | Fast subgraph retrieval for a query (no LLM call). |
+| read | `veritasgraph_get_entity` | One entity with its relations and source chunks. |
+| read | `veritasgraph_get_graph` | The full graph: nodes, edges, stats. |
+| read | `veritasgraph_get_ontology` | Entity types, predicates and glossary terms with their status. |
+| read | `veritasgraph_search_terms` / `veritasgraph_get_term` | Search or fetch business-glossary terms. |
+| read | `veritasgraph_get_answer_receipt` | Replay a past answer by `answer_id`. |
+| read | `veritasgraph_compile_status` | Latest ontology-compile run and pending suggestions. |
+| read | `veritasgraph_structured_search` / `_get_term` / `_list_measures` / `_ask` | Governed semantic layer over SQL sources (needs the `structured` extra). |
+| write | `veritasgraph_ingest_document` | Chunk a document, extract entities/relationships, merge into the graph. |
+| write | `veritasgraph_import_graph` | Import a `graph.json` (Graphify, Understand-Anything, AI-Atlas, generic). |
+| write | `veritasgraph_propose_term` | Propose a glossary term for admin certification. |
+| admin | `veritasgraph_clear_graph` | Clear the graph (a snapshot is taken first). |
+
+Tools outside the active tier are hidden and return JSON-RPC `-32601`.
 
 ## Resources
 
@@ -35,6 +49,7 @@ inspect entities — all **100% locally**, with **zero external data egress**.
 |-----|-------------|
 | `veritasgraph://graph` | Live snapshot of the knowledge graph. |
 | `veritasgraph://stats` | Entity / relationship / source counts. |
+| `veritasgraph://ontology` | The governed vocabulary (types, predicates, terms). |
 
 ---
 
@@ -63,7 +78,10 @@ python -m veritasgraph_mcp --debug    # verbose logging on stderr
 |----------|---------|---------|
 | `VERITASGRAPH_MODEL` | `qwen3:latest` | Default Ollama model for ingest/query. |
 | `OLLAMA_HOST` | `127.0.0.1:11434` | Local Ollama endpoint. |
-| `STUDIO_DATA_DIR` | `studio_api/data` | Where the graph snapshot is persisted. |
+| `VERITASGRAPH_MCP_MODE` | `write` | Tool tier: `read`, `write` or `admin`. Use `read` for untrusted clients. |
+| `STUDIO_DATA_DIR` | `studio_api/data` | Data directory. |
+| `VERITASGRAPH_DB` | `$STUDIO_DATA_DIR/veritasgraph.db` | SQLite graph store shared with Studio and the CLI. |
+| `VERITASGRAPH_PII_POLICY` | `tag` | `off`, `tag`, `redact_before_extract` or `reject`. |
 
 ---
 
@@ -182,6 +200,6 @@ current graph snapshot.
 
 The MCP server is a thin protocol adapter. All graph construction, multi-hop
 retrieval, and citation logic live in
-[`studio_api/graphrag_engine.py`](../studio_api/graphrag_engine.py), the same
+[`studio_api/graphrag_engine.py`](https://github.com/bibinprathap/VeritasGraph/blob/restored-main/studio_api/graphrag_engine.py), the same
 engine that powers Studio. That means the MCP surface, the Studio UI, and the
 HTTP API all read and write the **same** local knowledge graph.

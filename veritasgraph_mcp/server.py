@@ -32,11 +32,28 @@ from veritasgraph_mcp.tools import (  # noqa: E402
     current_mode,
     effective_mode,
     handle_resource_read,
+    public_prompts,
     public_tools,
+    render_prompt,
     tool_allowed,
 )
 
 log = logging.getLogger("veritasgraph.mcp.server")
+
+# Newest first; the first entry is offered when a client asks for a version we
+# do not know.
+SUPPORTED_PROTOCOL_VERSIONS = ("2025-11-25", "2025-06-18", "2025-03-26", "2024-11-05")
+LATEST_PROTOCOL_VERSION = SUPPORTED_PROTOCOL_VERSIONS[0]
+
+ICON_URL = "https://raw.githubusercontent.com/bibinprathap/VeritasGraph/restored-main/assets/veritasgraph-logo.png"
+
+SERVER_INFO = {
+    "name": "veritasgraph-mcp",
+    "title": "VeritasGraph",
+    "version": __version__,
+    "websiteUrl": "https://bibinprathap.github.io/VeritasGraph/",
+    "icons": [{"src": ICON_URL, "mimeType": "image/png", "sizes": ["512x512"]}],
+}
 
 # JSON-RPC error codes
 _PARSE_ERROR = -32700
@@ -62,11 +79,17 @@ def _err(request_id: Any, code: int, message: str, data: Any = None) -> dict:
 # --------------------------------------------------------------------------- #
 # Method handlers
 # --------------------------------------------------------------------------- #
-def _handle_initialize(req_id: Any, _params: dict) -> dict:
+def _handle_initialize(req_id: Any, params: dict) -> dict:
+    requested = params.get("protocolVersion")
+    version = requested if requested in SUPPORTED_PROTOCOL_VERSIONS else LATEST_PROTOCOL_VERSION
     return _ok(req_id, {
-        "protocolVersion": "2024-11-05",
-        "capabilities": {"tools": {}, "resources": {}},
-        "serverInfo": {"name": "veritasgraph-mcp", "version": __version__},
+        "protocolVersion": version,
+        "capabilities": {
+            "tools": {"listChanged": False},
+            "resources": {"listChanged": False, "subscribe": False},
+            "prompts": {"listChanged": False},
+        },
+        "serverInfo": SERVER_INFO,
         "instructions": SERVER_INSTRUCTIONS,
     })
 
@@ -75,25 +98,48 @@ def _handle_tools_list(req_id: Any, _params: dict) -> dict:
     return _ok(req_id, {"tools": public_tools(current_mode())})
 
 
+def _tool_result(result: Any, is_error: bool) -> dict:
+    out: dict = {
+        "content": [{"type": "text", "text": json.dumps(result, ensure_ascii=False)}],
+        "isError": is_error,
+    }
+    if isinstance(result, dict):
+        out["structuredContent"] = result
+    return out
+
+
 def _handle_tools_call(req_id: Any, params: dict) -> dict:
     name = params.get("name", "")
-    args = params.get("arguments", {}) or {}
+    args = params.get("arguments") or {}
 
     handler = TOOL_HANDLERS.get(name)
     # A tool above the current mode is reported exactly like an unknown one.
     if handler is None or not tool_allowed(name):
         return _err(req_id, _METHOD_NOT_FOUND, f"Unknown tool: {name}")
+    if not isinstance(args, dict):
+        return _err(req_id, _INVALID_PARAMS, "arguments must be an object")
 
     try:
         result = handler(args)
-    except Exception as exc:  # noqa: BLE001
+    except Exception as exc:  # noqa: BLE001 - tool failures are results, not protocol errors
         log.exception("Tool %s raised", name)
-        return _err(req_id, _INTERNAL_ERROR, str(exc))
+        return _ok(req_id, _tool_result({"error": f"{type(exc).__name__}: {exc}"}, True))
 
-    return _ok(req_id, {
-        "content": [{"type": "text", "text": json.dumps(result, ensure_ascii=False)}],
-        "isError": isinstance(result, dict) and "error" in result,
-    })
+    return _ok(req_id, _tool_result(result, isinstance(result, dict) and "error" in result))
+
+
+def _handle_prompts_list(req_id: Any, _params: dict) -> dict:
+    return _ok(req_id, {"prompts": public_prompts()})
+
+
+def _handle_prompts_get(req_id: Any, params: dict) -> dict:
+    name = params.get("name", "")
+    try:
+        return _ok(req_id, render_prompt(name, params.get("arguments") or {}))
+    except KeyError:
+        return _err(req_id, _INVALID_PARAMS, f"Unknown prompt: {name}")
+    except ValueError as exc:
+        return _err(req_id, _INVALID_PARAMS, str(exc))
 
 
 def _handle_resources_list(req_id: Any, _params: dict) -> dict:
@@ -124,6 +170,8 @@ _DISPATCH = {
     "tools/call": _handle_tools_call,
     "resources/list": _handle_resources_list,
     "resources/read": _handle_resources_read,
+    "prompts/list": _handle_prompts_list,
+    "prompts/get": _handle_prompts_get,
     "ping": _handle_ping,
 }
 
@@ -196,11 +244,33 @@ def _write(obj: Any) -> None:
 
 def main() -> None:
     import argparse
+    import os
 
     parser = argparse.ArgumentParser(description="VeritasGraph MCP Server")
+    parser.add_argument("--version", action="version", version=f"veritasgraph-mcp {__version__}")
     parser.add_argument("--debug", action="store_true", help="Enable debug logging")
+    parser.add_argument(
+        "--transport", choices=("stdio", "http"),
+        default=os.getenv("VERITASGRAPH_MCP_TRANSPORT", "stdio"),
+        help="stdio (default) or Streamable HTTP",
+    )
+    parser.add_argument("--host", default=os.getenv("VERITASGRAPH_MCP_HOST", "127.0.0.1"),
+                        help="HTTP bind address (default 127.0.0.1)")
+    parser.add_argument("--port", type=int, default=int(os.getenv("VERITASGRAPH_MCP_PORT", "8765")),
+                        help="HTTP port (default 8765)")
+    parser.add_argument("--path", default="/mcp", help="HTTP endpoint path (default /mcp)")
     args = parser.parse_args()
-    VeritasGraphMCPServer(debug=args.debug).run()
+    # Installed copies (pip/uvx/MCPB) would otherwise keep the graph inside the
+    # package directory, which uvx may discard; use ~/.veritasgraph instead.
+    if not (os.getenv("STUDIO_DATA_DIR") or os.getenv("VERITASGRAPH_DB") or (_REPO_ROOT / ".git").exists()):
+        os.environ["STUDIO_DATA_DIR"] = str(Path.home() / ".veritasgraph")
+    server = VeritasGraphMCPServer(debug=args.debug)
+    if args.transport == "http":
+        from veritasgraph_mcp.http_transport import serve
+
+        serve(server, host=args.host, port=args.port, path=args.path)
+    else:
+        server.run()
 
 
 if __name__ == "__main__":

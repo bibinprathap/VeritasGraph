@@ -39,8 +39,18 @@ _VIEWER_POSTS = frozenset(
         "/graphrag/query",
         "/graphrag/answerable",
         "/playground/chat",
+        "/structured/search",
+        "/structured/ask",
     }
 )
+
+
+def _structured_role(method: str, path: str) -> str:
+    if method == "DELETE" or path.endswith(("/certify", "/deprecate")) or path == "/structured/reindex":
+        return "admin"
+    if method in {"GET", "HEAD", "OPTIONS"} or path in _VIEWER_POSTS:
+        return "viewer"
+    return "editor"
 
 
 @lru_cache(maxsize=1)
@@ -90,6 +100,8 @@ def required_role(method: str, path: str) -> str:
     with very different blast radius.
     """
     method = method.upper()
+    if path.startswith("/structured"):
+        return _structured_role(method, path)
     if method in {"GET", "HEAD", "OPTIONS"} or path in _VIEWER_POSTS:
         return "viewer"
     if path.startswith("/mcp/"):

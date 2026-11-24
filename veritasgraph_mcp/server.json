@@ -1,19 +1,28 @@
 {
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "io.github.bibinprathap/veritasgraph",
+  "title": "VeritasGraph",
   "description": "Zero-trust, air-gapped Enterprise GraphRAG MCP server with offline, citation-grounded answers.",
   "repository": {
     "url": "https://github.com/bibinprathap/VeritasGraph",
     "source": "github"
   },
-  "version": "0.2.0",
+  "version": "0.3.0",
   "websiteUrl": "https://bibinprathap.github.io/VeritasGraph/",
+  "icons": [
+    {
+      "src": "https://raw.githubusercontent.com/bibinprathap/VeritasGraph/restored-main/assets/veritasgraph-logo.png",
+      "mimeType": "image/png",
+      "sizes": ["512x512"]
+    }
+  ],
   "packages": [
     {
       "registryType": "pypi",
       "registryBaseUrl": "https://pypi.org",
       "identifier": "veritasgraph-mcp",
-      "version": "0.2.0",
+      "version": "0.3.0",
+      "runtimeHint": "uvx",
       "transport": {
         "type": "stdio"
       },
@@ -51,6 +60,32 @@
           "description": "PII handling on ingest: off, tag, redact_before_extract or reject.",
           "isRequired": false,
           "default": "tag"
+        }
+      ]
+    },
+    {
+      "registryType": "oci",
+      "identifier": "ghcr.io/bibinprathap/veritasgraph-mcp:0.3.0",
+      "transport": {
+        "type": "stdio"
+      },
+      "environmentVariables": [
+        {
+          "name": "VERITASGRAPH_MCP_MODE",
+          "description": "Tool tier exposed to the client: read, write or admin.",
+          "isRequired": false,
+          "default": "read"
+        },
+        {
+          "name": "OLLAMA_HOST",
+          "description": "Ollama endpoint reachable from the container (e.g. host.docker.internal:11434).",
+          "isRequired": false
+        },
+        {
+          "name": "VERITASGRAPH_MODEL",
+          "description": "Default Ollama model for ingest/query.",
+          "isRequired": false,
+          "default": "qwen3:latest"
         }
       ]
     }

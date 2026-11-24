@@ -13,7 +13,7 @@ import time
 from enum import Enum
 from typing import Any, Dict, List, Literal, Optional
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 
 
 # --------------------------------------------------------------------------- #
@@ -308,4 +308,55 @@ class GraphImportRequest(BaseModel):
     origin_version: Optional[str] = Field(
         default=None, description="Optional source version/commit to preserve."
     )
+
+
+# --------------------------------------------------------------------------- #
+# Structured data
+# --------------------------------------------------------------------------- #
+class ConnectionOptions(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    schemas: List[str] = Field(default_factory=list, max_length=50)
+    exclude_schemas: List[str] = Field(default_factory=list, max_length=50)
+
+
+class ConnectionCreate(BaseModel):
+    name: str = Field(min_length=1, max_length=120, pattern=r"^[A-Za-z0-9_.-]+$")
+    dsn: str = Field(min_length=8, max_length=2000)
+    options: ConnectionOptions = Field(default_factory=ConnectionOptions)
+
+
+class FieldRoleUpdate(BaseModel):
+    role: Literal["id", "measure", "dimension", "time", "text", "other"]
+
+
+class StructuredTermRequest(BaseModel):
+    name: str = Field(min_length=1, max_length=120)
+    definition: str = Field(default="", max_length=2000)
+    synonyms: List[str] = Field(default_factory=list, max_length=20)
+    dataset_ids: List[str] = Field(default_factory=list, max_length=50)
+
+
+class RelationshipCreate(BaseModel):
+    from_field_id: str = Field(max_length=32)
+    to_field_id: str = Field(max_length=32)
+
+
+class MeasureRequest(BaseModel):
+    name: str = Field(min_length=1, max_length=120)
+    expression: str = Field(min_length=1, max_length=2000)
+    dataset_id: str = Field(max_length=32)
+    description: str = Field(default="", max_length=2000)
+    grain: Optional[str] = Field(default=None, max_length=500)
+
+
+class StructuredSearchRequest(BaseModel):
+    query: str = Field(min_length=1, max_length=500)
+    kinds: List[Literal["term", "measure", "dataset", "field"]] = Field(default_factory=list)
+    k: int = Field(default=10, ge=1, le=50)
+
+
+class StructuredAskRequest(BaseModel):
+    question: str = Field(min_length=3, max_length=2000)
+    mode: Literal["exploratory", "governed"] = "exploratory"
+    connection_id: Optional[str] = Field(default=None, max_length=32)
 

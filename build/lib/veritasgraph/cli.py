@@ -110,6 +110,51 @@ def _cmd_import(args: argparse.Namespace) -> int:
     return 0
 
 
+def _cmd_structured(args: argparse.Namespace) -> int:
+    from veritasgraph.structured import service, worker
+    from veritasgraph.structured.store import db
+
+    if args.action == "migrate":
+        db.upgrade()
+        print("vg_structured is up to date")
+        return 0
+    if not service.enabled():
+        print("Set VG_STRUCTURED_DSN first.", file=sys.stderr)
+        return 2
+    if args.action == "status":
+        print(json.dumps(service.status(), indent=2, default=str))
+        return 0
+    if args.action == "ask":
+        print(
+            json.dumps(
+                service.ask(
+                    args.target,
+                    actor="cli",
+                    role="admin",
+                    mode=args.mode,
+                    connection_id=args.connection,
+                ),
+                indent=2,
+                default=str,
+            )
+        )
+        return 0
+    names = {c["name"]: c["id"] for c in service.list_connections()}
+    conn_id = names.get(args.target) if args.action != "reindex" else None
+    if args.action != "reindex" and conn_id is None:
+        print(f"Unknown connection {args.target!r}. Known: {', '.join(names) or 'none'}", file=sys.stderr)
+        return 2
+    job_id = worker.enqueue(args.action, "cli", conn_id)
+    job = worker._claim()
+    if job is None:
+        print("No queued job found.", file=sys.stderr)
+        return 2
+    stats = worker._run(job)
+    worker._finish(job_id, {"status": "done", "stats": stats})
+    print(json.dumps(stats, indent=2, default=str))
+    return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="veritasgraph", description=__doc__)
     sub = parser.add_subparsers(dest="command", required=True)
@@ -148,6 +193,13 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--actor", default="cli")
     p.add_argument("--dry-run", action="store_true", help="report what would change; write nothing")
     p.set_defaults(func=_cmd_import)
+
+    p = sub.add_parser("structured", help="structured-data layer (needs the structured extra)")
+    p.add_argument("action", choices=["migrate", "status", "sync", "compile", "reindex", "ask"])
+    p.add_argument("target", nargs="?", default="", help="connection name (sync/compile) or question (ask)")
+    p.add_argument("--mode", default="exploratory", choices=["exploratory", "governed"])
+    p.add_argument("--connection", default=None, help="connection id for ask")
+    p.set_defaults(func=_cmd_structured)
     return parser
 
 
