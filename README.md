@@ -455,6 +455,10 @@ curl -s -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/json" \
 | **Public demo link** | [`scripts/start-studio-with-tunnel.sh`](scripts/start-studio-with-tunnel.sh): Studio behind a Cloudflare tunnel, reusing the admin token in `.studio-api-token`. [`scripts/install-studio-service.sh`](scripts/install-studio-service.sh) installs it as a service. |
 | **Azure (serverless MCP)** | See the [Azure production use case](#-mcp-server). |
 
+### DevOps hands-on learning path
+
+The [DevOps hands-on runbook](devops.md) turns VeritasGraph into a practical, staged learning environment—from a two-machine home lab (Windows/WSL Studio with Ollama on a separate GPU host) to a later hybrid-cloud deployment. It covers Linux and networking fundamentals, reproducible deployments, Docker, CI/CD, Ansible, Terraform, Kubernetes, GitOps, observability, security, backup and recovery through a 25-class curriculum. The runbook emphasizes private-by-default services, synthetic data, controlled failure exercises, and evidence-based release gates; cloud and advanced deployment steps are explicitly marked for rehearsal rather than presented as already-provisioned infrastructure.
+
 <details>
 <summary><b>Share with your team (free)</b></summary>
 
