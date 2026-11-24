@@ -54,26 +54,19 @@ def _pick_fallback(available: list[str]) -> str | None:
 
 
 def _resolve_model(requested: str, available: list[str]) -> tuple[str, str | None]:
-    """Return (model_to_use, note).
+    """Preserve explicitly assigned agent models.
 
-    Agents store their model in ``kind``. Seed agents use role names
-    (``orchestrator``) and older drafts may reference models that were never
-    pulled. Rather than 404, transparently fall back to an installed model and
-    report what happened so the UI can surface it.
+    The playground should send the stored agent model as-is. Falling back in
+    this function makes synthetic/test models disappear and can also replace
+    a valid model when Ollama discovery is unavailable.
     """
-    if requested and requested in available:
+    if requested:
         return requested, None
+
     fallback = _pick_fallback(available)
     if fallback is None:
-        # No local runtime / no models — keep the request so the caller emits a
-        # clear "pull it first" or 503 message.
         return requested, None
-    if not requested:
-        return fallback, f"Agent has no model set — running on '{fallback}'."
-    return (
-        fallback,
-        f"Model '{requested}' is not installed — running on '{fallback}'.",
-    )
+    return fallback, f"Agent has no model set — running on '{fallback}'."
 
 
 @playground_router.post("/chat")

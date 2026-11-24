@@ -223,7 +223,7 @@ class Orchestrator:
         registered: List[Dict[str, str]] = []
         seen_endpoints: set = set()
         for tool in self.store.list_resources("tools"):
-            if tool.status == "disabled":
+            if tool.status == "disabled" and not profile:
                 continue
             if wanted and tool.id not in wanted:
                 continue
@@ -235,37 +235,13 @@ class Orchestrator:
                 {
                     "name": tool.name,
                     "kind": tool.kind or "read",
+                    "status": tool.status,
                     "endpoint": endpoint,
                     "config": dict(tool.config or {}),
                 }
             )
             if endpoint:
                 seen_endpoints.add(endpoint)
-
-        # Always make the local VeritasGraph MCP tools available when tools are on.
-        # They are reliable, loopback, and citation-grounded, so an agent's tool
-        # profile should never accidentally starve them (fixes existing snapshots
-        # whose profiles predate the MCP bridge).
-        for tool in self.store.list_resources("tools"):
-            if tool.status == "disabled":
-                continue
-            endpoint = str((tool.config or {}).get("endpoint") or "").strip()
-            if not endpoint or endpoint in seen_endpoints:
-                continue
-            if "/mcp/tools/veritasgraph_" not in endpoint:
-                continue
-            if not self._is_loopback(endpoint):
-                continue
-            names.append(tool.name)
-            registered.append(
-                {
-                    "name": tool.name,
-                    "kind": tool.kind or "read",
-                    "endpoint": endpoint,
-                    "config": dict(tool.config or {}),
-                }
-            )
-            seen_endpoints.add(endpoint)
 
         if _truthy(cfg.get("use_graph")) and "Knowledge Graph" not in names:
             names.append("Knowledge Graph")
@@ -278,8 +254,8 @@ class Orchestrator:
 
     @staticmethod
     def _is_llm_graph_answer(endpoint: str) -> bool:
-        """True for tools that run an LLM-backed, graph-grounded answer."""
-        return endpoint.endswith("/graphrag/query") or "/mcp/tools/veritasgraph_query" in endpoint
+        """True for MCP/query tools that would add an extra LLM pass."""
+        return "/mcp/tools/veritasgraph_query" in endpoint
 
     @staticmethod
     def _has_graph_tool(tools: Dict[str, Any]) -> bool:
@@ -340,7 +316,16 @@ class Orchestrator:
         reachable: List[Dict[str, str]] = []
         skipped_tools: List[Dict[str, Any]] = []
         for tool in registered:
-            if self._is_loopback(tool["endpoint"]) or allow_external:
+            if tool.get("status") == "disabled":
+                skipped_tools.append(
+                    {
+                        "tool": tool["name"],
+                        "status": "skipped",
+                        "endpoint": tool["endpoint"],
+                        "reason": "tool is disabled",
+                    }
+                )
+            elif self._is_loopback(tool["endpoint"]) or allow_external:
                 reachable.append(tool)
             else:
                 skipped_tools.append(
@@ -449,13 +434,18 @@ class Orchestrator:
                 )
                 invoked += 1
 
+        # Keep skipped decisions visible in both the dedicated skipped_tools
+        # list and errors, since skip/error consumers use either representation.
+        visible_errors = list(errors) + [
+            dict(item) for item in skipped_tools
+        ]
         return {
             "invoked": invoked,
             "succeeded": len(results),
             "failed": len(errors),
             "skipped": len(skipped_tools),
             "results": results,
-            "errors": errors,
+            "errors": visible_errors,
             "skipped_tools": skipped_tools,
         }
 
