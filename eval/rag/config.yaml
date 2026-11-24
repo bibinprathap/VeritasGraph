@@ -1,0 +1,97 @@
+# Pinned, reproducible configuration for the VeritasGraph RAG evaluation harness.
+# Every table cell in the paper (III/IV/V) must be reproducible from this file.
+# Cited verbatim by the manuscript "Reproducibility" subsection.
+
+seeds: [13, 21, 42]
+
+generation:
+  # One generation model shared by ALL three systems for a fair comparison.
+  # Use the 12k-context Modelfile variant the manuscript describes; fall back to
+  # a locally-available tag for smoke runs.
+  model_tag: "llama3.1-12k"
+  temperature: 0.0
+  # Maximum new tokens for an answer (kept modest for QA; raised for QFS at runtime).
+  num_predict: 512
+
+embedding:
+  model_tag: "nomic-embed-text"
+
+retrieval:
+  # Per-system retrieval budget. Documented here so no hand-tuning happens
+  # between systems at run time.
+  naive:
+    top_k: 8
+  veritasgraph:
+    max_depth: 2
+    max_nodes: 25
+  msrag:
+    commit: "PINNED_COMMIT_SHA"   # pin microsoft/graphrag before the real run
+    search: "global"
+
+judge:
+  # The LLM-as-judge used for Comprehensiveness, Diversity, and Citation
+  # Faithfulness. Pinned + temperature 0 for determinism; its tag is reported
+  # in the paper as an anti-gaming disclosure.
+  model_tag: "llama3.1-12k"
+  temperature: 0.0
+
+datasets:
+  hotpotqa:
+    # HotpotQA distractor dev set; deterministic subsample of `limit` items.
+    path: "data/hotpot_dev_distractor_v1.json"
+    limit: 500
+  behindthetech:
+    # "Behind the Tech with Kevin Scott" transcript corpus (MSRAG's benchmark).
+    path: "data/behind_the_tech/"
+    limit: null
+
+output:
+  metrics_dir: "results/rag/metrics"
+  tables_dir: "results/rag/tables"
+  raw_dir: "results/rag/raw"
+
+# --------------------------------------------------------------------------- #
+# Full benchmark run (python -m eval.rag.experiment); see eval/rag/experiment.py
+# --------------------------------------------------------------------------- #
+experiment:
+  # Local Ollama endpoint used for every LLM and embedding call (a dedicated
+  # server started with OLLAMA_NUM_PARALLEL=4; override with RAG_OLLAMA_URL).
+  ollama_url: "http://127.0.0.1:11434"
+  concurrency: 4
+  work_dir: "data/eval_index"          # indexes + extraction caches (not committed)
+  hotpotqa_parquet: "data/eval_downloads/hotpot_distractor_validation.parquet"
+  # Questions sampled per seed from the 7,405 distractor-dev questions. The
+  # retrieval corpus is the union of the context paragraphs of all sampled
+  # questions, shared by every system (open-corpus setting).
+  hotpotqa_n_per_seed: 100
+  hotpotqa_answer_instruction: >-
+    Answer with a short phrase of a few words only, then cite the source id(s)
+    you used in square brackets.
+  qfs_num_predict: 1024
+  dense_seed_top_k: 8                  # veritasgraph_dense ablation only
+  msrag:
+    chunk_size: 600                    # tokens, as in the MSRAG podcast setup
+    chunk_overlap: 100
+    max_gleanings: 0                   # VeritasGraph also uses a single pass
+    community_level: 1
+    response_type_qa: "a short phrase of a few words"
+    response_type_qfs: "multiple paragraphs"
+  # Global sensemaking questions for the Behind the Tech corpus, fixed before
+  # any system was run (same class as the MSRAG paper's activity-centred queries).
+  qfs_queries:
+    - "What are the main themes discussed across the podcast episodes?"
+    - "How do the guests describe the relationship between artificial intelligence and society?"
+    - "What recurring concerns about the risks of technology do the guests raise?"
+    - "What different perspectives on innovation and how it happens are presented?"
+    - "How do the guests describe their paths into computing and technology careers?"
+    - "What views on education and learning to code are expressed across the episodes?"
+    - "How do the guests talk about the role of open source and developer communities?"
+    - "What do the guests say about the future of software development?"
+    - "What ethical responsibilities of technologists are discussed?"
+    - "How is the role of research labs versus product teams described?"
+    - "What lessons about leadership and building teams do the guests share?"
+    - "How do the guests describe the impact of technology on healthcare and science?"
+    - "What do the guests say about access to technology and the digital divide?"
+    - "How are hardware, chips, and computing infrastructure discussed across episodes?"
+    - "What role do creativity and the arts play in the conversations about technology?"
+    - "How do the guests describe failures, setbacks, and what they learned from them?"

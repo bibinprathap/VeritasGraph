@@ -201,7 +201,8 @@ floorplan-kg/backend/.venv/*
 floorplan-kg/backend/app/__pycache__/*
 eb1a/VeritasGraph-Ecosystem-EB1A-and-Marketing-Plan.md
 veritasgraph_video_script.md
-eval/*
+eval/__pycache__/*
+eval/**/__pycache__/*
 MedTrust Agent/tests/__pycache__/*
 tests/rag/__pycache__/*
 MedTrust Agent/__pycache__/*
