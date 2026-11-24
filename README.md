@@ -11,6 +11,13 @@
 [![GitHub Stars](https://img.shields.io/github/stars/bibinprathap/VeritasGraph?style=social)](https://github.com/bibinprathap/VeritasGraph)
 [![MCPVault: claimed](https://mcpvault.io/badge/veritasgraph.svg)](https://mcpvault.io/servers/veritasgraph/health?utm_source=external_badge&utm_medium=referral&utm_campaign=mcp_health_report)
 [![M8ven Score](https://m8ven.ai/badge/mcp/bibinprathap/veritasgraph)](https://m8ven.ai/mcp/bibinprathap/veritasgraph?s=readme)
+[![PyPI: veritasgraph-mcp](https://img.shields.io/pypi/v/veritasgraph-mcp?label=veritasgraph-mcp)](https://pypi.org/project/veritasgraph-mcp/)
+[![MCP Registry](https://img.shields.io/badge/MCP%20Registry-io.github.bibinprathap%2Fveritasgraph-blue)](https://registry.modelcontextprotocol.io/v0/servers?search=io.github.bibinprathap/veritasgraph)
+
+[![Install in VS Code](https://img.shields.io/badge/VS_Code-Install_MCP_server-0098FF?logo=visualstudiocode&logoColor=white)](https://insiders.vscode.dev/redirect/mcp/install?name=veritasgraph&config=%7B%22command%22%3A%22uvx%22%2C%22args%22%3A%5B%22veritasgraph-mcp%22%5D%7D)
+[![Install in VS Code Insiders](https://img.shields.io/badge/VS_Code_Insiders-Install_MCP_server-24bfa5?logo=visualstudiocode&logoColor=white)](https://insiders.vscode.dev/redirect/mcp/install?name=veritasgraph&config=%7B%22command%22%3A%22uvx%22%2C%22args%22%3A%5B%22veritasgraph-mcp%22%5D%7D&quality=insiders)
+[![Install in Cursor](https://cursor.com/deeplink/mcp-install-dark.svg)](https://cursor.com/en/install-mcp?name=veritasgraph&config=eyJjb21tYW5kIjoidXZ4IiwiYXJncyI6WyJ2ZXJpdGFzZ3JhcGgtbWNwIl19)
+[![Claude Desktop extension](https://img.shields.io/badge/Claude_Desktop-Download_.mcpb-D97757)](https://github.com/bibinprathap/VeritasGraph/releases/latest)
 
 > **🎯 Traditional RAG guesses based on similarity. VeritasGraph reasons based on structure — and refuses to answer when the evidence isn't there.**
 
@@ -95,11 +102,11 @@ Studio is published on `127.0.0.1:8200` only.
 ### Option C — MCP server for your IDE agent
 
 ```bash
-pip install -e .
-VERITASGRAPH_MCP_MODE=read python -m veritasgraph_mcp     # or: veritasgraph mcp
+uvx veritasgraph-mcp                                       # from PyPI, nothing to clone
+claude mcp add veritasgraph -- uvx veritasgraph-mcp       # Claude Code
 ```
 
-See [MCP server](#-mcp-server) for IDE registration.
+See [MCP server](#-mcp-server) for one-click installs and every client's config.
 
 ### One-command end-to-end demo
 
@@ -304,11 +311,19 @@ More controls:
 
 ## 🔌 MCP server
 
-VeritasGraph ships a [Model Context Protocol](https://modelcontextprotocol.io/) server: *a zero-trust, air-gapped enterprise GraphRAG server for MCP.* Claude Desktop, Cursor, VS Code, Windsurf, Cline and Continue connect over JSON-RPC 2.0 stdio with **zero external data egress**.
+VeritasGraph ships a [Model Context Protocol](https://modelcontextprotocol.io/) server: *a zero-trust, air-gapped enterprise GraphRAG server for MCP.* Claude Desktop, Claude Code, Cursor, VS Code, Windsurf, Cline, Continue, Codex and Gemini CLI connect over stdio (or Streamable HTTP) with **zero external data egress**. It is listed in the [official MCP Registry](https://registry.modelcontextprotocol.io/v0/servers?search=io.github.bibinprathap/veritasgraph) as `io.github.bibinprathap/veritasgraph`.
 
-```bash
-VERITASGRAPH_MCP_MODE=read python -m veritasgraph_mcp
-```
+| Install with | Command / link |
+|---|---|
+| uv (any client) | `uvx veritasgraph-mcp` |
+| pip | `pip install veritasgraph-mcp && veritasgraph-mcp` |
+| Docker | `docker run --rm -i -v veritasgraph:/data ghcr.io/bibinprathap/veritasgraph-mcp` |
+| Claude Code | `claude mcp add veritasgraph -- uvx veritasgraph-mcp` |
+| Claude Desktop | Download `veritasgraph-mcp-*.mcpb` from the [latest release](https://github.com/bibinprathap/VeritasGraph/releases/latest) and open it |
+| VS Code / Cursor | Use the install badges at the top of this page |
+| From a clone | `VERITASGRAPH_MCP_MODE=read python -m veritasgraph_mcp` |
+
+The server also offers three prompts (`grounded_answer`, `verify_claim`, `explore_entity`), tool annotations (read-only / destructive hints) and structured output for `check_answerable` and `query`.
 
 | Mode | Tools exposed (all prefixed `veritasgraph_`) |
 |------|-----------------------------------------------|
@@ -318,7 +333,7 @@ VERITASGRAPH_MCP_MODE=read python -m veritasgraph_mcp
 
 Resources: `veritasgraph://graph`, `veritasgraph://stats`, `veritasgraph://ontology`. Tools that aren't in the active mode are reported as unknown tools.
 
-See [`veritasgraph_mcp/README.md`](veritasgraph_mcp/README.md) for Claude Desktop, Cursor and VS Code registration snippets.
+See [`veritasgraph_mcp/README.md`](veritasgraph_mcp/README.md) for every client's config, the HTTP transport and environment variables.
 
 <details>
 <summary><b>🏥 Use case — VeritasGraph MCP in production medical AI on Azure</b></summary>
@@ -454,10 +469,6 @@ curl -s -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/json" \
 | **On-prem stack** | [`deploy/docker-compose.onprem.yml`](deploy/docker-compose.onprem.yml): pgvector semantic store, Studio via `veritasgraph serve`, `ollama` / `vllm` profiles and a `test-engines` profile with sample databases. |
 | **Public demo link** | [`scripts/start-studio-with-tunnel.sh`](scripts/start-studio-with-tunnel.sh): Studio behind a Cloudflare tunnel, reusing the admin token in `.studio-api-token`. [`scripts/install-studio-service.sh`](scripts/install-studio-service.sh) installs it as a service. |
 | **Azure (serverless MCP)** | See the [Azure production use case](#-mcp-server). |
-
-### DevOps hands-on learning path
-
-The [DevOps hands-on runbook](devops.md) turns VeritasGraph into a practical, staged learning environment—from a two-machine home lab (Windows/WSL Studio with Ollama on a separate GPU host) to a later hybrid-cloud deployment. It covers Linux and networking fundamentals, reproducible deployments, Docker, CI/CD, Ansible, Terraform, Kubernetes, GitOps, observability, security, backup and recovery through a 25-class curriculum. The runbook emphasizes private-by-default services, synthetic data, controlled failure exercises, and evidence-based release gates; cloud and advanced deployment steps are explicitly marked for rehearsal rather than presented as already-provisioned infrastructure.
 
 <details>
 <summary><b>Share with your team (free)</b></summary>
