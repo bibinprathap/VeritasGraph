@@ -85,6 +85,16 @@ require_cmd curl
 require_cmd cloudflared
 require_cmd flock
 
+# If no explicit token is provided, try using the stored GitHub CLI token for
+# the repository owner account. This keeps restart-time pushes non-interactive.
+if [ -z "${GITHUB_TOKEN:-}" ] && command -v gh >/dev/null 2>&1; then
+    GH_TOKEN_ACCOUNT="${GITHUB_TOKEN_ACCOUNT:-bibinprathap}"
+    GH_TOKEN_FALLBACK="$(gh auth token -u "$GH_TOKEN_ACCOUNT" 2>/dev/null || true)"
+    if [ -n "$GH_TOKEN_FALLBACK" ]; then
+        export GITHUB_TOKEN="$GH_TOKEN_FALLBACK"
+    fi
+fi
+
 if [ ! -x "$UVICORN_BIN" ]; then
     error "uvicorn not found or not executable: $UVICORN_BIN"
     exit 1
