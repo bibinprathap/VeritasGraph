@@ -254,7 +254,7 @@ HTMLEOF
         error "Failed to switch to publish branch '$GITHUB_BRANCH' (current: '$CURRENT_BRANCH')."
         return 1
     fi
-    git pull origin "$GITHUB_BRANCH" --rebase || warn "Initial rebase onto origin/${GITHUB_BRANCH} reported an issue; will retry on push if needed."
+    git pull origin "$GITHUB_BRANCH" --rebase --autostash || warn "Initial rebase onto origin/${GITHUB_BRANCH} reported an issue; will retry on push if needed."
 
     git add "$REDIRECT_FILE_PATH"
     if git diff --cached --quiet; then
@@ -280,7 +280,7 @@ HTMLEOF
         # Only retry on a rejected (non-fast-forward) push; rebase then loop.
         if [ "$attempt" -eq 1 ] && echo "$push_output" | grep -qiE 'rejected|non-fast-forward|fetch first'; then
             warn "Push rejected (remote moved ahead); rebasing and retrying..."
-            if ! git pull origin "$GITHUB_BRANCH" --rebase; then
+            if ! git pull origin "$GITHUB_BRANCH" --rebase --autostash; then
                 error "Rebase onto origin/${GITHUB_BRANCH} failed; resolve manually."
                 return 1
             fi
